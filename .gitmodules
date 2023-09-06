@@ -4,6 +4,6 @@
 [submodule "contacts/core/lib/forge-std"]
 	path = contacts/core/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
-[submodule "lib/solady"]
-	path = lib/solady
+[submodule "contacts/core/lib/solady"]
+	path = contacts/core/lib/solady
 	url = https://github.com/vectorized/solady
