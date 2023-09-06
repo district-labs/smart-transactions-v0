@@ -15,7 +15,7 @@
   script = "script"
   solc = "0.8.19"
   src = "src"
-  test = "test"
+  test = "src/test"
   fs_permissions = [{ access = "read-write", path = "./"}]
 
 [profile.ci]

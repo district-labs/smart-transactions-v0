@@ -13,13 +13,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <>
       <div className="relative flex min-h-screen flex-col">
-        <SiteHeader />
         <main className="flex-1">{children}</main>
-        <Footer />
-      </div>
-      <NetworkStatus />
-      <div className="fixed bottom-6 right-6">
-        <WalletConnect />
       </div>
     </>
   )

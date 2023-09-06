@@ -1,12 +1,13 @@
 {
-  "name": "@prb/foundry-template",
-  "description": "Foundry-based template for developing Solidity smart contracts",
-  "version": "1.0.0",
+  "name": "@alpha-wave/intentify-sol",
+  "description": "A Smart Wallet intents expression framework",
+  "version": "0.0.0",
   "author": {
-    "name": "Paul Razvan Berg",
-    "url": "https://github.com/PaulRBerg"
+    "name": "Kames Geraghty",
+    "url": "https://x.com/KamesGeraghty"
   },
   "devDependencies": {
+    "hardhat": "^2.17.2",
     "prettier": "^3.0.0",
     "solhint-community": "^3.6.0"
   },
@@ -23,6 +24,7 @@
   "scripts": {
     "clean": "rm -rf cache out",
     "lint": "pnpm lint:sol && pnpm prettier:check",
+    "test": "forge test",
     "lint:sol": "forge fmt --check && pnpm solhint {script,src,test}/**/*.sol",
     "prettier:check": "prettier --check **/*.{json,md,yml} --ignore-path=.prettierignore",
     "prettier:write": "prettier --write **/*.{json,md,yml} --ignore-path=.prettierignore"
