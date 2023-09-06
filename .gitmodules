@@ -7,3 +7,6 @@
 [submodule "contacts/core/lib/solady"]
 	path = contacts/core/lib/solady
 	url = https://github.com/vectorized/solady
+[submodule "contracts/intentify/lib/solady"]
+	path = contracts/intentify/lib/solady
+	url = https://github.com/vectorized/solady
