@@ -1,37 +1,61 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import {Hook} from "../Hook.sol";
+import {IHook} from "../interfaces/IHook.sol";
 import {BytesLib} from "../libraries/BytesLib.sol";
+import{ERC20} from "solady/tokens/ERC20.sol";
 
-contract LimitOrderHook is Hook {
-    /**
-     * @notice Allows the delegator to specify the latest timestamp the delegation will be valid.
-     * @param terms - The latest timestamp this delegation is valid.
-     * @param delegationHash - The hash of the delegation being operated on.
-     **/
+contract LimitOrderHook {
+    struct Order {
+        address tokenOut;
+        address tokenIn;
+        uint256 amountOut;
+        uint256 amountIn;
+    }
+
+    mapping(address => Order) public orders;
+
     function execute(
+        address account,
         bytes calldata terms,
         bytes calldata release
-    ) public view override returns (bool) {
-        (address tokenOut, address tokenIn, uint256 amountOut, uint256 amountIn) = abi.decode(terms, (address, address, uint256, uint256));
+    ) public returns (bool) {
+        (
+            address tokenOut,
+            address tokenIn, 
+            uint256 amountOut, 
+            uint256 amountIn
+        ) = abi.decode(terms, (address, address, uint256, uint256));
+        bytes memory lockdata = abi.encode(account, tokenOut, tokenIn, amountOut, amountIn);
+        lock(lockdata);
     }
 
     function lock(
-        bytes calldata terms
-    ) public override virtual returns (bool) {
-        
+        bytes memory terms
+    ) internal returns (bool) {
+        (
+            address account,
+            address tokenOut,
+            address tokenIn, 
+            uint256 amountOut, 
+            uint256 amountIn
+        ) = abi.decode(terms, (address, address, address, uint256, uint256));
+
+        orders[msg.sender] = Order(tokenOut, tokenIn, amountOut, amountIn);
+
+        return true;
     }
     
     function unlock(
         bytes calldata terms
-    ) public override virtual returns (bool) {
-
+    ) public returns (bool) {
+        return true;
     }
     
-    function release(
+    function delegate(
         bytes calldata terms
-    ) public override virtual returns (bool) {
+    ) public returns (bool) {
 
+        return true;
     }
 }

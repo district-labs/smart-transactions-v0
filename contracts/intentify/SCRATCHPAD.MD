@@ -1,3 +1,43 @@
+## Alpha V1
+
+```js
+const IntentBatch = {
+    nonce: {
+        queue: 'uint128',
+        accumulator: 'uint128'
+    }
+    intents: [
+        {
+            root: 'address'
+            target: 'address'
+            data: 'bytes'
+        }
+    ]
+}
+```
+
+```js
+const IntentBatchExecution = {
+    batch: IntentBatch
+    signature: {
+        r: 'bytes32'
+        s: 'bytes32'
+        v: 'uint8'
+    }
+    hooks: [
+        {
+            target: 'address'
+            data: 'address'
+        }
+    ]
+}
+```
+
+------------------------------------------
+
+
+## Alpha V0
+
 ```js
 const IntentBatch = {
     root: 'address'
@@ -27,4 +67,4 @@ const IntentBatchExecution = {
     ]
 }
 ```
-
+ 

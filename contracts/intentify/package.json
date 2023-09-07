@@ -1,5 +1,5 @@
 {
-  "name": "@alpha-wave/intentify-sol",
+  "name": "@district-labs/intentify-sol",
   "description": "A Smart Wallet intents expression framework",
   "version": "0.0.0",
   "author": {
@@ -9,6 +9,7 @@
   "devDependencies": {
     "hardhat": "^2.17.2",
     "prettier": "^3.0.0",
+    "signtypeddata-v5": "^5.0.1",
     "solhint-community": "^3.6.0"
   },
   "keywords": [

@@ -1,9 +1,0 @@
-[submodule "contacts/intentify/lib/prb-test"]
-	path = contacts/core/lib/prb-test
-	url = https://github.com/PaulRBerg/prb-test
-[submodule "contacts/intentify/lib/forge-std"]
-	path = contacts/core/lib/forge-std
-	url = https://github.com/foundry-rs/forge-std
-[submodule "contracts/intentify/lib/solady"]
-	path = contracts/intentify/lib/solady
-	url = https://github.com/vectorized/solady
