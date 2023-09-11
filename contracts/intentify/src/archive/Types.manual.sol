@@ -16,6 +16,7 @@ struct Intent {
     address root;
     address target;
     bytes data;
+    Signature signature;
 }
 
 struct IntentBatch {

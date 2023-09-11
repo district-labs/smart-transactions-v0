@@ -5,17 +5,13 @@ import { PRBTest } from "@prb/test/PRBTest.sol";
 import { console2 } from "forge-std/console2.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
 
-import { DimensionalNonce, Intent, IntentBatch, IntentBatchExecution, Signature, Hook, TypesAndDecoders } from "../src/TypesAndDecoders.sol";
+import { DimensionalNonce, IntentExecution, Intent, IntentBatch, IntentBatchExecution, Signature, Hook, TypesAndDecoders } from "../src/TypesAndDecoders.sol";
 import { Intentify } from "../src/Intentify.sol";
-import { TimestampBeforeHook } from "../src/hooks/TimestampBeforeHook.sol";
+import { TimestampBeforeIntent } from "../src/intents/TimestampBeforeIntent.sol";
 
-interface IERC20 {
-    function balanceOf(address account) external view returns (uint256);
-}
-
-contract IntentifyTest is PRBTest, StdCheats {
+contract TimestampBeforeIntentTest is PRBTest, StdCheats {
     Intentify internal _intentify;
-    TimestampBeforeHook internal _timestampBeforeHook;
+    TimestampBeforeIntent internal _TimestampBeforeIntent;
 
     uint256 SIGNER = 0xA11CE;
     address internal signer;
@@ -25,7 +21,7 @@ contract IntentifyTest is PRBTest, StdCheats {
         // Instantiate the contract-under-test.
         signer = vm.addr(SIGNER);
         _intentify = new Intentify(signer, "Intentify", "V0");
-        _timestampBeforeHook = new TimestampBeforeHook();
+        _TimestampBeforeIntent = new TimestampBeforeIntent();
     }
 
     function generateCalldata(Intent calldata intent) external pure returns (bytes memory) {
@@ -34,13 +30,20 @@ contract IntentifyTest is PRBTest, StdCheats {
     }
 
 
-    function test_TimestampBeforeHook_Success() external {        
+    function test_TimestampBeforeIntent_Success() external {        
         Intent[] memory intents = new Intent[](1);
 
         intents[0] = Intent({
-            root: address(_intentify),
-            target: address(_timestampBeforeHook),
-            data:  abi.encodePacked((uint128(block.timestamp - 100)))
+            exec: IntentExecution({
+                root: address(_intentify),
+                target: address(_TimestampBeforeIntent),
+                data:  abi.encodePacked((uint128(block.timestamp - 100)))
+            }),
+            signature: Signature({
+                r: bytes32(0x00),
+                s: bytes32(0x00),
+                v: uint8(0x00)
+            })
         });
 
         IntentBatch memory intentBatch = IntentBatch({
@@ -54,6 +57,12 @@ contract IntentifyTest is PRBTest, StdCheats {
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
+        Hook[] memory hooks = new Hook[](1);
+        hooks[0] = Hook({
+            target: address(0x00),
+            data: bytes("Hello World")
+        });
+
         IntentBatchExecution memory batchExecution = IntentBatchExecution({
             batch: intentBatch,
             signature: Signature({
@@ -61,7 +70,7 @@ contract IntentifyTest is PRBTest, StdCheats {
                 s: s,
                 v: v
             }),
-            hooks: new Hook[](0)
+            hooks: hooks
         });
 
         bool _executed = _intentify.execute(batchExecution);
@@ -72,13 +81,20 @@ contract IntentifyTest is PRBTest, StdCheats {
     /* Failing                                                                               */
     /* ===================================================================================== */
 
-    function test_TimestampBeforeHook_IsExpired() external {        
+    function test_TimestampBeforeIntent_IsExpired() external {        
         Intent[] memory intents = new Intent[](1);
 
         intents[0] = Intent({
-            root: address(_intentify),
-            target: address(_timestampBeforeHook),
-            data: abi.encodePacked((uint128(block.timestamp + 100)))
+            exec: IntentExecution({
+                root: address(_intentify),
+                target: address(_TimestampBeforeIntent),
+                data:  abi.encodePacked((uint128(block.timestamp + 100)))
+            }),
+            signature: Signature({
+                r: bytes32(0x00),
+                s: bytes32(0x00),
+                v: uint8(0x00)
+            })
         });
 
         IntentBatch memory intentBatch = IntentBatch({
@@ -92,6 +108,12 @@ contract IntentifyTest is PRBTest, StdCheats {
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
+        Hook[] memory hooks = new Hook[](1);
+        hooks[0] = Hook({
+            target: address(0x00),
+            data: bytes("Hello World")
+        });
+
         IntentBatchExecution memory batchExecution = IntentBatchExecution({
             batch: intentBatch,
             signature: Signature({
@@ -99,10 +121,10 @@ contract IntentifyTest is PRBTest, StdCheats {
                 s: s,
                 v: v
             }),
-            hooks: new Hook[](0)
+            hooks: hooks
         });
 
-        vm.expectRevert(bytes("TimestampBeforeHook:expired"));
+        vm.expectRevert(bytes("TimestampBeforeIntent:expired"));
         _intentify.execute(batchExecution);
     }
 }

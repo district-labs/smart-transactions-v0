@@ -6,11 +6,13 @@ import { IHook } from "./interfaces/IHook.sol";
 
 import { 
     DimensionalNonce, 
-    Signature, 
+    Signature,
+    Hook,
     Intent, 
     IntentBatch, 
     IntentBatchExecution, 
     EIP712DOMAIN_TYPEHASH,
+    IntentExecution,
     TypesAndDecoders
 } from "./TypesAndDecoders.sol";
 
@@ -24,7 +26,6 @@ contract Intentify is TypesAndDecoders {
     
     /// @notice Multi nonce to handle replay protection for multiple queues
     mapping(address => mapping(uint256 => uint256)) internal multiNonce;
-
 
     /**
      * @notice Delegatable Constructor
@@ -52,24 +53,25 @@ contract Intentify is TypesAndDecoders {
         address signer = _recover(digest, execution.signature.v, execution.signature.r ,execution.signature.s);
         require(signer == owner, "Intent:invalid-signature");
 
+        require(execution.batch.intents.length == execution.hooks.length, "Intent:invalid-intent-length");
+        
         for (uint256 index = 0; index < execution.batch.intents.length; index++) {
-            _execute(execution.batch.intents[index], 1e8);
+            // If the accompanying hook is not set, execute the intent directly
+            // This generally assumes the intent is a contract read i.e. a state constraint like timestamps, twaps or other oracles.
+            if(execution.hooks[index].target == address(0)) {
+                _execute(execution.batch.intents[index]);
+
+            // If the accompanying hook is set, execute the intent with the hook
+            // This generally assumes the intent is access control based and the hook is a contract write i.e. a state change.
+            } else {
+                _executeWithHook(execution.batch.intents[index], execution.hooks[index]);
+            }
         }
         
         return true;
     }
     
     
-    function testing(
-        IntentBatch calldata intentBatch, 
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) public returns (address signer) {
-        bytes32 digest = getIntentBatchTypedDataHash(intentBatch);
-        signer = _recover(digest, v, r ,s);
-    }
-
     function getIntentBatchTypedDataHash(IntentBatch memory intent)
         public
         view
@@ -80,6 +82,21 @@ contract Intentify is TypesAndDecoders {
                 "\x19\x01",
                 DOMAIN_SEPARATOR,
                 GET_INTENTBATCH_PACKETHASH(intent)
+            )
+        );
+        return digest;
+    }
+    
+    function getIntentExecutionTypedDataHash(IntentExecution memory intentExecution)
+        public
+        view
+        returns (bytes32)
+    {
+        bytes32 digest = keccak256(
+            abi.encodePacked(
+                "\x19\x01",
+                DOMAIN_SEPARATOR,
+                GET_INTENTEXECUTION_PACKETHASH(intentExecution)
             )
         );
         return digest;
@@ -103,17 +120,37 @@ contract Intentify is TypesAndDecoders {
         multiNonce[intendedSender][queue] = nonce;
     }
 
-    function _generateHookCalldata(Intent memory intent) internal pure returns (bytes memory) {
-        return abi.encodeWithSignature("execute((address,address,bytes))", intent);
+    function _generateIntentCalldata(Intent memory intent) internal pure returns (bytes memory) {
+        return abi.encodeWithSignature("execute(((address,address,bytes),(bytes32,bytes32,uint8)))", intent);
+    }
+    
+    function _generateIntentWithHookCalldata(Intent memory intent, Hook memory hook) internal pure returns (bytes memory) {
+        return abi.encodeWithSignature("execute(((address,address,bytes),(bytes32,bytes32,uint8)),(address,bytes))", intent, hook);
     }
 
     function _execute(
-        Intent memory intent,
-        uint256 gasLimit
+        Intent memory intent
     ) internal returns (bool success) {
         bytes memory errorMessage;
-        bytes memory data = _generateHookCalldata(intent);
-        (success, errorMessage) = address(intent.target).call{value: 0}(data);
+        bytes memory data = _generateIntentCalldata(intent);
+        (success, errorMessage) = address(intent.exec.target).call{value: 0}(data);
+        if (!success) {
+            if (errorMessage.length > 0) {
+                string memory reason = _extractRevertReason(errorMessage);
+                revert(reason);
+            } else {
+                revert("Intent::execution-failed");
+            }
+        }
+    }
+    
+    function _executeWithHook(
+        Intent memory intent,
+        Hook memory hook
+    ) internal returns (bool success) {
+        bytes memory errorMessage;
+        bytes memory data = _generateIntentWithHookCalldata(intent, hook);
+        (success, errorMessage) = address(intent.exec.target).call{value: 0}(data);
         if (!success) {
             if (errorMessage.length > 0) {
                 string memory reason = _extractRevertReason(errorMessage);
@@ -147,35 +184,6 @@ contract Intentify is TypesAndDecoders {
     /* ===================================================================================== */
     /* Helper Functions                                                                      */
     /* ===================================================================================== */
-    function getIntentHash(Intent memory _intent)
-        public
-        view
-        returns (bytes32)
-    {
-        return
-            keccak256(
-                abi.encodePacked(
-                    "\x19\x01",
-                    DOMAIN_SEPARATOR,
-                    _getStructHash(_intent)
-                )
-            );
-    }
-
-    function _getStructHash(Intent memory _intent)
-        internal
-        view
-        returns (bytes32)
-    {
-        return
-            keccak256(
-                abi.encode(
-                    INTENT_TYPEHASH,
-                    _intent.target
-                )
-            );
-    }
-
     function _getEIP712DomainHash(
         string memory contractName,
         string memory version,

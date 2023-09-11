@@ -5,7 +5,7 @@ import { PRBTest } from "@prb/test/PRBTest.sol";
 import { console2 } from "forge-std/console2.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
 
-import { DimensionalNonce, Intent, IntentBatch, IntentBatchExecution, Signature, Hook, TypesAndDecoders } from "../src/TypesAndDecoders.sol";
+import { DimensionalNonce, IntentExecution, Intent, IntentBatch, IntentBatchExecution, Signature, Hook, TypesAndDecoders } from "../src/TypesAndDecoders.sol";
 import { Intentify } from "../src/Intentify.sol";
 
 interface IERC20 {
@@ -39,9 +39,16 @@ contract IntentifyTest is PRBTest, StdCheats {
         Intent[] memory intents = new Intent[](1);
 
         intents[0] = Intent({
-            root: address(this),
-            target: address(0x00),
-            data: bytes("Hello World")
+            exec: IntentExecution({
+                root: address(this),
+                target: address(0x00),
+                data: bytes("Hello World")
+            }),
+            signature: Signature({
+                r: bytes32(0x00),
+                s: bytes32(0x00),
+                v: uint8(0x00)
+            })
         });
 
         IntentBatch memory intentBatch = IntentBatch({
@@ -54,6 +61,13 @@ contract IntentifyTest is PRBTest, StdCheats {
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
+
+        Hook[] memory hooks = new Hook[](1);
+
+        hooks[0] = Hook({
+            target: address(0x00),
+            data: bytes("Hello World")
+        });
 
         IntentBatchExecution memory batchExecution = IntentBatchExecution({
             batch: intentBatch,
@@ -62,34 +76,11 @@ contract IntentifyTest is PRBTest, StdCheats {
                 s: s,
                 v: v
             }),
-            hooks: new Hook[](0)
+            hooks: hooks
         });
 
         bool _executed = _intentify.execute(batchExecution);
         assertEq(true, _executed);
-    }
-
-    function test_EIP712() external {        
-        Intent[] memory intents = new Intent[](1);
-
-        intents[0] = Intent({
-            root: address(this),
-            target: address(0x00),
-            data: bytes("Hello World")
-        });
-
-        IntentBatch memory intentBatch = IntentBatch({
-            nonce: DimensionalNonce({
-                queue: 0,
-                accumulator: 1
-            }),
-            intents: intents
-        });
-
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
-        address _signer = _intentify.testing(intentBatch, v, r ,s);
-        assertEq(signer, _signer);
     }
 
     // function test_Example() external {

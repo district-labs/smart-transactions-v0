@@ -1,3 +1,19 @@
+
+## LimitOrder Intent
+
+TokenA Balance = 1000
+TokenB Balance = 0
+
+intent:release
+
+TokenA Release = 500
+
+
+
+
+
+
+
 ## Alpha V1
 
 ```js
@@ -8,9 +24,16 @@ const IntentBatch = {
     }
     intents: [
         {
-            root: 'address'
-            target: 'address'
-            data: 'bytes'
+            exec: {
+                root: 'address'
+                target: 'address'
+                data: 'bytes'
+            }
+            sig: {
+                r: 'bytes32'
+                s: 'bytes32'
+                v: 'uint8'
+            }
         }
     ]
 }

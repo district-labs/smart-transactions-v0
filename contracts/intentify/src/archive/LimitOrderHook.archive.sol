@@ -5,7 +5,7 @@ import {IHook} from "../interfaces/IHook.sol";
 import {BytesLib} from "../libraries/BytesLib.sol";
 import{ERC20} from "solady/tokens/ERC20.sol";
 
-contract LimitOrderHook {
+contract LimitOrderHookArchive {
     struct Order {
         address tokenOut;
         address tokenIn;
