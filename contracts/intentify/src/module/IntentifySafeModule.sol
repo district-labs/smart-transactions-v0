@@ -2,7 +2,7 @@
 pragma solidity >=0.8.19;
 
 import { console2 } from "forge-std/console2.sol";
-import { IHook } from "./interfaces/IHook.sol";
+import { IHook } from "../interfaces/IHook.sol";
 
 import { 
     DimensionalNonce, 
@@ -15,11 +15,29 @@ import {
     EIP712DOMAIN_TYPEHASH,
     IntentExecution,
     TypesAndDecoders
-} from "./TypesAndDecoders.sol";
+} from "../TypesAndDecoders.sol";
 
-contract Intentify is TypesAndDecoders {
+import "./Enum.sol";
+import "./SignatureDecoder.sol";
 
-    address public immutable owner;
+interface GnosisSafe {
+    /// @dev Allows a Module to execute a Safe transaction without any further confirmations.
+    /// @param to Destination address of module transaction.
+    /// @param value Ether value of module transaction.
+    /// @param data Data payload of module transaction.
+    /// @param operation Operation type of module transaction.
+    function execTransactionFromModule(
+        address to,
+        uint256 value,
+        bytes calldata data,
+        Enum.Operation operation
+    ) external returns (bool success);
+}
+
+contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder {
+    string public constant NAME = "Intentify Module";
+    string public constant VERSION = "0.0.0";
+    
 
     /// @notice The hash of the domain separator used in the EIP712 domain hash.
     bytes32 public immutable DOMAIN_SEPARATOR;
@@ -28,16 +46,10 @@ contract Intentify is TypesAndDecoders {
     /// @notice Multi nonce to handle replay protection for multiple queues
     mapping(address => mapping(uint256 => uint256)) internal multiNonce;
 
-    /**
-     * @notice Delegatable Constructor
-     * @param contractName string - The name of the contract
-     * @param version string - The version of the contract
-     */
-    constructor(address _owner, string memory contractName, string memory version) {
-        owner = _owner;
+    constructor() {
         DOMAIN_SEPARATOR = _getEIP712DomainHash(
-            contractName,
-            version,
+            NAME,
+            VERSION,
             block.chainid,
             address(this)
         );
@@ -52,7 +64,7 @@ contract Intentify is TypesAndDecoders {
     ) public returns (bool executed) {
         bytes32 digest = getIntentBatchTypedDataHash(execution.batch);
         address signer = _recover(digest, execution.signature.v, execution.signature.r ,execution.signature.s);
-        require(signer == owner, "Intent:invalid-signature");
+        // TODO(Kames): Add signer verification with Safe
 
         require(execution.batch.intents.length == execution.hooks.length, "Intent:invalid-intent-length");
         
