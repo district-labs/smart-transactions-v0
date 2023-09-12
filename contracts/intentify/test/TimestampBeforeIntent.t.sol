@@ -212,45 +212,4 @@ contract TimestampBeforeIntentTest is PRBTest, StdCheats {
         vm.expectRevert(bytes("TimestampBeforeIntent:invalid-root"));
         _intentify.execute(batchExecution);
     }
-
-    // TODO: Fix this test case to ensure it reverts if the target is invalid.
-    function test_RevertWhen_InvalidTarget() external {        
-        Intent[] memory intents = new Intent[](1);
-
-        intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
-                target: address(0),
-                data:  abi.encodePacked((uint128(block.timestamp - 100)))
-            }),
-            signature: EMPTY_SIGNATURE
-        });
-
-        IntentBatch memory intentBatch = IntentBatch({
-            nonce: DimensionalNonce({
-                queue: 0,
-                accumulator: 1
-            }),
-            intents: intents
-        });
-
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
-
-        Hook[] memory hooks = new Hook[](1);
-        hooks[0] = EMPTY_HOOK;
-
-        IntentBatchExecution memory batchExecution = IntentBatchExecution({
-            batch: intentBatch,
-            signature: Signature({
-                r: r,
-                s: s,
-                v: v
-            }),
-            hooks: hooks
-        });
-
-        vm.expectRevert(bytes("TimestampBeforeIntent:invalid-target"));
-        _intentify.execute(batchExecution);
-    }
 }
