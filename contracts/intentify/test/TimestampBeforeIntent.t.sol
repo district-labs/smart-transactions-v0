@@ -32,7 +32,6 @@ contract TimestampBeforeIntentTest is PRBTest, StdCheats {
 
     function test_TimestampBeforeIntent_Success() external {        
         Intent[] memory intents = new Intent[](1);
-
         intents[0] = Intent({
             exec: IntentExecution({
                 root: address(_intentify),
