@@ -10,3 +10,6 @@
 [submodule "contracts/intentify/lib/openzeppelin-contracts"]
 	path = contracts/intentify/lib/openzeppelin-contracts
 	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "contracts/intentify/lib/safe-contracts"]
+	path = contracts/intentify/lib/safe-contracts
+	url = https://github.com/safe-global/safe-contracts
