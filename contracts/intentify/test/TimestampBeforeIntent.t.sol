@@ -48,7 +48,6 @@ contract TimestampBeforeIntentTest is PRBTest, StdCheats {
         vm.assume(pastSeconds < block.timestamp);
 
         Intent[] memory intents = new Intent[](1);
-
         intents[0] = Intent({
             exec: IntentExecution({
                 root: address(_intentify),
