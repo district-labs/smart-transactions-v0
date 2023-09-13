@@ -8,7 +8,7 @@ import { Safe } from "safe-contracts/Safe.sol";
 import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
 import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
 
-import { SafeTestingUtils } from "./SafeTestingUtils.sol";
+import { SafeTestingUtils } from "./utils/SafeTestingUtils.sol";
 import { ERC20Mintable } from "./mocks/ERC20Mintable.sol";
 
 import { IntentifySafeModule } from "../src/module/IntentifySafeModule.sol";

@@ -1,0 +1,6 @@
+{
+  "recommendations": [
+    "rome.vscode-rome",
+    "mikestead.dotenv",
+  ]
+}

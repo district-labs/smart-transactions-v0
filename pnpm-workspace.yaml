@@ -2,3 +2,4 @@ packages:
   - "apps/*"
   - "contracts/*"
   - "packages/*"
+  - "sdk/*"
