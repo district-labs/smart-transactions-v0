@@ -6,7 +6,16 @@ import { console2 } from "forge-std/console2.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
 
 import "@uniswap/v3-core/contracts/libraries/FullMath.sol";
-import { DimensionalNonce, IntentExecution, Intent, IntentBatch, IntentBatchExecution, Signature, Hook, TypesAndDecoders } from "../src/TypesAndDecoders.sol";
+import {
+    DimensionalNonce,
+    IntentExecution,
+    Intent,
+    IntentBatch,
+    IntentBatchExecution,
+    Signature,
+    Hook,
+    TypesAndDecoders
+} from "../src/TypesAndDecoders.sol";
 import { Intentify } from "../src/Intentify.sol";
 import { TwapIntent } from "../src/intents/TwapIntent.sol";
 
@@ -29,16 +38,9 @@ contract TwapIntentTest is PRBTest, StdCheats {
 
     uint256 SIGNER = 0xA11CE;
     address internal signer;
-    
-    Signature EMPTY_SIGNATURE = Signature({
-        r: bytes32(0x00),
-        s: bytes32(0x00),
-        v: uint8(0x00)
-    });
-    Hook EMPTY_HOOK = Hook({
-        target: address(0x00),
-        data: bytes("")
-    });
+
+    Signature EMPTY_SIGNATURE = Signature({ r: bytes32(0x00), s: bytes32(0x00), v: uint8(0x00) });
+    Hook EMPTY_HOOK = Hook({ target: address(0x00), data: bytes("") });
 
     /// @dev A function invoked before each test case is run.
     function setUp() public virtual {
@@ -57,29 +59,21 @@ contract TwapIntentTest is PRBTest, StdCheats {
     /* ===================================================================================== */
 
     function test_TwapIntent_Success() external {
-        uint256 minPriceX96 = 49573475736131303867109800;
-        uint256 maxPriceX96 = 49573475736131303867109810;
+        uint256 minPriceX96 = 49_573_475_736_131_303_867_109_800;
+        uint256 maxPriceX96 = 49_573_475_736_131_303_867_109_810;
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             exec: IntentExecution({
                 root: address(_intentify),
                 target: address(_twapIntent),
-                data:  _twapIntent.encode(UNISWAP_V3_POOL,
-                    uint32(100),
-                    minPriceX96,
-                    maxPriceX96)
+                data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
             }),
             signature: EMPTY_SIGNATURE
         });
 
-        IntentBatch memory intentBatch = IntentBatch({
-            nonce: DimensionalNonce({
-                queue: 0,
-                accumulator: 1
-            }),
-            intents: intents
-        });
+        IntentBatch memory intentBatch =
+            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -87,15 +81,8 @@ contract TwapIntentTest is PRBTest, StdCheats {
         Hook[] memory hooks = new Hook[](1);
         hooks[0] = EMPTY_HOOK;
 
-        IntentBatchExecution memory batchExecution = IntentBatchExecution({
-            batch: intentBatch,
-            signature: Signature({
-                r: r,
-                s: s,
-                v: v
-            }),
-            hooks: hooks
-        });
+        IntentBatchExecution memory batchExecution =
+            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
         bool _executed = _intentify.execute(batchExecution);
         assertEq(true, _executed);
@@ -103,18 +90,18 @@ contract TwapIntentTest is PRBTest, StdCheats {
 
     function test_getTwapX96_ZeroInterval_Success() external {
         uint256 priceX96 = _twapIntent.exposed_getTwapX96(UNISWAP_V3_POOL, 0);
-        assertEq(priceX96, 49571501129800262641687087);
+        assertEq(priceX96, 49_571_501_129_800_262_641_687_087);
     }
 
     function test_getTwapX96_Interval_Success() external {
         uint256 priceX96 = _twapIntent.exposed_getTwapX96(UNISWAP_V3_POOL, 100);
-        assertEq(priceX96, 49573475736131303867109805);
+        assertEq(priceX96, 49_573_475_736_131_303_867_109_805);
     }
 
     function test_encode_Success() external {
         uint32 twapIntervalSeconds = 100;
-        uint256 minPriceX96 = 49573475736131303867109800;
-        uint256 maxPriceX96 = 49573475736131303867109810;
+        uint256 minPriceX96 = 49_573_475_736_131_303_867_109_800;
+        uint256 maxPriceX96 = 49_573_475_736_131_303_867_109_810;
 
         bytes memory data = _twapIntent.encode(UNISWAP_V3_POOL, twapIntervalSeconds, minPriceX96, maxPriceX96);
         assertEq(data, abi.encode(UNISWAP_V3_POOL, twapIntervalSeconds, minPriceX96, maxPriceX96));
@@ -125,31 +112,21 @@ contract TwapIntentTest is PRBTest, StdCheats {
     /* ===================================================================================== */
 
     function test_RevertWhen_TwapIntent_PriceTooLow() external {
-        uint256 minPriceX96 = 49573475736131303867109806;
-        uint256 maxPriceX96 = 49573475736131303867109810;
+        uint256 minPriceX96 = 49_573_475_736_131_303_867_109_806;
+        uint256 maxPriceX96 = 49_573_475_736_131_303_867_109_810;
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             exec: IntentExecution({
                 root: address(_intentify),
                 target: address(_twapIntent),
-                data:  _twapIntent.encode(
-                    UNISWAP_V3_POOL,
-                    uint32(100),
-                    minPriceX96,
-                    maxPriceX96
-                )
+                data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
             }),
             signature: EMPTY_SIGNATURE
         });
 
-        IntentBatch memory intentBatch = IntentBatch({
-            nonce: DimensionalNonce({
-                queue: 0,
-                accumulator: 1
-            }),
-            intents: intents
-        });
+        IntentBatch memory intentBatch =
+            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -157,46 +134,29 @@ contract TwapIntentTest is PRBTest, StdCheats {
         Hook[] memory hooks = new Hook[](1);
         hooks[0] = EMPTY_HOOK;
 
-        IntentBatchExecution memory batchExecution = IntentBatchExecution({
-            batch: intentBatch,
-            signature: Signature({
-                r: r,
-                s: s,
-                v: v
-            }),
-            hooks: hooks
-        });
+        IntentBatchExecution memory batchExecution =
+            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
         vm.expectRevert(bytes("TwapIntent:low-price"));
         _intentify.execute(batchExecution);
     }
 
     function test_RevertWhen_TwapIntent_PriceTooHigh() external {
-        uint256 minPriceX96 = 49573475736131303867109800;
-        uint256 maxPriceX96 = 49573475736131303867109804;
+        uint256 minPriceX96 = 49_573_475_736_131_303_867_109_800;
+        uint256 maxPriceX96 = 49_573_475_736_131_303_867_109_804;
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             exec: IntentExecution({
                 root: address(_intentify),
                 target: address(_twapIntent),
-                data:  _twapIntent.encode(
-                    UNISWAP_V3_POOL,
-                    uint32(100),
-                    minPriceX96,
-                    maxPriceX96
-                )
+                data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
             }),
             signature: EMPTY_SIGNATURE
         });
 
-        IntentBatch memory intentBatch = IntentBatch({
-            nonce: DimensionalNonce({
-                queue: 0,
-                accumulator: 1
-            }),
-            intents: intents
-        });
+        IntentBatch memory intentBatch =
+            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -204,46 +164,29 @@ contract TwapIntentTest is PRBTest, StdCheats {
         Hook[] memory hooks = new Hook[](1);
         hooks[0] = EMPTY_HOOK;
 
-        IntentBatchExecution memory batchExecution = IntentBatchExecution({
-            batch: intentBatch,
-            signature: Signature({
-                r: r,
-                s: s,
-                v: v
-            }),
-            hooks: hooks
-        });
+        IntentBatchExecution memory batchExecution =
+            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
         vm.expectRevert(bytes("TwapIntent:high-price"));
         _intentify.execute(batchExecution);
     }
 
     function test_RevertWhen_TwapIntent_InvalidRoot() external {
-        uint256 minPriceX96 = 49573475736131303867109800;
-        uint256 maxPriceX96 = 49573475736131303867109810;
+        uint256 minPriceX96 = 49_573_475_736_131_303_867_109_800;
+        uint256 maxPriceX96 = 49_573_475_736_131_303_867_109_810;
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             exec: IntentExecution({
                 root: address(0),
                 target: address(_twapIntent),
-                data: _twapIntent.encode(
-                    UNISWAP_V3_POOL,
-                    uint32(100),
-                    minPriceX96,
-                    maxPriceX96
-                )
+                data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
             }),
             signature: EMPTY_SIGNATURE
         });
 
-        IntentBatch memory intentBatch = IntentBatch({
-            nonce: DimensionalNonce({
-                queue: 0,
-                accumulator: 1
-            }),
-            intents: intents
-        });
+        IntentBatch memory intentBatch =
+            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -251,15 +194,8 @@ contract TwapIntentTest is PRBTest, StdCheats {
         Hook[] memory hooks = new Hook[](1);
         hooks[0] = EMPTY_HOOK;
 
-        IntentBatchExecution memory batchExecution = IntentBatchExecution({
-            batch: intentBatch,
-            signature: Signature({
-                r: r,
-                s: s,
-                v: v
-            }),
-            hooks: hooks
-        });
+        IntentBatchExecution memory batchExecution =
+            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
         vm.expectRevert(bytes("TwapIntent:invalid-root"));
         _intentify.execute(batchExecution);

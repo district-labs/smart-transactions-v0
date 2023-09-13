@@ -4,22 +4,19 @@ pragma solidity >=0.8.19;
 import { console2 } from "forge-std/console2.sol";
 
 import { ERC20 } from "solady/tokens/ERC20.sol";
-import { IHook } from "../interfaces/IHook.sol"; 
+import { IHook } from "../interfaces/IHook.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { BytesLib } from "../libraries/BytesLib.sol";
 
 contract LimitOrderIntent {
-
     mapping(address => mapping(address => uint256)) public till;
 
-    function execute(
-        Intent calldata intent,
-        Hook calldata hook
-    ) external returns (bool) {
+    function execute(Intent calldata intent, Hook calldata hook) external returns (bool) {
         require(intent.exec.root == msg.sender, "LimitOrderIntent:invalid-root");
         require(intent.exec.target == address(this), "LimitOrderIntent:invalid-target");
 
-        (address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin) = abi.decode(intent.exec.data, (address, address, uint256, uint256));
+        (address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin) =
+            abi.decode(intent.exec.data, (address, address, uint256, uint256));
 
         uint256 tokenABalance = ERC20(tokenOut).balanceOf(intent.exec.root);
         uint256 tokenBBalance = ERC20(tokenIn).balanceOf(intent.exec.root);
@@ -37,10 +34,18 @@ contract LimitOrderIntent {
         return true;
     }
 
-    function encode(address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin) external pure returns (bytes memory data){
+    function encode(
+        address tokenOut,
+        address tokenIn,
+        uint256 amountOutMax,
+        uint256 amountInMin
+    )
+        external
+        pure
+        returns (bytes memory data)
+    {
         data = abi.encode(tokenOut, tokenIn, amountOutMax, amountInMin);
     }
-
 
     function _unlock(address account, address tokenOut, address tokenIn) internal view returns (bool) {
         uint256 tokenABalance = ERC20(tokenOut).balanceOf(account);
@@ -52,7 +57,7 @@ contract LimitOrderIntent {
 
     function _hook(Hook calldata hook) internal returns (bool success) {
         bytes memory errorMessage;
-        (success, errorMessage) = address(hook.target).call{value: 0}(hook.data);
+        (success, errorMessage) = address(hook.target).call{ value: 0 }(hook.data);
 
         if (!success) {
             if (errorMessage.length > 0) {
@@ -64,11 +69,7 @@ contract LimitOrderIntent {
         }
     }
 
-    function _extractRevertReason(bytes memory revertData)
-        internal
-        pure
-        returns (string memory reason)
-    {
+    function _extractRevertReason(bytes memory revertData) internal pure returns (string memory reason) {
         uint256 length = revertData.length;
         if (length < 68) return "";
         uint256 t;
@@ -82,6 +83,4 @@ contract LimitOrderIntent {
             mstore(revertData, t) // Restore the content of the length slot
         }
     }
-
-
 }

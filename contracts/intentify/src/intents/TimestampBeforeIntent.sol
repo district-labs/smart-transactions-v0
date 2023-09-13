@@ -1,15 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import { IHook } from "../interfaces/IHook.sol"; 
+import { IHook } from "../interfaces/IHook.sol";
 import { Intent } from "../TypesAndDecoders.sol";
 import { BytesLib } from "../libraries/BytesLib.sol";
 
 contract TimestampBeforeIntent is IHook {
-
-    function execute(
-        Intent calldata intent
-    ) external view returns (bool) {
+    function execute(Intent calldata intent) external view returns (bool) {
         require(intent.exec.root == msg.sender, "TimestampBeforeIntent:invalid-root");
         require(intent.exec.target == address(this), "TimestampBeforeIntent:invalid-target");
 
@@ -21,7 +18,7 @@ contract TimestampBeforeIntent is IHook {
         }
     }
 
-    function encode(uint128 timestamp) external pure returns (bytes memory data){
+    function encode(uint128 timestamp) external pure returns (bytes memory data) {
         data = abi.encodePacked(timestamp);
     }
 }

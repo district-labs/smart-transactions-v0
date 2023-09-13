@@ -22,7 +22,7 @@ contract SafeTestingUtils is PRBTest, StdCheats {
             mstore(add(signature, 64), s)
             mstore8(add(signature, 96), v)
         }
-        
+
         return signature;
     }
 
@@ -40,11 +40,11 @@ contract SafeTestingUtils is PRBTest, StdCheats {
         bytes memory data = new bytes(0);
         owners[0] = owner;
         bytes memory initializer = abi.encodeWithSelector(
-            _safe.setup.selector, 
-            owners, 
-            1, // threshold 
+            _safe.setup.selector,
+            owners,
+            1, // threshold
             address(0), // to
-            data, 
+            data,
             address(0), // fallbackHandler
             address(0), // paymentToken
             0, // payment
@@ -58,20 +58,11 @@ contract SafeTestingUtils is PRBTest, StdCheats {
         // Craft Transaction
         bytes memory txdata = _generateIntentifyModuleEnableData(address(module));
         bytes32 executedata = _safe.getTransactionHash(
-            address(_safe),
-            0,
-            txdata,
-            Enum.Operation.Call,
-            0,
-            0,
-            0,
-            address(0x00),
-            address(0x00),
-            0
+            address(_safe), 0, txdata, Enum.Operation.Call, 0, 0, 0, address(0x00), address(0x00), 0
         );
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(signer, executedata);
-        bytes memory signatures = _combineRSV(r,s,v);
-        
+        bytes memory signatures = _combineRSV(r, s, v);
+
         // Initialize the Safe Intentiy Module
         _safe.execTransaction(
             address(_safe),
