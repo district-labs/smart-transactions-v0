@@ -13,3 +13,7 @@
 [submodule "contracts/intentify/lib/safe-contracts"]
 	path = contracts/intentify/lib/safe-contracts
 	url = https://github.com/safe-global/safe-contracts
+[submodule "contracts/intentify/lib/@uniswap/v3-core"]
+	path = contracts/intentify/lib/@uniswap/v3-core
+	url = https://github.com/Uniswap/v3-core
+	branch = 0.8
