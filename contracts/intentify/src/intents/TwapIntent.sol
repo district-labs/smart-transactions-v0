@@ -18,15 +18,18 @@ contract TwapIntent is IHook {
         require(intent.exec.root == msg.sender, "TwapIntent:invalid-root");
         require(intent.exec.target == address(this), "TwapIntent:invalid-target");
 
-        (address uniswapV3Pool, uint32 twapIntervalSeconds, uint256 minPriceX96) = abi.decode(intent.exec.data, (address, uint32, uint256));
+        (address uniswapV3Pool, uint32 twapIntervalSeconds, uint256 minPriceX96, uint256 maxPriceX96) = abi.decode(intent.exec.data, (address, uint32, uint256, uint256));
         uint256 priceX96 = _getTwapX96(uniswapV3Pool, twapIntervalSeconds);
 
-        if (priceX96 >= minPriceX96) {
-            return true;
-        } else {
+        if (priceX96 < minPriceX96) {
             revert("TwapIntent:low-price");
         }
         
+        if (priceX96 > maxPriceX96) {
+            revert("TwapIntent:high-price");
+        }
+
+        return true;   
     }
 
     function _getTwapX96(address uniswapV3Pool, uint32 twapIntervalSeconds) internal view returns (uint256 priceX96) {
