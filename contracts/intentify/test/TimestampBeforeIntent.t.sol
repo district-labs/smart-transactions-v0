@@ -11,7 +11,7 @@ import { TimestampBeforeIntent } from "../src/intents/TimestampBeforeIntent.sol"
 
 contract TimestampBeforeIntentTest is PRBTest, StdCheats {
     Intentify internal _intentify;
-    TimestampBeforeIntent internal _TimestampBeforeIntent;
+    TimestampBeforeIntent internal _timestampBeforeIntent;
 
     uint256 SIGNER = 0xA11CE;
     address internal signer;
@@ -31,7 +31,7 @@ contract TimestampBeforeIntentTest is PRBTest, StdCheats {
         // Instantiate the contract-under-test.
         signer = vm.addr(SIGNER);
         _intentify = new Intentify(signer, "Intentify", "V0");
-        _TimestampBeforeIntent = new TimestampBeforeIntent();
+        _timestampBeforeIntent = new TimestampBeforeIntent();
     }
 
     function generateCalldata(Intent calldata intent) external pure returns (bytes memory) {
@@ -43,7 +43,7 @@ contract TimestampBeforeIntentTest is PRBTest, StdCheats {
     /* Success                                                                               */
     /* ===================================================================================== */
 
-    function test_TimestampBeforeIntent_Success(uint128 pastSeconds) external {        
+    function test_timestampBeforeIntent_Success(uint128 pastSeconds) external {        
         vm.assume(pastSeconds > 0);
         vm.assume(pastSeconds < block.timestamp);
 
@@ -51,8 +51,8 @@ contract TimestampBeforeIntentTest is PRBTest, StdCheats {
         intents[0] = Intent({
             exec: IntentExecution({
                 root: address(_intentify),
-                target: address(_TimestampBeforeIntent),
-                data:  abi.encodePacked((uint128(block.timestamp - pastSeconds)))
+                target: address(_timestampBeforeIntent),
+                data:  _timestampBeforeIntent.encode(uint128(block.timestamp - pastSeconds)) 
             }),
             signature: EMPTY_SIGNATURE
         });
@@ -85,11 +85,17 @@ contract TimestampBeforeIntentTest is PRBTest, StdCheats {
         assertEq(true, _executed);
     }
 
+    function test_encode_Success() external {
+        uint128 timestamp = uint128(block.timestamp);
+        bytes memory data = _timestampBeforeIntent.encode(timestamp);
+        assertEq(data, abi.encodePacked(uint128(block.timestamp)));
+    }
+
     /* ===================================================================================== */
     /* Failing                                                                               */
     /* ===================================================================================== */
 
-    function test_RevertWhen_TimestampBeforeIntent_IsExpired(uint128 pastSeconds) external {        
+    function test_RevertWhen_timestampBeforeIntent_IsExpired(uint128 pastSeconds) external {        
         vm.assume(pastSeconds > 0);
         vm.assume(block.timestamp + pastSeconds < type(uint128).max);
 
@@ -98,8 +104,8 @@ contract TimestampBeforeIntentTest is PRBTest, StdCheats {
         intents[0] = Intent({
             exec: IntentExecution({
                 root: address(_intentify),
-                target: address(_TimestampBeforeIntent),
-                data:  abi.encodePacked((uint128(block.timestamp + pastSeconds)))
+                target: address(_timestampBeforeIntent),
+                data: _timestampBeforeIntent.encode(uint128(block.timestamp + pastSeconds))
             }),
             signature: EMPTY_SIGNATURE
         });
@@ -132,14 +138,14 @@ contract TimestampBeforeIntentTest is PRBTest, StdCheats {
         _intentify.execute(batchExecution);
     }
 
-    function test_RevertWhen_TimestampBeforeIntent_IsCurrentTimestamp() external {        
+    function test_RevertWhen_timestampBeforeIntent_IsCurrentTimestamp() external {        
         Intent[] memory intents = new Intent[](1);
 
         intents[0] = Intent({
             exec: IntentExecution({
                 root: address(_intentify),
-                target: address(_TimestampBeforeIntent),
-                data:  abi.encodePacked((uint128(block.timestamp)))
+                target: address(_timestampBeforeIntent),
+                data: _timestampBeforeIntent.encode(uint128(block.timestamp))
             }),
             signature: EMPTY_SIGNATURE
         });
@@ -178,8 +184,8 @@ contract TimestampBeforeIntentTest is PRBTest, StdCheats {
         intents[0] = Intent({
             exec: IntentExecution({
                 root: address(0),
-                target: address(_TimestampBeforeIntent),
-                data:  abi.encodePacked((uint128(block.timestamp - 100)))
+                target: address(_timestampBeforeIntent),
+                data: _timestampBeforeIntent.encode(uint128(block.timestamp - 100))
             }),
             signature: EMPTY_SIGNATURE
         });

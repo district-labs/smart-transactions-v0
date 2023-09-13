@@ -95,7 +95,7 @@ contract LimitOrderIntentTest is PRBTest, StdCheats {
             exec: IntentExecution({
                 root: address(_intentify),
                 target: address(_tokenRouterReleaseIntent),
-                data:  abi.encode(_tokenA, startingBalance)
+                data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
             }),
             signature: EMPTY_SIGNATURE
         });
@@ -107,7 +107,7 @@ contract LimitOrderIntentTest is PRBTest, StdCheats {
         IntentExecution memory _limitOrderIntentExecution = IntentExecution({
             root: address(_intentify),
             target: address(_limitOrderIntent),
-            data: abi.encode(_tokenA, _tokenB, startingBalance, endingBalance)
+            data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
 
         bytes32 _limitOrderIntentDigest = _intentify.getIntentExecutionTypedDataHash(_limitOrderIntentExecution);
@@ -167,6 +167,11 @@ contract LimitOrderIntentTest is PRBTest, StdCheats {
         assertEq(balanceTokenB, endingBalance);
     }
 
+    function test_encode_Success() external {
+        bytes memory data = _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance);
+        assertEq(data, abi.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance));
+    }
+
     function test_unlock_Success() external {
         setupBalanceAndApprovals(address(_intentify), address(_tokenA), startingBalance, address(_tokenRouterReleaseIntent));
 
@@ -179,7 +184,7 @@ contract LimitOrderIntentTest is PRBTest, StdCheats {
             exec: IntentExecution({
                 root: address(_intentify),
                 target: address(_tokenRouterReleaseIntent),
-                data:  abi.encode(_tokenA, startingBalance)
+                data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
             }),
             signature: EMPTY_SIGNATURE
         });
@@ -191,7 +196,7 @@ contract LimitOrderIntentTest is PRBTest, StdCheats {
         IntentExecution memory _limitOrderIntentExecution = IntentExecution({
             root: address(_intentify),
             target: address(_limitOrderIntent),
-            data: abi.encode(_tokenA, _tokenB, startingBalance, endingBalance)
+            data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance) 
         });
 
         bytes32 _limitOrderIntentDigest = _intentify.getIntentExecutionTypedDataHash(_limitOrderIntentExecution);
@@ -272,7 +277,7 @@ contract LimitOrderIntentTest is PRBTest, StdCheats {
             exec: IntentExecution({
                 root: address(_intentify),
                 target: address(_tokenRouterReleaseIntent),
-                data:  abi.encode(_tokenA, startingBalance)
+                data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
             }),
             signature: EMPTY_SIGNATURE
         });
@@ -284,7 +289,7 @@ contract LimitOrderIntentTest is PRBTest, StdCheats {
         IntentExecution memory _limitOrderIntentExecution = IntentExecution({
             root: address(_intentify),
             target: address(_limitOrderIntent),
-            data: abi.encode(_tokenA, _tokenB, startingBalance, endingBalance)
+            data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
 
         bytes32 _limitOrderIntentDigest = _intentify.getIntentExecutionTypedDataHash(_limitOrderIntentExecution);
@@ -352,7 +357,7 @@ contract LimitOrderIntentTest is PRBTest, StdCheats {
             exec: IntentExecution({
                 root: address(_intentify),
                 target: address(_tokenRouterReleaseIntent),
-                data:  abi.encode(_tokenA, startingBalance)
+                data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
             }),
             signature: EMPTY_SIGNATURE
         });
@@ -364,7 +369,7 @@ contract LimitOrderIntentTest is PRBTest, StdCheats {
         IntentExecution memory _limitOrderIntentExecution = IntentExecution({
             root: address(0),
             target: address(_limitOrderIntent),
-            data: abi.encode(_tokenA, _tokenB, startingBalance, endingBalance)
+            data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
 
         bytes32 _limitOrderIntentDigest = _intentify.getIntentExecutionTypedDataHash(_limitOrderIntentExecution);

@@ -35,8 +35,12 @@ contract LimitOrderIntent {
         _unlock(intent.exec.root, tokenOut, tokenIn);
 
         return true;
-        
     }
+
+    function encode(address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin) external pure returns (bytes memory data){
+        data = abi.encode(tokenOut, tokenIn, amountOutMax, amountInMin);
+    }
+
 
     function _unlock(address account, address tokenOut, address tokenIn) internal view returns (bool) {
         uint256 tokenABalance = ERC20(tokenOut).balanceOf(account);

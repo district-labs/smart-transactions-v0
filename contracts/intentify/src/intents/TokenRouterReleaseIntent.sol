@@ -27,4 +27,7 @@ contract TokenRouterReleaseIntent {
         return true;
     }
 
+    function encode(address token, uint256 amount) external pure returns (bytes memory data){
+        data = abi.encode(token, amount);
+    }
 }

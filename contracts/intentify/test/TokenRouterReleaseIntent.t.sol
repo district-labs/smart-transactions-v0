@@ -62,7 +62,7 @@ contract TokenRouterReleaseIntentTest is PRBTest, StdCheats {
             exec: IntentExecution({
                 root: address(_intentify),
                 target: address(_tokenRouterRelease),
-                data:  abi.encode(_tokenA, startingBalance)
+                data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
             }),
             signature: EMPTY_SIGNATURE
         });
@@ -106,6 +106,11 @@ contract TokenRouterReleaseIntentTest is PRBTest, StdCheats {
         assertEq(postBalanceTokenA, startingBalance);
     }
 
+    function test_encode_Success() external {
+        bytes memory data = _tokenRouterRelease.encode(address(_tokenA), startingBalance);
+        assertEq(data, abi.encode(address(_tokenA), startingBalance));
+    }    
+
     /* ===================================================================================== */
     /* Failing                                                                               */
     /* ===================================================================================== */
@@ -118,7 +123,7 @@ contract TokenRouterReleaseIntentTest is PRBTest, StdCheats {
             exec: IntentExecution({
                 root: address(0),
                 target: address(_tokenRouterRelease),
-                data:  abi.encode(_tokenA, startingBalance)
+                data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
             }),
             signature: EMPTY_SIGNATURE
         });
@@ -159,7 +164,7 @@ contract TokenRouterReleaseIntentTest is PRBTest, StdCheats {
             exec: IntentExecution({
                 root: address(_intentify),
                 target: address(_tokenRouterRelease),
-                data:  abi.encode(_tokenA, startingBalance)
+                data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
             }),
             signature: EMPTY_SIGNATURE
         });
