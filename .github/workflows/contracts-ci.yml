@@ -1,4 +1,4 @@
-name: "CI"
+name: "Intentify Contracts CI"
 
 env:
   API_KEY_ALCHEMY: ${{ secrets.API_KEY_ALCHEMY }}
@@ -7,9 +7,18 @@ env:
 on:
   workflow_dispatch:
   pull_request:
+    paths:
+      - "contracts/intentify/**"
   push:
     branches:
       - "main"
+    paths:
+      - "contracts/intentify/**"
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ./contracts/intentify
 
 jobs:
   lint:
