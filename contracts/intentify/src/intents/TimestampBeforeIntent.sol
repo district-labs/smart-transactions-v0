@@ -20,4 +20,8 @@ contract TimestampBeforeIntent is IHook {
             revert("TimestampBeforeIntent:expired");
         }
     }
+
+    function encode(uint128 timestamp) external pure returns (bytes memory data){
+        data = abi.encodePacked(timestamp);
+    }
 }

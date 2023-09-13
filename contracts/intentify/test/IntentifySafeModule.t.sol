@@ -55,7 +55,7 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
             exec: IntentExecution({
                 root: _safe,
                 target: address(_timestampBeforeIntent),
-                data:  abi.encodePacked((uint128(block.timestamp - 100)))
+                data: _timestampBeforeIntent.encode(uint128(block.timestamp - 100))
             }),
             signature: Signature({
                 r: bytes32(0x00),
