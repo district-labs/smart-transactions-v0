@@ -32,6 +32,10 @@ contract TwapIntent is IHook {
         return true;   
     }
 
+    function encode(address uniswapV3Pool, uint32 twapIntervalSeconds, uint256 minPriceX96, uint256 maxPriceX96) external view returns (bytes memory data){
+        data = abi.encode(uniswapV3Pool, twapIntervalSeconds, minPriceX96, maxPriceX96);
+    }
+
     function _getTwapX96(address uniswapV3Pool, uint32 twapIntervalSeconds) internal view returns (uint256 priceX96) {
         uint160 sqrtPriceX96;
 

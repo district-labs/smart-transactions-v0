@@ -65,12 +65,10 @@ contract TwapIntentTest is PRBTest, StdCheats {
             exec: IntentExecution({
                 root: address(_intentify),
                 target: address(_twapIntent),
-                data:  abi.encode(
-                    UNISWAP_V3_POOL,
+                data:  _twapIntent.encode(UNISWAP_V3_POOL,
                     uint32(100),
                     minPriceX96,
-                    maxPriceX96
-                )
+                    maxPriceX96)
             }),
             signature: EMPTY_SIGNATURE
         });
@@ -113,6 +111,15 @@ contract TwapIntentTest is PRBTest, StdCheats {
         assertEq(priceX96, 49573475736131303867109805);
     }
 
+    function test_encode_Success() external {
+        uint32 twapIntervalSeconds = 100;
+        uint256 minPriceX96 = 49573475736131303867109800;
+        uint256 maxPriceX96 = 49573475736131303867109810;
+
+        bytes memory data = _twapIntent.encode(UNISWAP_V3_POOL, twapIntervalSeconds, minPriceX96, maxPriceX96);
+        assertEq(data, abi.encode(UNISWAP_V3_POOL, twapIntervalSeconds, minPriceX96, maxPriceX96));
+    }
+
     /* ===================================================================================== */
     /* Failing                                                                               */
     /* ===================================================================================== */
@@ -126,7 +133,7 @@ contract TwapIntentTest is PRBTest, StdCheats {
             exec: IntentExecution({
                 root: address(_intentify),
                 target: address(_twapIntent),
-                data:  abi.encode(
+                data:  _twapIntent.encode(
                     UNISWAP_V3_POOL,
                     uint32(100),
                     minPriceX96,
@@ -173,7 +180,7 @@ contract TwapIntentTest is PRBTest, StdCheats {
             exec: IntentExecution({
                 root: address(_intentify),
                 target: address(_twapIntent),
-                data:  abi.encode(
+                data:  _twapIntent.encode(
                     UNISWAP_V3_POOL,
                     uint32(100),
                     minPriceX96,
@@ -220,7 +227,7 @@ contract TwapIntentTest is PRBTest, StdCheats {
             exec: IntentExecution({
                 root: address(0),
                 target: address(_twapIntent),
-                data:  abi.encode(
+                data: _twapIntent.encode(
                     UNISWAP_V3_POOL,
                     uint32(100),
                     minPriceX96,
