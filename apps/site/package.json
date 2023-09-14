@@ -18,6 +18,7 @@
     "shadcn:add": "pnpm dlx shadcn-ui@latest add"
   },
   "dependencies": {
+    "@headlessui/tailwindcss": "^0.2.0",
     "@hookform/resolvers": "^3.3.1",
     "@planetscale/database": "^1.11.0",
     "@radix-ui/react-accordion": "^1.1.2",
@@ -38,6 +39,7 @@
     "@rainbow-me/rainbowkit": "^1.0.11",
     "@t3-oss/env-nextjs": "^0.6.1",
     "@tanstack/react-table": "^8.9.8",
+    "@tremor/react": "^3.7.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",

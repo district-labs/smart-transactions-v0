@@ -126,7 +126,7 @@ export default async function StrategyPage({ params }: StrategyPageProps) {
             </div>
           </div>
           <DashboardChart data={chartData.prices} />
-          <div className="mt-2 flex items-center justify-center space-x-2">
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
             <Button size="sm" className="h-7 bg-blue-500 px-10">
               ETH
             </Button>
