@@ -1,9 +1,10 @@
-import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
+import { type ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
 import { env } from "@/env.mjs"
 import {
   getIronSession,
   unsealData,
   type IronSessionOptions,
+  type IronSessionData,
 } from "iron-session"
 import type { SiweMessage } from "siwe"
 
@@ -33,7 +34,7 @@ export async function getRequestCookie(cookies: ReadonlyRequestCookies) {
 
   if (!found) return null
 
-  const { user } = await unsealData(found.value, {
+  const user = await unsealData<IronSessionData>(found.value, {
     password: env.AUTH_SECRET_KEY,
   })
 

@@ -21,9 +21,8 @@ export const metadata: Metadata = {
 }
 
 export default async function DashboardPage() {
-  // TODO: Unable to decrypt the user session
   const user = await getRequestCookie(cookies())
-
+  
   const allStrategies = await db
     .select({
       id: strategies.id,
