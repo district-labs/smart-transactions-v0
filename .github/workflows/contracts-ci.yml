@@ -1,15 +1,24 @@
-name: "CI"
+name: "Intentify Contracts CI"
 
 env:
-  API_KEY_ALCHEMY: ${{ secrets.API_KEY_ALCHEMY }}
+  MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
   FOUNDRY_PROFILE: "ci"
 
 on:
   workflow_dispatch:
   pull_request:
+    paths:
+      - "contracts/intentify/**"
   push:
     branches:
       - "main"
+    paths:
+      - "contracts/intentify/**"
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ./contracts/intentify
 
 jobs:
   lint:

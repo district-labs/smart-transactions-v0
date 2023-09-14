@@ -1,18 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.19;
 
-
 contract ECRecovery {
     /**
      * @dev Recover signer address from a message by using their signature
      * @param hash bytes32 message, the hash is the signed message. What is recovered is the signer address.
      * @param sig bytes signature, the signature is generated using web3.eth.sign()
      */
-    function recover(bytes32 hash, bytes memory sig)
-        internal
-        pure
-        returns (address)
-    {
+    function recover(bytes32 hash, bytes memory sig) internal pure returns (address) {
         bytes32 r;
         bytes32 s;
         uint8 v;
