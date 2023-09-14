@@ -8,7 +8,13 @@ import { eq } from "drizzle-orm"
 
 import { getRequestCookie } from "@/lib/session"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import DashboardChart from "@/components/charts/dashboard-chart"
@@ -22,7 +28,7 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage() {
   const user = await getRequestCookie(cookies())
-  
+
   const allStrategies = await db
     .select({
       id: strategies.id,

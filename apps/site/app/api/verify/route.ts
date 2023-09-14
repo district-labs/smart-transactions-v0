@@ -28,22 +28,22 @@ export async function POST(req: Request) {
     const session = await getIronSession(req, res, ironOptions)
     const { message, signature } = verifySchema.parse(await req.json())
     const siweMessage = new SiweMessage(message)
-    const fields = await siweMessage.verify({ signature })
-    if (fields.data.nonce !== session.nonce)
+    const fields = await siweMessage.validate(signature)
+    if (fields.nonce !== session.nonce)
       return new Response(JSON.stringify({ message: "Invalid nonce." }), {
         status: 422,
       })
 
-    session.siwe = fields.data
+    session.siwe = fields
     await session.save()
 
     if (env.DATABASE_URL) {
       const user = await db.query.users.findFirst({
-        where: eq(users.address, fields.data.address),
+        where: eq(users.address, fields.address),
       })
       if (!user) {
         await db.insert(users).values({
-          address: fields.data.address,
+          address: fields.address,
         })
       }
     }
