@@ -1,6 +1,5 @@
 "use client"
 
-import { faker } from "@faker-js/faker"
 import { format } from "date-fns"
 import {
   CartesianGrid,
@@ -11,36 +10,29 @@ import {
   YAxis,
 } from "recharts"
 
-function generateChartData(days: number = 30) {
-  const chartData = []
-
-  for (let i = 0; i < days; i++) {
-    chartData.push({
-      date: faker.date.between({
-        from: "2020-01-01T00:00:00.000Z",
-        to: "2030-01-01T00:00:00.000Z",
-      }),
-      value: faker.number.float({ min: 1000, max: 30000, precision: 0.01 }),
-    })
-  }
-
-  return chartData
+interface DashboardChartProps {
+  data: [][]
 }
 
-export default function DashboardChart() {
-  const data = generateChartData(30)
+export default function DashboardChart({ data }: DashboardChartProps) {
+  const formattedData = data.map((x) => ({
+    time: x[0],
+    value: x[1],
+  }))
 
   return (
     <ResponsiveContainer width="100%" height={500}>
-      <LineChart data={data}>
+      <LineChart data={formattedData}>
         <CartesianGrid />
         <XAxis
-          dataKey="date"
+          dataKey="time"
           stroke="#888888"
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value) => format(value as Date, "MM-dd")}
+          tickCount={3}
+          interval={"equidistantPreserveStart"}
+          tickFormatter={(value) => format(new Date(value), "PP")}
         />
         <YAxis
           stroke="#888888"

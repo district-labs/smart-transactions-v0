@@ -2,6 +2,7 @@ import { notFound } from "next/navigation"
 import { db } from "@/db"
 import { strategies, users } from "@/db/schema"
 import { eq } from "drizzle-orm"
+import { char } from "drizzle-orm/mysql-core"
 
 import { toTitleCase } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -29,31 +30,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import DashboardChart from "@/components/charts/dashboard-chart"
 import { Icons } from "@/components/icons"
+import { getCoinMarketChart } from "@/app/_actions/gecko"
+import { getTokenChartData } from "@/app/_actions/llama"
 
 interface StrategyPageProps {
   params: {
     strategyId: string
-  }
-}
-
-export async function generateMetadata({ params }: StrategyPageProps) {
-  const strategyId = Number(params.strategyId)
-
-  const strategy = await db.query.strategies.findFirst({
-    columns: {
-      name: true,
-      description: true,
-    },
-    where: eq(strategies.id, strategyId),
-  })
-
-  if (!strategy) {
-    return {}
-  }
-
-  return {
-    title: toTitleCase(strategy.name),
-    description: strategy.description ?? undefined,
   }
 }
 
@@ -81,10 +63,16 @@ export default async function StrategyPage({ params }: StrategyPageProps) {
   const manager = await db.query.users.findFirst({
     columns: {
       id: true,
-      name: true,
+      firstName: true,
       about: true,
     },
     where: eq(users.id, strategy.managerId),
+  })
+
+  // Add a field to strategy schema for token
+  const chartData = await getCoinMarketChart({
+    coinId: "ethereum",
+    days: "7",
   })
 
   return (
@@ -137,7 +125,7 @@ export default async function StrategyPage({ params }: StrategyPageProps) {
               </Button>
             </div>
           </div>
-          <DashboardChart />
+          <DashboardChart data={chartData.prices} />
           <div className="mt-2 flex items-center justify-center space-x-2">
             <Button size="sm" className="h-7 bg-blue-500 px-10">
               ETH
