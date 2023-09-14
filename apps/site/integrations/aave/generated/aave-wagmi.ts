@@ -1463,7 +1463,7 @@ export const poolABI = [
  */
 export function useUiPoolDataProviderRead<
   TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<
@@ -1489,7 +1489,7 @@ export function useUiPoolDataProviderRead<
  */
 export function useUiPoolDataProviderEthCurrencyUnit<
   TFunctionName extends "ETH_CURRENCY_UNIT",
-  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<
@@ -1516,7 +1516,7 @@ export function useUiPoolDataProviderEthCurrencyUnit<
  */
 export function useUiPoolDataProviderMkrAddress<
   TFunctionName extends "MKR_ADDRESS",
-  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<
@@ -1543,7 +1543,7 @@ export function useUiPoolDataProviderMkrAddress<
  */
 export function useUiPoolDataProviderBytes32ToString<
   TFunctionName extends "bytes32ToString",
-  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<
@@ -1570,7 +1570,7 @@ export function useUiPoolDataProviderBytes32ToString<
  */
 export function useUiPoolDataProviderGetReservesData<
   TFunctionName extends "getReservesData",
-  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<
@@ -1597,7 +1597,7 @@ export function useUiPoolDataProviderGetReservesData<
  */
 export function useUiPoolDataProviderGetReservesList<
   TFunctionName extends "getReservesList",
-  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<
@@ -1624,7 +1624,7 @@ export function useUiPoolDataProviderGetReservesList<
  */
 export function useUiPoolDataProviderGetUserReservesData<
   TFunctionName extends "getUserReservesData",
-  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<
@@ -1651,7 +1651,7 @@ export function useUiPoolDataProviderGetUserReservesData<
  */
 export function useUiPoolDataProviderMarketReferenceCurrencyPriceInUsdProxyAggregator<
   TFunctionName extends "marketReferenceCurrencyPriceInUsdProxyAggregator",
-  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<
@@ -1678,7 +1678,7 @@ export function useUiPoolDataProviderMarketReferenceCurrencyPriceInUsdProxyAggre
  */
 export function useUiPoolDataProviderNetworkBaseTokenPriceInUsdProxyAggregator<
   TFunctionName extends "networkBaseTokenPriceInUsdProxyAggregator",
-  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof uiPoolDataProviderABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<
@@ -1705,7 +1705,7 @@ export function useUiPoolDataProviderNetworkBaseTokenPriceInUsdProxyAggregator<
  */
 export function usePoolRead<
   TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1724,7 +1724,7 @@ export function usePoolRead<
  */
 export function usePoolAddressesProvider<
   TFunctionName extends "ADDRESSES_PROVIDER",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1743,7 +1743,7 @@ export function usePoolAddressesProvider<
  */
 export function usePoolBridgeProtocolFee<
   TFunctionName extends "BRIDGE_PROTOCOL_FEE",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1762,7 +1762,7 @@ export function usePoolBridgeProtocolFee<
  */
 export function usePoolFlashloanPremiumTotal<
   TFunctionName extends "FLASHLOAN_PREMIUM_TOTAL",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1781,7 +1781,7 @@ export function usePoolFlashloanPremiumTotal<
  */
 export function usePoolFlashloanPremiumToProtocol<
   TFunctionName extends "FLASHLOAN_PREMIUM_TO_PROTOCOL",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1800,7 +1800,7 @@ export function usePoolFlashloanPremiumToProtocol<
  */
 export function usePoolMaxNumberReserves<
   TFunctionName extends "MAX_NUMBER_RESERVES",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1819,7 +1819,7 @@ export function usePoolMaxNumberReserves<
  */
 export function usePoolMaxStableRateBorrowSizePercent<
   TFunctionName extends "MAX_STABLE_RATE_BORROW_SIZE_PERCENT",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1838,7 +1838,7 @@ export function usePoolMaxStableRateBorrowSizePercent<
  */
 export function usePoolPoolRevision<
   TFunctionName extends "POOL_REVISION",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1857,7 +1857,7 @@ export function usePoolPoolRevision<
  */
 export function usePoolGetConfiguration<
   TFunctionName extends "getConfiguration",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1876,7 +1876,7 @@ export function usePoolGetConfiguration<
  */
 export function usePoolGetEModeCategoryData<
   TFunctionName extends "getEModeCategoryData",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1895,7 +1895,7 @@ export function usePoolGetEModeCategoryData<
  */
 export function usePoolGetReserveAddressById<
   TFunctionName extends "getReserveAddressById",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1914,7 +1914,7 @@ export function usePoolGetReserveAddressById<
  */
 export function usePoolGetReserveData<
   TFunctionName extends "getReserveData",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1933,7 +1933,7 @@ export function usePoolGetReserveData<
  */
 export function usePoolGetReserveNormalizedIncome<
   TFunctionName extends "getReserveNormalizedIncome",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1952,7 +1952,7 @@ export function usePoolGetReserveNormalizedIncome<
  */
 export function usePoolGetReserveNormalizedVariableDebt<
   TFunctionName extends "getReserveNormalizedVariableDebt",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1971,7 +1971,7 @@ export function usePoolGetReserveNormalizedVariableDebt<
  */
 export function usePoolGetReservesList<
   TFunctionName extends "getReservesList",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -1990,7 +1990,7 @@ export function usePoolGetReservesList<
  */
 export function usePoolGetUserAccountData<
   TFunctionName extends "getUserAccountData",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -2009,7 +2009,7 @@ export function usePoolGetUserAccountData<
  */
 export function usePoolGetUserConfiguration<
   TFunctionName extends "getUserConfiguration",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -2028,7 +2028,7 @@ export function usePoolGetUserConfiguration<
  */
 export function usePoolGetUserEMode<
   TFunctionName extends "getUserEMode",
-  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof poolABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof poolABI, TFunctionName, TSelectData>,
@@ -2047,7 +2047,7 @@ export function usePoolGetUserEMode<
  */
 export function usePoolWrite<
   TFunctionName extends string,
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2069,7 +2069,7 @@ export function usePoolWrite<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"backUnbacked"`.
  */
 export function usePoolBackUnbacked<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2118,7 +2118,7 @@ export function usePoolBorrow<TMode extends WriteContractMode = undefined>(
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"configureEModeCategory"`.
  */
 export function usePoolConfigureEModeCategory<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2196,7 +2196,7 @@ export function usePoolDropReserve<TMode extends WriteContractMode = undefined>(
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"finalizeTransfer"`.
  */
 export function usePoolFinalizeTransfer<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2248,7 +2248,7 @@ export function usePoolFlashLoan<TMode extends WriteContractMode = undefined>(
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"flashLoanSimple"`.
  */
 export function usePoolFlashLoanSimple<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2325,7 +2325,7 @@ export function usePoolInitialize<TMode extends WriteContractMode = undefined>(
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"liquidationCall"`.
  */
 export function usePoolLiquidationCall<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2352,7 +2352,7 @@ export function usePoolLiquidationCall<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"mintToTreasury"`.
  */
 export function usePoolMintToTreasury<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2379,7 +2379,7 @@ export function usePoolMintToTreasury<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"mintUnbacked"`.
  */
 export function usePoolMintUnbacked<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2406,7 +2406,7 @@ export function usePoolMintUnbacked<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"rebalanceStableBorrowRate"`.
  */
 export function usePoolRebalanceStableBorrowRate<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2459,7 +2459,7 @@ export function usePoolRepay<TMode extends WriteContractMode = undefined>(
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"repayWithATokens"`.
  */
 export function usePoolRepayWithATokens<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2486,7 +2486,7 @@ export function usePoolRepayWithATokens<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"repayWithPermit"`.
  */
 export function usePoolRepayWithPermit<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2513,7 +2513,7 @@ export function usePoolRepayWithPermit<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"rescueTokens"`.
  */
 export function usePoolRescueTokens<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2540,7 +2540,7 @@ export function usePoolRescueTokens<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"resetIsolationModeTotalDebt"`.
  */
 export function usePoolResetIsolationModeTotalDebt<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2573,7 +2573,7 @@ export function usePoolResetIsolationModeTotalDebt<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"setConfiguration"`.
  */
 export function usePoolSetConfiguration<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2600,7 +2600,7 @@ export function usePoolSetConfiguration<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"setReserveInterestRateStrategyAddress"`.
  */
 export function usePoolSetReserveInterestRateStrategyAddress<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2635,7 +2635,7 @@ export function usePoolSetReserveInterestRateStrategyAddress<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"setUserEMode"`.
  */
 export function usePoolSetUserEMode<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2662,7 +2662,7 @@ export function usePoolSetUserEMode<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"setUserUseReserveAsCollateral"`.
  */
 export function usePoolSetUserUseReserveAsCollateral<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2719,7 +2719,7 @@ export function usePoolSupply<TMode extends WriteContractMode = undefined>(
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"supplyWithPermit"`.
  */
 export function usePoolSupplyWithPermit<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2746,7 +2746,7 @@ export function usePoolSupplyWithPermit<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"swapBorrowRateMode"`.
  */
 export function usePoolSwapBorrowRateMode<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2773,7 +2773,7 @@ export function usePoolSwapBorrowRateMode<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"updateBridgeProtocolFee"`.
  */
 export function usePoolUpdateBridgeProtocolFee<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -2804,7 +2804,7 @@ export function usePoolUpdateBridgeProtocolFee<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link poolABI}__ and `functionName` set to `"updateFlashloanPremiums"`.
  */
 export function usePoolUpdateFlashloanPremiums<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<

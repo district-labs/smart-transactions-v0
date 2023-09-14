@@ -21,14 +21,15 @@ export default function HomePage() {
           <div className="max-w-5xl relative mt-20 z-100 text-white lg:left-32">
             <div className="pb-8">
               <h3 className="font-bold text-5xl lg:text-8xl">
-              Investment strategies simplified
+                Investment strategies simplified
               </h3>
               <h5 className="font-light text-2xl my-4">
                 Explore new digital frontiers with friends and uncover what’s
                 possible
               </h5>
               <p className="max-w-[720px]">
-              District helps you transform your ideas into action with a no-code strategy builder.
+                District helps you transform your ideas into action with a
+                no-code strategy builder.
               </p>
             </div>
           </div>

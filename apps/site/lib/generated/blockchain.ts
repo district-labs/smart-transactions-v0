@@ -594,7 +594,7 @@ export const prbTestABI = [
  */
 export function useFooRead<
   TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof fooABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof fooABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof fooABI, TFunctionName, TSelectData>,
@@ -613,7 +613,7 @@ export function useFooRead<
  */
 export function useFooId<
   TFunctionName extends "id",
-  TSelectData = ReadContractResult<typeof fooABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof fooABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof fooABI, TFunctionName, TSelectData>,
@@ -632,7 +632,7 @@ export function useFooId<
  */
 export function useIMulticall3Read<
   TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof iMulticall3ABI, TFunctionName, TSelectData>,
@@ -650,7 +650,7 @@ export function useIMulticall3Read<
  */
 export function useIMulticall3GetBasefee<
   TFunctionName extends "getBasefee",
-  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof iMulticall3ABI, TFunctionName, TSelectData>,
@@ -669,7 +669,7 @@ export function useIMulticall3GetBasefee<
  */
 export function useIMulticall3GetBlockHash<
   TFunctionName extends "getBlockHash",
-  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof iMulticall3ABI, TFunctionName, TSelectData>,
@@ -688,7 +688,7 @@ export function useIMulticall3GetBlockHash<
  */
 export function useIMulticall3GetBlockNumber<
   TFunctionName extends "getBlockNumber",
-  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof iMulticall3ABI, TFunctionName, TSelectData>,
@@ -707,7 +707,7 @@ export function useIMulticall3GetBlockNumber<
  */
 export function useIMulticall3GetChainId<
   TFunctionName extends "getChainId",
-  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof iMulticall3ABI, TFunctionName, TSelectData>,
@@ -726,7 +726,7 @@ export function useIMulticall3GetChainId<
  */
 export function useIMulticall3GetCurrentBlockCoinbase<
   TFunctionName extends "getCurrentBlockCoinbase",
-  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof iMulticall3ABI, TFunctionName, TSelectData>,
@@ -745,7 +745,7 @@ export function useIMulticall3GetCurrentBlockCoinbase<
  */
 export function useIMulticall3GetCurrentBlockDifficulty<
   TFunctionName extends "getCurrentBlockDifficulty",
-  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof iMulticall3ABI, TFunctionName, TSelectData>,
@@ -764,7 +764,7 @@ export function useIMulticall3GetCurrentBlockDifficulty<
  */
 export function useIMulticall3GetCurrentBlockGasLimit<
   TFunctionName extends "getCurrentBlockGasLimit",
-  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof iMulticall3ABI, TFunctionName, TSelectData>,
@@ -783,7 +783,7 @@ export function useIMulticall3GetCurrentBlockGasLimit<
  */
 export function useIMulticall3GetCurrentBlockTimestamp<
   TFunctionName extends "getCurrentBlockTimestamp",
-  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof iMulticall3ABI, TFunctionName, TSelectData>,
@@ -802,7 +802,7 @@ export function useIMulticall3GetCurrentBlockTimestamp<
  */
 export function useIMulticall3GetEthBalance<
   TFunctionName extends "getEthBalance",
-  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof iMulticall3ABI, TFunctionName, TSelectData>,
@@ -821,7 +821,7 @@ export function useIMulticall3GetEthBalance<
  */
 export function useIMulticall3GetLastBlockHash<
   TFunctionName extends "getLastBlockHash",
-  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof iMulticall3ABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof iMulticall3ABI, TFunctionName, TSelectData>,
@@ -840,7 +840,7 @@ export function useIMulticall3GetLastBlockHash<
  */
 export function useIMulticall3Write<
   TFunctionName extends string,
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -865,7 +865,7 @@ export function useIMulticall3Write<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iMulticall3ABI}__ and `functionName` set to `"aggregate"`.
  */
 export function useIMulticall3Aggregate<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -892,7 +892,7 @@ export function useIMulticall3Aggregate<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iMulticall3ABI}__ and `functionName` set to `"aggregate3"`.
  */
 export function useIMulticall3Aggregate3<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -919,7 +919,7 @@ export function useIMulticall3Aggregate3<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iMulticall3ABI}__ and `functionName` set to `"aggregate3Value"`.
  */
 export function useIMulticall3Aggregate3Value<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -950,7 +950,7 @@ export function useIMulticall3Aggregate3Value<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iMulticall3ABI}__ and `functionName` set to `"blockAndAggregate"`.
  */
 export function useIMulticall3BlockAndAggregate<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -981,7 +981,7 @@ export function useIMulticall3BlockAndAggregate<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iMulticall3ABI}__ and `functionName` set to `"tryAggregate"`.
  */
 export function useIMulticall3TryAggregate<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -1008,7 +1008,7 @@ export function useIMulticall3TryAggregate<
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iMulticall3ABI}__ and `functionName` set to `"tryBlockAndAggregate"`.
  */
 export function useIMulticall3TryBlockAndAggregate<
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -1162,7 +1162,7 @@ export function usePrepareIMulticall3TryBlockAndAggregate(
  */
 export function usePrbTestRead<
   TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof prbTestABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof prbTestABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof prbTestABI, TFunctionName, TSelectData>,
@@ -1180,7 +1180,7 @@ export function usePrbTestRead<
  */
 export function usePrbTestIsTest<
   TFunctionName extends "IS_TEST",
-  TSelectData = ReadContractResult<typeof prbTestABI, TFunctionName>
+  TSelectData = ReadContractResult<typeof prbTestABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof prbTestABI, TFunctionName, TSelectData>,
@@ -1199,7 +1199,7 @@ export function usePrbTestIsTest<
  */
 export function usePrbTestWrite<
   TFunctionName extends string,
-  TMode extends WriteContractMode = undefined
+  TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<

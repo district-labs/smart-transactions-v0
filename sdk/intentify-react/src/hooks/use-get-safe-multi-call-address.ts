@@ -1,5 +1,5 @@
 import { SafeMultiCallAddressList } from "../data";
 
 export function useGetSafeMultiCallAddress(chainId: number) {
-	return SafeMultiCallAddressList[chainId];
+  return SafeMultiCallAddressList[chainId];
 }

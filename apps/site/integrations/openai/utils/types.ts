@@ -15,7 +15,7 @@ export const models = [
  * See more details at https://platform.openai.com/docs/api-reference/chat/create
  */
 export interface ModelConfig {
-  model: typeof models[number]
+  model: (typeof models)[number]
   /**
    * A list of messages describing the conversation so far.
    */

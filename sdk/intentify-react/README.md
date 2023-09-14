@@ -6,7 +6,7 @@
 [![Version](https://img.shields.io/npm/v/@district-labs/react-core.svg)](https://npmjs.org/package/@district-labs/react-core)
 [![Downloads/week](https://img.shields.io/npm/dw/@district-labs/react-core.svg)](https://npmjs.org/package/@district-labs/react-core)
 
-A District Labs React component library. 
+A District Labs React component library.
 
 # Getting Started
 
@@ -17,11 +17,13 @@ pnpm install
 ```
 
 #### Development
+
 ```bash
 pnpm dev
 ```
 
 #### Build
+
 ```bash
 pnpm build
 ```
@@ -29,11 +31,13 @@ pnpm build
 # 💻 Developer Experience
 
 ### What is TSUP
+
 Bundle your TypeScript library with no config, powered by esbuild.
 
 https://tsup.egoist.dev/
 
 ### What is Rome
+
 Rome unifies your development stack by combining the functionality of separate tools.
 
 Single configuration file, amazing performance, and works with any stack.
@@ -41,6 +45,7 @@ Single configuration file, amazing performance, and works with any stack.
 https://rome.tools/
 
 ### What is Vitest
+
 A Vite-native unit test framework. It's fast! Out-of-box ESM, TypeScript and JSX support powered by esbuild.
 
 https://vitest.dev/

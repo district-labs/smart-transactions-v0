@@ -53,9 +53,8 @@ export const useLitClient = () => {
     const authSig = await signAuthMessage()
 
     // Encrypt message into an encripted blob and a symmetric key
-    const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(
-      messageToEncrypt
-    )
+    const { encryptedString, symmetricKey } =
+      await LitJsSdk.encryptString(messageToEncrypt)
 
     // Save symmetric key and access control conditions to Lit Protocol
     // This will return an encrypted symmetric key in Uint8Array format
