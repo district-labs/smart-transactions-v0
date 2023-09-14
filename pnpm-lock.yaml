@@ -835,6 +835,9 @@ importers:
       '@district-labs/intentify-utils':
         specifier: 0.0.0
         version: link:../intentify-core
+      '@ethersproject/constants':
+        specifier: ^5.7.0
+        version: 5.7.0
       '@radix-ui/colors':
         specifier: ^0.1.8
         version: 0.1.9
@@ -16169,8 +16172,8 @@ packages:
       '@babel/plugin-transform-react-jsx': ^7.14.9
       eslint: ^8.1.0
     dependencies:
-      '@babel/plugin-syntax-flow': 7.22.5(@babel/core@7.18.5)
-      '@babel/plugin-transform-react-jsx': 7.22.15(@babel/core@7.18.5)
+      '@babel/plugin-syntax-flow': 7.22.5(@babel/core@7.22.17)
+      '@babel/plugin-transform-react-jsx': 7.22.15(@babel/core@7.22.17)
       eslint: 8.49.0
       lodash: 4.17.21
       string-natural-compare: 3.0.1
@@ -26098,7 +26101,7 @@ packages:
       require-directory: 2.1.1
       string-width: 4.2.3
       y18n: 5.0.8
-      yargs-parser: 20.2.4
+      yargs-parser: 20.2.9
     dev: true
 
   /yargs@17.7.2:
