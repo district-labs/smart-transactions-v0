@@ -7,12 +7,12 @@ import {
   UsePrepareContractWriteConfig,
   useContractEvent,
   UseContractEventConfig,
-} from 'wagmi'
+} from "wagmi";
 import {
   ReadContractResult,
   WriteContractMode,
   PrepareWriteContractResult,
-} from 'wagmi/actions'
+} from "wagmi/actions";
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Intentify
@@ -20,153 +20,153 @@ import {
 
 export const intentifyABI = [
   {
-    stateMutability: 'nonpayable',
-    type: 'constructor',
+    stateMutability: "nonpayable",
+    type: "constructor",
     inputs: [
-      { name: '_owner', internalType: 'address', type: 'address' },
-      { name: 'contractName', internalType: 'string', type: 'string' },
-      { name: 'version', internalType: 'string', type: 'string' },
+      { name: "_owner", internalType: "address", type: "address" },
+      { name: "contractName", internalType: "string", type: "string" },
+      { name: "version", internalType: "string", type: "string" },
     ],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [],
-    name: 'DOMAIN_SEPARATOR',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "DOMAIN_SEPARATOR",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct DimensionalNonce',
-        type: 'tuple',
+        name: "_input",
+        internalType: "struct DimensionalNonce",
+        type: "tuple",
         components: [
-          { name: 'queue', internalType: 'uint128', type: 'uint128' },
-          { name: 'accumulator', internalType: 'uint128', type: 'uint128' },
+          { name: "queue", internalType: "uint128", type: "uint128" },
+          { name: "accumulator", internalType: "uint128", type: "uint128" },
         ],
       },
     ],
-    name: 'GET_DIMENSIONALNONCE_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_DIMENSIONALNONCE_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct EIP712Domain',
-        type: 'tuple',
+        name: "_input",
+        internalType: "struct EIP712Domain",
+        type: "tuple",
         components: [
-          { name: 'name', internalType: 'string', type: 'string' },
-          { name: 'version', internalType: 'string', type: 'string' },
-          { name: 'chainId', internalType: 'uint256', type: 'uint256' },
+          { name: "name", internalType: "string", type: "string" },
+          { name: "version", internalType: "string", type: "string" },
+          { name: "chainId", internalType: "uint256", type: "uint256" },
           {
-            name: 'verifyingContract',
-            internalType: 'address',
-            type: 'address',
+            name: "verifyingContract",
+            internalType: "address",
+            type: "address",
           },
         ],
       },
     ],
-    name: 'GET_EIP712DOMAIN_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_EIP712DOMAIN_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct Hook[]',
-        type: 'tuple[]',
+        name: "_input",
+        internalType: "struct Hook[]",
+        type: "tuple[]",
         components: [
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: "target", internalType: "address", type: "address" },
+          { name: "data", internalType: "bytes", type: "bytes" },
         ],
       },
     ],
-    name: 'GET_HOOK_ARRAY_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_HOOK_ARRAY_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct Hook',
-        type: 'tuple',
+        name: "_input",
+        internalType: "struct Hook",
+        type: "tuple",
         components: [
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: "target", internalType: "address", type: "address" },
+          { name: "data", internalType: "bytes", type: "bytes" },
         ],
       },
     ],
-    name: 'GET_HOOK_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_HOOK_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct IntentBatchExecution',
-        type: 'tuple',
+        name: "_input",
+        internalType: "struct IntentBatchExecution",
+        type: "tuple",
         components: [
           {
-            name: 'batch',
-            internalType: 'struct IntentBatch',
-            type: 'tuple',
+            name: "batch",
+            internalType: "struct IntentBatch",
+            type: "tuple",
             components: [
               {
-                name: 'nonce',
-                internalType: 'struct DimensionalNonce',
-                type: 'tuple',
+                name: "nonce",
+                internalType: "struct DimensionalNonce",
+                type: "tuple",
                 components: [
-                  { name: 'queue', internalType: 'uint128', type: 'uint128' },
+                  { name: "queue", internalType: "uint128", type: "uint128" },
                   {
-                    name: 'accumulator',
-                    internalType: 'uint128',
-                    type: 'uint128',
+                    name: "accumulator",
+                    internalType: "uint128",
+                    type: "uint128",
                   },
                 ],
               },
               {
-                name: 'intents',
-                internalType: 'struct Intent[]',
-                type: 'tuple[]',
+                name: "intents",
+                internalType: "struct Intent[]",
+                type: "tuple[]",
                 components: [
                   {
-                    name: 'exec',
-                    internalType: 'struct IntentExecution',
-                    type: 'tuple',
+                    name: "exec",
+                    internalType: "struct IntentExecution",
+                    type: "tuple",
                     components: [
                       {
-                        name: 'root',
-                        internalType: 'address',
-                        type: 'address',
+                        name: "root",
+                        internalType: "address",
+                        type: "address",
                       },
                       {
-                        name: 'target',
-                        internalType: 'address',
-                        type: 'address',
+                        name: "target",
+                        internalType: "address",
+                        type: "address",
                       },
-                      { name: 'data', internalType: 'bytes', type: 'bytes' },
+                      { name: "data", internalType: "bytes", type: "bytes" },
                     ],
                   },
                   {
-                    name: 'signature',
-                    internalType: 'struct Signature',
-                    type: 'tuple',
+                    name: "signature",
+                    internalType: "struct Signature",
+                    type: "tuple",
                     components: [
-                      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-                      { name: 's', internalType: 'bytes32', type: 'bytes32' },
-                      { name: 'v', internalType: 'uint8', type: 'uint8' },
+                      { name: "r", internalType: "bytes32", type: "bytes32" },
+                      { name: "s", internalType: "bytes32", type: "bytes32" },
+                      { name: "v", internalType: "uint8", type: "uint8" },
                     ],
                   },
                 ],
@@ -174,71 +174,71 @@ export const intentifyABI = [
             ],
           },
           {
-            name: 'signature',
-            internalType: 'struct Signature',
-            type: 'tuple',
+            name: "signature",
+            internalType: "struct Signature",
+            type: "tuple",
             components: [
-              { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-              { name: 's', internalType: 'bytes32', type: 'bytes32' },
-              { name: 'v', internalType: 'uint8', type: 'uint8' },
+              { name: "r", internalType: "bytes32", type: "bytes32" },
+              { name: "s", internalType: "bytes32", type: "bytes32" },
+              { name: "v", internalType: "uint8", type: "uint8" },
             ],
           },
           {
-            name: 'hooks',
-            internalType: 'struct Hook[]',
-            type: 'tuple[]',
+            name: "hooks",
+            internalType: "struct Hook[]",
+            type: "tuple[]",
             components: [
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
             ],
           },
         ],
       },
     ],
-    name: 'GET_INTENTBATCHEXECUTION_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_INTENTBATCHEXECUTION_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct IntentBatch',
-        type: 'tuple',
+        name: "_input",
+        internalType: "struct IntentBatch",
+        type: "tuple",
         components: [
           {
-            name: 'nonce',
-            internalType: 'struct DimensionalNonce',
-            type: 'tuple',
+            name: "nonce",
+            internalType: "struct DimensionalNonce",
+            type: "tuple",
             components: [
-              { name: 'queue', internalType: 'uint128', type: 'uint128' },
-              { name: 'accumulator', internalType: 'uint128', type: 'uint128' },
+              { name: "queue", internalType: "uint128", type: "uint128" },
+              { name: "accumulator", internalType: "uint128", type: "uint128" },
             ],
           },
           {
-            name: 'intents',
-            internalType: 'struct Intent[]',
-            type: 'tuple[]',
+            name: "intents",
+            internalType: "struct Intent[]",
+            type: "tuple[]",
             components: [
               {
-                name: 'exec',
-                internalType: 'struct IntentExecution',
-                type: 'tuple',
+                name: "exec",
+                internalType: "struct IntentExecution",
+                type: "tuple",
                 components: [
-                  { name: 'root', internalType: 'address', type: 'address' },
-                  { name: 'target', internalType: 'address', type: 'address' },
-                  { name: 'data', internalType: 'bytes', type: 'bytes' },
+                  { name: "root", internalType: "address", type: "address" },
+                  { name: "target", internalType: "address", type: "address" },
+                  { name: "data", internalType: "bytes", type: "bytes" },
                 ],
               },
               {
-                name: 'signature',
-                internalType: 'struct Signature',
-                type: 'tuple',
+                name: "signature",
+                internalType: "struct Signature",
+                type: "tuple",
                 components: [
-                  { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-                  { name: 's', internalType: 'bytes32', type: 'bytes32' },
-                  { name: 'v', internalType: 'uint8', type: 'uint8' },
+                  { name: "r", internalType: "bytes32", type: "bytes32" },
+                  { name: "s", internalType: "bytes32", type: "bytes32" },
+                  { name: "v", internalType: "uint8", type: "uint8" },
                 ],
               },
             ],
@@ -246,180 +246,180 @@ export const intentifyABI = [
         ],
       },
     ],
-    name: 'GET_INTENTBATCH_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_INTENTBATCH_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct IntentExecution',
-        type: 'tuple',
+        name: "_input",
+        internalType: "struct IntentExecution",
+        type: "tuple",
         components: [
-          { name: 'root', internalType: 'address', type: 'address' },
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: "root", internalType: "address", type: "address" },
+          { name: "target", internalType: "address", type: "address" },
+          { name: "data", internalType: "bytes", type: "bytes" },
         ],
       },
     ],
-    name: 'GET_INTENTEXECUTION_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_INTENTEXECUTION_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct Intent[]',
-        type: 'tuple[]',
+        name: "_input",
+        internalType: "struct Intent[]",
+        type: "tuple[]",
         components: [
           {
-            name: 'exec',
-            internalType: 'struct IntentExecution',
-            type: 'tuple',
+            name: "exec",
+            internalType: "struct IntentExecution",
+            type: "tuple",
             components: [
-              { name: 'root', internalType: 'address', type: 'address' },
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
+              { name: "root", internalType: "address", type: "address" },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
             ],
           },
           {
-            name: 'signature',
-            internalType: 'struct Signature',
-            type: 'tuple',
+            name: "signature",
+            internalType: "struct Signature",
+            type: "tuple",
             components: [
-              { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-              { name: 's', internalType: 'bytes32', type: 'bytes32' },
-              { name: 'v', internalType: 'uint8', type: 'uint8' },
-            ],
-          },
-        ],
-      },
-    ],
-    name: 'GET_INTENT_ARRAY_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-  },
-  {
-    stateMutability: 'pure',
-    type: 'function',
-    inputs: [
-      {
-        name: '_input',
-        internalType: 'struct Intent',
-        type: 'tuple',
-        components: [
-          {
-            name: 'exec',
-            internalType: 'struct IntentExecution',
-            type: 'tuple',
-            components: [
-              { name: 'root', internalType: 'address', type: 'address' },
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
-            ],
-          },
-          {
-            name: 'signature',
-            internalType: 'struct Signature',
-            type: 'tuple',
-            components: [
-              { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-              { name: 's', internalType: 'bytes32', type: 'bytes32' },
-              { name: 'v', internalType: 'uint8', type: 'uint8' },
+              { name: "r", internalType: "bytes32", type: "bytes32" },
+              { name: "s", internalType: "bytes32", type: "bytes32" },
+              { name: "v", internalType: "uint8", type: "uint8" },
             ],
           },
         ],
       },
     ],
-    name: 'GET_INTENT_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_INTENT_ARRAY_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct Signature',
-        type: 'tuple',
+        name: "_input",
+        internalType: "struct Intent",
+        type: "tuple",
         components: [
-          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-          { name: 's', internalType: 'bytes32', type: 'bytes32' },
-          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          {
+            name: "exec",
+            internalType: "struct IntentExecution",
+            type: "tuple",
+            components: [
+              { name: "root", internalType: "address", type: "address" },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
+            ],
+          },
+          {
+            name: "signature",
+            internalType: "struct Signature",
+            type: "tuple",
+            components: [
+              { name: "r", internalType: "bytes32", type: "bytes32" },
+              { name: "s", internalType: "bytes32", type: "bytes32" },
+              { name: "v", internalType: "uint8", type: "uint8" },
+            ],
+          },
         ],
       },
     ],
-    name: 'GET_SIGNATURE_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_INTENT_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
+    inputs: [
+      {
+        name: "_input",
+        internalType: "struct Signature",
+        type: "tuple",
+        components: [
+          { name: "r", internalType: "bytes32", type: "bytes32" },
+          { name: "s", internalType: "bytes32", type: "bytes32" },
+          { name: "v", internalType: "uint8", type: "uint8" },
+        ],
+      },
+    ],
+    name: "GET_SIGNATURE_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
     inputs: [],
-    name: 'INTENT_TYPEHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "INTENT_TYPEHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
       {
-        name: 'execution',
-        internalType: 'struct IntentBatchExecution',
-        type: 'tuple',
+        name: "execution",
+        internalType: "struct IntentBatchExecution",
+        type: "tuple",
         components: [
           {
-            name: 'batch',
-            internalType: 'struct IntentBatch',
-            type: 'tuple',
+            name: "batch",
+            internalType: "struct IntentBatch",
+            type: "tuple",
             components: [
               {
-                name: 'nonce',
-                internalType: 'struct DimensionalNonce',
-                type: 'tuple',
+                name: "nonce",
+                internalType: "struct DimensionalNonce",
+                type: "tuple",
                 components: [
-                  { name: 'queue', internalType: 'uint128', type: 'uint128' },
+                  { name: "queue", internalType: "uint128", type: "uint128" },
                   {
-                    name: 'accumulator',
-                    internalType: 'uint128',
-                    type: 'uint128',
+                    name: "accumulator",
+                    internalType: "uint128",
+                    type: "uint128",
                   },
                 ],
               },
               {
-                name: 'intents',
-                internalType: 'struct Intent[]',
-                type: 'tuple[]',
+                name: "intents",
+                internalType: "struct Intent[]",
+                type: "tuple[]",
                 components: [
                   {
-                    name: 'exec',
-                    internalType: 'struct IntentExecution',
-                    type: 'tuple',
+                    name: "exec",
+                    internalType: "struct IntentExecution",
+                    type: "tuple",
                     components: [
                       {
-                        name: 'root',
-                        internalType: 'address',
-                        type: 'address',
+                        name: "root",
+                        internalType: "address",
+                        type: "address",
                       },
                       {
-                        name: 'target',
-                        internalType: 'address',
-                        type: 'address',
+                        name: "target",
+                        internalType: "address",
+                        type: "address",
                       },
-                      { name: 'data', internalType: 'bytes', type: 'bytes' },
+                      { name: "data", internalType: "bytes", type: "bytes" },
                     ],
                   },
                   {
-                    name: 'signature',
-                    internalType: 'struct Signature',
-                    type: 'tuple',
+                    name: "signature",
+                    internalType: "struct Signature",
+                    type: "tuple",
                     components: [
-                      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-                      { name: 's', internalType: 'bytes32', type: 'bytes32' },
-                      { name: 'v', internalType: 'uint8', type: 'uint8' },
+                      { name: "r", internalType: "bytes32", type: "bytes32" },
+                      { name: "s", internalType: "bytes32", type: "bytes32" },
+                      { name: "v", internalType: "uint8", type: "uint8" },
                     ],
                   },
                 ],
@@ -427,71 +427,71 @@ export const intentifyABI = [
             ],
           },
           {
-            name: 'signature',
-            internalType: 'struct Signature',
-            type: 'tuple',
+            name: "signature",
+            internalType: "struct Signature",
+            type: "tuple",
             components: [
-              { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-              { name: 's', internalType: 'bytes32', type: 'bytes32' },
-              { name: 'v', internalType: 'uint8', type: 'uint8' },
+              { name: "r", internalType: "bytes32", type: "bytes32" },
+              { name: "s", internalType: "bytes32", type: "bytes32" },
+              { name: "v", internalType: "uint8", type: "uint8" },
             ],
           },
           {
-            name: 'hooks',
-            internalType: 'struct Hook[]',
-            type: 'tuple[]',
+            name: "hooks",
+            internalType: "struct Hook[]",
+            type: "tuple[]",
             components: [
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
             ],
           },
         ],
       },
     ],
-    name: 'execute',
-    outputs: [{ name: 'executed', internalType: 'bool', type: 'bool' }],
+    name: "execute",
+    outputs: [{ name: "executed", internalType: "bool", type: "bool" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
       {
-        name: 'intent',
-        internalType: 'struct IntentBatch',
-        type: 'tuple',
+        name: "intent",
+        internalType: "struct IntentBatch",
+        type: "tuple",
         components: [
           {
-            name: 'nonce',
-            internalType: 'struct DimensionalNonce',
-            type: 'tuple',
+            name: "nonce",
+            internalType: "struct DimensionalNonce",
+            type: "tuple",
             components: [
-              { name: 'queue', internalType: 'uint128', type: 'uint128' },
-              { name: 'accumulator', internalType: 'uint128', type: 'uint128' },
+              { name: "queue", internalType: "uint128", type: "uint128" },
+              { name: "accumulator", internalType: "uint128", type: "uint128" },
             ],
           },
           {
-            name: 'intents',
-            internalType: 'struct Intent[]',
-            type: 'tuple[]',
+            name: "intents",
+            internalType: "struct Intent[]",
+            type: "tuple[]",
             components: [
               {
-                name: 'exec',
-                internalType: 'struct IntentExecution',
-                type: 'tuple',
+                name: "exec",
+                internalType: "struct IntentExecution",
+                type: "tuple",
                 components: [
-                  { name: 'root', internalType: 'address', type: 'address' },
-                  { name: 'target', internalType: 'address', type: 'address' },
-                  { name: 'data', internalType: 'bytes', type: 'bytes' },
+                  { name: "root", internalType: "address", type: "address" },
+                  { name: "target", internalType: "address", type: "address" },
+                  { name: "data", internalType: "bytes", type: "bytes" },
                 ],
               },
               {
-                name: 'signature',
-                internalType: 'struct Signature',
-                type: 'tuple',
+                name: "signature",
+                internalType: "struct Signature",
+                type: "tuple",
                 components: [
-                  { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-                  { name: 's', internalType: 'bytes32', type: 'bytes32' },
-                  { name: 'v', internalType: 'uint8', type: 'uint8' },
+                  { name: "r", internalType: "bytes32", type: "bytes32" },
+                  { name: "s", internalType: "bytes32", type: "bytes32" },
+                  { name: "v", internalType: "uint8", type: "uint8" },
                 ],
               },
             ],
@@ -499,181 +499,181 @@ export const intentifyABI = [
         ],
       },
     ],
-    name: 'getIntentBatchTypedDataHash',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "getIntentBatchTypedDataHash",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
       {
-        name: 'intentExecution',
-        internalType: 'struct IntentExecution',
-        type: 'tuple',
+        name: "intentExecution",
+        internalType: "struct IntentExecution",
+        type: "tuple",
         components: [
-          { name: 'root', internalType: 'address', type: 'address' },
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: "root", internalType: "address", type: "address" },
+          { name: "target", internalType: "address", type: "address" },
+          { name: "data", internalType: "bytes", type: "bytes" },
         ],
       },
     ],
-    name: 'getIntentExecutionTypedDataHash',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "getIntentExecutionTypedDataHash",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [],
-    name: 'owner',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    name: "owner",
+    outputs: [{ name: "", internalType: "address", type: "address" }],
   },
-] as const
+] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IntentifySafeModule
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const intentifySafeModuleABI = [
-  { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
+  { stateMutability: "nonpayable", type: "constructor", inputs: [] },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [],
-    name: 'DOMAIN_SEPARATOR',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "DOMAIN_SEPARATOR",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct DimensionalNonce',
-        type: 'tuple',
+        name: "_input",
+        internalType: "struct DimensionalNonce",
+        type: "tuple",
         components: [
-          { name: 'queue', internalType: 'uint128', type: 'uint128' },
-          { name: 'accumulator', internalType: 'uint128', type: 'uint128' },
+          { name: "queue", internalType: "uint128", type: "uint128" },
+          { name: "accumulator", internalType: "uint128", type: "uint128" },
         ],
       },
     ],
-    name: 'GET_DIMENSIONALNONCE_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_DIMENSIONALNONCE_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct EIP712Domain',
-        type: 'tuple',
+        name: "_input",
+        internalType: "struct EIP712Domain",
+        type: "tuple",
         components: [
-          { name: 'name', internalType: 'string', type: 'string' },
-          { name: 'version', internalType: 'string', type: 'string' },
-          { name: 'chainId', internalType: 'uint256', type: 'uint256' },
+          { name: "name", internalType: "string", type: "string" },
+          { name: "version", internalType: "string", type: "string" },
+          { name: "chainId", internalType: "uint256", type: "uint256" },
           {
-            name: 'verifyingContract',
-            internalType: 'address',
-            type: 'address',
+            name: "verifyingContract",
+            internalType: "address",
+            type: "address",
           },
         ],
       },
     ],
-    name: 'GET_EIP712DOMAIN_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_EIP712DOMAIN_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct Hook[]',
-        type: 'tuple[]',
+        name: "_input",
+        internalType: "struct Hook[]",
+        type: "tuple[]",
         components: [
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: "target", internalType: "address", type: "address" },
+          { name: "data", internalType: "bytes", type: "bytes" },
         ],
       },
     ],
-    name: 'GET_HOOK_ARRAY_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_HOOK_ARRAY_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct Hook',
-        type: 'tuple',
+        name: "_input",
+        internalType: "struct Hook",
+        type: "tuple",
         components: [
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: "target", internalType: "address", type: "address" },
+          { name: "data", internalType: "bytes", type: "bytes" },
         ],
       },
     ],
-    name: 'GET_HOOK_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_HOOK_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct IntentBatchExecution',
-        type: 'tuple',
+        name: "_input",
+        internalType: "struct IntentBatchExecution",
+        type: "tuple",
         components: [
           {
-            name: 'batch',
-            internalType: 'struct IntentBatch',
-            type: 'tuple',
+            name: "batch",
+            internalType: "struct IntentBatch",
+            type: "tuple",
             components: [
               {
-                name: 'nonce',
-                internalType: 'struct DimensionalNonce',
-                type: 'tuple',
+                name: "nonce",
+                internalType: "struct DimensionalNonce",
+                type: "tuple",
                 components: [
-                  { name: 'queue', internalType: 'uint128', type: 'uint128' },
+                  { name: "queue", internalType: "uint128", type: "uint128" },
                   {
-                    name: 'accumulator',
-                    internalType: 'uint128',
-                    type: 'uint128',
+                    name: "accumulator",
+                    internalType: "uint128",
+                    type: "uint128",
                   },
                 ],
               },
               {
-                name: 'intents',
-                internalType: 'struct Intent[]',
-                type: 'tuple[]',
+                name: "intents",
+                internalType: "struct Intent[]",
+                type: "tuple[]",
                 components: [
                   {
-                    name: 'exec',
-                    internalType: 'struct IntentExecution',
-                    type: 'tuple',
+                    name: "exec",
+                    internalType: "struct IntentExecution",
+                    type: "tuple",
                     components: [
                       {
-                        name: 'root',
-                        internalType: 'address',
-                        type: 'address',
+                        name: "root",
+                        internalType: "address",
+                        type: "address",
                       },
                       {
-                        name: 'target',
-                        internalType: 'address',
-                        type: 'address',
+                        name: "target",
+                        internalType: "address",
+                        type: "address",
                       },
-                      { name: 'data', internalType: 'bytes', type: 'bytes' },
+                      { name: "data", internalType: "bytes", type: "bytes" },
                     ],
                   },
                   {
-                    name: 'signature',
-                    internalType: 'struct Signature',
-                    type: 'tuple',
+                    name: "signature",
+                    internalType: "struct Signature",
+                    type: "tuple",
                     components: [
-                      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-                      { name: 's', internalType: 'bytes32', type: 'bytes32' },
-                      { name: 'v', internalType: 'uint8', type: 'uint8' },
+                      { name: "r", internalType: "bytes32", type: "bytes32" },
+                      { name: "s", internalType: "bytes32", type: "bytes32" },
+                      { name: "v", internalType: "uint8", type: "uint8" },
                     ],
                   },
                 ],
@@ -681,71 +681,71 @@ export const intentifySafeModuleABI = [
             ],
           },
           {
-            name: 'signature',
-            internalType: 'struct Signature',
-            type: 'tuple',
+            name: "signature",
+            internalType: "struct Signature",
+            type: "tuple",
             components: [
-              { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-              { name: 's', internalType: 'bytes32', type: 'bytes32' },
-              { name: 'v', internalType: 'uint8', type: 'uint8' },
+              { name: "r", internalType: "bytes32", type: "bytes32" },
+              { name: "s", internalType: "bytes32", type: "bytes32" },
+              { name: "v", internalType: "uint8", type: "uint8" },
             ],
           },
           {
-            name: 'hooks',
-            internalType: 'struct Hook[]',
-            type: 'tuple[]',
+            name: "hooks",
+            internalType: "struct Hook[]",
+            type: "tuple[]",
             components: [
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
             ],
           },
         ],
       },
     ],
-    name: 'GET_INTENTBATCHEXECUTION_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_INTENTBATCHEXECUTION_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct IntentBatch',
-        type: 'tuple',
+        name: "_input",
+        internalType: "struct IntentBatch",
+        type: "tuple",
         components: [
           {
-            name: 'nonce',
-            internalType: 'struct DimensionalNonce',
-            type: 'tuple',
+            name: "nonce",
+            internalType: "struct DimensionalNonce",
+            type: "tuple",
             components: [
-              { name: 'queue', internalType: 'uint128', type: 'uint128' },
-              { name: 'accumulator', internalType: 'uint128', type: 'uint128' },
+              { name: "queue", internalType: "uint128", type: "uint128" },
+              { name: "accumulator", internalType: "uint128", type: "uint128" },
             ],
           },
           {
-            name: 'intents',
-            internalType: 'struct Intent[]',
-            type: 'tuple[]',
+            name: "intents",
+            internalType: "struct Intent[]",
+            type: "tuple[]",
             components: [
               {
-                name: 'exec',
-                internalType: 'struct IntentExecution',
-                type: 'tuple',
+                name: "exec",
+                internalType: "struct IntentExecution",
+                type: "tuple",
                 components: [
-                  { name: 'root', internalType: 'address', type: 'address' },
-                  { name: 'target', internalType: 'address', type: 'address' },
-                  { name: 'data', internalType: 'bytes', type: 'bytes' },
+                  { name: "root", internalType: "address", type: "address" },
+                  { name: "target", internalType: "address", type: "address" },
+                  { name: "data", internalType: "bytes", type: "bytes" },
                 ],
               },
               {
-                name: 'signature',
-                internalType: 'struct Signature',
-                type: 'tuple',
+                name: "signature",
+                internalType: "struct Signature",
+                type: "tuple",
                 components: [
-                  { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-                  { name: 's', internalType: 'bytes32', type: 'bytes32' },
-                  { name: 'v', internalType: 'uint8', type: 'uint8' },
+                  { name: "r", internalType: "bytes32", type: "bytes32" },
+                  { name: "s", internalType: "bytes32", type: "bytes32" },
+                  { name: "v", internalType: "uint8", type: "uint8" },
                 ],
               },
             ],
@@ -753,188 +753,188 @@ export const intentifySafeModuleABI = [
         ],
       },
     ],
-    name: 'GET_INTENTBATCH_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_INTENTBATCH_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct IntentExecution',
-        type: 'tuple',
+        name: "_input",
+        internalType: "struct IntentExecution",
+        type: "tuple",
         components: [
-          { name: 'root', internalType: 'address', type: 'address' },
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: "root", internalType: "address", type: "address" },
+          { name: "target", internalType: "address", type: "address" },
+          { name: "data", internalType: "bytes", type: "bytes" },
         ],
       },
     ],
-    name: 'GET_INTENTEXECUTION_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_INTENTEXECUTION_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct Intent[]',
-        type: 'tuple[]',
+        name: "_input",
+        internalType: "struct Intent[]",
+        type: "tuple[]",
         components: [
           {
-            name: 'exec',
-            internalType: 'struct IntentExecution',
-            type: 'tuple',
+            name: "exec",
+            internalType: "struct IntentExecution",
+            type: "tuple",
             components: [
-              { name: 'root', internalType: 'address', type: 'address' },
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
+              { name: "root", internalType: "address", type: "address" },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
             ],
           },
           {
-            name: 'signature',
-            internalType: 'struct Signature',
-            type: 'tuple',
+            name: "signature",
+            internalType: "struct Signature",
+            type: "tuple",
             components: [
-              { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-              { name: 's', internalType: 'bytes32', type: 'bytes32' },
-              { name: 'v', internalType: 'uint8', type: 'uint8' },
-            ],
-          },
-        ],
-      },
-    ],
-    name: 'GET_INTENT_ARRAY_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-  },
-  {
-    stateMutability: 'pure',
-    type: 'function',
-    inputs: [
-      {
-        name: '_input',
-        internalType: 'struct Intent',
-        type: 'tuple',
-        components: [
-          {
-            name: 'exec',
-            internalType: 'struct IntentExecution',
-            type: 'tuple',
-            components: [
-              { name: 'root', internalType: 'address', type: 'address' },
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
-            ],
-          },
-          {
-            name: 'signature',
-            internalType: 'struct Signature',
-            type: 'tuple',
-            components: [
-              { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-              { name: 's', internalType: 'bytes32', type: 'bytes32' },
-              { name: 'v', internalType: 'uint8', type: 'uint8' },
+              { name: "r", internalType: "bytes32", type: "bytes32" },
+              { name: "s", internalType: "bytes32", type: "bytes32" },
+              { name: "v", internalType: "uint8", type: "uint8" },
             ],
           },
         ],
       },
     ],
-    name: 'GET_INTENT_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_INTENT_ARRAY_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [
       {
-        name: '_input',
-        internalType: 'struct Signature',
-        type: 'tuple',
+        name: "_input",
+        internalType: "struct Intent",
+        type: "tuple",
         components: [
-          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-          { name: 's', internalType: 'bytes32', type: 'bytes32' },
-          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          {
+            name: "exec",
+            internalType: "struct IntentExecution",
+            type: "tuple",
+            components: [
+              { name: "root", internalType: "address", type: "address" },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
+            ],
+          },
+          {
+            name: "signature",
+            internalType: "struct Signature",
+            type: "tuple",
+            components: [
+              { name: "r", internalType: "bytes32", type: "bytes32" },
+              { name: "s", internalType: "bytes32", type: "bytes32" },
+              { name: "v", internalType: "uint8", type: "uint8" },
+            ],
+          },
         ],
       },
     ],
-    name: 'GET_SIGNATURE_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "GET_INTENT_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
+    inputs: [
+      {
+        name: "_input",
+        internalType: "struct Signature",
+        type: "tuple",
+        components: [
+          { name: "r", internalType: "bytes32", type: "bytes32" },
+          { name: "s", internalType: "bytes32", type: "bytes32" },
+          { name: "v", internalType: "uint8", type: "uint8" },
+        ],
+      },
+    ],
+    name: "GET_SIGNATURE_PACKETHASH",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
     inputs: [],
-    name: 'NAME',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    name: "NAME",
+    outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [],
-    name: 'VERSION',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    name: "VERSION",
+    outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: 'root', internalType: 'address', type: 'address' },
+      { name: "root", internalType: "address", type: "address" },
       {
-        name: 'execution',
-        internalType: 'struct IntentBatchExecution',
-        type: 'tuple',
+        name: "execution",
+        internalType: "struct IntentBatchExecution",
+        type: "tuple",
         components: [
           {
-            name: 'batch',
-            internalType: 'struct IntentBatch',
-            type: 'tuple',
+            name: "batch",
+            internalType: "struct IntentBatch",
+            type: "tuple",
             components: [
               {
-                name: 'nonce',
-                internalType: 'struct DimensionalNonce',
-                type: 'tuple',
+                name: "nonce",
+                internalType: "struct DimensionalNonce",
+                type: "tuple",
                 components: [
-                  { name: 'queue', internalType: 'uint128', type: 'uint128' },
+                  { name: "queue", internalType: "uint128", type: "uint128" },
                   {
-                    name: 'accumulator',
-                    internalType: 'uint128',
-                    type: 'uint128',
+                    name: "accumulator",
+                    internalType: "uint128",
+                    type: "uint128",
                   },
                 ],
               },
               {
-                name: 'intents',
-                internalType: 'struct Intent[]',
-                type: 'tuple[]',
+                name: "intents",
+                internalType: "struct Intent[]",
+                type: "tuple[]",
                 components: [
                   {
-                    name: 'exec',
-                    internalType: 'struct IntentExecution',
-                    type: 'tuple',
+                    name: "exec",
+                    internalType: "struct IntentExecution",
+                    type: "tuple",
                     components: [
                       {
-                        name: 'root',
-                        internalType: 'address',
-                        type: 'address',
+                        name: "root",
+                        internalType: "address",
+                        type: "address",
                       },
                       {
-                        name: 'target',
-                        internalType: 'address',
-                        type: 'address',
+                        name: "target",
+                        internalType: "address",
+                        type: "address",
                       },
-                      { name: 'data', internalType: 'bytes', type: 'bytes' },
+                      { name: "data", internalType: "bytes", type: "bytes" },
                     ],
                   },
                   {
-                    name: 'signature',
-                    internalType: 'struct Signature',
-                    type: 'tuple',
+                    name: "signature",
+                    internalType: "struct Signature",
+                    type: "tuple",
                     components: [
-                      { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-                      { name: 's', internalType: 'bytes32', type: 'bytes32' },
-                      { name: 'v', internalType: 'uint8', type: 'uint8' },
+                      { name: "r", internalType: "bytes32", type: "bytes32" },
+                      { name: "s", internalType: "bytes32", type: "bytes32" },
+                      { name: "v", internalType: "uint8", type: "uint8" },
                     ],
                   },
                 ],
@@ -942,71 +942,71 @@ export const intentifySafeModuleABI = [
             ],
           },
           {
-            name: 'signature',
-            internalType: 'struct Signature',
-            type: 'tuple',
+            name: "signature",
+            internalType: "struct Signature",
+            type: "tuple",
             components: [
-              { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-              { name: 's', internalType: 'bytes32', type: 'bytes32' },
-              { name: 'v', internalType: 'uint8', type: 'uint8' },
+              { name: "r", internalType: "bytes32", type: "bytes32" },
+              { name: "s", internalType: "bytes32", type: "bytes32" },
+              { name: "v", internalType: "uint8", type: "uint8" },
             ],
           },
           {
-            name: 'hooks',
-            internalType: 'struct Hook[]',
-            type: 'tuple[]',
+            name: "hooks",
+            internalType: "struct Hook[]",
+            type: "tuple[]",
             components: [
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
             ],
           },
         ],
       },
     ],
-    name: 'execute',
-    outputs: [{ name: 'executed', internalType: 'bool', type: 'bool' }],
+    name: "execute",
+    outputs: [{ name: "executed", internalType: "bool", type: "bool" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
       {
-        name: 'intent',
-        internalType: 'struct IntentBatch',
-        type: 'tuple',
+        name: "intent",
+        internalType: "struct IntentBatch",
+        type: "tuple",
         components: [
           {
-            name: 'nonce',
-            internalType: 'struct DimensionalNonce',
-            type: 'tuple',
+            name: "nonce",
+            internalType: "struct DimensionalNonce",
+            type: "tuple",
             components: [
-              { name: 'queue', internalType: 'uint128', type: 'uint128' },
-              { name: 'accumulator', internalType: 'uint128', type: 'uint128' },
+              { name: "queue", internalType: "uint128", type: "uint128" },
+              { name: "accumulator", internalType: "uint128", type: "uint128" },
             ],
           },
           {
-            name: 'intents',
-            internalType: 'struct Intent[]',
-            type: 'tuple[]',
+            name: "intents",
+            internalType: "struct Intent[]",
+            type: "tuple[]",
             components: [
               {
-                name: 'exec',
-                internalType: 'struct IntentExecution',
-                type: 'tuple',
+                name: "exec",
+                internalType: "struct IntentExecution",
+                type: "tuple",
                 components: [
-                  { name: 'root', internalType: 'address', type: 'address' },
-                  { name: 'target', internalType: 'address', type: 'address' },
-                  { name: 'data', internalType: 'bytes', type: 'bytes' },
+                  { name: "root", internalType: "address", type: "address" },
+                  { name: "target", internalType: "address", type: "address" },
+                  { name: "data", internalType: "bytes", type: "bytes" },
                 ],
               },
               {
-                name: 'signature',
-                internalType: 'struct Signature',
-                type: 'tuple',
+                name: "signature",
+                internalType: "struct Signature",
+                type: "tuple",
                 components: [
-                  { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-                  { name: 's', internalType: 'bytes32', type: 'bytes32' },
-                  { name: 'v', internalType: 'uint8', type: 'uint8' },
+                  { name: "r", internalType: "bytes32", type: "bytes32" },
+                  { name: "s", internalType: "bytes32", type: "bytes32" },
+                  { name: "v", internalType: "uint8", type: "uint8" },
                 ],
               },
             ],
@@ -1014,28 +1014,28 @@ export const intentifySafeModuleABI = [
         ],
       },
     ],
-    name: 'getIntentBatchTypedDataHash',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "getIntentBatchTypedDataHash",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
       {
-        name: 'intentExecution',
-        internalType: 'struct IntentExecution',
-        type: 'tuple',
+        name: "intentExecution",
+        internalType: "struct IntentExecution",
+        type: "tuple",
         components: [
-          { name: 'root', internalType: 'address', type: 'address' },
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: "root", internalType: "address", type: "address" },
+          { name: "target", internalType: "address", type: "address" },
+          { name: "data", internalType: "bytes", type: "bytes" },
         ],
       },
     ],
-    name: 'getIntentExecutionTypedDataHash',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "getIntentExecutionTypedDataHash",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
-] as const
+] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // LimitOrderIntent
@@ -1043,641 +1043,641 @@ export const intentifySafeModuleABI = [
 
 export const limitOrderIntentABI = [
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
       {
-        name: 'intent',
-        internalType: 'struct Intent',
-        type: 'tuple',
+        name: "intent",
+        internalType: "struct Intent",
+        type: "tuple",
         components: [
           {
-            name: 'exec',
-            internalType: 'struct IntentExecution',
-            type: 'tuple',
+            name: "exec",
+            internalType: "struct IntentExecution",
+            type: "tuple",
             components: [
-              { name: 'root', internalType: 'address', type: 'address' },
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
+              { name: "root", internalType: "address", type: "address" },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
             ],
           },
           {
-            name: 'signature',
-            internalType: 'struct Signature',
-            type: 'tuple',
+            name: "signature",
+            internalType: "struct Signature",
+            type: "tuple",
             components: [
-              { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-              { name: 's', internalType: 'bytes32', type: 'bytes32' },
-              { name: 'v', internalType: 'uint8', type: 'uint8' },
+              { name: "r", internalType: "bytes32", type: "bytes32" },
+              { name: "s", internalType: "bytes32", type: "bytes32" },
+              { name: "v", internalType: "uint8", type: "uint8" },
             ],
           },
         ],
       },
       {
-        name: 'hook',
-        internalType: 'struct Hook',
-        type: 'tuple',
+        name: "hook",
+        internalType: "struct Hook",
+        type: "tuple",
         components: [
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: "target", internalType: "address", type: "address" },
+          { name: "data", internalType: "bytes", type: "bytes" },
         ],
       },
     ],
-    name: 'execute',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    name: "execute",
+    outputs: [{ name: "", internalType: "bool", type: "bool" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
-      { name: '', internalType: 'address', type: 'address' },
-      { name: '', internalType: 'address', type: 'address' },
+      { name: "", internalType: "address", type: "address" },
+      { name: "", internalType: "address", type: "address" },
     ],
-    name: 'till',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: "till",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
-] as const
+] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MultiSend
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const multiSendABI = [
-  { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
+  { stateMutability: "nonpayable", type: "constructor", inputs: [] },
   {
-    stateMutability: 'payable',
-    type: 'function',
-    inputs: [{ name: 'transactions', internalType: 'bytes', type: 'bytes' }],
-    name: 'multiSend',
+    stateMutability: "payable",
+    type: "function",
+    inputs: [{ name: "transactions", internalType: "bytes", type: "bytes" }],
+    name: "multiSend",
     outputs: [],
   },
-] as const
+] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Safe
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const safeABI = [
-  { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
+  { stateMutability: "nonpayable", type: "constructor", inputs: [] },
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
+        name: "owner",
+        internalType: "address",
+        type: "address",
         indexed: true,
       },
     ],
-    name: 'AddedOwner',
+    name: "AddedOwner",
   },
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'approvedHash',
-        internalType: 'bytes32',
-        type: 'bytes32',
+        name: "approvedHash",
+        internalType: "bytes32",
+        type: "bytes32",
         indexed: true,
       },
       {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'ApproveHash',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'handler',
-        internalType: 'address',
-        type: 'address',
+        name: "owner",
+        internalType: "address",
+        type: "address",
         indexed: true,
       },
     ],
-    name: 'ChangedFallbackHandler',
+    name: "ApproveHash",
   },
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'guard',
-        internalType: 'address',
-        type: 'address',
+        name: "handler",
+        internalType: "address",
+        type: "address",
         indexed: true,
       },
     ],
-    name: 'ChangedGuard',
+    name: "ChangedFallbackHandler",
   },
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'threshold',
-        internalType: 'uint256',
-        type: 'uint256',
+        name: "guard",
+        internalType: "address",
+        type: "address",
+        indexed: true,
+      },
+    ],
+    name: "ChangedGuard",
+  },
+  {
+    type: "event",
+    anonymous: false,
+    inputs: [
+      {
+        name: "threshold",
+        internalType: "uint256",
+        type: "uint256",
         indexed: false,
       },
     ],
-    name: 'ChangedThreshold',
+    name: "ChangedThreshold",
   },
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'module',
-        internalType: 'address',
-        type: 'address',
+        name: "module",
+        internalType: "address",
+        type: "address",
         indexed: true,
       },
     ],
-    name: 'DisabledModule',
+    name: "DisabledModule",
   },
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'module',
-        internalType: 'address',
-        type: 'address',
+        name: "module",
+        internalType: "address",
+        type: "address",
         indexed: true,
       },
     ],
-    name: 'EnabledModule',
+    name: "EnabledModule",
   },
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'txHash',
-        internalType: 'bytes32',
-        type: 'bytes32',
+        name: "txHash",
+        internalType: "bytes32",
+        type: "bytes32",
         indexed: true,
       },
       {
-        name: 'payment',
-        internalType: 'uint256',
-        type: 'uint256',
+        name: "payment",
+        internalType: "uint256",
+        type: "uint256",
         indexed: false,
       },
     ],
-    name: 'ExecutionFailure',
+    name: "ExecutionFailure",
   },
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'module',
-        internalType: 'address',
-        type: 'address',
+        name: "module",
+        internalType: "address",
+        type: "address",
         indexed: true,
       },
     ],
-    name: 'ExecutionFromModuleFailure',
+    name: "ExecutionFromModuleFailure",
   },
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'module',
-        internalType: 'address',
-        type: 'address',
+        name: "module",
+        internalType: "address",
+        type: "address",
         indexed: true,
       },
     ],
-    name: 'ExecutionFromModuleSuccess',
+    name: "ExecutionFromModuleSuccess",
   },
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'txHash',
-        internalType: 'bytes32',
-        type: 'bytes32',
+        name: "txHash",
+        internalType: "bytes32",
+        type: "bytes32",
         indexed: true,
       },
       {
-        name: 'payment',
-        internalType: 'uint256',
-        type: 'uint256',
+        name: "payment",
+        internalType: "uint256",
+        type: "uint256",
         indexed: false,
       },
     ],
-    name: 'ExecutionSuccess',
+    name: "ExecutionSuccess",
   },
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
+        name: "owner",
+        internalType: "address",
+        type: "address",
         indexed: true,
       },
     ],
-    name: 'RemovedOwner',
+    name: "RemovedOwner",
   },
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'sender',
-        internalType: 'address',
-        type: 'address',
+        name: "sender",
+        internalType: "address",
+        type: "address",
         indexed: true,
       },
       {
-        name: 'value',
-        internalType: 'uint256',
-        type: 'uint256',
+        name: "value",
+        internalType: "uint256",
+        type: "uint256",
         indexed: false,
       },
     ],
-    name: 'SafeReceived',
+    name: "SafeReceived",
   },
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'initiator',
-        internalType: 'address',
-        type: 'address',
+        name: "initiator",
+        internalType: "address",
+        type: "address",
         indexed: true,
       },
       {
-        name: 'owners',
-        internalType: 'address[]',
-        type: 'address[]',
+        name: "owners",
+        internalType: "address[]",
+        type: "address[]",
         indexed: false,
       },
       {
-        name: 'threshold',
-        internalType: 'uint256',
-        type: 'uint256',
+        name: "threshold",
+        internalType: "uint256",
+        type: "uint256",
         indexed: false,
       },
       {
-        name: 'initializer',
-        internalType: 'address',
-        type: 'address',
+        name: "initializer",
+        internalType: "address",
+        type: "address",
         indexed: false,
       },
       {
-        name: 'fallbackHandler',
-        internalType: 'address',
-        type: 'address',
+        name: "fallbackHandler",
+        internalType: "address",
+        type: "address",
         indexed: false,
       },
     ],
-    name: 'SafeSetup',
+    name: "SafeSetup",
   },
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'msgHash',
-        internalType: 'bytes32',
-        type: 'bytes32',
+        name: "msgHash",
+        internalType: "bytes32",
+        type: "bytes32",
         indexed: true,
       },
     ],
-    name: 'SignMsg',
+    name: "SignMsg",
   },
-  { stateMutability: 'nonpayable', type: 'fallback' },
+  { stateMutability: "nonpayable", type: "fallback" },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [],
-    name: 'VERSION',
-    outputs: [{ name: '', internalType: 'string', type: 'string' }],
+    name: "VERSION",
+    outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: '_threshold', internalType: 'uint256', type: 'uint256' },
+      { name: "owner", internalType: "address", type: "address" },
+      { name: "_threshold", internalType: "uint256", type: "uint256" },
     ],
-    name: 'addOwnerWithThreshold',
+    name: "addOwnerWithThreshold",
     outputs: [],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: 'hashToApprove', internalType: 'bytes32', type: 'bytes32' },
+      { name: "hashToApprove", internalType: "bytes32", type: "bytes32" },
     ],
-    name: 'approveHash',
+    name: "approveHash",
     outputs: [],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
-      { name: '', internalType: 'address', type: 'address' },
-      { name: '', internalType: 'bytes32', type: 'bytes32' },
+      { name: "", internalType: "address", type: "address" },
+      { name: "", internalType: "bytes32", type: "bytes32" },
     ],
-    name: 'approvedHashes',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: "approvedHashes",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: '_threshold', internalType: 'uint256', type: 'uint256' }],
-    name: 'changeThreshold',
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [{ name: "_threshold", internalType: "uint256", type: "uint256" }],
+    name: "changeThreshold",
     outputs: [],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
-      { name: 'dataHash', internalType: 'bytes32', type: 'bytes32' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-      { name: 'signatures', internalType: 'bytes', type: 'bytes' },
-      { name: 'requiredSignatures', internalType: 'uint256', type: 'uint256' },
+      { name: "dataHash", internalType: "bytes32", type: "bytes32" },
+      { name: "data", internalType: "bytes", type: "bytes" },
+      { name: "signatures", internalType: "bytes", type: "bytes" },
+      { name: "requiredSignatures", internalType: "uint256", type: "uint256" },
     ],
-    name: 'checkNSignatures',
+    name: "checkNSignatures",
     outputs: [],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
-      { name: 'dataHash', internalType: 'bytes32', type: 'bytes32' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-      { name: 'signatures', internalType: 'bytes', type: 'bytes' },
+      { name: "dataHash", internalType: "bytes32", type: "bytes32" },
+      { name: "data", internalType: "bytes", type: "bytes" },
+      { name: "signatures", internalType: "bytes", type: "bytes" },
     ],
-    name: 'checkSignatures',
+    name: "checkSignatures",
     outputs: [],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: 'prevModule', internalType: 'address', type: 'address' },
-      { name: 'module', internalType: 'address', type: 'address' },
+      { name: "prevModule", internalType: "address", type: "address" },
+      { name: "module", internalType: "address", type: "address" },
     ],
-    name: 'disableModule',
+    name: "disableModule",
     outputs: [],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [],
-    name: 'domainSeparator',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "domainSeparator",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'module', internalType: 'address', type: 'address' }],
-    name: 'enableModule',
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [{ name: "module", internalType: "address", type: "address" }],
+    name: "enableModule",
     outputs: [],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-      { name: 'operation', internalType: 'enum Enum.Operation', type: 'uint8' },
-      { name: 'safeTxGas', internalType: 'uint256', type: 'uint256' },
-      { name: 'baseGas', internalType: 'uint256', type: 'uint256' },
-      { name: 'gasPrice', internalType: 'uint256', type: 'uint256' },
-      { name: 'gasToken', internalType: 'address', type: 'address' },
-      { name: 'refundReceiver', internalType: 'address', type: 'address' },
-      { name: '_nonce', internalType: 'uint256', type: 'uint256' },
+      { name: "to", internalType: "address", type: "address" },
+      { name: "value", internalType: "uint256", type: "uint256" },
+      { name: "data", internalType: "bytes", type: "bytes" },
+      { name: "operation", internalType: "enum Enum.Operation", type: "uint8" },
+      { name: "safeTxGas", internalType: "uint256", type: "uint256" },
+      { name: "baseGas", internalType: "uint256", type: "uint256" },
+      { name: "gasPrice", internalType: "uint256", type: "uint256" },
+      { name: "gasToken", internalType: "address", type: "address" },
+      { name: "refundReceiver", internalType: "address", type: "address" },
+      { name: "_nonce", internalType: "uint256", type: "uint256" },
     ],
-    name: 'encodeTransactionData',
-    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    name: "encodeTransactionData",
+    outputs: [{ name: "", internalType: "bytes", type: "bytes" }],
   },
   {
-    stateMutability: 'payable',
-    type: 'function',
+    stateMutability: "payable",
+    type: "function",
     inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-      { name: 'operation', internalType: 'enum Enum.Operation', type: 'uint8' },
-      { name: 'safeTxGas', internalType: 'uint256', type: 'uint256' },
-      { name: 'baseGas', internalType: 'uint256', type: 'uint256' },
-      { name: 'gasPrice', internalType: 'uint256', type: 'uint256' },
-      { name: 'gasToken', internalType: 'address', type: 'address' },
+      { name: "to", internalType: "address", type: "address" },
+      { name: "value", internalType: "uint256", type: "uint256" },
+      { name: "data", internalType: "bytes", type: "bytes" },
+      { name: "operation", internalType: "enum Enum.Operation", type: "uint8" },
+      { name: "safeTxGas", internalType: "uint256", type: "uint256" },
+      { name: "baseGas", internalType: "uint256", type: "uint256" },
+      { name: "gasPrice", internalType: "uint256", type: "uint256" },
+      { name: "gasToken", internalType: "address", type: "address" },
       {
-        name: 'refundReceiver',
-        internalType: 'address payable',
-        type: 'address',
+        name: "refundReceiver",
+        internalType: "address payable",
+        type: "address",
       },
-      { name: 'signatures', internalType: 'bytes', type: 'bytes' },
+      { name: "signatures", internalType: "bytes", type: "bytes" },
     ],
-    name: 'execTransaction',
-    outputs: [{ name: 'success', internalType: 'bool', type: 'bool' }],
+    name: "execTransaction",
+    outputs: [{ name: "success", internalType: "bool", type: "bool" }],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-      { name: 'operation', internalType: 'enum Enum.Operation', type: 'uint8' },
+      { name: "to", internalType: "address", type: "address" },
+      { name: "value", internalType: "uint256", type: "uint256" },
+      { name: "data", internalType: "bytes", type: "bytes" },
+      { name: "operation", internalType: "enum Enum.Operation", type: "uint8" },
     ],
-    name: 'execTransactionFromModule',
-    outputs: [{ name: 'success', internalType: 'bool', type: 'bool' }],
+    name: "execTransactionFromModule",
+    outputs: [{ name: "success", internalType: "bool", type: "bool" }],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-      { name: 'operation', internalType: 'enum Enum.Operation', type: 'uint8' },
+      { name: "to", internalType: "address", type: "address" },
+      { name: "value", internalType: "uint256", type: "uint256" },
+      { name: "data", internalType: "bytes", type: "bytes" },
+      { name: "operation", internalType: "enum Enum.Operation", type: "uint8" },
     ],
-    name: 'execTransactionFromModuleReturnData',
+    name: "execTransactionFromModuleReturnData",
     outputs: [
-      { name: 'success', internalType: 'bool', type: 'bool' },
-      { name: 'returnData', internalType: 'bytes', type: 'bytes' },
+      { name: "success", internalType: "bool", type: "bool" },
+      { name: "returnData", internalType: "bytes", type: "bytes" },
     ],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [],
-    name: 'getChainId',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: "getChainId",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
-      { name: 'start', internalType: 'address', type: 'address' },
-      { name: 'pageSize', internalType: 'uint256', type: 'uint256' },
+      { name: "start", internalType: "address", type: "address" },
+      { name: "pageSize", internalType: "uint256", type: "uint256" },
     ],
-    name: 'getModulesPaginated',
+    name: "getModulesPaginated",
     outputs: [
-      { name: 'array', internalType: 'address[]', type: 'address[]' },
-      { name: 'next', internalType: 'address', type: 'address' },
+      { name: "array", internalType: "address[]", type: "address[]" },
+      { name: "next", internalType: "address", type: "address" },
     ],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [],
-    name: 'getOwners',
-    outputs: [{ name: '', internalType: 'address[]', type: 'address[]' }],
+    name: "getOwners",
+    outputs: [{ name: "", internalType: "address[]", type: "address[]" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
-      { name: 'offset', internalType: 'uint256', type: 'uint256' },
-      { name: 'length', internalType: 'uint256', type: 'uint256' },
+      { name: "offset", internalType: "uint256", type: "uint256" },
+      { name: "length", internalType: "uint256", type: "uint256" },
     ],
-    name: 'getStorageAt',
-    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    name: "getStorageAt",
+    outputs: [{ name: "", internalType: "bytes", type: "bytes" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [],
-    name: 'getThreshold',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: "getThreshold",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'value', internalType: 'uint256', type: 'uint256' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-      { name: 'operation', internalType: 'enum Enum.Operation', type: 'uint8' },
-      { name: 'safeTxGas', internalType: 'uint256', type: 'uint256' },
-      { name: 'baseGas', internalType: 'uint256', type: 'uint256' },
-      { name: 'gasPrice', internalType: 'uint256', type: 'uint256' },
-      { name: 'gasToken', internalType: 'address', type: 'address' },
-      { name: 'refundReceiver', internalType: 'address', type: 'address' },
-      { name: '_nonce', internalType: 'uint256', type: 'uint256' },
+      { name: "to", internalType: "address", type: "address" },
+      { name: "value", internalType: "uint256", type: "uint256" },
+      { name: "data", internalType: "bytes", type: "bytes" },
+      { name: "operation", internalType: "enum Enum.Operation", type: "uint8" },
+      { name: "safeTxGas", internalType: "uint256", type: "uint256" },
+      { name: "baseGas", internalType: "uint256", type: "uint256" },
+      { name: "gasPrice", internalType: "uint256", type: "uint256" },
+      { name: "gasToken", internalType: "address", type: "address" },
+      { name: "refundReceiver", internalType: "address", type: "address" },
+      { name: "_nonce", internalType: "uint256", type: "uint256" },
     ],
-    name: 'getTransactionHash',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
+    name: "getTransactionHash",
+    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'module', internalType: 'address', type: 'address' }],
-    name: 'isModuleEnabled',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: "view",
+    type: "function",
+    inputs: [{ name: "module", internalType: "address", type: "address" }],
+    name: "isModuleEnabled",
+    outputs: [{ name: "", internalType: "bool", type: "bool" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'owner', internalType: 'address', type: 'address' }],
-    name: 'isOwner',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: "view",
+    type: "function",
+    inputs: [{ name: "owner", internalType: "address", type: "address" }],
+    name: "isOwner",
+    outputs: [{ name: "", internalType: "bool", type: "bool" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [],
-    name: 'nonce',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: "nonce",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: 'prevOwner', internalType: 'address', type: 'address' },
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: '_threshold', internalType: 'uint256', type: 'uint256' },
+      { name: "prevOwner", internalType: "address", type: "address" },
+      { name: "owner", internalType: "address", type: "address" },
+      { name: "_threshold", internalType: "uint256", type: "uint256" },
     ],
-    name: 'removeOwner',
+    name: "removeOwner",
     outputs: [],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'handler', internalType: 'address', type: 'address' }],
-    name: 'setFallbackHandler',
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [{ name: "handler", internalType: "address", type: "address" }],
+    name: "setFallbackHandler",
     outputs: [],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'guard', internalType: 'address', type: 'address' }],
-    name: 'setGuard',
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [{ name: "guard", internalType: "address", type: "address" }],
+    name: "setGuard",
     outputs: [],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: '_owners', internalType: 'address[]', type: 'address[]' },
-      { name: '_threshold', internalType: 'uint256', type: 'uint256' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'data', internalType: 'bytes', type: 'bytes' },
-      { name: 'fallbackHandler', internalType: 'address', type: 'address' },
-      { name: 'paymentToken', internalType: 'address', type: 'address' },
-      { name: 'payment', internalType: 'uint256', type: 'uint256' },
+      { name: "_owners", internalType: "address[]", type: "address[]" },
+      { name: "_threshold", internalType: "uint256", type: "uint256" },
+      { name: "to", internalType: "address", type: "address" },
+      { name: "data", internalType: "bytes", type: "bytes" },
+      { name: "fallbackHandler", internalType: "address", type: "address" },
+      { name: "paymentToken", internalType: "address", type: "address" },
+      { name: "payment", internalType: "uint256", type: "uint256" },
       {
-        name: 'paymentReceiver',
-        internalType: 'address payable',
-        type: 'address',
+        name: "paymentReceiver",
+        internalType: "address payable",
+        type: "address",
       },
     ],
-    name: 'setup',
+    name: "setup",
     outputs: [],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-    name: 'signedMessages',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    stateMutability: "view",
+    type: "function",
+    inputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
+    name: "signedMessages",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: 'targetContract', internalType: 'address', type: 'address' },
-      { name: 'calldataPayload', internalType: 'bytes', type: 'bytes' },
+      { name: "targetContract", internalType: "address", type: "address" },
+      { name: "calldataPayload", internalType: "bytes", type: "bytes" },
     ],
-    name: 'simulateAndRevert',
+    name: "simulateAndRevert",
     outputs: [],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: 'prevOwner', internalType: 'address', type: 'address' },
-      { name: 'oldOwner', internalType: 'address', type: 'address' },
-      { name: 'newOwner', internalType: 'address', type: 'address' },
+      { name: "prevOwner", internalType: "address", type: "address" },
+      { name: "oldOwner", internalType: "address", type: "address" },
+      { name: "newOwner", internalType: "address", type: "address" },
     ],
-    name: 'swapOwner',
+    name: "swapOwner",
     outputs: [],
   },
-  { stateMutability: 'payable', type: 'receive' },
-] as const
+  { stateMutability: "payable", type: "receive" },
+] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SafeProxy
@@ -1685,12 +1685,12 @@ export const safeABI = [
 
 export const safeProxyABI = [
   {
-    stateMutability: 'nonpayable',
-    type: 'constructor',
-    inputs: [{ name: '_singleton', internalType: 'address', type: 'address' }],
+    stateMutability: "nonpayable",
+    type: "constructor",
+    inputs: [{ name: "_singleton", internalType: "address", type: "address" }],
   },
-  { stateMutability: 'payable', type: 'fallback' },
-] as const
+  { stateMutability: "payable", type: "fallback" },
+] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // SafeProxyFactory
@@ -1698,83 +1698,83 @@ export const safeProxyABI = [
 
 export const safeProxyFactoryABI = [
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'proxy',
-        internalType: 'contract SafeProxy',
-        type: 'address',
+        name: "proxy",
+        internalType: "contract SafeProxy",
+        type: "address",
         indexed: true,
       },
       {
-        name: 'singleton',
-        internalType: 'address',
-        type: 'address',
+        name: "singleton",
+        internalType: "address",
+        type: "address",
         indexed: false,
       },
     ],
-    name: 'ProxyCreation',
+    name: "ProxyCreation",
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: '_singleton', internalType: 'address', type: 'address' },
-      { name: 'initializer', internalType: 'bytes', type: 'bytes' },
-      { name: 'saltNonce', internalType: 'uint256', type: 'uint256' },
+      { name: "_singleton", internalType: "address", type: "address" },
+      { name: "initializer", internalType: "bytes", type: "bytes" },
+      { name: "saltNonce", internalType: "uint256", type: "uint256" },
     ],
-    name: 'createChainSpecificProxyWithNonce',
+    name: "createChainSpecificProxyWithNonce",
     outputs: [
-      { name: 'proxy', internalType: 'contract SafeProxy', type: 'address' },
+      { name: "proxy", internalType: "contract SafeProxy", type: "address" },
     ],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: '_singleton', internalType: 'address', type: 'address' },
-      { name: 'initializer', internalType: 'bytes', type: 'bytes' },
-      { name: 'saltNonce', internalType: 'uint256', type: 'uint256' },
+      { name: "_singleton", internalType: "address", type: "address" },
+      { name: "initializer", internalType: "bytes", type: "bytes" },
+      { name: "saltNonce", internalType: "uint256", type: "uint256" },
       {
-        name: 'callback',
-        internalType: 'contract IProxyCreationCallback',
-        type: 'address',
+        name: "callback",
+        internalType: "contract IProxyCreationCallback",
+        type: "address",
       },
     ],
-    name: 'createProxyWithCallback',
+    name: "createProxyWithCallback",
     outputs: [
-      { name: 'proxy', internalType: 'contract SafeProxy', type: 'address' },
+      { name: "proxy", internalType: "contract SafeProxy", type: "address" },
     ],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: '_singleton', internalType: 'address', type: 'address' },
-      { name: 'initializer', internalType: 'bytes', type: 'bytes' },
-      { name: 'saltNonce', internalType: 'uint256', type: 'uint256' },
+      { name: "_singleton", internalType: "address", type: "address" },
+      { name: "initializer", internalType: "bytes", type: "bytes" },
+      { name: "saltNonce", internalType: "uint256", type: "uint256" },
     ],
-    name: 'createProxyWithNonce',
+    name: "createProxyWithNonce",
     outputs: [
-      { name: 'proxy', internalType: 'contract SafeProxy', type: 'address' },
+      { name: "proxy", internalType: "contract SafeProxy", type: "address" },
     ],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [],
-    name: 'getChainId',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: "getChainId",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [],
-    name: 'proxyCreationCode',
-    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    name: "proxyCreationCode",
+    outputs: [{ name: "", internalType: "bytes", type: "bytes" }],
   },
-] as const
+] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // TimestampBeforeIntent
@@ -1782,41 +1782,41 @@ export const safeProxyFactoryABI = [
 
 export const timestampBeforeIntentABI = [
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
       {
-        name: 'intent',
-        internalType: 'struct Intent',
-        type: 'tuple',
+        name: "intent",
+        internalType: "struct Intent",
+        type: "tuple",
         components: [
           {
-            name: 'exec',
-            internalType: 'struct IntentExecution',
-            type: 'tuple',
+            name: "exec",
+            internalType: "struct IntentExecution",
+            type: "tuple",
             components: [
-              { name: 'root', internalType: 'address', type: 'address' },
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
+              { name: "root", internalType: "address", type: "address" },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
             ],
           },
           {
-            name: 'signature',
-            internalType: 'struct Signature',
-            type: 'tuple',
+            name: "signature",
+            internalType: "struct Signature",
+            type: "tuple",
             components: [
-              { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-              { name: 's', internalType: 'bytes32', type: 'bytes32' },
-              { name: 'v', internalType: 'uint8', type: 'uint8' },
+              { name: "r", internalType: "bytes32", type: "bytes32" },
+              { name: "s", internalType: "bytes32", type: "bytes32" },
+              { name: "v", internalType: "uint8", type: "uint8" },
             ],
           },
         ],
       },
     ],
-    name: 'execute',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    name: "execute",
+    outputs: [{ name: "", internalType: "bool", type: "bool" }],
   },
-] as const
+] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // TokenRouterReleaseIntent
@@ -1824,88 +1824,88 @@ export const timestampBeforeIntentABI = [
 
 export const tokenRouterReleaseIntentABI = [
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'account',
-        internalType: 'address',
-        type: 'address',
+        name: "account",
+        internalType: "address",
+        type: "address",
         indexed: true,
       },
       {
-        name: 'token',
-        internalType: 'address',
-        type: 'address',
+        name: "token",
+        internalType: "address",
+        type: "address",
         indexed: true,
       },
       {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
+        name: "amount",
+        internalType: "uint256",
+        type: "uint256",
         indexed: false,
       },
     ],
-    name: 'Release',
+    name: "Release",
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'token', internalType: 'address', type: 'address' },
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
+      { name: "from", internalType: "address", type: "address" },
+      { name: "to", internalType: "address", type: "address" },
+      { name: "token", internalType: "address", type: "address" },
+      { name: "amount", internalType: "uint256", type: "uint256" },
     ],
-    name: 'claim',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    name: "claim",
+    outputs: [{ name: "", internalType: "bool", type: "bool" }],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
       {
-        name: 'intent',
-        internalType: 'struct Intent',
-        type: 'tuple',
+        name: "intent",
+        internalType: "struct Intent",
+        type: "tuple",
         components: [
           {
-            name: 'exec',
-            internalType: 'struct IntentExecution',
-            type: 'tuple',
+            name: "exec",
+            internalType: "struct IntentExecution",
+            type: "tuple",
             components: [
-              { name: 'root', internalType: 'address', type: 'address' },
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
+              { name: "root", internalType: "address", type: "address" },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
             ],
           },
           {
-            name: 'signature',
-            internalType: 'struct Signature',
-            type: 'tuple',
+            name: "signature",
+            internalType: "struct Signature",
+            type: "tuple",
             components: [
-              { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-              { name: 's', internalType: 'bytes32', type: 'bytes32' },
-              { name: 'v', internalType: 'uint8', type: 'uint8' },
+              { name: "r", internalType: "bytes32", type: "bytes32" },
+              { name: "s", internalType: "bytes32", type: "bytes32" },
+              { name: "v", internalType: "uint8", type: "uint8" },
             ],
           },
         ],
       },
     ],
-    name: 'execute',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    name: "execute",
+    outputs: [{ name: "", internalType: "bool", type: "bool" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
-      { name: '', internalType: 'address', type: 'address' },
-      { name: '', internalType: 'address', type: 'address' },
+      { name: "", internalType: "address", type: "address" },
+      { name: "", internalType: "address", type: "address" },
     ],
-    name: 'till',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: "till",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
-] as const
+] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // WalletFactory
@@ -1913,94 +1913,94 @@ export const tokenRouterReleaseIntentABI = [
 
 export const walletFactoryABI = [
   {
-    type: 'event',
+    type: "event",
     anonymous: false,
     inputs: [
       {
-        name: 'proxy',
-        internalType: 'contract SafeProxy',
-        type: 'address',
+        name: "proxy",
+        internalType: "contract SafeProxy",
+        type: "address",
         indexed: true,
       },
       {
-        name: 'singleton',
-        internalType: 'address',
-        type: 'address',
+        name: "singleton",
+        internalType: "address",
+        type: "address",
         indexed: false,
       },
     ],
-    name: 'ProxyCreation',
+    name: "ProxyCreation",
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: '_singleton', internalType: 'address', type: 'address' },
-      { name: 'initializer', internalType: 'bytes', type: 'bytes' },
-      { name: 'saltNonce', internalType: 'uint256', type: 'uint256' },
+      { name: "_singleton", internalType: "address", type: "address" },
+      { name: "initializer", internalType: "bytes", type: "bytes" },
+      { name: "saltNonce", internalType: "uint256", type: "uint256" },
     ],
-    name: 'createChainSpecificProxyWithNonce',
+    name: "createChainSpecificProxyWithNonce",
     outputs: [
-      { name: 'proxy', internalType: 'contract SafeProxy', type: 'address' },
+      { name: "proxy", internalType: "contract SafeProxy", type: "address" },
     ],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: '_singleton', internalType: 'address', type: 'address' },
-      { name: 'initializer', internalType: 'bytes', type: 'bytes' },
-      { name: 'saltNonce', internalType: 'uint256', type: 'uint256' },
+      { name: "_singleton", internalType: "address", type: "address" },
+      { name: "initializer", internalType: "bytes", type: "bytes" },
+      { name: "saltNonce", internalType: "uint256", type: "uint256" },
       {
-        name: 'callback',
-        internalType: 'contract IProxyCreationCallback',
-        type: 'address',
+        name: "callback",
+        internalType: "contract IProxyCreationCallback",
+        type: "address",
       },
     ],
-    name: 'createProxyWithCallback',
+    name: "createProxyWithCallback",
     outputs: [
-      { name: 'proxy', internalType: 'contract SafeProxy', type: 'address' },
+      { name: "proxy", internalType: "contract SafeProxy", type: "address" },
     ],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
     inputs: [
-      { name: '_singleton', internalType: 'address', type: 'address' },
-      { name: 'initializer', internalType: 'bytes', type: 'bytes' },
-      { name: 'saltNonce', internalType: 'uint256', type: 'uint256' },
+      { name: "_singleton", internalType: "address", type: "address" },
+      { name: "initializer", internalType: "bytes", type: "bytes" },
+      { name: "saltNonce", internalType: "uint256", type: "uint256" },
     ],
-    name: 'createProxyWithNonce',
+    name: "createProxyWithNonce",
     outputs: [
-      { name: 'proxy', internalType: 'contract SafeProxy', type: 'address' },
+      { name: "proxy", internalType: "contract SafeProxy", type: "address" },
     ],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [],
-    name: 'getChainId',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+    name: "getChainId",
+    outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
+    stateMutability: "view",
+    type: "function",
     inputs: [
-      { name: '_singleton', internalType: 'address', type: 'address' },
-      { name: 'initializer', internalType: 'bytes', type: 'bytes' },
-      { name: 'saltNonce', internalType: 'uint256', type: 'uint256' },
+      { name: "_singleton", internalType: "address", type: "address" },
+      { name: "initializer", internalType: "bytes", type: "bytes" },
+      { name: "saltNonce", internalType: "uint256", type: "uint256" },
     ],
-    name: 'getDeterministicWalletAddress',
-    outputs: [{ name: 'proxy', internalType: 'address', type: 'address' }],
+    name: "getDeterministicWalletAddress",
+    outputs: [{ name: "proxy", internalType: "address", type: "address" }],
   },
   {
-    stateMutability: 'pure',
-    type: 'function',
+    stateMutability: "pure",
+    type: "function",
     inputs: [],
-    name: 'proxyCreationCode',
-    outputs: [{ name: '', internalType: 'bytes', type: 'bytes' }],
+    name: "proxyCreationCode",
+    outputs: [{ name: "", internalType: "bytes", type: "bytes" }],
   },
-] as const
+] as const;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // React
@@ -2015,298 +2015,298 @@ export function useIntentifyRead<
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"DOMAIN_SEPARATOR"`.
  */
 export function useIntentifyDomainSeparator<
-  TFunctionName extends 'DOMAIN_SEPARATOR',
+  TFunctionName extends "DOMAIN_SEPARATOR",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'DOMAIN_SEPARATOR',
+    functionName: "DOMAIN_SEPARATOR",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_DIMENSIONALNONCE_PACKETHASH"`.
  */
 export function useIntentifyGetDimensionalnoncePackethash<
-  TFunctionName extends 'GET_DIMENSIONALNONCE_PACKETHASH',
+  TFunctionName extends "GET_DIMENSIONALNONCE_PACKETHASH",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'GET_DIMENSIONALNONCE_PACKETHASH',
+    functionName: "GET_DIMENSIONALNONCE_PACKETHASH",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_EIP712DOMAIN_PACKETHASH"`.
  */
 export function useIntentifyGetEip712DomainPackethash<
-  TFunctionName extends 'GET_EIP712DOMAIN_PACKETHASH',
+  TFunctionName extends "GET_EIP712DOMAIN_PACKETHASH",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'GET_EIP712DOMAIN_PACKETHASH',
+    functionName: "GET_EIP712DOMAIN_PACKETHASH",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_HOOK_ARRAY_PACKETHASH"`.
  */
 export function useIntentifyGetHookArrayPackethash<
-  TFunctionName extends 'GET_HOOK_ARRAY_PACKETHASH',
+  TFunctionName extends "GET_HOOK_ARRAY_PACKETHASH",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'GET_HOOK_ARRAY_PACKETHASH',
+    functionName: "GET_HOOK_ARRAY_PACKETHASH",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_HOOK_PACKETHASH"`.
  */
 export function useIntentifyGetHookPackethash<
-  TFunctionName extends 'GET_HOOK_PACKETHASH',
+  TFunctionName extends "GET_HOOK_PACKETHASH",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'GET_HOOK_PACKETHASH',
+    functionName: "GET_HOOK_PACKETHASH",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_INTENTBATCHEXECUTION_PACKETHASH"`.
  */
 export function useIntentifyGetIntentbatchexecutionPackethash<
-  TFunctionName extends 'GET_INTENTBATCHEXECUTION_PACKETHASH',
+  TFunctionName extends "GET_INTENTBATCHEXECUTION_PACKETHASH",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'GET_INTENTBATCHEXECUTION_PACKETHASH',
+    functionName: "GET_INTENTBATCHEXECUTION_PACKETHASH",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_INTENTBATCH_PACKETHASH"`.
  */
 export function useIntentifyGetIntentbatchPackethash<
-  TFunctionName extends 'GET_INTENTBATCH_PACKETHASH',
+  TFunctionName extends "GET_INTENTBATCH_PACKETHASH",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'GET_INTENTBATCH_PACKETHASH',
+    functionName: "GET_INTENTBATCH_PACKETHASH",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_INTENTEXECUTION_PACKETHASH"`.
  */
 export function useIntentifyGetIntentexecutionPackethash<
-  TFunctionName extends 'GET_INTENTEXECUTION_PACKETHASH',
+  TFunctionName extends "GET_INTENTEXECUTION_PACKETHASH",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'GET_INTENTEXECUTION_PACKETHASH',
+    functionName: "GET_INTENTEXECUTION_PACKETHASH",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_INTENT_ARRAY_PACKETHASH"`.
  */
 export function useIntentifyGetIntentArrayPackethash<
-  TFunctionName extends 'GET_INTENT_ARRAY_PACKETHASH',
+  TFunctionName extends "GET_INTENT_ARRAY_PACKETHASH",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'GET_INTENT_ARRAY_PACKETHASH',
+    functionName: "GET_INTENT_ARRAY_PACKETHASH",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_INTENT_PACKETHASH"`.
  */
 export function useIntentifyGetIntentPackethash<
-  TFunctionName extends 'GET_INTENT_PACKETHASH',
+  TFunctionName extends "GET_INTENT_PACKETHASH",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'GET_INTENT_PACKETHASH',
+    functionName: "GET_INTENT_PACKETHASH",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_SIGNATURE_PACKETHASH"`.
  */
 export function useIntentifyGetSignaturePackethash<
-  TFunctionName extends 'GET_SIGNATURE_PACKETHASH',
+  TFunctionName extends "GET_SIGNATURE_PACKETHASH",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'GET_SIGNATURE_PACKETHASH',
+    functionName: "GET_SIGNATURE_PACKETHASH",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"INTENT_TYPEHASH"`.
  */
 export function useIntentifyIntentTypehash<
-  TFunctionName extends 'INTENT_TYPEHASH',
+  TFunctionName extends "INTENT_TYPEHASH",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'INTENT_TYPEHASH',
+    functionName: "INTENT_TYPEHASH",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"getIntentBatchTypedDataHash"`.
  */
 export function useIntentifyGetIntentBatchTypedDataHash<
-  TFunctionName extends 'getIntentBatchTypedDataHash',
+  TFunctionName extends "getIntentBatchTypedDataHash",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'getIntentBatchTypedDataHash',
+    functionName: "getIntentBatchTypedDataHash",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"getIntentExecutionTypedDataHash"`.
  */
 export function useIntentifyGetIntentExecutionTypedDataHash<
-  TFunctionName extends 'getIntentExecutionTypedDataHash',
+  TFunctionName extends "getIntentExecutionTypedDataHash",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'getIntentExecutionTypedDataHash',
+    functionName: "getIntentExecutionTypedDataHash",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"owner"`.
  */
 export function useIntentifyOwner<
-  TFunctionName extends 'owner',
+  TFunctionName extends "owner",
   TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifyABI,
-    functionName: 'owner',
+    functionName: "owner",
     ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -2316,23 +2316,23 @@ export function useIntentifyWrite<
   TFunctionName extends string,
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof intentifyABI,
           string
-        >['request']['abi'],
+        >["request"]["abi"],
         TFunctionName,
         TMode
       >
     : UseContractWriteConfig<typeof intentifyABI, TFunctionName, TMode> & {
-        abi?: never
+        abi?: never;
       } = {} as any,
 ) {
   return useContractWrite<typeof intentifyABI, TFunctionName, TMode>({
     abi: intentifyABI,
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -2341,25 +2341,25 @@ export function useIntentifyWrite<
 export function useIntentifyExecute<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof intentifyABI,
-          'execute'
-        >['request']['abi'],
-        'execute',
+          "execute"
+        >["request"]["abi"],
+        "execute",
         TMode
-      > & { functionName?: 'execute' }
-    : UseContractWriteConfig<typeof intentifyABI, 'execute', TMode> & {
-        abi?: never
-        functionName?: 'execute'
+      > & { functionName?: "execute" }
+    : UseContractWriteConfig<typeof intentifyABI, "execute", TMode> & {
+        abi?: never;
+        functionName?: "execute";
       } = {} as any,
 ) {
-  return useContractWrite<typeof intentifyABI, 'execute', TMode>({
+  return useContractWrite<typeof intentifyABI, "execute", TMode>({
     abi: intentifyABI,
-    functionName: 'execute',
+    functionName: "execute",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -2368,13 +2368,13 @@ export function useIntentifyExecute<
 export function usePrepareIntentifyWrite<TFunctionName extends string>(
   config: Omit<
     UsePrepareContractWriteConfig<typeof intentifyABI, TFunctionName>,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: intentifyABI,
     ...config,
-  } as UsePrepareContractWriteConfig<typeof intentifyABI, TFunctionName>)
+  } as UsePrepareContractWriteConfig<typeof intentifyABI, TFunctionName>);
 }
 
 /**
@@ -2382,15 +2382,15 @@ export function usePrepareIntentifyWrite<TFunctionName extends string>(
  */
 export function usePrepareIntentifyExecute(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof intentifyABI, 'execute'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof intentifyABI, "execute">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: intentifyABI,
-    functionName: 'execute',
+    functionName: "execute",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof intentifyABI, 'execute'>)
+  } as UsePrepareContractWriteConfig<typeof intentifyABI, "execute">);
 }
 
 /**
@@ -2409,7 +2409,7 @@ export function useIntentifySafeModuleRead<
       TFunctionName,
       TSelectData
     >,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return useContractRead({
@@ -2419,14 +2419,14 @@ export function useIntentifySafeModuleRead<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"DOMAIN_SEPARATOR"`.
  */
 export function useIntentifySafeModuleDomainSeparator<
-  TFunctionName extends 'DOMAIN_SEPARATOR',
+  TFunctionName extends "DOMAIN_SEPARATOR",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2438,25 +2438,25 @@ export function useIntentifySafeModuleDomainSeparator<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'DOMAIN_SEPARATOR',
+    functionName: "DOMAIN_SEPARATOR",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"GET_DIMENSIONALNONCE_PACKETHASH"`.
  */
 export function useIntentifySafeModuleGetDimensionalnoncePackethash<
-  TFunctionName extends 'GET_DIMENSIONALNONCE_PACKETHASH',
+  TFunctionName extends "GET_DIMENSIONALNONCE_PACKETHASH",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2468,25 +2468,25 @@ export function useIntentifySafeModuleGetDimensionalnoncePackethash<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'GET_DIMENSIONALNONCE_PACKETHASH',
+    functionName: "GET_DIMENSIONALNONCE_PACKETHASH",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"GET_EIP712DOMAIN_PACKETHASH"`.
  */
 export function useIntentifySafeModuleGetEip712DomainPackethash<
-  TFunctionName extends 'GET_EIP712DOMAIN_PACKETHASH',
+  TFunctionName extends "GET_EIP712DOMAIN_PACKETHASH",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2498,25 +2498,25 @@ export function useIntentifySafeModuleGetEip712DomainPackethash<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'GET_EIP712DOMAIN_PACKETHASH',
+    functionName: "GET_EIP712DOMAIN_PACKETHASH",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"GET_HOOK_ARRAY_PACKETHASH"`.
  */
 export function useIntentifySafeModuleGetHookArrayPackethash<
-  TFunctionName extends 'GET_HOOK_ARRAY_PACKETHASH',
+  TFunctionName extends "GET_HOOK_ARRAY_PACKETHASH",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2528,25 +2528,25 @@ export function useIntentifySafeModuleGetHookArrayPackethash<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'GET_HOOK_ARRAY_PACKETHASH',
+    functionName: "GET_HOOK_ARRAY_PACKETHASH",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"GET_HOOK_PACKETHASH"`.
  */
 export function useIntentifySafeModuleGetHookPackethash<
-  TFunctionName extends 'GET_HOOK_PACKETHASH',
+  TFunctionName extends "GET_HOOK_PACKETHASH",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2558,25 +2558,25 @@ export function useIntentifySafeModuleGetHookPackethash<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'GET_HOOK_PACKETHASH',
+    functionName: "GET_HOOK_PACKETHASH",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"GET_INTENTBATCHEXECUTION_PACKETHASH"`.
  */
 export function useIntentifySafeModuleGetIntentbatchexecutionPackethash<
-  TFunctionName extends 'GET_INTENTBATCHEXECUTION_PACKETHASH',
+  TFunctionName extends "GET_INTENTBATCHEXECUTION_PACKETHASH",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2588,25 +2588,25 @@ export function useIntentifySafeModuleGetIntentbatchexecutionPackethash<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'GET_INTENTBATCHEXECUTION_PACKETHASH',
+    functionName: "GET_INTENTBATCHEXECUTION_PACKETHASH",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"GET_INTENTBATCH_PACKETHASH"`.
  */
 export function useIntentifySafeModuleGetIntentbatchPackethash<
-  TFunctionName extends 'GET_INTENTBATCH_PACKETHASH',
+  TFunctionName extends "GET_INTENTBATCH_PACKETHASH",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2618,25 +2618,25 @@ export function useIntentifySafeModuleGetIntentbatchPackethash<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'GET_INTENTBATCH_PACKETHASH',
+    functionName: "GET_INTENTBATCH_PACKETHASH",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"GET_INTENTEXECUTION_PACKETHASH"`.
  */
 export function useIntentifySafeModuleGetIntentexecutionPackethash<
-  TFunctionName extends 'GET_INTENTEXECUTION_PACKETHASH',
+  TFunctionName extends "GET_INTENTEXECUTION_PACKETHASH",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2648,25 +2648,25 @@ export function useIntentifySafeModuleGetIntentexecutionPackethash<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'GET_INTENTEXECUTION_PACKETHASH',
+    functionName: "GET_INTENTEXECUTION_PACKETHASH",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"GET_INTENT_ARRAY_PACKETHASH"`.
  */
 export function useIntentifySafeModuleGetIntentArrayPackethash<
-  TFunctionName extends 'GET_INTENT_ARRAY_PACKETHASH',
+  TFunctionName extends "GET_INTENT_ARRAY_PACKETHASH",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2678,25 +2678,25 @@ export function useIntentifySafeModuleGetIntentArrayPackethash<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'GET_INTENT_ARRAY_PACKETHASH',
+    functionName: "GET_INTENT_ARRAY_PACKETHASH",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"GET_INTENT_PACKETHASH"`.
  */
 export function useIntentifySafeModuleGetIntentPackethash<
-  TFunctionName extends 'GET_INTENT_PACKETHASH',
+  TFunctionName extends "GET_INTENT_PACKETHASH",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2708,25 +2708,25 @@ export function useIntentifySafeModuleGetIntentPackethash<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'GET_INTENT_PACKETHASH',
+    functionName: "GET_INTENT_PACKETHASH",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"GET_SIGNATURE_PACKETHASH"`.
  */
 export function useIntentifySafeModuleGetSignaturePackethash<
-  TFunctionName extends 'GET_SIGNATURE_PACKETHASH',
+  TFunctionName extends "GET_SIGNATURE_PACKETHASH",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2738,25 +2738,25 @@ export function useIntentifySafeModuleGetSignaturePackethash<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'GET_SIGNATURE_PACKETHASH',
+    functionName: "GET_SIGNATURE_PACKETHASH",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"NAME"`.
  */
 export function useIntentifySafeModuleName<
-  TFunctionName extends 'NAME',
+  TFunctionName extends "NAME",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2768,25 +2768,25 @@ export function useIntentifySafeModuleName<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'NAME',
+    functionName: "NAME",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"VERSION"`.
  */
 export function useIntentifySafeModuleVersion<
-  TFunctionName extends 'VERSION',
+  TFunctionName extends "VERSION",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2798,25 +2798,25 @@ export function useIntentifySafeModuleVersion<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'VERSION',
+    functionName: "VERSION",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"getIntentBatchTypedDataHash"`.
  */
 export function useIntentifySafeModuleGetIntentBatchTypedDataHash<
-  TFunctionName extends 'getIntentBatchTypedDataHash',
+  TFunctionName extends "getIntentBatchTypedDataHash",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2828,25 +2828,25 @@ export function useIntentifySafeModuleGetIntentBatchTypedDataHash<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'getIntentBatchTypedDataHash',
+    functionName: "getIntentBatchTypedDataHash",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"getIntentExecutionTypedDataHash"`.
  */
 export function useIntentifySafeModuleGetIntentExecutionTypedDataHash<
-  TFunctionName extends 'getIntentExecutionTypedDataHash',
+  TFunctionName extends "getIntentExecutionTypedDataHash",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2858,18 +2858,18 @@ export function useIntentifySafeModuleGetIntentExecutionTypedDataHash<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: 'getIntentExecutionTypedDataHash',
+    functionName: "getIntentExecutionTypedDataHash",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
@@ -2879,12 +2879,12 @@ export function useIntentifySafeModuleWrite<
   TFunctionName extends string,
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof intentifySafeModuleABI,
           string
-        >['request']['abi'],
+        >["request"]["abi"],
         TFunctionName,
         TMode
       >
@@ -2893,13 +2893,13 @@ export function useIntentifySafeModuleWrite<
         TFunctionName,
         TMode
       > & {
-        abi?: never
+        abi?: never;
       } = {} as any,
 ) {
   return useContractWrite<typeof intentifySafeModuleABI, TFunctionName, TMode>({
     abi: intentifySafeModuleABI,
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -2908,29 +2908,29 @@ export function useIntentifySafeModuleWrite<
 export function useIntentifySafeModuleExecute<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof intentifySafeModuleABI,
-          'execute'
-        >['request']['abi'],
-        'execute',
+          "execute"
+        >["request"]["abi"],
+        "execute",
         TMode
-      > & { functionName?: 'execute' }
+      > & { functionName?: "execute" }
     : UseContractWriteConfig<
         typeof intentifySafeModuleABI,
-        'execute',
+        "execute",
         TMode
       > & {
-        abi?: never
-        functionName?: 'execute'
+        abi?: never;
+        functionName?: "execute";
       } = {} as any,
 ) {
-  return useContractWrite<typeof intentifySafeModuleABI, 'execute', TMode>({
+  return useContractWrite<typeof intentifySafeModuleABI, "execute", TMode>({
     abi: intentifySafeModuleABI,
-    functionName: 'execute',
+    functionName: "execute",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -2941,7 +2941,7 @@ export function usePrepareIntentifySafeModuleWrite<
 >(
   config: Omit<
     UsePrepareContractWriteConfig<typeof intentifySafeModuleABI, TFunctionName>,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
@@ -2950,7 +2950,7 @@ export function usePrepareIntentifySafeModuleWrite<
   } as UsePrepareContractWriteConfig<
     typeof intentifySafeModuleABI,
     TFunctionName
-  >)
+  >);
 }
 
 /**
@@ -2958,15 +2958,15 @@ export function usePrepareIntentifySafeModuleWrite<
  */
 export function usePrepareIntentifySafeModuleExecute(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof intentifySafeModuleABI, 'execute'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof intentifySafeModuleABI, "execute">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: intentifySafeModuleABI,
-    functionName: 'execute',
+    functionName: "execute",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof intentifySafeModuleABI, 'execute'>)
+  } as UsePrepareContractWriteConfig<typeof intentifySafeModuleABI, "execute">);
 }
 
 /**
@@ -2982,7 +2982,7 @@ export function useLimitOrderIntentRead<
       TFunctionName,
       TSelectData
     >,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return useContractRead({
@@ -2992,14 +2992,14 @@ export function useLimitOrderIntentRead<
     typeof limitOrderIntentABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link limitOrderIntentABI}__ and `functionName` set to `"till"`.
  */
 export function useLimitOrderIntentTill<
-  TFunctionName extends 'till',
+  TFunctionName extends "till",
   TSelectData = ReadContractResult<typeof limitOrderIntentABI, TFunctionName>,
 >(
   config: Omit<
@@ -3008,18 +3008,18 @@ export function useLimitOrderIntentTill<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: limitOrderIntentABI,
-    functionName: 'till',
+    functionName: "till",
     ...config,
   } as UseContractReadConfig<
     typeof limitOrderIntentABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
@@ -3029,12 +3029,12 @@ export function useLimitOrderIntentWrite<
   TFunctionName extends string,
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof limitOrderIntentABI,
           string
-        >['request']['abi'],
+        >["request"]["abi"],
         TFunctionName,
         TMode
       >
@@ -3043,13 +3043,13 @@ export function useLimitOrderIntentWrite<
         TFunctionName,
         TMode
       > & {
-        abi?: never
+        abi?: never;
       } = {} as any,
 ) {
   return useContractWrite<typeof limitOrderIntentABI, TFunctionName, TMode>({
     abi: limitOrderIntentABI,
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -3058,25 +3058,25 @@ export function useLimitOrderIntentWrite<
 export function useLimitOrderIntentExecute<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof limitOrderIntentABI,
-          'execute'
-        >['request']['abi'],
-        'execute',
+          "execute"
+        >["request"]["abi"],
+        "execute",
         TMode
-      > & { functionName?: 'execute' }
-    : UseContractWriteConfig<typeof limitOrderIntentABI, 'execute', TMode> & {
-        abi?: never
-        functionName?: 'execute'
+      > & { functionName?: "execute" }
+    : UseContractWriteConfig<typeof limitOrderIntentABI, "execute", TMode> & {
+        abi?: never;
+        functionName?: "execute";
       } = {} as any,
 ) {
-  return useContractWrite<typeof limitOrderIntentABI, 'execute', TMode>({
+  return useContractWrite<typeof limitOrderIntentABI, "execute", TMode>({
     abi: limitOrderIntentABI,
-    functionName: 'execute',
+    functionName: "execute",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -3085,13 +3085,16 @@ export function useLimitOrderIntentExecute<
 export function usePrepareLimitOrderIntentWrite<TFunctionName extends string>(
   config: Omit<
     UsePrepareContractWriteConfig<typeof limitOrderIntentABI, TFunctionName>,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: limitOrderIntentABI,
     ...config,
-  } as UsePrepareContractWriteConfig<typeof limitOrderIntentABI, TFunctionName>)
+  } as UsePrepareContractWriteConfig<
+    typeof limitOrderIntentABI,
+    TFunctionName
+  >);
 }
 
 /**
@@ -3099,15 +3102,15 @@ export function usePrepareLimitOrderIntentWrite<TFunctionName extends string>(
  */
 export function usePrepareLimitOrderIntentExecute(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof limitOrderIntentABI, 'execute'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof limitOrderIntentABI, "execute">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: limitOrderIntentABI,
-    functionName: 'execute',
+    functionName: "execute",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof limitOrderIntentABI, 'execute'>)
+  } as UsePrepareContractWriteConfig<typeof limitOrderIntentABI, "execute">);
 }
 
 /**
@@ -3117,23 +3120,23 @@ export function useMultiSendWrite<
   TFunctionName extends string,
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof multiSendABI,
           string
-        >['request']['abi'],
+        >["request"]["abi"],
         TFunctionName,
         TMode
       >
     : UseContractWriteConfig<typeof multiSendABI, TFunctionName, TMode> & {
-        abi?: never
+        abi?: never;
       } = {} as any,
 ) {
   return useContractWrite<typeof multiSendABI, TFunctionName, TMode>({
     abi: multiSendABI,
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -3142,25 +3145,25 @@ export function useMultiSendWrite<
 export function useMultiSendMultiSend<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof multiSendABI,
-          'multiSend'
-        >['request']['abi'],
-        'multiSend',
+          "multiSend"
+        >["request"]["abi"],
+        "multiSend",
         TMode
-      > & { functionName?: 'multiSend' }
-    : UseContractWriteConfig<typeof multiSendABI, 'multiSend', TMode> & {
-        abi?: never
-        functionName?: 'multiSend'
+      > & { functionName?: "multiSend" }
+    : UseContractWriteConfig<typeof multiSendABI, "multiSend", TMode> & {
+        abi?: never;
+        functionName?: "multiSend";
       } = {} as any,
 ) {
-  return useContractWrite<typeof multiSendABI, 'multiSend', TMode>({
+  return useContractWrite<typeof multiSendABI, "multiSend", TMode>({
     abi: multiSendABI,
-    functionName: 'multiSend',
+    functionName: "multiSend",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -3169,13 +3172,13 @@ export function useMultiSendMultiSend<
 export function usePrepareMultiSendWrite<TFunctionName extends string>(
   config: Omit<
     UsePrepareContractWriteConfig<typeof multiSendABI, TFunctionName>,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: multiSendABI,
     ...config,
-  } as UsePrepareContractWriteConfig<typeof multiSendABI, TFunctionName>)
+  } as UsePrepareContractWriteConfig<typeof multiSendABI, TFunctionName>);
 }
 
 /**
@@ -3183,15 +3186,15 @@ export function usePrepareMultiSendWrite<TFunctionName extends string>(
  */
 export function usePrepareMultiSendMultiSend(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof multiSendABI, 'multiSend'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof multiSendABI, "multiSend">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: multiSendABI,
-    functionName: 'multiSend',
+    functionName: "multiSend",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof multiSendABI, 'multiSend'>)
+  } as UsePrepareContractWriteConfig<typeof multiSendABI, "multiSend">);
 }
 
 /**
@@ -3203,318 +3206,318 @@ export function useSafeRead<
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return useContractRead({ abi: safeABI, ...config } as UseContractReadConfig<
     typeof safeABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"VERSION"`.
  */
 export function useSafeVersion<
-  TFunctionName extends 'VERSION',
+  TFunctionName extends "VERSION",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'VERSION',
+    functionName: "VERSION",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"approvedHashes"`.
  */
 export function useSafeApprovedHashes<
-  TFunctionName extends 'approvedHashes',
+  TFunctionName extends "approvedHashes",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'approvedHashes',
+    functionName: "approvedHashes",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"checkNSignatures"`.
  */
 export function useSafeCheckNSignatures<
-  TFunctionName extends 'checkNSignatures',
+  TFunctionName extends "checkNSignatures",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'checkNSignatures',
+    functionName: "checkNSignatures",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"checkSignatures"`.
  */
 export function useSafeCheckSignatures<
-  TFunctionName extends 'checkSignatures',
+  TFunctionName extends "checkSignatures",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'checkSignatures',
+    functionName: "checkSignatures",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"domainSeparator"`.
  */
 export function useSafeDomainSeparator<
-  TFunctionName extends 'domainSeparator',
+  TFunctionName extends "domainSeparator",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'domainSeparator',
+    functionName: "domainSeparator",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"encodeTransactionData"`.
  */
 export function useSafeEncodeTransactionData<
-  TFunctionName extends 'encodeTransactionData',
+  TFunctionName extends "encodeTransactionData",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'encodeTransactionData',
+    functionName: "encodeTransactionData",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"getChainId"`.
  */
 export function useSafeGetChainId<
-  TFunctionName extends 'getChainId',
+  TFunctionName extends "getChainId",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'getChainId',
+    functionName: "getChainId",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"getModulesPaginated"`.
  */
 export function useSafeGetModulesPaginated<
-  TFunctionName extends 'getModulesPaginated',
+  TFunctionName extends "getModulesPaginated",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'getModulesPaginated',
+    functionName: "getModulesPaginated",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"getOwners"`.
  */
 export function useSafeGetOwners<
-  TFunctionName extends 'getOwners',
+  TFunctionName extends "getOwners",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'getOwners',
+    functionName: "getOwners",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"getStorageAt"`.
  */
 export function useSafeGetStorageAt<
-  TFunctionName extends 'getStorageAt',
+  TFunctionName extends "getStorageAt",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'getStorageAt',
+    functionName: "getStorageAt",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"getThreshold"`.
  */
 export function useSafeGetThreshold<
-  TFunctionName extends 'getThreshold',
+  TFunctionName extends "getThreshold",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'getThreshold',
+    functionName: "getThreshold",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"getTransactionHash"`.
  */
 export function useSafeGetTransactionHash<
-  TFunctionName extends 'getTransactionHash',
+  TFunctionName extends "getTransactionHash",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'getTransactionHash',
+    functionName: "getTransactionHash",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"isModuleEnabled"`.
  */
 export function useSafeIsModuleEnabled<
-  TFunctionName extends 'isModuleEnabled',
+  TFunctionName extends "isModuleEnabled",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'isModuleEnabled',
+    functionName: "isModuleEnabled",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"isOwner"`.
  */
 export function useSafeIsOwner<
-  TFunctionName extends 'isOwner',
+  TFunctionName extends "isOwner",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'isOwner',
+    functionName: "isOwner",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"nonce"`.
  */
 export function useSafeNonce<
-  TFunctionName extends 'nonce',
+  TFunctionName extends "nonce",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'nonce',
+    functionName: "nonce",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"signedMessages"`.
  */
 export function useSafeSignedMessages<
-  TFunctionName extends 'signedMessages',
+  TFunctionName extends "signedMessages",
   TSelectData = ReadContractResult<typeof safeABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeABI,
-    functionName: 'signedMessages',
+    functionName: "signedMessages",
     ...config,
-  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof safeABI, TFunctionName, TSelectData>);
 }
 
 /**
@@ -3524,20 +3527,20 @@ export function useSafeWrite<
   TFunctionName extends string,
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
-        PrepareWriteContractResult<typeof safeABI, string>['request']['abi'],
+        PrepareWriteContractResult<typeof safeABI, string>["request"]["abi"],
         TFunctionName,
         TMode
       >
     : UseContractWriteConfig<typeof safeABI, TFunctionName, TMode> & {
-        abi?: never
+        abi?: never;
       } = {} as any,
 ) {
   return useContractWrite<typeof safeABI, TFunctionName, TMode>({
     abi: safeABI,
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -3546,50 +3549,50 @@ export function useSafeWrite<
 export function useSafeAddOwnerWithThreshold<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeABI,
-          'addOwnerWithThreshold'
-        >['request']['abi'],
-        'addOwnerWithThreshold',
+          "addOwnerWithThreshold"
+        >["request"]["abi"],
+        "addOwnerWithThreshold",
         TMode
-      > & { functionName?: 'addOwnerWithThreshold' }
-    : UseContractWriteConfig<typeof safeABI, 'addOwnerWithThreshold', TMode> & {
-        abi?: never
-        functionName?: 'addOwnerWithThreshold'
+      > & { functionName?: "addOwnerWithThreshold" }
+    : UseContractWriteConfig<typeof safeABI, "addOwnerWithThreshold", TMode> & {
+        abi?: never;
+        functionName?: "addOwnerWithThreshold";
       } = {} as any,
 ) {
-  return useContractWrite<typeof safeABI, 'addOwnerWithThreshold', TMode>({
+  return useContractWrite<typeof safeABI, "addOwnerWithThreshold", TMode>({
     abi: safeABI,
-    functionName: 'addOwnerWithThreshold',
+    functionName: "addOwnerWithThreshold",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"approveHash"`.
  */
 export function useSafeApproveHash<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeABI,
-          'approveHash'
-        >['request']['abi'],
-        'approveHash',
+          "approveHash"
+        >["request"]["abi"],
+        "approveHash",
         TMode
-      > & { functionName?: 'approveHash' }
-    : UseContractWriteConfig<typeof safeABI, 'approveHash', TMode> & {
-        abi?: never
-        functionName?: 'approveHash'
+      > & { functionName?: "approveHash" }
+    : UseContractWriteConfig<typeof safeABI, "approveHash", TMode> & {
+        abi?: never;
+        functionName?: "approveHash";
       } = {} as any,
 ) {
-  return useContractWrite<typeof safeABI, 'approveHash', TMode>({
+  return useContractWrite<typeof safeABI, "approveHash", TMode>({
     abi: safeABI,
-    functionName: 'approveHash',
+    functionName: "approveHash",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -3598,25 +3601,25 @@ export function useSafeApproveHash<TMode extends WriteContractMode = undefined>(
 export function useSafeChangeThreshold<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeABI,
-          'changeThreshold'
-        >['request']['abi'],
-        'changeThreshold',
+          "changeThreshold"
+        >["request"]["abi"],
+        "changeThreshold",
         TMode
-      > & { functionName?: 'changeThreshold' }
-    : UseContractWriteConfig<typeof safeABI, 'changeThreshold', TMode> & {
-        abi?: never
-        functionName?: 'changeThreshold'
+      > & { functionName?: "changeThreshold" }
+    : UseContractWriteConfig<typeof safeABI, "changeThreshold", TMode> & {
+        abi?: never;
+        functionName?: "changeThreshold";
       } = {} as any,
 ) {
-  return useContractWrite<typeof safeABI, 'changeThreshold', TMode>({
+  return useContractWrite<typeof safeABI, "changeThreshold", TMode>({
     abi: safeABI,
-    functionName: 'changeThreshold',
+    functionName: "changeThreshold",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -3625,25 +3628,25 @@ export function useSafeChangeThreshold<
 export function useSafeDisableModule<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeABI,
-          'disableModule'
-        >['request']['abi'],
-        'disableModule',
+          "disableModule"
+        >["request"]["abi"],
+        "disableModule",
         TMode
-      > & { functionName?: 'disableModule' }
-    : UseContractWriteConfig<typeof safeABI, 'disableModule', TMode> & {
-        abi?: never
-        functionName?: 'disableModule'
+      > & { functionName?: "disableModule" }
+    : UseContractWriteConfig<typeof safeABI, "disableModule", TMode> & {
+        abi?: never;
+        functionName?: "disableModule";
       } = {} as any,
 ) {
-  return useContractWrite<typeof safeABI, 'disableModule', TMode>({
+  return useContractWrite<typeof safeABI, "disableModule", TMode>({
     abi: safeABI,
-    functionName: 'disableModule',
+    functionName: "disableModule",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -3652,25 +3655,25 @@ export function useSafeDisableModule<
 export function useSafeEnableModule<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeABI,
-          'enableModule'
-        >['request']['abi'],
-        'enableModule',
+          "enableModule"
+        >["request"]["abi"],
+        "enableModule",
         TMode
-      > & { functionName?: 'enableModule' }
-    : UseContractWriteConfig<typeof safeABI, 'enableModule', TMode> & {
-        abi?: never
-        functionName?: 'enableModule'
+      > & { functionName?: "enableModule" }
+    : UseContractWriteConfig<typeof safeABI, "enableModule", TMode> & {
+        abi?: never;
+        functionName?: "enableModule";
       } = {} as any,
 ) {
-  return useContractWrite<typeof safeABI, 'enableModule', TMode>({
+  return useContractWrite<typeof safeABI, "enableModule", TMode>({
     abi: safeABI,
-    functionName: 'enableModule',
+    functionName: "enableModule",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -3679,25 +3682,25 @@ export function useSafeEnableModule<
 export function useSafeExecTransaction<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeABI,
-          'execTransaction'
-        >['request']['abi'],
-        'execTransaction',
+          "execTransaction"
+        >["request"]["abi"],
+        "execTransaction",
         TMode
-      > & { functionName?: 'execTransaction' }
-    : UseContractWriteConfig<typeof safeABI, 'execTransaction', TMode> & {
-        abi?: never
-        functionName?: 'execTransaction'
+      > & { functionName?: "execTransaction" }
+    : UseContractWriteConfig<typeof safeABI, "execTransaction", TMode> & {
+        abi?: never;
+        functionName?: "execTransaction";
       } = {} as any,
 ) {
-  return useContractWrite<typeof safeABI, 'execTransaction', TMode>({
+  return useContractWrite<typeof safeABI, "execTransaction", TMode>({
     abi: safeABI,
-    functionName: 'execTransaction',
+    functionName: "execTransaction",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -3706,29 +3709,29 @@ export function useSafeExecTransaction<
 export function useSafeExecTransactionFromModule<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeABI,
-          'execTransactionFromModule'
-        >['request']['abi'],
-        'execTransactionFromModule',
+          "execTransactionFromModule"
+        >["request"]["abi"],
+        "execTransactionFromModule",
         TMode
-      > & { functionName?: 'execTransactionFromModule' }
+      > & { functionName?: "execTransactionFromModule" }
     : UseContractWriteConfig<
         typeof safeABI,
-        'execTransactionFromModule',
+        "execTransactionFromModule",
         TMode
       > & {
-        abi?: never
-        functionName?: 'execTransactionFromModule'
+        abi?: never;
+        functionName?: "execTransactionFromModule";
       } = {} as any,
 ) {
-  return useContractWrite<typeof safeABI, 'execTransactionFromModule', TMode>({
+  return useContractWrite<typeof safeABI, "execTransactionFromModule", TMode>({
     abi: safeABI,
-    functionName: 'execTransactionFromModule',
+    functionName: "execTransactionFromModule",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -3737,58 +3740,58 @@ export function useSafeExecTransactionFromModule<
 export function useSafeExecTransactionFromModuleReturnData<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeABI,
-          'execTransactionFromModuleReturnData'
-        >['request']['abi'],
-        'execTransactionFromModuleReturnData',
+          "execTransactionFromModuleReturnData"
+        >["request"]["abi"],
+        "execTransactionFromModuleReturnData",
         TMode
-      > & { functionName?: 'execTransactionFromModuleReturnData' }
+      > & { functionName?: "execTransactionFromModuleReturnData" }
     : UseContractWriteConfig<
         typeof safeABI,
-        'execTransactionFromModuleReturnData',
+        "execTransactionFromModuleReturnData",
         TMode
       > & {
-        abi?: never
-        functionName?: 'execTransactionFromModuleReturnData'
+        abi?: never;
+        functionName?: "execTransactionFromModuleReturnData";
       } = {} as any,
 ) {
   return useContractWrite<
     typeof safeABI,
-    'execTransactionFromModuleReturnData',
+    "execTransactionFromModuleReturnData",
     TMode
   >({
     abi: safeABI,
-    functionName: 'execTransactionFromModuleReturnData',
+    functionName: "execTransactionFromModuleReturnData",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"removeOwner"`.
  */
 export function useSafeRemoveOwner<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeABI,
-          'removeOwner'
-        >['request']['abi'],
-        'removeOwner',
+          "removeOwner"
+        >["request"]["abi"],
+        "removeOwner",
         TMode
-      > & { functionName?: 'removeOwner' }
-    : UseContractWriteConfig<typeof safeABI, 'removeOwner', TMode> & {
-        abi?: never
-        functionName?: 'removeOwner'
+      > & { functionName?: "removeOwner" }
+    : UseContractWriteConfig<typeof safeABI, "removeOwner", TMode> & {
+        abi?: never;
+        functionName?: "removeOwner";
       } = {} as any,
 ) {
-  return useContractWrite<typeof safeABI, 'removeOwner', TMode>({
+  return useContractWrite<typeof safeABI, "removeOwner", TMode>({
     abi: safeABI,
-    functionName: 'removeOwner',
+    functionName: "removeOwner",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -3797,72 +3800,72 @@ export function useSafeRemoveOwner<TMode extends WriteContractMode = undefined>(
 export function useSafeSetFallbackHandler<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeABI,
-          'setFallbackHandler'
-        >['request']['abi'],
-        'setFallbackHandler',
+          "setFallbackHandler"
+        >["request"]["abi"],
+        "setFallbackHandler",
         TMode
-      > & { functionName?: 'setFallbackHandler' }
-    : UseContractWriteConfig<typeof safeABI, 'setFallbackHandler', TMode> & {
-        abi?: never
-        functionName?: 'setFallbackHandler'
+      > & { functionName?: "setFallbackHandler" }
+    : UseContractWriteConfig<typeof safeABI, "setFallbackHandler", TMode> & {
+        abi?: never;
+        functionName?: "setFallbackHandler";
       } = {} as any,
 ) {
-  return useContractWrite<typeof safeABI, 'setFallbackHandler', TMode>({
+  return useContractWrite<typeof safeABI, "setFallbackHandler", TMode>({
     abi: safeABI,
-    functionName: 'setFallbackHandler',
+    functionName: "setFallbackHandler",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"setGuard"`.
  */
 export function useSafeSetGuard<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeABI,
-          'setGuard'
-        >['request']['abi'],
-        'setGuard',
+          "setGuard"
+        >["request"]["abi"],
+        "setGuard",
         TMode
-      > & { functionName?: 'setGuard' }
-    : UseContractWriteConfig<typeof safeABI, 'setGuard', TMode> & {
-        abi?: never
-        functionName?: 'setGuard'
+      > & { functionName?: "setGuard" }
+    : UseContractWriteConfig<typeof safeABI, "setGuard", TMode> & {
+        abi?: never;
+        functionName?: "setGuard";
       } = {} as any,
 ) {
-  return useContractWrite<typeof safeABI, 'setGuard', TMode>({
+  return useContractWrite<typeof safeABI, "setGuard", TMode>({
     abi: safeABI,
-    functionName: 'setGuard',
+    functionName: "setGuard",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"setup"`.
  */
 export function useSafeSetup<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
-        PrepareWriteContractResult<typeof safeABI, 'setup'>['request']['abi'],
-        'setup',
+        PrepareWriteContractResult<typeof safeABI, "setup">["request"]["abi"],
+        "setup",
         TMode
-      > & { functionName?: 'setup' }
-    : UseContractWriteConfig<typeof safeABI, 'setup', TMode> & {
-        abi?: never
-        functionName?: 'setup'
+      > & { functionName?: "setup" }
+    : UseContractWriteConfig<typeof safeABI, "setup", TMode> & {
+        abi?: never;
+        functionName?: "setup";
       } = {} as any,
 ) {
-  return useContractWrite<typeof safeABI, 'setup', TMode>({
+  return useContractWrite<typeof safeABI, "setup", TMode>({
     abi: safeABI,
-    functionName: 'setup',
+    functionName: "setup",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -3871,50 +3874,50 @@ export function useSafeSetup<TMode extends WriteContractMode = undefined>(
 export function useSafeSimulateAndRevert<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeABI,
-          'simulateAndRevert'
-        >['request']['abi'],
-        'simulateAndRevert',
+          "simulateAndRevert"
+        >["request"]["abi"],
+        "simulateAndRevert",
         TMode
-      > & { functionName?: 'simulateAndRevert' }
-    : UseContractWriteConfig<typeof safeABI, 'simulateAndRevert', TMode> & {
-        abi?: never
-        functionName?: 'simulateAndRevert'
+      > & { functionName?: "simulateAndRevert" }
+    : UseContractWriteConfig<typeof safeABI, "simulateAndRevert", TMode> & {
+        abi?: never;
+        functionName?: "simulateAndRevert";
       } = {} as any,
 ) {
-  return useContractWrite<typeof safeABI, 'simulateAndRevert', TMode>({
+  return useContractWrite<typeof safeABI, "simulateAndRevert", TMode>({
     abi: safeABI,
-    functionName: 'simulateAndRevert',
+    functionName: "simulateAndRevert",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link safeABI}__ and `functionName` set to `"swapOwner"`.
  */
 export function useSafeSwapOwner<TMode extends WriteContractMode = undefined>(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeABI,
-          'swapOwner'
-        >['request']['abi'],
-        'swapOwner',
+          "swapOwner"
+        >["request"]["abi"],
+        "swapOwner",
         TMode
-      > & { functionName?: 'swapOwner' }
-    : UseContractWriteConfig<typeof safeABI, 'swapOwner', TMode> & {
-        abi?: never
-        functionName?: 'swapOwner'
+      > & { functionName?: "swapOwner" }
+    : UseContractWriteConfig<typeof safeABI, "swapOwner", TMode> & {
+        abi?: never;
+        functionName?: "swapOwner";
       } = {} as any,
 ) {
-  return useContractWrite<typeof safeABI, 'swapOwner', TMode>({
+  return useContractWrite<typeof safeABI, "swapOwner", TMode>({
     abi: safeABI,
-    functionName: 'swapOwner',
+    functionName: "swapOwner",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -3923,13 +3926,13 @@ export function useSafeSwapOwner<TMode extends WriteContractMode = undefined>(
 export function usePrepareSafeWrite<TFunctionName extends string>(
   config: Omit<
     UsePrepareContractWriteConfig<typeof safeABI, TFunctionName>,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
     ...config,
-  } as UsePrepareContractWriteConfig<typeof safeABI, TFunctionName>)
+  } as UsePrepareContractWriteConfig<typeof safeABI, TFunctionName>);
 }
 
 /**
@@ -3937,15 +3940,15 @@ export function usePrepareSafeWrite<TFunctionName extends string>(
  */
 export function usePrepareSafeAddOwnerWithThreshold(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof safeABI, 'addOwnerWithThreshold'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof safeABI, "addOwnerWithThreshold">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
-    functionName: 'addOwnerWithThreshold',
+    functionName: "addOwnerWithThreshold",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof safeABI, 'addOwnerWithThreshold'>)
+  } as UsePrepareContractWriteConfig<typeof safeABI, "addOwnerWithThreshold">);
 }
 
 /**
@@ -3953,15 +3956,15 @@ export function usePrepareSafeAddOwnerWithThreshold(
  */
 export function usePrepareSafeApproveHash(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof safeABI, 'approveHash'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof safeABI, "approveHash">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
-    functionName: 'approveHash',
+    functionName: "approveHash",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof safeABI, 'approveHash'>)
+  } as UsePrepareContractWriteConfig<typeof safeABI, "approveHash">);
 }
 
 /**
@@ -3969,15 +3972,15 @@ export function usePrepareSafeApproveHash(
  */
 export function usePrepareSafeChangeThreshold(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof safeABI, 'changeThreshold'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof safeABI, "changeThreshold">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
-    functionName: 'changeThreshold',
+    functionName: "changeThreshold",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof safeABI, 'changeThreshold'>)
+  } as UsePrepareContractWriteConfig<typeof safeABI, "changeThreshold">);
 }
 
 /**
@@ -3985,15 +3988,15 @@ export function usePrepareSafeChangeThreshold(
  */
 export function usePrepareSafeDisableModule(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof safeABI, 'disableModule'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof safeABI, "disableModule">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
-    functionName: 'disableModule',
+    functionName: "disableModule",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof safeABI, 'disableModule'>)
+  } as UsePrepareContractWriteConfig<typeof safeABI, "disableModule">);
 }
 
 /**
@@ -4001,15 +4004,15 @@ export function usePrepareSafeDisableModule(
  */
 export function usePrepareSafeEnableModule(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof safeABI, 'enableModule'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof safeABI, "enableModule">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
-    functionName: 'enableModule',
+    functionName: "enableModule",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof safeABI, 'enableModule'>)
+  } as UsePrepareContractWriteConfig<typeof safeABI, "enableModule">);
 }
 
 /**
@@ -4017,15 +4020,15 @@ export function usePrepareSafeEnableModule(
  */
 export function usePrepareSafeExecTransaction(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof safeABI, 'execTransaction'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof safeABI, "execTransaction">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
-    functionName: 'execTransaction',
+    functionName: "execTransaction",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof safeABI, 'execTransaction'>)
+  } as UsePrepareContractWriteConfig<typeof safeABI, "execTransaction">);
 }
 
 /**
@@ -4033,18 +4036,18 @@ export function usePrepareSafeExecTransaction(
  */
 export function usePrepareSafeExecTransactionFromModule(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof safeABI, 'execTransactionFromModule'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof safeABI, "execTransactionFromModule">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
-    functionName: 'execTransactionFromModule',
+    functionName: "execTransactionFromModule",
     ...config,
   } as UsePrepareContractWriteConfig<
     typeof safeABI,
-    'execTransactionFromModule'
-  >)
+    "execTransactionFromModule"
+  >);
 }
 
 /**
@@ -4054,19 +4057,19 @@ export function usePrepareSafeExecTransactionFromModuleReturnData(
   config: Omit<
     UsePrepareContractWriteConfig<
       typeof safeABI,
-      'execTransactionFromModuleReturnData'
+      "execTransactionFromModuleReturnData"
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
-    functionName: 'execTransactionFromModuleReturnData',
+    functionName: "execTransactionFromModuleReturnData",
     ...config,
   } as UsePrepareContractWriteConfig<
     typeof safeABI,
-    'execTransactionFromModuleReturnData'
-  >)
+    "execTransactionFromModuleReturnData"
+  >);
 }
 
 /**
@@ -4074,15 +4077,15 @@ export function usePrepareSafeExecTransactionFromModuleReturnData(
  */
 export function usePrepareSafeRemoveOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof safeABI, 'removeOwner'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof safeABI, "removeOwner">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
-    functionName: 'removeOwner',
+    functionName: "removeOwner",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof safeABI, 'removeOwner'>)
+  } as UsePrepareContractWriteConfig<typeof safeABI, "removeOwner">);
 }
 
 /**
@@ -4090,15 +4093,15 @@ export function usePrepareSafeRemoveOwner(
  */
 export function usePrepareSafeSetFallbackHandler(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof safeABI, 'setFallbackHandler'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof safeABI, "setFallbackHandler">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
-    functionName: 'setFallbackHandler',
+    functionName: "setFallbackHandler",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof safeABI, 'setFallbackHandler'>)
+  } as UsePrepareContractWriteConfig<typeof safeABI, "setFallbackHandler">);
 }
 
 /**
@@ -4106,15 +4109,15 @@ export function usePrepareSafeSetFallbackHandler(
  */
 export function usePrepareSafeSetGuard(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof safeABI, 'setGuard'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof safeABI, "setGuard">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
-    functionName: 'setGuard',
+    functionName: "setGuard",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof safeABI, 'setGuard'>)
+  } as UsePrepareContractWriteConfig<typeof safeABI, "setGuard">);
 }
 
 /**
@@ -4122,15 +4125,15 @@ export function usePrepareSafeSetGuard(
  */
 export function usePrepareSafeSetup(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof safeABI, 'setup'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof safeABI, "setup">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
-    functionName: 'setup',
+    functionName: "setup",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof safeABI, 'setup'>)
+  } as UsePrepareContractWriteConfig<typeof safeABI, "setup">);
 }
 
 /**
@@ -4138,15 +4141,15 @@ export function usePrepareSafeSetup(
  */
 export function usePrepareSafeSimulateAndRevert(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof safeABI, 'simulateAndRevert'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof safeABI, "simulateAndRevert">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
-    functionName: 'simulateAndRevert',
+    functionName: "simulateAndRevert",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof safeABI, 'simulateAndRevert'>)
+  } as UsePrepareContractWriteConfig<typeof safeABI, "simulateAndRevert">);
 }
 
 /**
@@ -4154,15 +4157,15 @@ export function usePrepareSafeSimulateAndRevert(
  */
 export function usePrepareSafeSwapOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof safeABI, 'swapOwner'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof safeABI, "swapOwner">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeABI,
-    functionName: 'swapOwner',
+    functionName: "swapOwner",
     ...config,
-  } as UsePrepareContractWriteConfig<typeof safeABI, 'swapOwner'>)
+  } as UsePrepareContractWriteConfig<typeof safeABI, "swapOwner">);
 }
 
 /**
@@ -4171,13 +4174,13 @@ export function usePrepareSafeSwapOwner(
 export function useSafeEvent<TEventName extends string>(
   config: Omit<
     UseContractEventConfig<typeof safeABI, TEventName>,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return useContractEvent({ abi: safeABI, ...config } as UseContractEventConfig<
     typeof safeABI,
     TEventName
-  >)
+  >);
 }
 
 /**
@@ -4185,15 +4188,15 @@ export function useSafeEvent<TEventName extends string>(
  */
 export function useSafeAddedOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'AddedOwner'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "AddedOwner">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'AddedOwner',
+    eventName: "AddedOwner",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'AddedOwner'>)
+  } as UseContractEventConfig<typeof safeABI, "AddedOwner">);
 }
 
 /**
@@ -4201,15 +4204,15 @@ export function useSafeAddedOwnerEvent(
  */
 export function useSafeApproveHashEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'ApproveHash'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "ApproveHash">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'ApproveHash',
+    eventName: "ApproveHash",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'ApproveHash'>)
+  } as UseContractEventConfig<typeof safeABI, "ApproveHash">);
 }
 
 /**
@@ -4217,15 +4220,15 @@ export function useSafeApproveHashEvent(
  */
 export function useSafeChangedFallbackHandlerEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'ChangedFallbackHandler'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "ChangedFallbackHandler">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'ChangedFallbackHandler',
+    eventName: "ChangedFallbackHandler",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'ChangedFallbackHandler'>)
+  } as UseContractEventConfig<typeof safeABI, "ChangedFallbackHandler">);
 }
 
 /**
@@ -4233,15 +4236,15 @@ export function useSafeChangedFallbackHandlerEvent(
  */
 export function useSafeChangedGuardEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'ChangedGuard'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "ChangedGuard">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'ChangedGuard',
+    eventName: "ChangedGuard",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'ChangedGuard'>)
+  } as UseContractEventConfig<typeof safeABI, "ChangedGuard">);
 }
 
 /**
@@ -4249,15 +4252,15 @@ export function useSafeChangedGuardEvent(
  */
 export function useSafeChangedThresholdEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'ChangedThreshold'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "ChangedThreshold">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'ChangedThreshold',
+    eventName: "ChangedThreshold",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'ChangedThreshold'>)
+  } as UseContractEventConfig<typeof safeABI, "ChangedThreshold">);
 }
 
 /**
@@ -4265,15 +4268,15 @@ export function useSafeChangedThresholdEvent(
  */
 export function useSafeDisabledModuleEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'DisabledModule'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "DisabledModule">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'DisabledModule',
+    eventName: "DisabledModule",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'DisabledModule'>)
+  } as UseContractEventConfig<typeof safeABI, "DisabledModule">);
 }
 
 /**
@@ -4281,15 +4284,15 @@ export function useSafeDisabledModuleEvent(
  */
 export function useSafeEnabledModuleEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'EnabledModule'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "EnabledModule">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'EnabledModule',
+    eventName: "EnabledModule",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'EnabledModule'>)
+  } as UseContractEventConfig<typeof safeABI, "EnabledModule">);
 }
 
 /**
@@ -4297,15 +4300,15 @@ export function useSafeEnabledModuleEvent(
  */
 export function useSafeExecutionFailureEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'ExecutionFailure'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "ExecutionFailure">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'ExecutionFailure',
+    eventName: "ExecutionFailure",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'ExecutionFailure'>)
+  } as UseContractEventConfig<typeof safeABI, "ExecutionFailure">);
 }
 
 /**
@@ -4313,15 +4316,15 @@ export function useSafeExecutionFailureEvent(
  */
 export function useSafeExecutionFromModuleFailureEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'ExecutionFromModuleFailure'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "ExecutionFromModuleFailure">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'ExecutionFromModuleFailure',
+    eventName: "ExecutionFromModuleFailure",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'ExecutionFromModuleFailure'>)
+  } as UseContractEventConfig<typeof safeABI, "ExecutionFromModuleFailure">);
 }
 
 /**
@@ -4329,15 +4332,15 @@ export function useSafeExecutionFromModuleFailureEvent(
  */
 export function useSafeExecutionFromModuleSuccessEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'ExecutionFromModuleSuccess'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "ExecutionFromModuleSuccess">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'ExecutionFromModuleSuccess',
+    eventName: "ExecutionFromModuleSuccess",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'ExecutionFromModuleSuccess'>)
+  } as UseContractEventConfig<typeof safeABI, "ExecutionFromModuleSuccess">);
 }
 
 /**
@@ -4345,15 +4348,15 @@ export function useSafeExecutionFromModuleSuccessEvent(
  */
 export function useSafeExecutionSuccessEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'ExecutionSuccess'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "ExecutionSuccess">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'ExecutionSuccess',
+    eventName: "ExecutionSuccess",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'ExecutionSuccess'>)
+  } as UseContractEventConfig<typeof safeABI, "ExecutionSuccess">);
 }
 
 /**
@@ -4361,15 +4364,15 @@ export function useSafeExecutionSuccessEvent(
  */
 export function useSafeRemovedOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'RemovedOwner'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "RemovedOwner">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'RemovedOwner',
+    eventName: "RemovedOwner",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'RemovedOwner'>)
+  } as UseContractEventConfig<typeof safeABI, "RemovedOwner">);
 }
 
 /**
@@ -4377,15 +4380,15 @@ export function useSafeRemovedOwnerEvent(
  */
 export function useSafeSafeReceivedEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'SafeReceived'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "SafeReceived">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'SafeReceived',
+    eventName: "SafeReceived",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'SafeReceived'>)
+  } as UseContractEventConfig<typeof safeABI, "SafeReceived">);
 }
 
 /**
@@ -4393,15 +4396,15 @@ export function useSafeSafeReceivedEvent(
  */
 export function useSafeSafeSetupEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'SafeSetup'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "SafeSetup">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'SafeSetup',
+    eventName: "SafeSetup",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'SafeSetup'>)
+  } as UseContractEventConfig<typeof safeABI, "SafeSetup">);
 }
 
 /**
@@ -4409,15 +4412,15 @@ export function useSafeSafeSetupEvent(
  */
 export function useSafeSignMsgEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeABI, 'SignMsg'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeABI, "SignMsg">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeABI,
-    eventName: 'SignMsg',
+    eventName: "SignMsg",
     ...config,
-  } as UseContractEventConfig<typeof safeABI, 'SignMsg'>)
+  } as UseContractEventConfig<typeof safeABI, "SignMsg">);
 }
 
 /**
@@ -4433,7 +4436,7 @@ export function useSafeProxyFactoryRead<
       TFunctionName,
       TSelectData
     >,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return useContractRead({
@@ -4443,14 +4446,14 @@ export function useSafeProxyFactoryRead<
     typeof safeProxyFactoryABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeProxyFactoryABI}__ and `functionName` set to `"getChainId"`.
  */
 export function useSafeProxyFactoryGetChainId<
-  TFunctionName extends 'getChainId',
+  TFunctionName extends "getChainId",
   TSelectData = ReadContractResult<typeof safeProxyFactoryABI, TFunctionName>,
 >(
   config: Omit<
@@ -4459,25 +4462,25 @@ export function useSafeProxyFactoryGetChainId<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeProxyFactoryABI,
-    functionName: 'getChainId',
+    functionName: "getChainId",
     ...config,
   } as UseContractReadConfig<
     typeof safeProxyFactoryABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link safeProxyFactoryABI}__ and `functionName` set to `"proxyCreationCode"`.
  */
 export function useSafeProxyFactoryProxyCreationCode<
-  TFunctionName extends 'proxyCreationCode',
+  TFunctionName extends "proxyCreationCode",
   TSelectData = ReadContractResult<typeof safeProxyFactoryABI, TFunctionName>,
 >(
   config: Omit<
@@ -4486,18 +4489,18 @@ export function useSafeProxyFactoryProxyCreationCode<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: safeProxyFactoryABI,
-    functionName: 'proxyCreationCode',
+    functionName: "proxyCreationCode",
     ...config,
   } as UseContractReadConfig<
     typeof safeProxyFactoryABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
@@ -4507,12 +4510,12 @@ export function useSafeProxyFactoryWrite<
   TFunctionName extends string,
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeProxyFactoryABI,
           string
-        >['request']['abi'],
+        >["request"]["abi"],
         TFunctionName,
         TMode
       >
@@ -4521,13 +4524,13 @@ export function useSafeProxyFactoryWrite<
         TFunctionName,
         TMode
       > & {
-        abi?: never
+        abi?: never;
       } = {} as any,
 ) {
   return useContractWrite<typeof safeProxyFactoryABI, TFunctionName, TMode>({
     abi: safeProxyFactoryABI,
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -4536,33 +4539,33 @@ export function useSafeProxyFactoryWrite<
 export function useSafeProxyFactoryCreateChainSpecificProxyWithNonce<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeProxyFactoryABI,
-          'createChainSpecificProxyWithNonce'
-        >['request']['abi'],
-        'createChainSpecificProxyWithNonce',
+          "createChainSpecificProxyWithNonce"
+        >["request"]["abi"],
+        "createChainSpecificProxyWithNonce",
         TMode
-      > & { functionName?: 'createChainSpecificProxyWithNonce' }
+      > & { functionName?: "createChainSpecificProxyWithNonce" }
     : UseContractWriteConfig<
         typeof safeProxyFactoryABI,
-        'createChainSpecificProxyWithNonce',
+        "createChainSpecificProxyWithNonce",
         TMode
       > & {
-        abi?: never
-        functionName?: 'createChainSpecificProxyWithNonce'
+        abi?: never;
+        functionName?: "createChainSpecificProxyWithNonce";
       } = {} as any,
 ) {
   return useContractWrite<
     typeof safeProxyFactoryABI,
-    'createChainSpecificProxyWithNonce',
+    "createChainSpecificProxyWithNonce",
     TMode
   >({
     abi: safeProxyFactoryABI,
-    functionName: 'createChainSpecificProxyWithNonce',
+    functionName: "createChainSpecificProxyWithNonce",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -4571,33 +4574,33 @@ export function useSafeProxyFactoryCreateChainSpecificProxyWithNonce<
 export function useSafeProxyFactoryCreateProxyWithCallback<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeProxyFactoryABI,
-          'createProxyWithCallback'
-        >['request']['abi'],
-        'createProxyWithCallback',
+          "createProxyWithCallback"
+        >["request"]["abi"],
+        "createProxyWithCallback",
         TMode
-      > & { functionName?: 'createProxyWithCallback' }
+      > & { functionName?: "createProxyWithCallback" }
     : UseContractWriteConfig<
         typeof safeProxyFactoryABI,
-        'createProxyWithCallback',
+        "createProxyWithCallback",
         TMode
       > & {
-        abi?: never
-        functionName?: 'createProxyWithCallback'
+        abi?: never;
+        functionName?: "createProxyWithCallback";
       } = {} as any,
 ) {
   return useContractWrite<
     typeof safeProxyFactoryABI,
-    'createProxyWithCallback',
+    "createProxyWithCallback",
     TMode
   >({
     abi: safeProxyFactoryABI,
-    functionName: 'createProxyWithCallback',
+    functionName: "createProxyWithCallback",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -4606,33 +4609,33 @@ export function useSafeProxyFactoryCreateProxyWithCallback<
 export function useSafeProxyFactoryCreateProxyWithNonce<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof safeProxyFactoryABI,
-          'createProxyWithNonce'
-        >['request']['abi'],
-        'createProxyWithNonce',
+          "createProxyWithNonce"
+        >["request"]["abi"],
+        "createProxyWithNonce",
         TMode
-      > & { functionName?: 'createProxyWithNonce' }
+      > & { functionName?: "createProxyWithNonce" }
     : UseContractWriteConfig<
         typeof safeProxyFactoryABI,
-        'createProxyWithNonce',
+        "createProxyWithNonce",
         TMode
       > & {
-        abi?: never
-        functionName?: 'createProxyWithNonce'
+        abi?: never;
+        functionName?: "createProxyWithNonce";
       } = {} as any,
 ) {
   return useContractWrite<
     typeof safeProxyFactoryABI,
-    'createProxyWithNonce',
+    "createProxyWithNonce",
     TMode
   >({
     abi: safeProxyFactoryABI,
-    functionName: 'createProxyWithNonce',
+    functionName: "createProxyWithNonce",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -4641,13 +4644,16 @@ export function useSafeProxyFactoryCreateProxyWithNonce<
 export function usePrepareSafeProxyFactoryWrite<TFunctionName extends string>(
   config: Omit<
     UsePrepareContractWriteConfig<typeof safeProxyFactoryABI, TFunctionName>,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeProxyFactoryABI,
     ...config,
-  } as UsePrepareContractWriteConfig<typeof safeProxyFactoryABI, TFunctionName>)
+  } as UsePrepareContractWriteConfig<
+    typeof safeProxyFactoryABI,
+    TFunctionName
+  >);
 }
 
 /**
@@ -4657,19 +4663,19 @@ export function usePrepareSafeProxyFactoryCreateChainSpecificProxyWithNonce(
   config: Omit<
     UsePrepareContractWriteConfig<
       typeof safeProxyFactoryABI,
-      'createChainSpecificProxyWithNonce'
+      "createChainSpecificProxyWithNonce"
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeProxyFactoryABI,
-    functionName: 'createChainSpecificProxyWithNonce',
+    functionName: "createChainSpecificProxyWithNonce",
     ...config,
   } as UsePrepareContractWriteConfig<
     typeof safeProxyFactoryABI,
-    'createChainSpecificProxyWithNonce'
-  >)
+    "createChainSpecificProxyWithNonce"
+  >);
 }
 
 /**
@@ -4679,19 +4685,19 @@ export function usePrepareSafeProxyFactoryCreateProxyWithCallback(
   config: Omit<
     UsePrepareContractWriteConfig<
       typeof safeProxyFactoryABI,
-      'createProxyWithCallback'
+      "createProxyWithCallback"
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeProxyFactoryABI,
-    functionName: 'createProxyWithCallback',
+    functionName: "createProxyWithCallback",
     ...config,
   } as UsePrepareContractWriteConfig<
     typeof safeProxyFactoryABI,
-    'createProxyWithCallback'
-  >)
+    "createProxyWithCallback"
+  >);
 }
 
 /**
@@ -4701,19 +4707,19 @@ export function usePrepareSafeProxyFactoryCreateProxyWithNonce(
   config: Omit<
     UsePrepareContractWriteConfig<
       typeof safeProxyFactoryABI,
-      'createProxyWithNonce'
+      "createProxyWithNonce"
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: safeProxyFactoryABI,
-    functionName: 'createProxyWithNonce',
+    functionName: "createProxyWithNonce",
     ...config,
   } as UsePrepareContractWriteConfig<
     typeof safeProxyFactoryABI,
-    'createProxyWithNonce'
-  >)
+    "createProxyWithNonce"
+  >);
 }
 
 /**
@@ -4722,13 +4728,13 @@ export function usePrepareSafeProxyFactoryCreateProxyWithNonce(
 export function useSafeProxyFactoryEvent<TEventName extends string>(
   config: Omit<
     UseContractEventConfig<typeof safeProxyFactoryABI, TEventName>,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeProxyFactoryABI,
     ...config,
-  } as UseContractEventConfig<typeof safeProxyFactoryABI, TEventName>)
+  } as UseContractEventConfig<typeof safeProxyFactoryABI, TEventName>);
 }
 
 /**
@@ -4736,15 +4742,15 @@ export function useSafeProxyFactoryEvent<TEventName extends string>(
  */
 export function useSafeProxyFactoryProxyCreationEvent(
   config: Omit<
-    UseContractEventConfig<typeof safeProxyFactoryABI, 'ProxyCreation'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof safeProxyFactoryABI, "ProxyCreation">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: safeProxyFactoryABI,
-    eventName: 'ProxyCreation',
+    eventName: "ProxyCreation",
     ...config,
-  } as UseContractEventConfig<typeof safeProxyFactoryABI, 'ProxyCreation'>)
+  } as UseContractEventConfig<typeof safeProxyFactoryABI, "ProxyCreation">);
 }
 
 /**
@@ -4763,7 +4769,7 @@ export function useTimestampBeforeIntentRead<
       TFunctionName,
       TSelectData
     >,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return useContractRead({
@@ -4773,14 +4779,14 @@ export function useTimestampBeforeIntentRead<
     typeof timestampBeforeIntentABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link timestampBeforeIntentABI}__ and `functionName` set to `"execute"`.
  */
 export function useTimestampBeforeIntentExecute<
-  TFunctionName extends 'execute',
+  TFunctionName extends "execute",
   TSelectData = ReadContractResult<
     typeof timestampBeforeIntentABI,
     TFunctionName
@@ -4792,18 +4798,18 @@ export function useTimestampBeforeIntentExecute<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: timestampBeforeIntentABI,
-    functionName: 'execute',
+    functionName: "execute",
     ...config,
   } as UseContractReadConfig<
     typeof timestampBeforeIntentABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
@@ -4822,7 +4828,7 @@ export function useTokenRouterReleaseIntentRead<
       TFunctionName,
       TSelectData
     >,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return useContractRead({
@@ -4832,14 +4838,14 @@ export function useTokenRouterReleaseIntentRead<
     typeof tokenRouterReleaseIntentABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link tokenRouterReleaseIntentABI}__ and `functionName` set to `"till"`.
  */
 export function useTokenRouterReleaseIntentTill<
-  TFunctionName extends 'till',
+  TFunctionName extends "till",
   TSelectData = ReadContractResult<
     typeof tokenRouterReleaseIntentABI,
     TFunctionName
@@ -4851,18 +4857,18 @@ export function useTokenRouterReleaseIntentTill<
       TFunctionName,
       TSelectData
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: tokenRouterReleaseIntentABI,
-    functionName: 'till',
+    functionName: "till",
     ...config,
   } as UseContractReadConfig<
     typeof tokenRouterReleaseIntentABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
@@ -4872,12 +4878,12 @@ export function useTokenRouterReleaseIntentWrite<
   TFunctionName extends string,
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof tokenRouterReleaseIntentABI,
           string
-        >['request']['abi'],
+        >["request"]["abi"],
         TFunctionName,
         TMode
       >
@@ -4886,14 +4892,14 @@ export function useTokenRouterReleaseIntentWrite<
         TFunctionName,
         TMode
       > & {
-        abi?: never
+        abi?: never;
       } = {} as any,
 ) {
   return useContractWrite<
     typeof tokenRouterReleaseIntentABI,
     TFunctionName,
     TMode
-  >({ abi: tokenRouterReleaseIntentABI, ...config } as any)
+  >({ abi: tokenRouterReleaseIntentABI, ...config } as any);
 }
 
 /**
@@ -4902,29 +4908,29 @@ export function useTokenRouterReleaseIntentWrite<
 export function useTokenRouterReleaseIntentClaim<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof tokenRouterReleaseIntentABI,
-          'claim'
-        >['request']['abi'],
-        'claim',
+          "claim"
+        >["request"]["abi"],
+        "claim",
         TMode
-      > & { functionName?: 'claim' }
+      > & { functionName?: "claim" }
     : UseContractWriteConfig<
         typeof tokenRouterReleaseIntentABI,
-        'claim',
+        "claim",
         TMode
       > & {
-        abi?: never
-        functionName?: 'claim'
+        abi?: never;
+        functionName?: "claim";
       } = {} as any,
 ) {
-  return useContractWrite<typeof tokenRouterReleaseIntentABI, 'claim', TMode>({
+  return useContractWrite<typeof tokenRouterReleaseIntentABI, "claim", TMode>({
     abi: tokenRouterReleaseIntentABI,
-    functionName: 'claim',
+    functionName: "claim",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -4933,31 +4939,31 @@ export function useTokenRouterReleaseIntentClaim<
 export function useTokenRouterReleaseIntentExecute<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof tokenRouterReleaseIntentABI,
-          'execute'
-        >['request']['abi'],
-        'execute',
+          "execute"
+        >["request"]["abi"],
+        "execute",
         TMode
-      > & { functionName?: 'execute' }
+      > & { functionName?: "execute" }
     : UseContractWriteConfig<
         typeof tokenRouterReleaseIntentABI,
-        'execute',
+        "execute",
         TMode
       > & {
-        abi?: never
-        functionName?: 'execute'
+        abi?: never;
+        functionName?: "execute";
       } = {} as any,
 ) {
-  return useContractWrite<typeof tokenRouterReleaseIntentABI, 'execute', TMode>(
+  return useContractWrite<typeof tokenRouterReleaseIntentABI, "execute", TMode>(
     {
       abi: tokenRouterReleaseIntentABI,
-      functionName: 'execute',
+      functionName: "execute",
       ...config,
     } as any,
-  )
+  );
 }
 
 /**
@@ -4971,7 +4977,7 @@ export function usePrepareTokenRouterReleaseIntentWrite<
       typeof tokenRouterReleaseIntentABI,
       TFunctionName
     >,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
@@ -4980,7 +4986,7 @@ export function usePrepareTokenRouterReleaseIntentWrite<
   } as UsePrepareContractWriteConfig<
     typeof tokenRouterReleaseIntentABI,
     TFunctionName
-  >)
+  >);
 }
 
 /**
@@ -4988,18 +4994,18 @@ export function usePrepareTokenRouterReleaseIntentWrite<
  */
 export function usePrepareTokenRouterReleaseIntentClaim(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof tokenRouterReleaseIntentABI, 'claim'>,
-    'abi' | 'functionName'
+    UsePrepareContractWriteConfig<typeof tokenRouterReleaseIntentABI, "claim">,
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: tokenRouterReleaseIntentABI,
-    functionName: 'claim',
+    functionName: "claim",
     ...config,
   } as UsePrepareContractWriteConfig<
     typeof tokenRouterReleaseIntentABI,
-    'claim'
-  >)
+    "claim"
+  >);
 }
 
 /**
@@ -5009,19 +5015,19 @@ export function usePrepareTokenRouterReleaseIntentExecute(
   config: Omit<
     UsePrepareContractWriteConfig<
       typeof tokenRouterReleaseIntentABI,
-      'execute'
+      "execute"
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: tokenRouterReleaseIntentABI,
-    functionName: 'execute',
+    functionName: "execute",
     ...config,
   } as UsePrepareContractWriteConfig<
     typeof tokenRouterReleaseIntentABI,
-    'execute'
-  >)
+    "execute"
+  >);
 }
 
 /**
@@ -5030,13 +5036,13 @@ export function usePrepareTokenRouterReleaseIntentExecute(
 export function useTokenRouterReleaseIntentEvent<TEventName extends string>(
   config: Omit<
     UseContractEventConfig<typeof tokenRouterReleaseIntentABI, TEventName>,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: tokenRouterReleaseIntentABI,
     ...config,
-  } as UseContractEventConfig<typeof tokenRouterReleaseIntentABI, TEventName>)
+  } as UseContractEventConfig<typeof tokenRouterReleaseIntentABI, TEventName>);
 }
 
 /**
@@ -5044,15 +5050,15 @@ export function useTokenRouterReleaseIntentEvent<TEventName extends string>(
  */
 export function useTokenRouterReleaseIntentReleaseEvent(
   config: Omit<
-    UseContractEventConfig<typeof tokenRouterReleaseIntentABI, 'Release'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof tokenRouterReleaseIntentABI, "Release">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: tokenRouterReleaseIntentABI,
-    eventName: 'Release',
+    eventName: "Release",
     ...config,
-  } as UseContractEventConfig<typeof tokenRouterReleaseIntentABI, 'Release'>)
+  } as UseContractEventConfig<typeof tokenRouterReleaseIntentABI, "Release">);
 }
 
 /**
@@ -5064,7 +5070,7 @@ export function useWalletFactoryRead<
 >(
   config: Omit<
     UseContractReadConfig<typeof walletFactoryABI, TFunctionName, TSelectData>,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return useContractRead({
@@ -5074,76 +5080,76 @@ export function useWalletFactoryRead<
     typeof walletFactoryABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link walletFactoryABI}__ and `functionName` set to `"getChainId"`.
  */
 export function useWalletFactoryGetChainId<
-  TFunctionName extends 'getChainId',
+  TFunctionName extends "getChainId",
   TSelectData = ReadContractResult<typeof walletFactoryABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof walletFactoryABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: walletFactoryABI,
-    functionName: 'getChainId',
+    functionName: "getChainId",
     ...config,
   } as UseContractReadConfig<
     typeof walletFactoryABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link walletFactoryABI}__ and `functionName` set to `"getDeterministicWalletAddress"`.
  */
 export function useWalletFactoryGetDeterministicWalletAddress<
-  TFunctionName extends 'getDeterministicWalletAddress',
+  TFunctionName extends "getDeterministicWalletAddress",
   TSelectData = ReadContractResult<typeof walletFactoryABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof walletFactoryABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: walletFactoryABI,
-    functionName: 'getDeterministicWalletAddress',
+    functionName: "getDeterministicWalletAddress",
     ...config,
   } as UseContractReadConfig<
     typeof walletFactoryABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link walletFactoryABI}__ and `functionName` set to `"proxyCreationCode"`.
  */
 export function useWalletFactoryProxyCreationCode<
-  TFunctionName extends 'proxyCreationCode',
+  TFunctionName extends "proxyCreationCode",
   TSelectData = ReadContractResult<typeof walletFactoryABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<typeof walletFactoryABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return useContractRead({
     abi: walletFactoryABI,
-    functionName: 'proxyCreationCode',
+    functionName: "proxyCreationCode",
     ...config,
   } as UseContractReadConfig<
     typeof walletFactoryABI,
     TFunctionName,
     TSelectData
-  >)
+  >);
 }
 
 /**
@@ -5153,23 +5159,23 @@ export function useWalletFactoryWrite<
   TFunctionName extends string,
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof walletFactoryABI,
           string
-        >['request']['abi'],
+        >["request"]["abi"],
         TFunctionName,
         TMode
       >
     : UseContractWriteConfig<typeof walletFactoryABI, TFunctionName, TMode> & {
-        abi?: never
+        abi?: never;
       } = {} as any,
 ) {
   return useContractWrite<typeof walletFactoryABI, TFunctionName, TMode>({
     abi: walletFactoryABI,
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -5178,33 +5184,33 @@ export function useWalletFactoryWrite<
 export function useWalletFactoryCreateChainSpecificProxyWithNonce<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof walletFactoryABI,
-          'createChainSpecificProxyWithNonce'
-        >['request']['abi'],
-        'createChainSpecificProxyWithNonce',
+          "createChainSpecificProxyWithNonce"
+        >["request"]["abi"],
+        "createChainSpecificProxyWithNonce",
         TMode
-      > & { functionName?: 'createChainSpecificProxyWithNonce' }
+      > & { functionName?: "createChainSpecificProxyWithNonce" }
     : UseContractWriteConfig<
         typeof walletFactoryABI,
-        'createChainSpecificProxyWithNonce',
+        "createChainSpecificProxyWithNonce",
         TMode
       > & {
-        abi?: never
-        functionName?: 'createChainSpecificProxyWithNonce'
+        abi?: never;
+        functionName?: "createChainSpecificProxyWithNonce";
       } = {} as any,
 ) {
   return useContractWrite<
     typeof walletFactoryABI,
-    'createChainSpecificProxyWithNonce',
+    "createChainSpecificProxyWithNonce",
     TMode
   >({
     abi: walletFactoryABI,
-    functionName: 'createChainSpecificProxyWithNonce',
+    functionName: "createChainSpecificProxyWithNonce",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -5213,33 +5219,33 @@ export function useWalletFactoryCreateChainSpecificProxyWithNonce<
 export function useWalletFactoryCreateProxyWithCallback<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof walletFactoryABI,
-          'createProxyWithCallback'
-        >['request']['abi'],
-        'createProxyWithCallback',
+          "createProxyWithCallback"
+        >["request"]["abi"],
+        "createProxyWithCallback",
         TMode
-      > & { functionName?: 'createProxyWithCallback' }
+      > & { functionName?: "createProxyWithCallback" }
     : UseContractWriteConfig<
         typeof walletFactoryABI,
-        'createProxyWithCallback',
+        "createProxyWithCallback",
         TMode
       > & {
-        abi?: never
-        functionName?: 'createProxyWithCallback'
+        abi?: never;
+        functionName?: "createProxyWithCallback";
       } = {} as any,
 ) {
   return useContractWrite<
     typeof walletFactoryABI,
-    'createProxyWithCallback',
+    "createProxyWithCallback",
     TMode
   >({
     abi: walletFactoryABI,
-    functionName: 'createProxyWithCallback',
+    functionName: "createProxyWithCallback",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -5248,33 +5254,33 @@ export function useWalletFactoryCreateProxyWithCallback<
 export function useWalletFactoryCreateProxyWithNonce<
   TMode extends WriteContractMode = undefined,
 >(
-  config: TMode extends 'prepared'
+  config: TMode extends "prepared"
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof walletFactoryABI,
-          'createProxyWithNonce'
-        >['request']['abi'],
-        'createProxyWithNonce',
+          "createProxyWithNonce"
+        >["request"]["abi"],
+        "createProxyWithNonce",
         TMode
-      > & { functionName?: 'createProxyWithNonce' }
+      > & { functionName?: "createProxyWithNonce" }
     : UseContractWriteConfig<
         typeof walletFactoryABI,
-        'createProxyWithNonce',
+        "createProxyWithNonce",
         TMode
       > & {
-        abi?: never
-        functionName?: 'createProxyWithNonce'
+        abi?: never;
+        functionName?: "createProxyWithNonce";
       } = {} as any,
 ) {
   return useContractWrite<
     typeof walletFactoryABI,
-    'createProxyWithNonce',
+    "createProxyWithNonce",
     TMode
   >({
     abi: walletFactoryABI,
-    functionName: 'createProxyWithNonce',
+    functionName: "createProxyWithNonce",
     ...config,
-  } as any)
+  } as any);
 }
 
 /**
@@ -5283,13 +5289,13 @@ export function useWalletFactoryCreateProxyWithNonce<
 export function usePrepareWalletFactoryWrite<TFunctionName extends string>(
   config: Omit<
     UsePrepareContractWriteConfig<typeof walletFactoryABI, TFunctionName>,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: walletFactoryABI,
     ...config,
-  } as UsePrepareContractWriteConfig<typeof walletFactoryABI, TFunctionName>)
+  } as UsePrepareContractWriteConfig<typeof walletFactoryABI, TFunctionName>);
 }
 
 /**
@@ -5299,19 +5305,19 @@ export function usePrepareWalletFactoryCreateChainSpecificProxyWithNonce(
   config: Omit<
     UsePrepareContractWriteConfig<
       typeof walletFactoryABI,
-      'createChainSpecificProxyWithNonce'
+      "createChainSpecificProxyWithNonce"
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: walletFactoryABI,
-    functionName: 'createChainSpecificProxyWithNonce',
+    functionName: "createChainSpecificProxyWithNonce",
     ...config,
   } as UsePrepareContractWriteConfig<
     typeof walletFactoryABI,
-    'createChainSpecificProxyWithNonce'
-  >)
+    "createChainSpecificProxyWithNonce"
+  >);
 }
 
 /**
@@ -5321,19 +5327,19 @@ export function usePrepareWalletFactoryCreateProxyWithCallback(
   config: Omit<
     UsePrepareContractWriteConfig<
       typeof walletFactoryABI,
-      'createProxyWithCallback'
+      "createProxyWithCallback"
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: walletFactoryABI,
-    functionName: 'createProxyWithCallback',
+    functionName: "createProxyWithCallback",
     ...config,
   } as UsePrepareContractWriteConfig<
     typeof walletFactoryABI,
-    'createProxyWithCallback'
-  >)
+    "createProxyWithCallback"
+  >);
 }
 
 /**
@@ -5343,19 +5349,19 @@ export function usePrepareWalletFactoryCreateProxyWithNonce(
   config: Omit<
     UsePrepareContractWriteConfig<
       typeof walletFactoryABI,
-      'createProxyWithNonce'
+      "createProxyWithNonce"
     >,
-    'abi' | 'functionName'
+    "abi" | "functionName"
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: walletFactoryABI,
-    functionName: 'createProxyWithNonce',
+    functionName: "createProxyWithNonce",
     ...config,
   } as UsePrepareContractWriteConfig<
     typeof walletFactoryABI,
-    'createProxyWithNonce'
-  >)
+    "createProxyWithNonce"
+  >);
 }
 
 /**
@@ -5364,13 +5370,13 @@ export function usePrepareWalletFactoryCreateProxyWithNonce(
 export function useWalletFactoryEvent<TEventName extends string>(
   config: Omit<
     UseContractEventConfig<typeof walletFactoryABI, TEventName>,
-    'abi'
+    "abi"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: walletFactoryABI,
     ...config,
-  } as UseContractEventConfig<typeof walletFactoryABI, TEventName>)
+  } as UseContractEventConfig<typeof walletFactoryABI, TEventName>);
 }
 
 /**
@@ -5378,13 +5384,13 @@ export function useWalletFactoryEvent<TEventName extends string>(
  */
 export function useWalletFactoryProxyCreationEvent(
   config: Omit<
-    UseContractEventConfig<typeof walletFactoryABI, 'ProxyCreation'>,
-    'abi' | 'eventName'
+    UseContractEventConfig<typeof walletFactoryABI, "ProxyCreation">,
+    "abi" | "eventName"
   > = {} as any,
 ) {
   return useContractEvent({
     abi: walletFactoryABI,
-    eventName: 'ProxyCreation',
+    eventName: "ProxyCreation",
     ...config,
-  } as UseContractEventConfig<typeof walletFactoryABI, 'ProxyCreation'>)
+  } as UseContractEventConfig<typeof walletFactoryABI, "ProxyCreation">);
 }

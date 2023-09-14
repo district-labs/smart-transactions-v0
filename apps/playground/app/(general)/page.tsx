@@ -1,6 +1,10 @@
 "use client"
 
-import { DeploySafe, EnableSafeIntentModule, SignIntentBundle } from "@district-labs/intentify-react"
+import {
+  DeploySafe,
+  EnableSafeIntentModule,
+  SignIntentBundle,
+} from "@district-labs/intentify-react"
 import { constants } from "ethers"
 
 import { Button } from "@/components/ui/button"
