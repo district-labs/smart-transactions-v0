@@ -5,7 +5,7 @@ import { PRBTest } from "@prb/test/PRBTest.sol";
 import { console2 } from "forge-std/console2.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
 
-import { ERC20Mintable } from "./mocks/ERC20Mintable.sol";
+import { ERC20Mintable } from "../mocks/ERC20Mintable.sol";
 
 import {
     DimensionalNonce,
@@ -16,11 +16,11 @@ import {
     Signature,
     Hook,
     TypesAndDecoders
-} from "../src/TypesAndDecoders.sol";
-import { Intentify } from "../src/Intentify.sol";
-import { SwapRouter } from "../src/periphery/SwapRouter.sol";
-import { TokenRouterReleaseIntent } from "../src/intents/TokenRouterReleaseIntent.sol";
-import { LimitOrderIntent } from "../src/intents/LimitOrderIntent.sol";
+} from "../../src/TypesAndDecoders.sol";
+import { Intentify } from "../../src/Intentify.sol";
+import { SwapRouter } from "../../src/periphery/SwapRouter.sol";
+import { TokenRouterReleaseIntent } from "../../src/intents/TokenRouterReleaseIntent.sol";
+import { LimitOrderIntent } from "../../src/intents/LimitOrderIntent.sol";
 
 contract LimitOrderIntentHarness is LimitOrderIntent {
     function exposed_unlock(address account, address tokenOut, address tokenIn) external view returns (bool) {

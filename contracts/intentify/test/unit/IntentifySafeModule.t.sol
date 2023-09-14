@@ -9,9 +9,9 @@ import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
 import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
 
 import { SafeTestingUtils } from "./SafeTestingUtils.sol";
-import { ERC20Mintable } from "./mocks/ERC20Mintable.sol";
+import { ERC20Mintable } from "../mocks/ERC20Mintable.sol";
 
-import { IntentifySafeModule } from "../src/module/IntentifySafeModule.sol";
+import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
 import {
     DimensionalNonce,
     IntentExecution,
@@ -21,9 +21,9 @@ import {
     Signature,
     Hook,
     TypesAndDecoders
-} from "../src/TypesAndDecoders.sol";
-import { Intentify } from "../src/Intentify.sol";
-import { TimestampBeforeIntent } from "../src/intents/TimestampBeforeIntent.sol";
+} from "../../src/TypesAndDecoders.sol";
+import { Intentify } from "../../src/Intentify.sol";
+import { TimestampBeforeIntent } from "../../src/intents/TimestampBeforeIntent.sol";
 
 contract IntentifySafeModuleTest is SafeTestingUtils {
     // Intentify Module

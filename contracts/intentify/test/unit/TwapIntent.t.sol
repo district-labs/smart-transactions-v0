@@ -15,9 +15,9 @@ import {
     Signature,
     Hook,
     TypesAndDecoders
-} from "../src/TypesAndDecoders.sol";
-import { Intentify } from "../src/Intentify.sol";
-import { TwapIntent } from "../src/intents/TwapIntent.sol";
+} from "../../src/TypesAndDecoders.sol";
+import { Intentify } from "../../src/Intentify.sol";
+import { TwapIntent } from "../../src/intents/TwapIntent.sol";
 
 contract TwapIntentHarness is TwapIntent {
     function exposed_getTwapX96(address uniswapV3Pool, uint32 twapInterval) public view returns (uint256 priceX96) {
