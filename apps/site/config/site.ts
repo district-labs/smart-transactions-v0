@@ -1,36 +1,62 @@
-// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-// Site
-// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-interface SiteConfig {
-  name: string
-  title: string
-  emoji: string
-  description: string
-  localeDefault: string
-  links: {
-    docs: string
-    discord: string
-    twitter: string
-    github: string
-  }
-}
+import { type MainNavItem } from "@/types"
 
-export const SITE_CANONICAL = "https://turboeth.xyz"
-
-export const siteConfig: SiteConfig = {
-  name: "TurboETH",
-  title: "TurboETH - Web3 App Template",
-  emoji: "⚡",
+export const siteConfig = {
+  name: "District",
+  url: "https://districtlabs.com",
   description:
-    "Start building full-stack Web3 applications in minutes with TurboETH.",
-  localeDefault: "en",
+    "Transform your ideas into action with a no-code strategy builder.",
   links: {
-    docs: "https://docs.turboeth.xyz/overview",
-    discord: "https://discord.gg/U4jy7Xfh76",
     twitter: "https://twitter.com/district_labs",
-    github: "https://github.com/turbo-eth/template-web3-app",
   },
+  marketingNav: [
+    {
+      title: "Platform",
+      items: [
+        {
+          title: "Invest",
+          href: "/invest",
+          description:
+            "Find strategies you can invest in right away built by the pros.",
+          items: [],
+        },
+        {
+          title: "Create",
+          href: "/create",
+          description:
+            "Build algorithmic strategies, backtest them, then execute - all in one platform.",
+          items: [],
+        },
+        {
+          title: "About",
+          href: "/about",
+          description:
+            " Discover how we&apos;re giving investors the best chance for success.",
+          items: [],
+        },
+      ],
+    },
+  ] satisfies MainNavItem[],
+  onboardingSteps: [
+    {
+      id: 1,
+      name: "Identity",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipscing elit amet lorem upsum. Dolor sit consec tetur adip nunc sed.",
+      href: "/onboarding",
+    },
+    {
+      id: 2,
+      name: "Funding",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipscing elit amet lorem upsum. Dolor sit consec tetur adip nunc sed.",
+      href: "/onboarding/funding",
+    },
+    {
+      id: 3,
+      name: "Strategy",
+      description:
+        "Lorem ipsum dolor sit amet consectetur adipscing elit amet lorem upsum. Dolor sit consec tetur adip nunc sed.",
+      href: "/onboarding/strategy",
+    },
+  ],
 }
-
-export const DEPLOY_URL =
-  "https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fturbo-eth%2Ftemplate-web3-app&project-name=TurboETH&repository-name=turbo-eth&demo-title=TurboETH&env=NEXTAUTH_SECRET,DATABASE_URL&envDescription=How%20to%20get%20these%20env%20variables%3A&envLink=https%3A%2F%2Fgithub.com%2Fturbo-eth%2Ftemplate-web3-app%2Fblob%2Fintegrations%2F.env.example"

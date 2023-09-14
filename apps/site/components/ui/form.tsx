@@ -17,7 +17,7 @@ const Form = FormProvider
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = {
   name: TName
 }
@@ -28,7 +28,7 @@ const FormFieldContext = React.createContext<FormFieldContextValue>(
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   ...props
 }: ControllerProps<TFieldValues, TName>) => {
@@ -164,6 +164,32 @@ const FormMessage = React.forwardRef<
 })
 FormMessage.displayName = "FormMessage"
 
+const UncontrolledFormMessage = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement> & {
+    message?: string
+  }
+>(({ className, children, message, ...props }, ref) => {
+  const { formMessageId } = useFormField()
+  const body = message ? String(message) : children
+
+  if (!body) {
+    return null
+  }
+
+  return (
+    <p
+      ref={ref}
+      id={formMessageId}
+      className={cn("text-[0.8rem] font-medium text-destructive", className)}
+      {...props}
+    >
+      {body}
+    </p>
+  )
+})
+UncontrolledFormMessage.displayName = "UncontrolledFormMessage"
+
 export {
   useFormField,
   Form,
@@ -172,5 +198,6 @@ export {
   FormControl,
   FormDescription,
   FormMessage,
+  UncontrolledFormMessage,
   FormField,
 }
