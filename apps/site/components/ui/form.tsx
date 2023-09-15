@@ -1,13 +1,13 @@
 import * as React from "react"
-import * as LabelPrimitive from "@radix-ui/react-label"
+import type * as LabelPrimitive from "@radix-ui/react-label"
 import { Slot } from "@radix-ui/react-slot"
 import {
   Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
   FormProvider,
   useFormContext,
+  type ControllerProps,
+  type FieldPath,
+  type FieldValues,
 } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
@@ -164,6 +164,32 @@ const FormMessage = React.forwardRef<
 })
 FormMessage.displayName = "FormMessage"
 
+const UncontrolledFormMessage = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLParagraphElement> & {
+    message?: string
+  }
+>(({ className, children, message, ...props }, ref) => {
+  const { formMessageId } = useFormField()
+  const body = message ? String(message) : children
+
+  if (!body) {
+    return null
+  }
+
+  return (
+    <p
+      ref={ref}
+      id={formMessageId}
+      className={cn("text-[0.8rem] font-medium text-destructive", className)}
+      {...props}
+    >
+      {body}
+    </p>
+  )
+})
+UncontrolledFormMessage.displayName = "UncontrolledFormMessage"
+
 export {
   useFormField,
   Form,
@@ -172,5 +198,6 @@ export {
   FormControl,
   FormDescription,
   FormMessage,
+  UncontrolledFormMessage,
   FormField,
 }

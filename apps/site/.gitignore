@@ -2,17 +2,16 @@
 
 # dependencies
 /node_modules
+/.react-email/node_modules
 /.pnp
 .pnp.js
-
-# turborepo
-.turbo
 
 # testing
 /coverage
 
 # next.js
 /.next/
+/.react-email/.next/
 /out/
 
 # production
@@ -31,7 +30,6 @@ yarn-error.log*
 # local env files
 .env
 .env*.local
-.env*.prd
 
 # vercel
 .vercel

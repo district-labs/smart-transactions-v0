@@ -2,21 +2,28 @@
 
 import * as React from "react"
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
-import { LuChevronDown } from "react-icons/lu"
+import { ChevronDownIcon } from "@radix-ui/react-icons"
 
 import { cn } from "@/lib/utils"
+import { Progress } from "@/components/ui/progress"
 
 const Accordion = AccordionPrimitive.Root
 
 const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
->(({ className, ...props }, ref) => (
-  <AccordionPrimitive.Item
-    ref={ref}
-    className={cn("border-b", className)}
-    {...props}
-  />
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item> & {
+    progress?: number | false
+    active?: number
+  }
+>(({ className, progress, ...props }, ref) => (
+  <>
+    <AccordionPrimitive.Item
+      ref={ref}
+      className={cn("border-b", className)}
+      {...props}
+    />
+    {progress && <Progress value={progress} className="h-px" />}
+  </>
 ))
 AccordionItem.displayName = "AccordionItem"
 
@@ -34,7 +41,7 @@ const AccordionTrigger = React.forwardRef<
       {...props}
     >
       {children}
-      <LuChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
+      <ChevronDownIcon className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ))

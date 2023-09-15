@@ -1,0 +1,1 @@
+ALTER TABLE `strategies` MODIFY COLUMN `coins` json NOT NULL DEFAULT ('["ethereum"]');
