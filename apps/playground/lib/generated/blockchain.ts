@@ -124,7 +124,7 @@ export const erc20ABI = [
  */
 export function useErc20Read<
   TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof erc20ABI, TFunctionName>,
+  TSelectData = ReadContractResult<typeof erc20ABI, TFunctionName>
 >(
   config: Omit<
     UseContractReadConfig<typeof erc20ABI, TFunctionName, TSelectData>,
@@ -143,7 +143,7 @@ export function useErc20Read<
  */
 export function useErc20Allowance<
   TFunctionName extends "allowance",
-  TSelectData = ReadContractResult<typeof erc20ABI, TFunctionName>,
+  TSelectData = ReadContractResult<typeof erc20ABI, TFunctionName>
 >(
   config: Omit<
     UseContractReadConfig<typeof erc20ABI, TFunctionName, TSelectData>,
@@ -162,7 +162,7 @@ export function useErc20Allowance<
  */
 export function useErc20BalanceOf<
   TFunctionName extends "balanceOf",
-  TSelectData = ReadContractResult<typeof erc20ABI, TFunctionName>,
+  TSelectData = ReadContractResult<typeof erc20ABI, TFunctionName>
 >(
   config: Omit<
     UseContractReadConfig<typeof erc20ABI, TFunctionName, TSelectData>,
@@ -181,7 +181,7 @@ export function useErc20BalanceOf<
  */
 export function useErc20Decimals<
   TFunctionName extends "decimals",
-  TSelectData = ReadContractResult<typeof erc20ABI, TFunctionName>,
+  TSelectData = ReadContractResult<typeof erc20ABI, TFunctionName>
 >(
   config: Omit<
     UseContractReadConfig<typeof erc20ABI, TFunctionName, TSelectData>,
@@ -200,7 +200,7 @@ export function useErc20Decimals<
  */
 export function useErc20Name<
   TFunctionName extends "name",
-  TSelectData = ReadContractResult<typeof erc20ABI, TFunctionName>,
+  TSelectData = ReadContractResult<typeof erc20ABI, TFunctionName>
 >(
   config: Omit<
     UseContractReadConfig<typeof erc20ABI, TFunctionName, TSelectData>,
@@ -219,7 +219,7 @@ export function useErc20Name<
  */
 export function useErc20Symbol<
   TFunctionName extends "symbol",
-  TSelectData = ReadContractResult<typeof erc20ABI, TFunctionName>,
+  TSelectData = ReadContractResult<typeof erc20ABI, TFunctionName>
 >(
   config: Omit<
     UseContractReadConfig<typeof erc20ABI, TFunctionName, TSelectData>,
@@ -238,7 +238,7 @@ export function useErc20Symbol<
  */
 export function useErc20TotalSupply<
   TFunctionName extends "totalSupply",
-  TSelectData = ReadContractResult<typeof erc20ABI, TFunctionName>,
+  TSelectData = ReadContractResult<typeof erc20ABI, TFunctionName>
 >(
   config: Omit<
     UseContractReadConfig<typeof erc20ABI, TFunctionName, TSelectData>,
@@ -257,7 +257,7 @@ export function useErc20TotalSupply<
  */
 export function useErc20Write<
   TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
+  TMode extends WriteContractMode = undefined
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<
@@ -329,7 +329,7 @@ export function useErc20Transfer<TMode extends WriteContractMode = undefined>(
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link erc20ABI}__ and `functionName` set to `"transferFrom"`.
  */
 export function useErc20TransferFrom<
-  TMode extends WriteContractMode = undefined,
+  TMode extends WriteContractMode = undefined
 >(
   config: TMode extends "prepared"
     ? UseContractWriteConfig<

@@ -26,43 +26,23 @@ contract WalletFactoryTest is BaseTest {
 
     function test_WalletFactory_getDeterministicWalletAddress_Success() external {
         address EXPECTED_ADDRESS = 0x6A5A6B9c48cCC0157BCDbE4F13Ce073F2D609cbC;
-        address[] memory owners = new address[](1);
-        bytes memory data = new bytes(0);
-        owners[0] = wallet1;
-        bytes memory initializer = abi.encodeWithSelector(
-            _safe.setup.selector, 
-            owners, 
-            1, // threshold 
-            address(0), // to
-            data, 
-            address(0), // fallbackHandler
-            address(0), // paymentToken
-            0, // payment
-            payable(address(0)) // paymentReceiver
-        );
-        address proxy = _walletFactory.getDeterministicWalletAddress(address(_safe), initializer, 0);
+        address proxy = _walletFactory.getDeterministicWalletAddress(address(_safe),wallet1, 0);
         assertEq(address(proxy), address(EXPECTED_ADDRESS));
     }
     
     function test_WalletFactory_createDeterministicWallet_Success() external {
-        address[] memory owners = new address[](1);
-        bytes memory data = new bytes(0);
-        owners[0] = wallet1;
-        bytes memory initializer = abi.encodeWithSelector(
-            _safe.setup.selector, 
-            owners, 
-            1, // threshold 
-            address(0), // to
-            data, 
-            address(0), // fallbackHandler
-            address(0), // paymentToken
-            0, // payment
-            payable(address(0)) // paymentReceiver
-        );
-        address proxyCounterfactual = _walletFactory.getDeterministicWalletAddress(address(_safe), initializer, 0);
-
-        SafeProxy proxyMaterialized = _walletFactory.createProxyWithNonce(address(_safe), initializer, 0);
+        address proxyCounterfactual = _walletFactory.getDeterministicWalletAddress(address(_safe), wallet1, 0);
+        SafeProxy proxyMaterialized = _walletFactory.createDeterministicWallet(address(_safe), wallet1, 0);
         assertEq(address(proxyMaterialized), address(proxyCounterfactual));
+    }
+    
+    function test_WalletFactory_isWalletMaterialized_Success() external {
+        address proxyCounterfactual = _walletFactory.getDeterministicWalletAddress(address(_safe), wallet1, 0);
+        bool isCounterfactual = _walletFactory.isWalletMaterialized(address(_safe), wallet1, 0);
+        assertEq(isCounterfactual, false);
+        SafeProxy proxyMaterialized = _walletFactory.createDeterministicWallet(address(_safe), wallet1, 0);
+        bool isMaterialized = _walletFactory.isWalletMaterialized(address(_safe), wallet1, 0);
+        assertEq(isMaterialized, true);
     }
     
 }
