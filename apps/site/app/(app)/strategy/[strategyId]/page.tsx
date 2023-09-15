@@ -119,7 +119,7 @@ export default async function StrategyPage({ params }: StrategyPageProps) {
               </Avatar>
               <div>
                 <p id="manager" className="text-sm font-medium leading-none">
-                  {manager?.name || "Strategy Man"}
+                  {manager?.firstName || "Strategy Man"}
                 </p>
                 <p className="line-clamp-2 text-sm text-muted-foreground">
                   {manager?.about || "Bio on strategy"}
