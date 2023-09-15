@@ -2,6 +2,7 @@
 pragma solidity >=0.8.19;
 
 import { console2 } from "forge-std/console2.sol";
+import { MultiSend } from "safe-contracts/libraries/MultiSend.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 
 import { IHook } from "../interfaces/IHook.sol";
@@ -19,7 +20,7 @@ import {
 } from "../TypesAndDecoders.sol";
 import "./SignatureDecoder.sol";
 
-interface Safe {
+interface SafeMinimal {
     function isOwner(address owner) external view returns (bool);
 
     function execTransactionFromModule(
@@ -72,7 +73,7 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder {
 
         bytes32 digest = getIntentBatchTypedDataHash(execution.batch);
         address signer = _recover(digest, execution.signature.v, execution.signature.r, execution.signature.s);
-        require(Safe(root).isOwner(signer), "Intent:invalid-signer");
+        require(SafeMinimal(root).isOwner(signer), "Intent:invalid-signer");
 
         for (uint256 index = 0; index < execution.batch.intents.length; index++) {
             // If the accompanying hook is not set, execute the intent directly
@@ -134,7 +135,7 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder {
     function _execute(Intent memory intent) internal returns (bool success) {
         bytes memory errorMessage;
         bytes memory data = _generateIntentCalldata(intent);
-        Safe _safe = Safe(address(intent.exec.root));
+        SafeMinimal _safe = SafeMinimal(address(intent.exec.root));
         (success, errorMessage) = _safe.execTransactionFromModuleReturnData(
             intent.exec.target, // to
             0, // value
@@ -154,7 +155,7 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder {
     function _executeWithHook(Intent memory intent, Hook memory hook) internal returns (bool success) {
         bytes memory errorMessage;
         bytes memory data = _generateIntentWithHookCalldata(intent, hook);
-        Safe _safe = Safe(address(intent.exec.root));
+        SafeMinimal _safe = SafeMinimal(address(intent.exec.root));
         (success, errorMessage) = _safe.execTransactionFromModuleReturnData(
             intent.exec.target, // to
             0, // value

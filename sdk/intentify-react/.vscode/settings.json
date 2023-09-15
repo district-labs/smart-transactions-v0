@@ -1,0 +1,29 @@
+{
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "search.exclude": {
+    "package-lock.json": true
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "rome.rome",
+  "editor.codeActionsOnSave":{
+		"source.organizeImports.rome": true,
+    "source.addMissingImports": true
+	},
+  "eslint.validate": ["typescript", "javascript", "javascriptreact"],
+  // Multiple language settings for json and jsonc files
+  "[json][jsonc]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "rome.rome"
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "rome.rome"
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "rome.rome"
+  },
+  "typescript.tsdk": "../../node_modules/.pnpm/typescript@4.9.4/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}
