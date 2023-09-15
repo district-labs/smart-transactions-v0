@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState, useTransition } from "react"
+import { useMemo } from "react"
 import Link from "next/link"
 import { strategies, type Strategy } from "@/db/schema"
 import { type ColumnDef } from "@tanstack/react-table"
@@ -23,8 +23,6 @@ export function StrategiesTableShell({
   pageCount,
   managerId,
 }: StrategiesTableShellProps) {
-  const [isPending, startTransition] = useTransition()
-
   // Memoize the columns so they don't re-render
   const columns = useMemo<ColumnDef<Strategy, unknown>[]>(
     () => [
@@ -39,7 +37,7 @@ export function StrategiesTableShell({
               <h4 className="font-bold">{row.getValue("name")}</h4>
               <p>{row.original.managerId}</p>
               <div className="mt-2 flex items-center gap-2">
-                <Button size="sm" className="h-6 px-4" disabled={isPending}>
+                <Button size="sm" className="h-6 px-4">
                   Invest
                 </Button>
                 <Link
@@ -48,7 +46,6 @@ export function StrategiesTableShell({
                     buttonVariants({ variant: "ghost", size: "sm" }),
                     "h-6 px-4"
                   )}
-                  disabled={isPending}
                 >
                   Details
                 </Link>
@@ -64,6 +61,7 @@ export function StrategiesTableShell({
         ),
         cell: ({ row }) => {
           const categories = Object.values(strategies.category.enumValues)
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
           const category = row.getValue("category") as Strategy["category"]
 
           if (!categories.includes(category)) return null
@@ -82,7 +80,7 @@ export function StrategiesTableShell({
         ),
       },
     ],
-    [data, isPending, managerId]
+    [data, managerId]
   )
 
   return (
@@ -106,6 +104,7 @@ export function StrategiesTableShell({
           title: "strategies",
         },
       ]}
+      // newRowLink={`/strategy/create`}
     />
   )
 }

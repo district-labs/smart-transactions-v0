@@ -5,8 +5,8 @@ import Balancer from "react-wrap-balancer"
 import { StrategiesTableShell } from "@/components/strategies-table-shell"
 import { getStrategiesAction } from "@/app/_actions/strategy"
 
-import { columns } from "./columns"
-import { DataTable } from "./data-table"
+import { columns } from "../strategies/columns"
+import { DataTable } from "../strategies/data-table"
 
 interface StrategiesPageProps {
   searchParams: {

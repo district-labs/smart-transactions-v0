@@ -16,7 +16,7 @@ export function AppNav() {
       <Link href="/dashboard" className={buttonVariants({ variant: "ghost" })}>
         Dashboard
       </Link>
-      <Link href="/strategies" className={buttonVariants({ variant: "ghost" })}>
+      <Link href="/strategy" className={buttonVariants({ variant: "ghost" })}>
         Strategies
       </Link>
     </div>
