@@ -145,7 +145,16 @@ importers:
         version: 6.1.0(encoding@0.1.13)(graphql@16.8.0)
       iron-session:
         specifier: ^6.3.1
-        version: 6.3.1(next@13.4.19)
+        version: 6.3.1(next@13.4.0)
+      jotai:
+        specifier: ^1.13.0
+        version: 1.13.1(@babel/core@7.18.5)(react@18.2.0)
+      luxon:
+        specifier: ^3.2.1
+        version: 3.2.1
+      moment:
+        specifier: ^2.29.4
+        version: 2.29.4
       next:
         specifier: 13.4.0
         version: 13.4.0(@babel/core@7.18.5)(react-dom@18.2.0)(react@18.2.0)
@@ -20338,8 +20347,8 @@ packages:
       react: 18.2.0
     dev: false
 
-  /luxon@3.4.3:
-    resolution: {integrity: sha512-tFWBiv3h7z+T/tDaoxA8rqTxy1CHV6gHS//QdaH4pulbq/JuBSGgQspQQqcgnwdAx6pNI7cmvz5Sv/addzHmUg==}
+  /luxon@3.2.1:
+    resolution: {integrity: sha512-QrwPArQCNLAKGO/C+ZIilgIuDnEnKx5QYODdDtbFaxzsbZcc/a7WFq7MhsVYgRlwawLtvOUESTlfJ+hc/USqPg==}
     engines: {node: '>=12'}
     dev: false
 
