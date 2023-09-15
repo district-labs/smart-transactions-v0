@@ -31,7 +31,6 @@ import { Breadcrumbs } from "@/components/breadcrumbs"
 import DashboardChart from "@/components/charts/dashboard-chart"
 import { Icons } from "@/components/icons"
 import { getCoinMarketChart } from "@/app/_actions/gecko"
-import { getTokenChartData } from "@/app/_actions/llama"
 
 interface StrategyPageProps {
   params: {

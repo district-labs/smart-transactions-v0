@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
-import DashboardChart from "@/components/charts/dashboard-chart"
+import DashboardOverview from "@/components/dashboard-overview"
 import { Icons } from "@/components/icons"
 
 export const metadata: Metadata = {
@@ -41,45 +41,7 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <h2 className="text-2xl tracking-tight sm:text-3xl">Overview</h2>
-      <div className="flex flex-col justify-between md:flex-row md:items-end">
-        <dl className="mt-4 flex max-w-2xl gap-x-8 divide-x lg:mx-0 lg:max-w-none">
-          <div className="flex flex-col gap-y-2">
-            <dt className="text-sm leading-6">Current Balance</dt>
-            <dd className="text-3xl font-semibold tracking-tight">$24,789</dd>
-          </div>
-          <div className="flex flex-col gap-y-2 pl-6">
-            <dt className="text-sm leading-6">Return (chart value)</dt>
-            <dd className="text-3xl font-semibold tracking-tight">
-              $12,345.00
-            </dd>
-            <span>27.2%</span>
-          </div>
-        </dl>
-        <div className="flex justify-end space-x-2 text-muted-foreground">
-          <Button variant="ghost" size="icon">
-            1M
-          </Button>
-          <Button variant="ghost" size="icon">
-            1Y
-          </Button>
-        </div>
-      </div>
-      <div className="my-4 md:my-8">
-        <DashboardChart />
-        <p className="text-muted-foreground">Compare with:</p>
-        <div className="mt-2 flex space-x-2">
-          <Button size="sm" className="h-7 bg-blue-500 px-10">
-            ETH
-          </Button>
-          <Button size="sm" className="h-7 bg-orange-500 px-10">
-            BTC
-          </Button>
-          <Button size="sm" className="h-7 bg-yellow-500 px-10">
-            S&P
-          </Button>
-        </div>
-      </div>
+      <DashboardOverview />
       <section
         id="strategy"
         aria-label="strategy-heading"

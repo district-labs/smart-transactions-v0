@@ -3,25 +3,15 @@
 import { LineChart } from "@tremor/react"
 import { format } from "date-fns"
 
+import { formatDate, formatPrice } from "@/lib/utils"
+
 interface DashboardChartProps {
   data: [number, number][]
 }
 
-export const valueFormatter = (number: number) =>
-  `${new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 1,
-  }).format(number)}`
-
 export default function DashboardChart({ data }: DashboardChartProps) {
-  // const formattedData = data.map((x) => ({
-  //   time: x[0],
-  //   value: x[1],
-  // }))
-
   const formattedData = data.map((obj) => {
-    const formattedTime = format(new Date(obj[0]), "MMM-d")
+    const formattedTime = formatDate(obj[0])
 
     return {
       time: formattedTime,
@@ -34,7 +24,7 @@ export default function DashboardChart({ data }: DashboardChartProps) {
       data={formattedData}
       index="time"
       categories={["strategy"]}
-      valueFormatter={valueFormatter}
+      valueFormatter={(value) => formatPrice(value, { notation: "standard" })}
       yAxisWidth={64}
       autoMinValue={true}
     />
