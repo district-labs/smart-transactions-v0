@@ -1,5 +1,11 @@
+import { type ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
 import { env } from "@/env.mjs"
-import { IronSessionOptions } from "iron-session"
+import {
+  getIronSession,
+  unsealData,
+  type IronSessionOptions,
+  type IronSessionData,
+} from "iron-session"
 import type { SiweMessage } from "siwe"
 
 import { siteConfig } from "@/config/site"
@@ -8,22 +14,29 @@ declare module "iron-session" {
   interface IronSessionData {
     nonce: string
     siwe: SiweMessage
-    isAdmin: boolean
   }
 }
-
-// This is the secret used to encrypt the session cookie
-// It should be at least 32 characters long
-export const NEXTAUTH_SECRET = env.NEXTAUTH_SECRET
 
 // The httpOnly cookie option is not working so we are using
 // a hack to remove the cookie from the browser
 // See: /api/siwe/logout
-export const SERVER_SESSION_SETTINGS: IronSessionOptions = {
-  cookieName: siteConfig.name,
-  password:
-    NEXTAUTH_SECRET ?? "UPDATE_TO_complex_password_at_least_32_characters_long",
+export const ironOptions: IronSessionOptions = {
+  cookieName: `${siteConfig.name} web3session`,
+  password: env.AUTH_SECRET_KEY,
   cookieOptions: {
     secure: process.env.NODE_ENV == "production",
   },
+}
+
+export async function getRequestCookie(cookies: ReadonlyRequestCookies) {
+  const cookieName = `${siteConfig.name} web3session`
+  const found = cookies.get(cookieName)
+
+  if (!found) return null
+
+  const user = await unsealData<IronSessionData>(found.value, {
+    password: env.AUTH_SECRET_KEY,
+  })
+
+  return user
 }
