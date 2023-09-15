@@ -26,6 +26,7 @@ module.exports = {
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/no-floating-promises": "off",
     "tailwindcss/no-custom-classname": "off",
+    "tailwindcss/classnames-order": "off",
   },
   settings: {
     tailwindcss: {

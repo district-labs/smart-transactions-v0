@@ -7,10 +7,10 @@ import { type ColumnDef } from "@tanstack/react-table"
 
 import { cn } from "@/lib/utils"
 
-import { DataTable } from "./data-table/data-table"
-import { DataTableColumnHeader } from "./data-table/data-table-column-header"
-import { Badge } from "./ui/badge"
-import { Button, buttonVariants } from "./ui/button"
+import { DataTable } from "../data-table/data-table"
+import { DataTableColumnHeader } from "../data-table/data-table-column-header"
+import { Badge } from "../ui/badge"
+import { Button, buttonVariants } from "../ui/button"
 
 interface StrategiesTableShellProps {
   data: Strategy[]

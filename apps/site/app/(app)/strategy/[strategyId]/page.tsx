@@ -29,8 +29,9 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import DashboardChart from "@/components/charts/dashboard-chart"
-import StrategyOverview from "@/components/charts/strategy-overview"
 import { Icons } from "@/components/icons"
+import StrategyActions from "@/components/strategies/strategy-actions"
+import StrategyOverview from "@/components/strategies/strategy-overview"
 import { getCoinMarketChart } from "@/app/_actions/gecko"
 
 interface StrategyPageProps {
@@ -95,102 +96,7 @@ export default async function StrategyPage({ params }: StrategyPageProps) {
         className="my-8 grid grid-cols-3 gap-8"
       >
         <StrategyOverview {...strategy} />
-        <Tabs defaultValue="invest" className="col-span-3 h-fit lg:col-span-1">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="invest">Invest</TabsTrigger>
-            <TabsTrigger value="exit">Exit</TabsTrigger>
-          </TabsList>
-          <TabsContent value="invest">
-            <Card>
-              <CardHeader>
-                <CardTitle className="leading-normal">{`Invest in ${strategy.name} strategy`}</CardTitle>
-                <Separator />
-              </CardHeader>
-              <CardContent className="grid gap-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="deposit">Deposit Amount</Label>
-                    <Input id="deposit" type="number" placeholder="1000 USDC" />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="deviation-level">Deviation Level</Label>
-                    <Select defaultValue="3">
-                      <SelectTrigger
-                        id="deviation-level"
-                        className="line-clamp-1 w-[160px] truncate"
-                      >
-                        <SelectValue placeholder="Select level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1">1%</SelectItem>
-                        <SelectItem value="3">3%</SelectItem>
-                        <SelectItem value="5">5%</SelectItem>
-                        <SelectItem value="10">10%</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <Button className="w-full">Invest</Button>
-              </CardContent>
-              <CardFooter className="flex w-full flex-col gap-y-2 border-t pt-2 text-sm">
-                <div className="flex w-full items-center justify-between">
-                  <p>Platform Fee: </p>
-                  <p>{`${strategy.platformFee}%`}</p>
-                </div>
-                <div className="flex w-full items-center justify-between">
-                  <p>Performance Fee: </p>
-                  <p>{`${strategy.performanceFee}%`}</p>
-                </div>
-              </CardFooter>
-            </Card>
-          </TabsContent>
-          <TabsContent value="exit">
-            <Card>
-              <CardHeader>
-                <CardTitle className="leading-normal">{`Exit ${strategy.name} strategy`}</CardTitle>
-                <Separator />
-              </CardHeader>
-              <CardContent className="grid gap-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="deposit">Deposit Amount</Label>
-                    <Input id="deposit" type="number" placeholder="1000 USDC" />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="deviation-level">Deviation Level</Label>
-                    <Select defaultValue="3">
-                      <SelectTrigger
-                        id="deviation-level"
-                        className="line-clamp-1 w-[160px] truncate"
-                      >
-                        <SelectValue placeholder="Select level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1">1%</SelectItem>
-                        <SelectItem value="3">3%</SelectItem>
-                        <SelectItem value="5">5%</SelectItem>
-                        <SelectItem value="10">10%</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <Button variant="destructive" className="w-full">
-                  Exit
-                </Button>
-              </CardContent>
-              <CardFooter className="flex w-full flex-col gap-y-2 border-t pt-2 text-sm">
-                <div className="flex w-full items-center justify-between">
-                  <p>Platform Fee: </p>
-                  <p>{`${strategy.platformFee}%`}</p>
-                </div>
-                <div className="flex w-full items-center justify-between">
-                  <p>Performance Fee: </p>
-                  <p>{`${strategy.performanceFee}%`}</p>
-                </div>
-              </CardFooter>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        <StrategyActions strategy={strategy} />
       </section>
       <section
         id="information"

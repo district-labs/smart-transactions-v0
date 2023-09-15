@@ -6,13 +6,13 @@ import { Strategy } from "@/db/schema"
 import { formatPrice } from "@/lib/utils"
 import { getCoinMarketChart } from "@/app/_actions/gecko"
 
-import { Icons } from "../icons"
-import { Button } from "../ui/button"
 import {
   ChartTimeFilters,
   type ChartTimeFiltersOptions,
-} from "./chart-time-filters"
-import DashboardChart from "./dashboard-chart"
+} from "../charts/chart-time-filters"
+import DashboardChart from "../charts/dashboard-chart"
+import { Icons } from "../icons"
+import { Button } from "../ui/button"
 
 interface StrategyOverviewProps {
   coins: string[]

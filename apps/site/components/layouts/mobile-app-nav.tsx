@@ -45,7 +45,7 @@ export default function MobileAppNav() {
               Dashboard
             </Link>
             <Link
-              href="/strategies"
+              href="/strategy"
               className="w-full border-b py-4 text-sm font-medium"
               onClick={() => setOpen(false)}
             >

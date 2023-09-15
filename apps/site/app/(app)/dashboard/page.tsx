@@ -18,7 +18,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import DashboardOverview from "@/components/charts/dashboard-overview"
-import { GenerateButton } from "@/components/generate-button"
+import { GenerateButton } from "@/components/strategies/generate-button"
 import { Icons } from "@/components/icons"
 
 export const metadata: Metadata = {
