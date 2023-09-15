@@ -15,14 +15,7 @@ export function LogOutButtons() {
   const router = useRouter()
   const mounted = useMounted()
   const [isPending, startTransition] = useTransition()
-  const { disconnect } = useDisconnect({
-    onSuccess(data) {
-      console.log("Logged out: ", data)
-      startTransition(() => {
-        router.push(`${window.location.origin}/?redirect=false`)
-      })
-    },
-  })
+  const { disconnect } = useDisconnect()
 
   return (
     <div className="flex w-full items-center space-x-2">
@@ -31,7 +24,13 @@ export function LogOutButtons() {
           size="sm"
           className="w-full"
           aria-label="Log out"
-          onClick={() => disconnect()}
+          onClick={() => {
+            startTransition(() => {
+              fetch("/api/logout")
+              disconnect()
+              router.push(`${window.location.origin}/?redirect=false`)
+            })
+          }}
           disabled={isPending}
         >
           {isPending && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}

@@ -6,7 +6,6 @@ import { strategies } from "@/db/schema"
 import { env } from "@/env.mjs"
 import { eq } from "drizzle-orm"
 
-import { getRequestCookie } from "@/lib/session"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -18,8 +17,8 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import DashboardOverview from "@/components/charts/dashboard-overview"
-import { GenerateButton } from "@/components/strategies/generate-button"
 import { Icons } from "@/components/icons"
+import { GenerateButton } from "@/components/strategies/generate-button"
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
@@ -28,8 +27,6 @@ export const metadata: Metadata = {
 }
 
 export default async function DashboardPage() {
-  const user = await getRequestCookie(cookies())
-
   const allStrategies = await db
     .select({
       id: strategies.id,

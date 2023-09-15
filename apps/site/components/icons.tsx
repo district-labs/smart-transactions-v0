@@ -10,6 +10,7 @@ import {
   ExitIcon,
   GearIcon,
   HamburgerMenuIcon,
+  Link2Icon,
   MagnifyingGlassIcon,
   PersonIcon,
   PlusIcon,
@@ -20,6 +21,7 @@ import {
 type IconProps = React.HTMLAttributes<SVGElement>
 
 export const Icons = {
+  chain: Link2Icon,
   chevronLeft: ChevronLeftIcon,
   chevronRight: ChevronRightIcon,
   close: Cross1Icon,

@@ -1,10 +1,9 @@
 import { type ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
 import { env } from "@/env.mjs"
 import {
-  getIronSession,
   unsealData,
-  type IronSessionOptions,
   type IronSessionData,
+  type IronSessionOptions,
 } from "iron-session"
 import type { SiweMessage } from "siwe"
 
