@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
-import DashboardOverview from "@/components/dashboard-overview"
+import DashboardOverview from "@/components/charts/dashboard-overview"
 import { Icons } from "@/components/icons"
 
 export const metadata: Metadata = {

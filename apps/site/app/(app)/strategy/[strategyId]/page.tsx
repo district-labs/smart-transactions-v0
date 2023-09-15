@@ -29,6 +29,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import DashboardChart from "@/components/charts/dashboard-chart"
+import StrategyOverview from "@/components/charts/strategy-overview"
 import { Icons } from "@/components/icons"
 import { getCoinMarketChart } from "@/app/_actions/gecko"
 
@@ -98,49 +99,7 @@ export default async function StrategyPage({ params }: StrategyPageProps) {
         aria-label="strategy-heading"
         className="my-8 grid grid-cols-3 gap-8"
       >
-        <div className="col-span-3 space-y-4 lg:col-span-2">
-          <div className="flex flex-col justify-between md:flex-row md:items-end">
-            <dl className="flex max-w-2xl gap-x-8 divide-x lg:mx-0 lg:max-w-none">
-              <div className="flex flex-col gap-y-2">
-                <dt className="text-sm leading-6">Net Assets</dt>
-                <dd className="text-3xl font-semibold tracking-tight">
-                  $24,7M
-                </dd>
-              </div>
-              <div className="flex flex-col gap-y-2 pl-6">
-                <dt className="text-sm leading-6">Return (chart value)</dt>
-                <dd className="text-3xl font-semibold tracking-tight">
-                  $12,345.00
-                </dd>
-                <span>27.2%</span>
-              </div>
-            </dl>
-            <div className="flex justify-end space-x-2 text-muted-foreground">
-              <Button variant="ghost" size="icon">
-                1M
-              </Button>
-              <Button variant="ghost" size="icon">
-                1Y
-              </Button>
-            </div>
-          </div>
-          <DashboardChart data={chartData.prices} />
-          <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
-            <Button size="sm" className="h-7 bg-blue-500 px-10">
-              ETH
-            </Button>
-            <Button size="sm" className="h-7 bg-orange-500 px-10">
-              BTC
-            </Button>
-            <Button size="sm" className="h-7 bg-yellow-500 px-10">
-              S&P
-            </Button>
-            <Button size="sm" className="h-7 bg-zinc-500 px-5">
-              <Icons.plus className="mr-2 h-4 w-4" />
-              Add benchmark
-            </Button>
-          </div>
-        </div>
+        <StrategyOverview />
         <Tabs defaultValue="invest" className="col-span-3 h-fit lg:col-span-1">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="invest">Invest</TabsTrigger>

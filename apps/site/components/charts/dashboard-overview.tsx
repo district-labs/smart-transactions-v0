@@ -4,12 +4,12 @@ import { useEffect, useState } from "react"
 
 import { getCoinMarketChart } from "@/app/_actions/gecko"
 
+import { Button } from "../ui/button"
 import {
   ChartTimeFilters,
   type ChartTimeFiltersOptions,
-} from "./charts/chart-time-filters"
-import DashboardChart from "./charts/dashboard-chart"
-import { Button } from "./ui/button"
+} from "./chart-time-filters"
+import DashboardChart from "./dashboard-chart"
 
 interface DashboardOverviewProps {}
 
