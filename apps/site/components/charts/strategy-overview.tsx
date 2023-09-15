@@ -1,7 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { Strategy } from "@/db/schema"
 
+import { formatPrice } from "@/lib/utils"
 import { getCoinMarketChart } from "@/app/_actions/gecko"
 
 import { Icons } from "../icons"
@@ -12,19 +14,27 @@ import {
 } from "./chart-time-filters"
 import DashboardChart from "./dashboard-chart"
 
-interface StrategyOverviewProps {}
+interface StrategyOverviewProps {
+  coins: string[]
+  assets: string
+}
 
-export default function StrategyOverview() {
+export default function StrategyOverview({
+  coins,
+  assets,
+}: StrategyOverviewProps) {
   const [chartData, setChartData] = useState<[number, number][] | null>(null)
   const [chartRange, setChartRange] =
     useState<ChartTimeFiltersOptions["range"]>("30")
 
   const fetchChartData = async () => {
-    const res = await getCoinMarketChart({
-      coinId: "ethereum",
-      days: chartRange,
-    })
-    setChartData(res.prices)
+    for (const coin of coins) {
+      const res = await getCoinMarketChart({
+        coinId: coin,
+        days: chartRange,
+      })
+      setChartData(res.prices)
+    }
   }
 
   useEffect(() => {
@@ -37,7 +47,9 @@ export default function StrategyOverview() {
         <dl className="flex max-w-2xl gap-x-8 divide-x lg:mx-0 lg:max-w-none">
           <div className="flex flex-col gap-y-2">
             <dt className="text-sm leading-6">Net Assets</dt>
-            <dd className="text-3xl font-semibold tracking-tight">$24,7M</dd>
+            <dd className="text-3xl font-semibold tracking-tight">
+              {formatPrice(assets)}
+            </dd>
           </div>
           <div className="flex flex-col gap-y-2 pl-6">
             <dt className="text-sm leading-6">Return (chart value)</dt>

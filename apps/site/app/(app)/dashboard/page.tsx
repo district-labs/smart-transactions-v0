@@ -18,6 +18,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import DashboardOverview from "@/components/charts/dashboard-overview"
+import { GenerateButton } from "@/components/generate-button"
 import { Icons } from "@/components/icons"
 
 export const metadata: Metadata = {
@@ -56,6 +57,7 @@ export default async function DashboardPage() {
               <Icons.plus className="mr-2 h-4 w-4" />
               New
             </Button>
+            <GenerateButton />
           </div>
           <Separator />
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

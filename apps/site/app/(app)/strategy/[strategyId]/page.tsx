@@ -48,6 +48,7 @@ export default async function StrategyPage({ params }: StrategyPageProps) {
       name: true,
       description: true,
       assets: true,
+      coins: true,
       category: true,
       performanceFee: true,
       platformFee: true,
@@ -67,12 +68,6 @@ export default async function StrategyPage({ params }: StrategyPageProps) {
       about: true,
     },
     where: eq(users.id, strategy.managerId),
-  })
-
-  // Add a field to strategy schema for token
-  const chartData = await getCoinMarketChart({
-    coinId: "ethereum",
-    days: "7",
   })
 
   return (
@@ -99,7 +94,7 @@ export default async function StrategyPage({ params }: StrategyPageProps) {
         aria-label="strategy-heading"
         className="my-8 grid grid-cols-3 gap-8"
       >
-        <StrategyOverview />
+        <StrategyOverview {...strategy} />
         <Tabs defaultValue="invest" className="col-span-3 h-fit lg:col-span-1">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="invest">Invest</TabsTrigger>

@@ -6,13 +6,12 @@ import { catchError } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
-import { generateStrategies } from "@/app/_actions/generate"
+import {
+  generateBearStrategy,
+  generateStrategies,
+} from "@/app/_actions/generate"
 
-interface GenerateButtonProps {
-  managerId: number
-}
-
-export function GenerateButton({ managerId }: GenerateButtonProps) {
+export function GenerateButton() {
   const [isPending, startTransition] = useTransition()
 
   return (
@@ -21,7 +20,7 @@ export function GenerateButton({ managerId }: GenerateButtonProps) {
       onClick={() => {
         startTransition(async () => {
           try {
-            await generateStrategies({ managerId, count: 5 })
+            await generateBearStrategy()
             toast({ description: "Strategies generated successfully." })
           } catch (err) {
             catchError(err)
