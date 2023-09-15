@@ -44,8 +44,8 @@ export default function PotentialChart() {
   return (
     <div className="lg:grid lg:grid-cols-7 lg:gap-x-8 lg:gap-y-10 xl:gap-x-10">
       <div className="mx-auto mt-14 max-w-2xl sm:mt-16 lg:col-span-2 lg:mt-0 lg:max-w-none">
-        <div className="mb-16 space-y-6">
-          <div>
+        <div className="grid gap-6">
+          <div className="grid gap-2">
             <Label htmlFor="strategy">Strategy</Label>
             <Select>
               <SelectTrigger id="strategy" className="w-56">
@@ -60,11 +60,11 @@ export default function PotentialChart() {
               </SelectContent>
             </Select>
           </div>
-          <div className="grid w-full gap-1">
+          <div className="grid gap-2">
             <Label htmlFor="deposit">Initial Deposit</Label>
             <Input type="number" id="deposit" placeholder="1000" step="500" />
           </div>
-          <div className="grid w-full gap-1">
+          <div className="grid gap-2">
             <Label htmlFor="contributions">Monthly Contributions</Label>
             <Input
               type="number"
