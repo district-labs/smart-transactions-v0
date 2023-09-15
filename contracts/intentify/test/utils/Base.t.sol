@@ -9,8 +9,7 @@ contract BaseTest is PRBTest, StdCheats {
     uint256 WALLET_1 = 0xA11CE;
     uint256 WALLET_2 = 0xA11CE;
     uint256 WALLET_3 = 0xA11CE;
-    
-    
+
     address internal signer;
     address internal wallet1;
     address internal wallet2;
@@ -22,5 +21,4 @@ contract BaseTest is PRBTest, StdCheats {
         wallet2 = vm.addr(WALLET_2);
         wallet3 = vm.addr(WALLET_3);
     }
-    
 }

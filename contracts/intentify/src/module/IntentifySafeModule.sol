@@ -72,9 +72,9 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder {
         require(execution.batch.intents.length == execution.hooks.length, "Intent:invalid-intent-length");
 
         bytes32 digest = getIntentBatchTypedDataHash(execution.batch);
-        address signer = _recover(digest, execution.signature.v, execution.signature.r ,execution.signature.s);
+        address signer = _recover(digest, execution.signature.v, execution.signature.r, execution.signature.s);
         require(SafeMinimal(root).isOwner(signer), "Intent:invalid-signer");
-        
+
         for (uint256 index = 0; index < execution.batch.intents.length; index++) {
             // If the accompanying hook is not set, execute the intent directly
             // This generally assumes the intent is a contract read i.e. a state constraint like timestamps, twaps or

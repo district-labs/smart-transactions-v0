@@ -1,4 +1,3 @@
-
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19;
 
@@ -16,6 +15,7 @@ contract IntentifySafeModuleDeploy is Script {
     }
 }
 
-// forge script script/IntentifySafeModuleDeploy.s.sol:IntentifySafeModuleDeploy --fork-url http://localhost:8545 --broadcast
-// forge script script/IntentifySafeModuleDeploy.s.sol:IntentifySafeModuleDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify -vvvv
-
+// forge script script/IntentifySafeModuleDeploy.s.sol:IntentifySafeModuleDeploy --fork-url http://localhost:8545
+// --broadcast
+// forge script script/IntentifySafeModuleDeploy.s.sol:IntentifySafeModuleDeploy --rpc-url $GOERLI_RPC_URL --broadcast
+// --verify -vvvv

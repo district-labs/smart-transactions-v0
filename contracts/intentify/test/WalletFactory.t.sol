@@ -11,7 +11,6 @@ import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
 import { WalletFactory } from "../src/WalletFactory.sol";
 import { BaseTest } from "./utils/Base.t.sol";
 
-
 contract WalletFactoryTest is BaseTest {
     Safe internal _safe;
     SafeProxy internal _safeProxy;
@@ -26,16 +25,16 @@ contract WalletFactoryTest is BaseTest {
 
     function test_WalletFactory_getDeterministicWalletAddress_Success() external {
         address EXPECTED_ADDRESS = 0x6A5A6B9c48cCC0157BCDbE4F13Ce073F2D609cbC;
-        address proxy = _walletFactory.getDeterministicWalletAddress(address(_safe),wallet1, 0);
+        address proxy = _walletFactory.getDeterministicWalletAddress(address(_safe), wallet1, 0);
         assertEq(address(proxy), address(EXPECTED_ADDRESS));
     }
-    
+
     function test_WalletFactory_createDeterministicWallet_Success() external {
         address proxyCounterfactual = _walletFactory.getDeterministicWalletAddress(address(_safe), wallet1, 0);
         SafeProxy proxyMaterialized = _walletFactory.createDeterministicWallet(address(_safe), wallet1, 0);
         assertEq(address(proxyMaterialized), address(proxyCounterfactual));
     }
-    
+
     function test_WalletFactory_isWalletMaterialized_Success() external {
         address proxyCounterfactual = _walletFactory.getDeterministicWalletAddress(address(_safe), wallet1, 0);
         bool isCounterfactual = _walletFactory.isWalletMaterialized(address(_safe), wallet1, 0);
@@ -44,5 +43,4 @@ contract WalletFactoryTest is BaseTest {
         bool isMaterialized = _walletFactory.isWalletMaterialized(address(_safe), wallet1, 0);
         assertEq(isMaterialized, true);
     }
-    
 }
