@@ -7,6 +7,7 @@ import { SiweMessage } from "siwe"
 import { z } from "zod"
 
 import { ironOptions } from "@/lib/session"
+import { getUserAction } from "@/app/_actions/user"
 
 const verifySchema = z.object({
   signature: z.string(),
@@ -38,13 +39,14 @@ export async function POST(req: Request) {
     await session.save()
 
     if (env.DATABASE_URL) {
-      const user = await db.query.users.findFirst({
-        where: eq(users.address, fields.address),
-      })
+      const user = await getUserAction(fields.address)
       if (!user) {
         await db.insert(users).values({
           address: fields.address,
         })
+      } else {
+        session.user = user
+        await session.save()
       }
     }
 

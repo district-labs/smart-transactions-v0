@@ -4,25 +4,9 @@ import { faker } from "@faker-js/faker"
 import Balancer from "react-wrap-balancer"
 
 import { siteConfig } from "@/config/site"
-import { NewUserButton, Profile } from "@/components/auth/login-button"
+import NewUserButton from "@/components/auth/new-user-button"
 import { Icons } from "@/components/icons"
 
-const onboardingSteps = [
-  {
-    name: "Verify your identity",
-    icon: Icons.user,
-  },
-  {
-    name: "Fund your account",
-    icon: Icons.bank,
-  },
-  {
-    name: "Set up your first strategy",
-    icon: Icons.rocket,
-  },
-]
-
-// TODO: Handle case where we have an already linked account / wallet.
 export default function SignUpPage() {
   return (
     <div className="flex min-h-screen flex-1">
@@ -47,7 +31,7 @@ export default function SignUpPage() {
             What to expect:
           </p>
           <dl className="max-w-xl space-y-8 text-base leading-7 lg:max-w-none">
-            {onboardingSteps.map((step) => (
+            {siteConfig.onboardingStepsMini.map((step) => (
               <dt key={step.name} className="flex items-center">
                 <step.icon className="mr-4 h-5 w-5" />
                 {step.name}

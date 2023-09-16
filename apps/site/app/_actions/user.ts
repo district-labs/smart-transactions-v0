@@ -16,6 +16,14 @@ export async function getUserAction(address: string) {
   return existingUser
 }
 
+export async function checkExistingUserAction(address: string) {
+  const existingUser = await db.query.users.findFirst({
+    where: eq(users.address, address),
+  })
+
+  return !!existingUser
+}
+
 export async function updateUserAction(input: NewUser) {
   const user = await db.query.users.findFirst({
     where: eq(users.address, input.address),

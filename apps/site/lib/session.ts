@@ -1,4 +1,5 @@
 import { type ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
+import { User } from "@/db/schema"
 import { env } from "@/env.mjs"
 import {
   unsealData,
@@ -13,6 +14,7 @@ declare module "iron-session" {
   interface IronSessionData {
     nonce: string
     siwe: SiweMessage
+    user: User
   }
 }
 
