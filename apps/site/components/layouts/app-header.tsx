@@ -21,6 +21,8 @@ import { Icons } from "@/components/icons"
 import { AppNav } from "@/components/layouts/app-nav"
 import MobileAppNav from "@/components/layouts/mobile-app-nav"
 
+import { BaseCurrencySelector } from "../base-currency/base-currency-selector"
+
 interface AppHeaderProps {
   user: {
     imageUrl: string
@@ -110,6 +112,7 @@ export default function AppHeader({ user }: AppHeaderProps) {
                 <span className="sr-only">Sign In</span>
               </Link>
             )}
+            <BaseCurrencySelector />
           </nav>
         </div>
       </div>

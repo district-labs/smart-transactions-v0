@@ -1,7 +1,7 @@
 "use server"
 
 import { db } from "@/db"
-import { NewUser, users } from "@/db/schema"
+import { users, type NewUser } from "@/db/schema"
 import { eq } from "drizzle-orm"
 
 export async function checkUserAction(input: { address: string }) {

@@ -1,12 +1,7 @@
-import { db } from "@/db"
-import { strategies } from "@/db/schema"
 import Balancer from "react-wrap-balancer"
 
 import { StrategiesTableShell } from "@/components/strategies/strategies-table-shell"
 import { getStrategiesAction } from "@/app/_actions/strategy"
-
-import { columns } from "../strategies/columns"
-import { DataTable } from "../strategies/data-table"
 
 interface StrategiesPageProps {
   searchParams: {

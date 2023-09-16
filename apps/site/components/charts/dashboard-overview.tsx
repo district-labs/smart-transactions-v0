@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 
 import { getCoinMarketChart } from "@/app/_actions/gecko"
 
+import { formatPrice } from "../base-currency/use-format-price"
 import { Button } from "../ui/button"
 import {
   ChartTimeFilters,
@@ -11,7 +12,7 @@ import {
 } from "./chart-time-filters"
 import DashboardChart from "./dashboard-chart"
 
-interface DashboardOverviewProps {}
+// type DashboardOverviewProps = {}
 
 export default function DashboardOverview() {
   const [chartData, setChartData] = useState<[number, number][] | null>(null)
@@ -37,12 +38,14 @@ export default function DashboardOverview() {
         <dl className="mt-4 flex max-w-2xl gap-x-8 divide-x lg:mx-0 lg:max-w-none">
           <div className="flex flex-col gap-y-2">
             <dt className="text-sm leading-6">Current Balance</dt>
-            <dd className="text-3xl font-semibold tracking-tight">$24,789</dd>
+            <dd className="text-3xl font-semibold tracking-tight">
+              {formatPrice(24789)}
+            </dd>
           </div>
           <div className="flex flex-col gap-y-2 pl-6">
             <dt className="text-sm leading-6">Return (chart value)</dt>
             <dd className="text-3xl font-semibold tracking-tight">
-              $12,345.00
+              {formatPrice(32)}
             </dd>
             <span>27.2%</span>
           </div>

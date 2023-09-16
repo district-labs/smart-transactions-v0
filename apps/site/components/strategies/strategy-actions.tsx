@@ -41,7 +41,7 @@ export default function StrategyActions({ strategy }: StrategyActionsProps) {
           <CardContent className="grid gap-6">
             <div className="grid gap-2">
               <Label htmlFor="deposit">
-                {toTitleCase(strategy.coins[0])} Deposit{" "}
+                {toTitleCase(strategy?.coins?.[0] || "")} Deposit{" "}
               </Label>
               <Input id="deposit" type="number" placeholder="0.0" />
             </div>

@@ -12,8 +12,8 @@ export function FundAccountForm() {
   return (
     <>
       <p>
-        TODO: Funding Buttons - Direct transfer (existing wallet) or buy via MoonPay /
-        Sardine
+        TODO: Funding Buttons - Direct transfer (existing wallet) or buy via
+        MoonPay / Sardine
       </p>
       <Button onClick={() => router.push(siteConfig.onboardingSteps[2].href)}>
         Next
