@@ -19,6 +19,7 @@ export const users = mysqlTable("users", {
   firstName: varchar("firstName", { length: 255 }),
   lastName: varchar("lastName", { length: 255 }),
   email: varchar("email", { length: 255 }),
+  safeAddress: char("safeAddress", { length: 42 }),
   about: text("about"),
   createdAt: timestamp("createdAt").defaultNow(),
 })

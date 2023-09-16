@@ -1,15 +1,21 @@
+import { cookies } from "next/headers"
 import { db } from "@/db"
 import { users } from "@/db/schema"
 import { eq } from "drizzle-orm"
 
+import { getRequestCookie } from "@/lib/session"
 import { UpdateUserForm } from "@/components/forms/update-user-form"
 import { Icons } from "@/components/icons"
 
-// TODO: Fix getting the connected wallet to fetch user
 export default async function OnboardingPage() {
+  const session = await getRequestCookie(cookies())
+
+  // TODO add session check
   const dbUser = await db.query.users.findFirst({
-    where: eq(users.address, "0x698B963E13c12Ee7fC24258F04667b30aD1ceC13"),
+    where: eq(users.address, session!.user.address),
   })
+
+  console.log(dbUser)
 
   if (!dbUser) {
     throw new Error("You shouldn't be here.")
