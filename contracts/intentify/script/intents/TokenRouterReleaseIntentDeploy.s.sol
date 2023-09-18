@@ -14,6 +14,3 @@ contract TokenRouterReleaseIntentDeploy is Script {
         vm.stopBroadcast();
     }
 }
-
-// forge script script/intents/TokenRouterReleaseIntentDeploy.s.sol:TokenRouterReleaseIntentDeploy --fork-url http://localhost:8545 --broadcast
-// forge script script/intents/TokenRouterReleaseIntentDeploy.s.sol:TokenRouterReleaseIntentDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify
