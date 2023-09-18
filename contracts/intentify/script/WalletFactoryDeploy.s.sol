@@ -14,7 +14,3 @@ contract WalletFactoryDeploy is Script {
         vm.stopBroadcast();
     }
 }
-
-// forge script script/WalletFactoryDeploy.s.sol:WalletFactoryDeploy --fork-url http://localhost:8545 --broadcast
-// forge script script/WalletFactoryDeploy.s.sol:WalletFactoryDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify
-// -vvvv
