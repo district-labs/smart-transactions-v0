@@ -38,10 +38,6 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
         _safeProxy = new SafeProxy(address(_safe));
         _safeProxyFactory = new SafeProxyFactory();
 
-        // Setup Safe
-        // Safe _safeCreated = _setupSafe(wallet1);
-
-        // Enable Intentify Module
         Safe _safeCreated = _setupSafe(wallet1);
         _enableIntentifyModule(WALLET_1, _safeCreated, address(_intentifySafeModule));
     }
@@ -50,7 +46,7 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
     /* Failure Tests                                                                         */
     /* ===================================================================================== */
 
-    function test_RevertWhen_intentSafeModule_IsReentered(uint128 pastSeconds) external {
-        
+    function test_RevertWhen_intentSafeModule_IsReentered() external {
+            // TODO: implement when data structures are finalized
     }
 }
