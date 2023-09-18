@@ -14,3 +14,6 @@ contract TwapIntentDeploy is Script {
         vm.stopBroadcast();
     }
 }
+
+// forge script script/intents/TwapIntentDeploy.s.sol:TwapIntentDeploy --fork-url http://localhost:8545 --broadcast
+// forge script script/intents/TwapIntentDeploy.s.sol:TwapIntentDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify

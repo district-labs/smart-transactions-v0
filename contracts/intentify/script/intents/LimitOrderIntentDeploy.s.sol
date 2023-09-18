@@ -14,3 +14,6 @@ contract LimitOrderIntentDeploy is Script {
         vm.stopBroadcast();
     }
 }
+
+// forge script script/intents/LimitOrderIntentDeploy.s.sol:LimitOrderIntentDeploy --fork-url http://localhost:8545 --broadcast
+// forge script script/intents/LimitOrderIntentDeploy.s.sol:LimitOrderIntentDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify

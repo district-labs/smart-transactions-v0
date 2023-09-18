@@ -14,3 +14,6 @@ contract TimestampBeforeIntentDeploy is Script {
         vm.stopBroadcast();
     }
 }
+
+// forge script script/intents/TimestampBeforeIntentDeploy.s.sol:TimestampBeforeIntentDeploy --fork-url http://localhost:8545 --broadcast
+// forge script script/intents/TimestampBeforeIntentDeploy.s.sol:TimestampBeforeIntentDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify
