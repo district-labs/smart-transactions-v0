@@ -3,19 +3,19 @@ import { cn } from "@/utils";
 import * as React from "react";
 
 type IsSafeCounterfactual = React.HTMLAttributes<HTMLElement> & {
-  watch?: boolean;
+	watch?: boolean;
 };
 
 export const IsSafeCounterfactual = ({
-  children,
-  className,
-  watch = true,
+	children,
+	className,
+	watch = true,
 }: IsSafeCounterfactual) => {
-  const isSafeMaterialized = useIsSafeMaterialized(watch);
-  const classes = cn(className);
+	const isSafeMaterialized = useIsSafeMaterialized(watch);
+	const classes = cn(className);
 
-  if (!isSafeMaterialized) {
-    return <div className={classes}>{children}</div>;
-  }
-  return null;
+	if (!isSafeMaterialized) {
+		return <div className={classes}>{children}</div>;
+	}
+	return null;
 };

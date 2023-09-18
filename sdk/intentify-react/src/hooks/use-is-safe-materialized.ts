@@ -5,17 +5,17 @@ import { useWalletFactoryIsWalletMaterialized } from "@/blockchain";
 import { useAccount, useChainId } from "wagmi";
 
 export function useIsSafeMaterialized(watch = true) {
-  const chainId = useChainId();
-  const account = useAccount();
-  const walletFactory = useGetWalletFactoryAddress(chainId);
-  const safeProxyAddress = useGetSafeProxyAddress(chainId);
+	const chainId = useChainId();
+	const account = useAccount();
+	const walletFactory = useGetWalletFactoryAddress(chainId);
+	const safeProxyAddress = useGetSafeProxyAddress(chainId);
 
-  const { data } = useWalletFactoryIsWalletMaterialized({
-    address: walletFactory,
-    args: [safeProxyAddress, account?.address || ADDRESS_ZERO, DEFAULT_SALT],
-    enabled: !!walletFactory && !!safeProxyAddress && !!account?.address,
-    watch: watch,
-  });
+	const { data } = useWalletFactoryIsWalletMaterialized({
+		address: walletFactory,
+		args: [safeProxyAddress, account?.address || ADDRESS_ZERO, DEFAULT_SALT],
+		enabled: !!walletFactory && !!safeProxyAddress && !!account?.address,
+		watch: watch,
+	});
 
-  return data;
+	return data;
 }

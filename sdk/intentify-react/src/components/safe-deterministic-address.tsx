@@ -6,13 +6,13 @@ import * as React from "react";
 type SafeDeterministicAddress = React.HTMLAttributes<HTMLElement>;
 
 export const SafeDeterministicAddress = ({
-  className,
+	className,
 }: SafeDeterministicAddress) => {
-  const safeAddress = useGetSafeAddress();
-  const classes = cn(className);
+	const safeAddress = useGetSafeAddress();
+	const classes = cn(className);
 
-  if (!safeAddress) {
-    return null;
-  }
-  return <span className={classes}>{safeAddress}</span>;
+	if (!safeAddress) {
+		return null;
+	}
+	return <span className={classes}>{safeAddress}</span>;
 };
