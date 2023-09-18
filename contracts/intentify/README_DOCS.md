@@ -13,8 +13,7 @@ A Foundry-based template for developing Solidity smart contracts, with sensible 
 
 ## What's Inside
 
-- [Forge](https://github.com/foundry-rs/foundry/blob/master/forge): compile, test, fuzz, format, and deploy smart
-  contracts
+- [Forge](https://github.com/foundry-rs/foundry/blob/master/forge): compile, test, fuzz, format, and deploy smart contracts
 - [Forge Std](https://github.com/foundry-rs/forge-std): collection of helpful contracts and cheatcodes for testing
 - [PRBTest](https://github.com/PaulRBerg/prb-test): modern collection of testing assertions and logging utilities
 - [Prettier](https://github.com/prettier/prettier): code formatter for non-Solidity files
@@ -22,8 +21,8 @@ A Foundry-based template for developing Solidity smart contracts, with sensible 
 
 ## Getting Started
 
-Click the [`Use this template`](https://github.com/PaulRBerg/foundry-template/generate) button at the top of the page to
-create a new repository with this repo as the initial state.
+Click the [`Use this template`](https://github.com/PaulRBerg/foundry-template/generate) button at the top of the page to create a new repository with this repo as the initial
+state.
 
 Or, if you prefer to install the template manually:
 
@@ -34,22 +33,18 @@ $ forge init --template PaulRBerg/foundry-template
 $ pnpm install # install Solhint, Prettier, and other Node.js deps
 ```
 
-If this is your first time with Foundry, check out the
-[installation](https://github.com/foundry-rs/foundry#installation) instructions.
+If this is your first time with Foundry, check out the [installation](https://github.com/foundry-rs/foundry#installation) instructions.
 
 ## Features
 
-This template builds upon the frameworks and libraries mentioned above, so for details about their specific features,
-please consult their respective documentation.
+This template builds upon the frameworks and libraries mentioned above, so for details about their specific features, please consult their respective documentation.
 
-For example, if you're interested in exploring Foundry in more detail, you should look at the
-[Foundry Book](https://book.getfoundry.sh/). In particular, you may be interested in reading the
-[Writing Tests](https://book.getfoundry.sh/forge/writing-tests.html) tutorial.
+For example, if you're interested in exploring Foundry in more detail, you should look at the [Foundry Book](https://book.getfoundry.sh/). In particular, you may be interested in
+reading the [Writing Tests](https://book.getfoundry.sh/forge/writing-tests.html) tutorial.
 
 ### Sensible Defaults
 
-This template comes with a set of sensible default configurations for you to use. These defaults can be found in the
-following files:
+This template comes with a set of sensible default configurations for you to use. These defaults can be found in the following files:
 
 ```text
 ├── .editorconfig
@@ -63,25 +58,22 @@ following files:
 
 ### VSCode Integration
 
-This template is IDE agnostic, but for the best user experience, you may want to use it in VSCode alongside Nomic
-Foundation's [Solidity extension](https://marketplace.visualstudio.com/items?itemName=NomicFoundation.hardhat-solidity).
+This template is IDE agnostic, but for the best user experience, you may want to use it in VSCode alongside Nomic Foundation's
+[Solidity extension](https://marketplace.visualstudio.com/items?itemName=NomicFoundation.hardhat-solidity).
 
-For guidance on how to integrate a Foundry project in VSCode, please refer to this
-[guide](https://book.getfoundry.sh/config/vscode).
+For guidance on how to integrate a Foundry project in VSCode, please refer to this [guide](https://book.getfoundry.sh/config/vscode).
 
 ### GitHub Actions
 
-This template comes with GitHub Actions pre-configured. Your contracts will be linted and tested on every push and pull
-request made to the `main` branch.
+This template comes with GitHub Actions pre-configured. Your contracts will be linted and tested on every push and pull request made to the `main` branch.
 
 You can edit the CI script in [.github/workflows/ci.yml](./.github/workflows/ci.yml).
 
 ## Writing Tests
 
-To write a new test contract, you start by importing [PRBTest](https://github.com/PaulRBerg/prb-test) and inherit from
-it in your test contract. PRBTest comes with a pre-instantiated [cheatcodes](https://book.getfoundry.sh/cheatcodes/)
-environment accessible via the `vm` property. If you would like to view the logs in the terminal output you can add the
-`-vvv` flag and use [console.log](https://book.getfoundry.sh/faq?highlight=console.log#how-do-i-use-consolelog).
+To write a new test contract, you start by importing [PRBTest](https://github.com/PaulRBerg/prb-test) and inherit from it in your test contract. PRBTest comes with a
+pre-instantiated [cheatcodes](https://book.getfoundry.sh/cheatcodes/) environment accessible via the `vm` property. If you would like to view the logs in the terminal output you
+can add the `-vvv` flag and use [console.log](https://book.getfoundry.sh/faq?highlight=console.log#how-do-i-use-consolelog).
 
 This template comes with an example test contract [Foo.t.sol](./test/Foo.t.sol)
 
@@ -129,11 +121,9 @@ Deploy to Anvil:
 $ forge script script/Deploy.s.sol --broadcast --fork-url http://localhost:8545
 ```
 
-For this script to work, you need to have a `MNEMONIC` environment variable set to a valid
-[BIP39 mnemonic](https://iancoleman.io/bip39/).
+For this script to work, you need to have a `MNEMONIC` environment variable set to a valid [BIP39 mnemonic](https://iancoleman.io/bip39/).
 
-For instructions on how to deploy to a testnet or mainnet, check out the
-[Solidity Scripting](https://book.getfoundry.sh/tutorials/solidity-scripting.html) tutorial.
+For instructions on how to deploy to a testnet or mainnet, check out the [Solidity Scripting](https://book.getfoundry.sh/tutorials/solidity-scripting.html) tutorial.
 
 ### Format
 
@@ -169,11 +159,9 @@ $ forge test
 
 ## Notes
 
-1. Foundry uses [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) to manage dependencies. For
-   detailed instructions on working with dependencies, please refer to the
-   [guide](https://book.getfoundry.sh/projects/dependencies.html) in the book
-2. You don't have to create a `.env` file, but filling in the environment variables may be useful when debugging and
-   testing against a fork.
+1. Foundry uses [git submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules) to manage dependencies. For detailed instructions on working with dependencies, please refer
+   to the [guide](https://book.getfoundry.sh/projects/dependencies.html) in the book
+2. You don't have to create a `.env` file, but filling in the environment variables may be useful when debugging and testing against a fork.
 
 ## Related Efforts
 
