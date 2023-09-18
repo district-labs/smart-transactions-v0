@@ -3,17 +3,17 @@ import { cn } from "@/utils";
 import * as React from "react";
 
 type IsSafeIntentModuleEnabled = React.HTMLAttributes<HTMLElement> & {
-	watch?: boolean;
+  watch?: boolean;
 };
 
 export const IsSafeIntentModuleEnabled = ({
-	children,
-	className,
-	watch = true,
+  children,
+  className,
+  watch = true,
 }: IsSafeIntentModuleEnabled) => {
-	const isModuleEnabled = useIsSafeIntentModuleEnabled(watch);
-	const classes = cn(className);
+  const isModuleEnabled = useIsSafeIntentModuleEnabled(watch);
+  const classes = cn(className);
 
-	if (!isModuleEnabled) return null;
-	return <div className={classes}>{children}</div>;
+  if (!isModuleEnabled) return null;
+  return <div className={classes}>{children}</div>;
 };

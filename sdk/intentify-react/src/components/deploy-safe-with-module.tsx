@@ -1,8 +1,8 @@
 import { cn } from "../utils";
 import {
-	safeABI,
-	usePrepareWalletFactoryCreateDeterministicWallet,
-	useWalletFactoryGetDeterministicWalletAddress,
+  safeABI,
+  usePrepareWalletFactoryCreateDeterministicWallet,
+  useWalletFactoryGetDeterministicWalletAddress,
 } from "@/blockchain";
 import { useGetIntentifyModuleAddress } from "@/hooks/use-get-intentify-module-address";
 import { useGetSafeMultiCallAddress } from "@/hooks/use-get-safe-multi-call-address";
@@ -16,95 +16,95 @@ import { encodeFunctionData } from "viem";
 import { useAccount, useChainId, useContractWrite } from "wagmi";
 
 type DeploySafe = React.HTMLAttributes<HTMLElement> & {
-	salt: number;
-	onSuccess?: (res: any) => void;
-	onError?: (res: any) => void;
-	onLoading?: () => void;
+  salt: number;
+  onSuccess?: (res: any) => void;
+  onError?: (res: any) => void;
+  onLoading?: () => void;
 };
 
 export const DeploySafeWithModule = ({
-	children,
-	className,
-	salt = 1,
+  children,
+  className,
+  salt = 1,
 }: DeploySafe) => {
-	const classes = cn(className);
-	const chainId = useChainId();
-	const account = useAccount();
-	const walletFactoryAddress = useGetWalletFactoryAddress(chainId);
-	const intentifyModuleAddress = useGetIntentifyModuleAddress(chainId);
-	const safeProxyAddress = useGetSafeProxyAddress(chainId);
-	const safeProxyFactoryAddress = useGetSafeProxyFactoryAddress(chainId);
+  const classes = cn(className);
+  const chainId = useChainId();
+  const account = useAccount();
+  const walletFactoryAddress = useGetWalletFactoryAddress(chainId);
+  const intentifyModuleAddress = useGetIntentifyModuleAddress(chainId);
+  const safeProxyAddress = useGetSafeProxyAddress(chainId);
+  const safeProxyFactoryAddress = useGetSafeProxyFactoryAddress(chainId);
 
-	const deterministicWalletAddress =
-		useWalletFactoryGetDeterministicWalletAddress({
-			address: walletFactoryAddress,
-			args: [safeProxyAddress, "0x", BigInt(salt)],
-			enabled: true,
-		});
+  const deterministicWalletAddress =
+    useWalletFactoryGetDeterministicWalletAddress({
+      address: walletFactoryAddress,
+      args: [safeProxyAddress, "0x", BigInt(salt)],
+      enabled: true,
+    });
 
-	// const enableModuleData = encodeMultiSend([
-	// 	{
-	// 		to: deterministicWalletAddress.data as `0x{string}`, // WHAT ADDRESS SHOULD THIS BE?
-	// 		value: 0,
-	// 		data: encodeFunctionData({
-	// 			abi: safeABI,
-	// 			functionName: "enableModule",
-	// 			args: [intentifyModuleAddress],
-	// 		}),
-	// 		operation: 1,
-	// 	},
-	// ]);
+  // const enableModuleData = encodeMultiSend([
+  // 	{
+  // 		to: deterministicWalletAddress.data as `0x{string}`, // WHAT ADDRESS SHOULD THIS BE?
+  // 		value: 0,
+  // 		data: encodeFunctionData({
+  // 			abi: safeABI,
+  // 			functionName: "enableModule",
+  // 			args: [intentifyModuleAddress],
+  // 		}),
+  // 		operation: 1,
+  // 	},
+  // ]);
 
-	const [enableModuleData, setEnableModuleData] = React.useState<string>("");
-	React.useEffect(() => {
-		if (deterministicWalletAddress.data && intentifyModuleAddress) {
-			const data = encodeMultiSend([
-				{
-					to: deterministicWalletAddress.data as `0x{string}`, // WHAT ADDRESS SHOULD THIS BE?
-					value: 0,
-					data: encodeFunctionData({
-						abi: safeABI,
-						functionName: "enableModule",
-						args: [intentifyModuleAddress],
-					}),
-					operation: 0,
-				},
-			]);
+  const [enableModuleData, setEnableModuleData] = React.useState<string>("");
+  React.useEffect(() => {
+    if (deterministicWalletAddress.data && intentifyModuleAddress) {
+      const data = encodeMultiSend([
+        {
+          to: deterministicWalletAddress.data as `0x{string}`, // WHAT ADDRESS SHOULD THIS BE?
+          value: 0,
+          data: encodeFunctionData({
+            abi: safeABI,
+            functionName: "enableModule",
+            args: [intentifyModuleAddress],
+          }),
+          operation: 0,
+        },
+      ]);
 
-			const setupData = encodeFunctionData({
-				abi: safeABI,
-				functionName: "setup",
-				args: [
-					[account?.address as `0x${string}`], // owners
-					BigInt(1), // threshold
-					constants.AddressZero, // to
-					"0x", // data
-					constants.AddressZero, // fallbackHandler
-					constants.AddressZero, // paymentToken
-					BigInt(0), // payment
-					constants.AddressZero, // paymentReceiver
-				],
-			});
-			setEnableModuleData(setupData);
-		}
-	}, [deterministicWalletAddress.data, intentifyModuleAddress]);
+      const setupData = encodeFunctionData({
+        abi: safeABI,
+        functionName: "setup",
+        args: [
+          [account?.address as `0x${string}`], // owners
+          BigInt(1), // threshold
+          constants.AddressZero, // to
+          "0x", // data
+          constants.AddressZero, // fallbackHandler
+          constants.AddressZero, // paymentToken
+          BigInt(0), // payment
+          constants.AddressZero, // paymentReceiver
+        ],
+      });
+      setEnableModuleData(setupData);
+    }
+  }, [deterministicWalletAddress.data, intentifyModuleAddress]);
 
-	const { config } = usePrepareWalletFactoryCreateDeterministicWallet({
-		address: walletFactoryAddress,
-		args: [safeProxyAddress, enableModuleData as `0x{string}`, BigInt(salt)],
-		enabled: enableModuleData?.length > 0,
-	});
+  const { config } = usePrepareWalletFactoryCreateDeterministicWallet({
+    address: walletFactoryAddress,
+    args: [safeProxyAddress, enableModuleData as `0x{string}`, BigInt(salt)],
+    enabled: enableModuleData?.length > 0,
+  });
 
-	const safeProxyFactory = useContractWrite(config);
+  const safeProxyFactory = useContractWrite(config);
 
-	const handleSign = () => {
-		safeProxyFactory?.write?.();
-	};
+  const handleSign = () => {
+    safeProxyFactory?.write?.();
+  };
 
-	return (
-		// rome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-		<span onClick={handleSign} className={classes}>
-			{children}
-		</span>
-	);
+  return (
+    // rome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+    <span onClick={handleSign} className={classes}>
+      {children}
+    </span>
+  );
 };
