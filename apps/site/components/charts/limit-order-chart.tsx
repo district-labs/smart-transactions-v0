@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { LineChart } from "@tremor/react"
 
-import { calculatePeriod } from "@/lib/utils"
+import { calculatePeriod, formatDate, formatPrice } from "@/lib/utils"
 import { useChart } from "@/hooks/use-chart"
 
 import {
@@ -14,6 +14,7 @@ import {
 export default function LimitOrderChart() {
   const [chartRange, setChartRange] =
     useState<ChartTimeFiltersOptions["range"]>("30d")
+  const [chartData, setChartData] = useState([])
 
   const { data, refetch } = useChart({
     coins: {
@@ -30,7 +31,19 @@ export default function LimitOrderChart() {
   })
   useEffect(() => {
     refetch()
-  }, [])
+
+    const formattedData = data?.coins["coingecko:ethereum"].prices.map(
+      (obj) => {
+        const formattedTime = formatDate(obj.timestamp)
+
+        return {
+          timestamp: formattedTime,
+          price: obj.price,
+        }
+      }
+    )
+    setChartData(formattedData)
+  }, [data, chartRange])
 
   return (
     <div>
@@ -41,10 +54,14 @@ export default function LimitOrderChart() {
       />
       {data && (
         <LineChart
-          data={data.coins["coingecko:ethereum"].prices}
+          data={chartData}
           index="timestamp"
           categories={["price"]}
+          yAxisWidth={64}
           autoMinValue={true}
+          valueFormatter={(value) =>
+            formatPrice(value, { notation: "standard" })
+          }
         />
       )}
     </div>

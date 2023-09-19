@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import { Token } from "@/types"
 import { SelectValue } from "@radix-ui/react-select"
-import { Address } from "viem"
+import { type Address } from "viem"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
@@ -14,10 +15,8 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select"
-import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { SelectToken } from "@/components/blockchain/token-select"
-import { Token } from "@/components/blockchain/token-select-input/types"
+import TokenInputAmount from "@/components/blockchain/token-input-amount"
 import TokenSelector from "@/components/blockchain/token-selector"
 import LimitOrderChart from "@/components/charts/limit-order-chart"
 import { Icons } from "@/components/icons"
@@ -79,7 +78,7 @@ const defaultToken = {
 }
 
 export default function LimitPage() {
-  const [amount, setAmount] = useState("")
+  const [amount, setAmount] = useState<number | undefined>()
   const [selectedToken, setSelectedToken] = useState<Token>(defaultToken)
 
   return (
@@ -95,24 +94,12 @@ export default function LimitPage() {
               <Label htmlFor="selling" className="">
                 You&apos;re selling
               </Label>
-              <div className="group relative flex items-center justify-between gap-2 rounded-md border py-1">
-                <input
-                  id="amount"
-                  type="number"
-                  className="block w-full px-3 py-1 text-sm font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-                  placeholder="0.0"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                />
-                <span className="text-sm font-medium">
-                  {selectedToken.symbol}
-                </span>
-                <TokenSelector
-                  selectedToken={selectedToken}
-                  setSelectedToken={setSelectedToken}
-                  className="mr-2"
-                />
-              </div>
+              <TokenInputAmount
+                amount={amount}
+                setAmount={setAmount}
+                selectedToken={selectedToken}
+                setSelectedToken={setSelectedToken}
+              />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
@@ -121,9 +108,9 @@ export default function LimitPage() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="selling">Expiry</Label>
-                <Select>
+                <Select defaultValue="1d">
                   <SelectTrigger>
-                    <SelectValue defaultValue="1d" />
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="1d">1 Day</SelectItem>
@@ -145,7 +132,12 @@ export default function LimitPage() {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="selling">To recieve</Label>
-              <Input placeholder="1.0" />
+              <TokenInputAmount
+                amount={amount}
+                setAmount={setAmount}
+                selectedToken={selectedToken}
+                setSelectedToken={setSelectedToken}
+              />
             </div>
           </CardContent>
           <CardFooter>

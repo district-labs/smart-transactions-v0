@@ -43,12 +43,12 @@ export function formatNumber(
   }).format(Number(number))
 }
 
-export function formatDate(date: Date | string | number) {
+export function formatDate(date: number) {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
-  }).format(new Date(date))
+  }).format(new Date(date * 1000))
 }
 
 export function isMacOs() {
