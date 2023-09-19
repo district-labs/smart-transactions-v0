@@ -67,7 +67,7 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, ReentrancyGu
         IntentBatchExecution memory execution
     )
         public
-        nonReentrant()
+        nonReentrant
         returns (bool executed)
     {
         _enforceReplayProtection(root, execution.batch.nonce);

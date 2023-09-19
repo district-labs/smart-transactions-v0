@@ -47,6 +47,6 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
     /* ===================================================================================== */
 
     function test_RevertWhen_intentSafeModule_IsReentered() external {
-            // TODO: implement when data structures are finalized
+        // TODO: implement when data structures are finalized
     }
 }
