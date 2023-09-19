@@ -1,5 +1,7 @@
 import {
+  ArrowDownIcon,
   CaretSortIcon,
+  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   Cross1Icon,
@@ -20,6 +22,8 @@ import {
 type IconProps = React.HTMLAttributes<SVGElement>
 
 export const Icons = {
+  arrowdown: ArrowDownIcon,
+  chevronDown: ChevronDownIcon,
   chevronLeft: ChevronLeftIcon,
   chevronRight: ChevronRightIcon,
   close: Cross1Icon,
