@@ -6,6 +6,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core"
+
 import { emailPreferences } from "./emailPreferences"
 import { investments } from "./investments"
 import { strategies } from "./strategies"

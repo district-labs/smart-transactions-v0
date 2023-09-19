@@ -9,8 +9,9 @@ import {
   serial,
   text,
   timestamp,
-  varchar
+  varchar,
 } from "drizzle-orm/mysql-core"
+
 import { intentBatchExecution } from "./intents"
 import { users } from "./users"
 
@@ -30,7 +31,7 @@ export const strategies = mysqlTable("strategies", {
   platformFee: decimal("platform_fee", { precision: 5, scale: 2 })
     .notNull()
     .default("0.25"),
-  managerId: char("manager_id", {length: 42}).notNull(),
+  managerId: char("manager_id", { length: 42 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 })
 

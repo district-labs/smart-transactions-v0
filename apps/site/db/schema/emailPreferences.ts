@@ -3,7 +3,7 @@ import {
   mysqlTable,
   serial,
   timestamp,
-  varchar
+  varchar,
 } from "drizzle-orm/mysql-core"
 
 export const emailPreferences = mysqlTable("email_preferences", {

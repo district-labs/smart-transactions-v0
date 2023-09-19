@@ -1,14 +1,14 @@
-import { relations } from 'drizzle-orm';
+import { relations } from "drizzle-orm"
 import {
   decimal,
   int,
   mysqlTable,
   serial,
   timestamp,
-} from "drizzle-orm/mysql-core";
-import { strategies } from './strategies';
-import { users } from './users';
+} from "drizzle-orm/mysql-core"
 
+import { strategies } from "./strategies"
+import { users } from "./users"
 
 export const investments = mysqlTable("investments", {
   id: serial("id").primaryKey(),
