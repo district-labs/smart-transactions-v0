@@ -101,6 +101,6 @@ export function FundAccountForm() {
           Next
         </Button>
       </div>
-    </div>
+    </div
   )
 }

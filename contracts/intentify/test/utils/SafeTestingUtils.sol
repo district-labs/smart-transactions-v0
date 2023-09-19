@@ -7,8 +7,9 @@ import { Safe } from "safe-contracts/Safe.sol";
 import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
 import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
+import { BaseTest } from "./Base.t.sol";
 
-contract SafeTestingUtils is PRBTest, StdCheats {
+contract SafeTestingUtils is BaseTest {
     Safe internal _safe;
     SafeProxy internal _safeProxy;
     SafeProxyFactory internal _safeProxyFactory;
