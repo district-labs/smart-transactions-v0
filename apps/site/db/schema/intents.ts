@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm"
 import {
+  boolean,
   char,
   int,
   json,
@@ -67,6 +68,8 @@ export const intentBatchExecution = mysqlTable("intent_batch_execution", {
   id: serial("id").primaryKey(),
   signature: text("signature").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
+  executed: boolean("executed").notNull().default(false),
+  executedAt: timestamp("executed_at"),
 })
 
 export const intentBatchExecutionRelations = relations(
