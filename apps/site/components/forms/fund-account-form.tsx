@@ -95,7 +95,7 @@ export function FundAccountForm() {
       </div>
       <div className="div flex w-full justify-end p-4">
         <Button
-          onClick={() => router.push(siteConfig.onboardingSteps[2].href)}
+          onClick={() => router.push("/dashboard")}
           disabled={!isSafeDeployed || !isModuleEnabled}
         >
           Next
