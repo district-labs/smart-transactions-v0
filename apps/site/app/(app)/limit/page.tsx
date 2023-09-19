@@ -1,6 +1,8 @@
 "use client"
 
+import { useState } from "react"
 import { SelectValue } from "@radix-ui/react-select"
+import { Address } from "viem"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
@@ -12,7 +14,11 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { SelectToken } from "@/components/blockchain/token-select"
+import { Token } from "@/components/blockchain/token-select-input/types"
+import TokenSelector from "@/components/blockchain/token-selector"
 import LimitOrderChart from "@/components/charts/limit-order-chart"
 import { Icons } from "@/components/icons"
 import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
@@ -46,8 +52,36 @@ const dummyData = [
   },
 ]
 
+const defaultToken = {
+  name: "Wrapped Ether",
+  address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" as Address,
+  symbol: "WETH",
+  decimals: 18,
+  chainId: 1,
+  logoURI:
+    "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+  extensions: {
+    bridgeInfo: {
+      "10": {
+        tokenAddress: "0x4200000000000000000000000000000000000006",
+      },
+      "137": {
+        tokenAddress: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+      },
+      "42161": {
+        tokenAddress: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+      },
+      "42220": {
+        tokenAddress: "0x2DEf4285787d58a2f811AF24755A8150622f4361",
+      },
+    },
+  },
+}
 
 export default function LimitPage() {
+  const [amount, setAmount] = useState("")
+  const [selectedToken, setSelectedToken] = useState<Token>(defaultToken)
+
   return (
     <>
       <section className="mt-8 grid gap-8 md:grid-cols-3">
@@ -58,8 +92,27 @@ export default function LimitPage() {
         <Card>
           <CardContent className="grid gap-6 pt-4">
             <div className="grid gap-2">
-              <Label htmlFor="selling">You&apos;re selling</Label>
-              <Input placeholder="0.0" />
+              <Label htmlFor="selling" className="">
+                You&apos;re selling
+              </Label>
+              <div className="group relative flex items-center justify-between gap-2 rounded-md border py-1">
+                <input
+                  id="amount"
+                  type="number"
+                  className="block w-full px-3 py-1 text-sm font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+                  placeholder="0.0"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                />
+                <span className="text-sm font-medium">
+                  {selectedToken.symbol}
+                </span>
+                <TokenSelector
+                  selectedToken={selectedToken}
+                  setSelectedToken={setSelectedToken}
+                  className="mr-2"
+                />
+              </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">

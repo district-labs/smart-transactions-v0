@@ -149,3 +149,7 @@ export const calculatePeriod = (
 
   return `${periodMinutes}m` as const
 }
+
+export function trimAddress(address: string, start = 4, end = 4) {
+  return `${address.slice(0, start + 2)}...${address.slice(-end)}`
+}
