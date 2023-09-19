@@ -5,8 +5,6 @@ import { PRBTest } from "@prb/test/PRBTest.sol";
 import { console2 } from "forge-std/console2.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
 import {
-    DimensionalNonce,
-    IntentExecution,
     Intent,
     IntentBatch,
     IntentBatchExecution,
@@ -46,13 +44,10 @@ contract IntentifyTest is PRBTest, StdCheats {
     function test_Execute() external {
         Intent[] memory intents = new Intent[](1);
 
-        intents[0] = Intent({
-            exec: IntentExecution({ root: address(this), target: address(0x00), data: bytes("Hello World") }),
-            signature: Signature({ r: bytes32(0x00), s: bytes32(0x00), v: uint8(0x00) })
-        });
+        intents[0] = Intent({ root: address(this), target: address(0x00), data: bytes("") });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);

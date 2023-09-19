@@ -7,10 +7,10 @@ import { BytesLib } from "../libraries/BytesLib.sol";
 
 contract TimestampBeforeIntent is IHook {
     function execute(Intent calldata intent) external view returns (bool) {
-        require(intent.exec.root == msg.sender, "TimestampBeforeIntent:invalid-root");
-        require(intent.exec.target == address(this), "TimestampBeforeIntent:invalid-target");
+        require(intent.root == msg.sender, "TimestampBeforeIntent:invalid-root");
+        require(intent.target == address(this), "TimestampBeforeIntent:invalid-target");
 
-        uint128 timestamp = BytesLib.toUint128(intent.exec.data, 0);
+        uint128 timestamp = BytesLib.toUint128(intent.data, 0);
         if (timestamp < block.timestamp) {
             return true;
         } else {

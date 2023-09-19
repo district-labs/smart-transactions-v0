@@ -3,12 +3,9 @@ pragma solidity >=0.8.19;
 
 import { console2 } from "forge-std/console2.sol";
 import { ReentrancyGuard } from "@openzeppelin/security/ReentrancyGuard.sol";
-import { MultiSend } from "safe-contracts/libraries/MultiSend.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 
-import { IHook } from "../interfaces/IHook.sol";
 import {
-    DimensionalNonce,
     Signature,
     Hook,
     Intent,
@@ -16,10 +13,9 @@ import {
     INTENT_TYPEHASH,
     IntentBatchExecution,
     EIP712DOMAIN_TYPEHASH,
-    IntentExecution,
     TypesAndDecoders
 } from "../TypesAndDecoders.sol";
-import "./SignatureDecoder.sol";
+import { SignatureDecoder } from "./SignatureDecoder.sol";
 
 interface SafeMinimal {
     function isOwner(address owner) external view returns (bool);
@@ -70,7 +66,7 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, ReentrancyGu
         nonReentrant
         returns (bool executed)
     {
-        _enforceReplayProtection(root, execution.batch.nonce);
+        // _enforceReplayProtection(root, execution.batch.nonce);
         require(execution.batch.intents.length == execution.hooks.length, "Intent:invalid-intent-length");
 
         bytes32 digest = getIntentBatchTypedDataHash(execution.batch);
@@ -100,25 +96,13 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, ReentrancyGu
         return digest;
     }
 
-    function getIntentExecutionTypedDataHash(IntentExecution memory intentExecution) public view returns (bytes32) {
-        bytes32 digest =
-            keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, GET_INTENTEXECUTION_PACKETHASH(intentExecution)));
-        return digest;
-    }
-
     /* ===================================================================================== */
     /* Internal Functions                                                                    */
     /* ===================================================================================== */
 
-    function _enforceReplayProtection(address account, DimensionalNonce memory protection) internal {
-        uint256 queue = protection.queue;
-        uint256 accumulator = protection.accumulator;
-        require(accumulator == (multiNonce[account][queue] + 1), "Intentify:nonce-out-of-order");
-        multiNonce[account][queue] = accumulator;
-    }
 
     function _generateIntentCalldata(Intent memory intent) internal pure returns (bytes memory) {
-        return abi.encodeWithSignature("execute(((address,address,bytes),(bytes32,bytes32,uint8)))", intent);
+        return abi.encodeWithSignature("execute((address,address,bytes))", intent);
     }
 
     function _generateIntentWithHookCalldata(
@@ -130,16 +114,16 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, ReentrancyGu
         returns (bytes memory)
     {
         return abi.encodeWithSignature(
-            "execute(((address,address,bytes),(bytes32,bytes32,uint8)),(address,bytes))", intent, hook
+            "execute((address,address,bytes),(address,bytes))", intent, hook
         );
     }
 
     function _execute(Intent memory intent) internal returns (bool success) {
         bytes memory errorMessage;
         bytes memory data = _generateIntentCalldata(intent);
-        SafeMinimal _safe = SafeMinimal(address(intent.exec.root));
+        SafeMinimal _safe = SafeMinimal(address(intent.root));
         (success, errorMessage) = _safe.execTransactionFromModuleReturnData(
-            intent.exec.target, // to
+            intent.target, // to
             0, // value
             data, //calldata
             Enum.Operation.Call // operation
@@ -157,9 +141,9 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, ReentrancyGu
     function _executeWithHook(Intent memory intent, Hook memory hook) internal returns (bool success) {
         bytes memory errorMessage;
         bytes memory data = _generateIntentWithHookCalldata(intent, hook);
-        SafeMinimal _safe = SafeMinimal(address(intent.exec.root));
+        SafeMinimal _safe = SafeMinimal(address(intent.root));
         (success, errorMessage) = _safe.execTransactionFromModuleReturnData(
-            intent.exec.target, // to
+            intent.target, // to
             0, // value
             data, //calldata
             Enum.Operation.Call // operation

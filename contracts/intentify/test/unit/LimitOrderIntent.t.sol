@@ -8,8 +8,6 @@ import { StdCheats } from "forge-std/StdCheats.sol";
 import { ERC20Mintable } from "../mocks/ERC20Mintable.sol";
 
 import {
-    DimensionalNonce,
-    IntentExecution,
     Intent,
     IntentBatch,
     IntentBatchExecution,
@@ -99,32 +97,23 @@ contract LimitOrderIntentTest is PRBTest, StdCheats {
         // Token Release Intent
         // ------------------------------------------------------
         intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
-                target: address(_tokenRouterReleaseIntent),
-                data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(_intentify),
+            target: address(_tokenRouterReleaseIntent),
+            data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
         });
 
         // ------------------------------------------------------
         // Limit Order Intent
         // ------------------------------------------------------
 
-        IntentExecution memory _limitOrderIntentExecution = IntentExecution({
+        intents[1] = Intent({
             root: address(_intentify),
             target: address(_limitOrderIntent),
             data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
 
-        bytes32 _limitOrderIntentDigest = _intentify.getIntentExecutionTypedDataHash(_limitOrderIntentExecution);
-        (uint8 v_loi, bytes32 r_loi, bytes32 s_loi) = vm.sign(SIGNER, _limitOrderIntentDigest);
-
-        intents[1] =
-            Intent({ exec: _limitOrderIntentExecution, signature: Signature({ r: r_loi, s: s_loi, v: v_loi }) });
-
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -181,32 +170,23 @@ contract LimitOrderIntentTest is PRBTest, StdCheats {
         // Token Release Intent
         // ------------------------------------------------------
         intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
-                target: address(_tokenRouterReleaseIntent),
-                data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(_intentify),
+            target: address(_tokenRouterReleaseIntent),
+            data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
         });
 
         // ------------------------------------------------------
         // Limit Order Intent
         // ------------------------------------------------------
 
-        IntentExecution memory _limitOrderIntentExecution = IntentExecution({
+        intents[1] = Intent({
             root: address(_intentify),
             target: address(_limitOrderIntent),
             data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
 
-        bytes32 _limitOrderIntentDigest = _intentify.getIntentExecutionTypedDataHash(_limitOrderIntentExecution);
-        (uint8 v_loi, bytes32 r_loi, bytes32 s_loi) = vm.sign(SIGNER, _limitOrderIntentDigest);
-
-        intents[1] =
-            Intent({ exec: _limitOrderIntentExecution, signature: Signature({ r: r_loi, s: s_loi, v: v_loi }) });
-
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -266,32 +246,22 @@ contract LimitOrderIntentTest is PRBTest, StdCheats {
         // Token Release Intent
         // ------------------------------------------------------
         intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
+            root: address(_intentify),
                 target: address(_tokenRouterReleaseIntent),
                 data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
-            }),
-            signature: EMPTY_SIGNATURE
         });
 
         // ------------------------------------------------------
         // Limit Order Intent
         // ------------------------------------------------------
 
-        IntentExecution memory _limitOrderIntentExecution = IntentExecution({
-            root: address(_intentify),
-            target: address(_limitOrderIntent),
-            data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
-        });
-
-        bytes32 _limitOrderIntentDigest = _intentify.getIntentExecutionTypedDataHash(_limitOrderIntentExecution);
-        (uint8 v_loi, bytes32 r_loi, bytes32 s_loi) = vm.sign(SIGNER, _limitOrderIntentDigest);
-
         intents[1] =
-            Intent({ exec: _limitOrderIntentExecution, signature: Signature({ r: r_loi, s: s_loi, v: v_loi }) });
+            Intent({ root: address(_intentify),
+            target: address(_limitOrderIntent),
+            data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance) });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -339,32 +309,22 @@ contract LimitOrderIntentTest is PRBTest, StdCheats {
         // Token Release Intent
         // ------------------------------------------------------
         intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
+            root: address(_intentify),
                 target: address(_tokenRouterReleaseIntent),
                 data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
-            }),
-            signature: EMPTY_SIGNATURE
         });
 
         // ------------------------------------------------------
         // Limit Order Intent
         // ------------------------------------------------------
 
-        IntentExecution memory _limitOrderIntentExecution = IntentExecution({
-            root: address(0),
-            target: address(_limitOrderIntent),
-            data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
-        });
-
-        bytes32 _limitOrderIntentDigest = _intentify.getIntentExecutionTypedDataHash(_limitOrderIntentExecution);
-        (uint8 v_loi, bytes32 r_loi, bytes32 s_loi) = vm.sign(SIGNER, _limitOrderIntentDigest);
-
         intents[1] =
-            Intent({ exec: _limitOrderIntentExecution, signature: Signature({ r: r_loi, s: s_loi, v: v_loi }) });
+            Intent({ root: address(0),
+            target: address(_limitOrderIntent),
+            data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance) });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);

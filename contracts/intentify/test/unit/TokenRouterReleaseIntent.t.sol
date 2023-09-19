@@ -8,8 +8,6 @@ import { StdCheats } from "forge-std/StdCheats.sol";
 import { ERC20Mintable } from "../mocks/ERC20Mintable.sol";
 
 import {
-    DimensionalNonce,
-    IntentExecution,
     Intent,
     IntentBatch,
     IntentBatchExecution,
@@ -67,16 +65,13 @@ contract TokenRouterReleaseIntentTest is PRBTest, StdCheats {
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
-                target: address(_tokenRouterRelease),
-                data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(_intentify),
+            target: address(_tokenRouterRelease),
+            data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -116,16 +111,13 @@ contract TokenRouterReleaseIntentTest is PRBTest, StdCheats {
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(0),
-                target: address(_tokenRouterRelease),
-                data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(0),
+            target: address(_tokenRouterRelease),
+            data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -145,16 +137,13 @@ contract TokenRouterReleaseIntentTest is PRBTest, StdCheats {
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
-                target: address(_tokenRouterRelease),
-                data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(_intentify),
+            target: address(_tokenRouterRelease),
+            data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);

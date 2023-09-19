@@ -12,24 +12,24 @@ contract LimitOrderIntent {
     mapping(address => mapping(address => uint256)) public till;
 
     function execute(Intent calldata intent, Hook calldata hook) external returns (bool) {
-        require(intent.exec.root == msg.sender, "LimitOrderIntent:invalid-root");
-        require(intent.exec.target == address(this), "LimitOrderIntent:invalid-target");
+        require(intent.root == msg.sender, "LimitOrderIntent:invalid-root");
+        require(intent.target == address(this), "LimitOrderIntent:invalid-target");
 
         (address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin) =
-            abi.decode(intent.exec.data, (address, address, uint256, uint256));
+            abi.decode(intent.data, (address, address, uint256, uint256));
 
-        uint256 tokenABalance = ERC20(tokenOut).balanceOf(intent.exec.root);
-        uint256 tokenBBalance = ERC20(tokenIn).balanceOf(intent.exec.root);
+        uint256 tokenABalance = ERC20(tokenOut).balanceOf(intent.root);
+        uint256 tokenBBalance = ERC20(tokenIn).balanceOf(intent.root);
         console2.log("pre:tokenABalance", tokenABalance);
 
-        till[intent.exec.root][tokenOut] = tokenABalance - amountOutMax;
-        till[intent.exec.root][tokenIn] += tokenBBalance + amountInMin;
+        till[intent.root][tokenOut] = tokenABalance - amountOutMax;
+        till[intent.root][tokenIn] += tokenBBalance + amountInMin;
 
         _hook(hook);
         // The hook is expected to transfer the tokens to the intent root.
         // NOTICE: We can likely optimize by using the `transient storage` when available.
 
-        _unlock(intent.exec.root, tokenOut, tokenIn);
+        _unlock(intent.root, tokenOut, tokenIn);
 
         return true;
     }

@@ -7,8 +7,6 @@ import { StdCheats } from "forge-std/StdCheats.sol";
 
 import "@uniswap/v3-core/contracts/libraries/FullMath.sol";
 import {
-    DimensionalNonce,
-    IntentExecution,
     Intent,
     IntentBatch,
     IntentBatchExecution,
@@ -64,16 +62,13 @@ contract TwapIntentTest is PRBTest, StdCheats {
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
-                target: address(_twapIntent),
-                data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(_intentify),
+            target: address(_twapIntent),
+            data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -117,16 +112,13 @@ contract TwapIntentTest is PRBTest, StdCheats {
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
-                target: address(_twapIntent),
-                data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(_intentify),
+            target: address(_twapIntent),
+            data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -147,16 +139,13 @@ contract TwapIntentTest is PRBTest, StdCheats {
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
-                target: address(_twapIntent),
-                data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(_intentify),
+            target: address(_twapIntent),
+            data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -177,16 +166,13 @@ contract TwapIntentTest is PRBTest, StdCheats {
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(0),
-                target: address(_twapIntent),
-                data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(0),
+            target: address(_twapIntent),
+            data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);

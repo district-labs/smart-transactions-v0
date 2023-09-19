@@ -12,11 +12,11 @@ import { BytesLib } from "../libraries/BytesLib.sol";
 
 contract TwapIntent is IHook {
     function execute(Intent calldata intent) external view returns (bool) {
-        require(intent.exec.root == msg.sender, "TwapIntent:invalid-root");
-        require(intent.exec.target == address(this), "TwapIntent:invalid-target");
+        require(intent.root == msg.sender, "TwapIntent:invalid-root");
+        require(intent.target == address(this), "TwapIntent:invalid-target");
 
         (address uniswapV3Pool, uint32 twapIntervalSeconds, uint256 minPriceX96, uint256 maxPriceX96) =
-            abi.decode(intent.exec.data, (address, uint32, uint256, uint256));
+            abi.decode(intent.data, (address, uint32, uint256, uint256));
         uint256 priceX96 = _getTwapX96(uniswapV3Pool, twapIntervalSeconds);
 
         if (priceX96 < minPriceX96) {

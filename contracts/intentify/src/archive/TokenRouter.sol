@@ -13,9 +13,9 @@ pragma solidity >=0.8.19;
 //     mapping (address => mapping (address => uint256)) public till;
 
 //     function execute(Intent calldata intent) external (return bool) {
-//         require(msg.sender == intent.exec.root, "TokenRouter:invalid-target");
-//         (address token, uint256 amount) = abi.decode(intent.exec.data, (address, uint256));
-//         till[intent.exec.root][token] += amount;
+//         require(msg.sender == intent.root, "TokenRouter:invalid-target");
+//         (address token, uint256 amount) = abi.decode(intent.data, (address, uint256));
+//         till[intent.root][token] += amount;
 //     }
 
 //     function claim(address from, address to, address token, uint256 amount) external {

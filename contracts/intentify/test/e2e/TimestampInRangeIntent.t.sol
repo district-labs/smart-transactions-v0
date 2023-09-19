@@ -6,8 +6,6 @@ import { console2 } from "forge-std/console2.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
 
 import {
-    DimensionalNonce,
-    IntentExecution,
     Intent,
     IntentBatch,
     IntentBatchExecution,
@@ -56,24 +54,18 @@ contract TimestampInRangeIntentTest is PRBTest, StdCheats {
         // Tests if the current timestamp is in the range of the rangeSeconds
         Intent[] memory intents = new Intent[](2);
         intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
-                target: address(_timestampBeforeIntent),
-                data: _timestampBeforeIntent.encode(uint128(block.timestamp - rangeSeconds))
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(_intentify),
+            target: address(_timestampBeforeIntent),
+            data: _timestampBeforeIntent.encode(uint128(block.timestamp - rangeSeconds))
         });
         intents[1] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
-                target: address(_timestampAfterIntent),
-                data: _timestampAfterIntent.encode(uint128(block.timestamp + rangeSeconds))
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(_intentify),
+            target: address(_timestampAfterIntent),
+            data: _timestampAfterIntent.encode(uint128(block.timestamp + rangeSeconds))
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -101,24 +93,18 @@ contract TimestampInRangeIntentTest is PRBTest, StdCheats {
         Intent[] memory intents = new Intent[](2);
 
         intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
-                target: address(_timestampBeforeIntent),
-                data: _timestampBeforeIntent.encode(uint128(block.timestamp + rangeSeconds))
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(_intentify),
+            target: address(_timestampBeforeIntent),
+            data: _timestampBeforeIntent.encode(uint128(block.timestamp + rangeSeconds))
         });
         intents[1] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
-                target: address(_timestampAfterIntent),
-                data: _timestampAfterIntent.encode(uint128(block.timestamp - rangeSeconds))
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(_intentify),
+            target: address(_timestampAfterIntent),
+            data: _timestampAfterIntent.encode(uint128(block.timestamp - rangeSeconds))
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -138,24 +124,18 @@ contract TimestampInRangeIntentTest is PRBTest, StdCheats {
         Intent[] memory intents = new Intent[](2);
 
         intents[0] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
-                target: address(_timestampBeforeIntent),
-                data: _timestampBeforeIntent.encode(uint128(block.timestamp))
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(_intentify),
+            target: address(_timestampBeforeIntent),
+            data: _timestampBeforeIntent.encode(uint128(block.timestamp))
         });
         intents[1] = Intent({
-            exec: IntentExecution({
-                root: address(_intentify),
-                target: address(_timestampAfterIntent),
-                data: _timestampBeforeIntent.encode(uint128(block.timestamp))
-            }),
-            signature: EMPTY_SIGNATURE
+            root: address(_intentify),
+            target: address(_timestampAfterIntent),
+            data: _timestampBeforeIntent.encode(uint128(block.timestamp))
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ nonce: DimensionalNonce({ queue: 0, accumulator: 1 }), intents: intents });
+            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
