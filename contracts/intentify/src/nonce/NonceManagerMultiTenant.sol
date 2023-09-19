@@ -120,7 +120,9 @@ contract NonceManagerMultiTenant {
         if (timeNonceIdStorage == 0) {
             timeNonce[account][id] = keccak256(abi.encodePacked(id, delta, count));
         } else {
-            require(timeNonceIdStorage == keccak256(abi.encodePacked(id, delta, count)), "NonceManagerMultiTenant:id-used");
+            require(
+                timeNonceIdStorage == keccak256(abi.encodePacked(id, delta, count)), "NonceManagerMultiTenant:id-used"
+            );
         }
         TimeTracker memory timeTracker = timeTracking[account][id];
         require(timeTracker.delta + delta <= block.timestamp, "NonceManagerMultiTenant:delta-not-reached");

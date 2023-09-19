@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import { BaseTest } from "./utils/Base.t.sol";
-import { NonceManager } from "../src/nonce/NonceManager.sol";
+import { BaseTest } from "../utils/Base.t.sol";
+import { NonceManager } from "../../src/nonce/NonceManager.sol";
 
 contract NonceManagerMock is NonceManager {
     function nonceEnforcer(bytes calldata encodedNonce) external {
@@ -35,6 +35,7 @@ contract NonceManagerTest is BaseTest {
         bytes memory encodedStandardNonce = _nonceManager.encodeStandardNonce(0);
         _nonceManager.nonceEnforcer(encodedStandardNonce);
     }
+
     function test_NonceManager_StandardNonce_WithoutEncoding_Success() external {
         _nonceManager.nonceEnforcer(abi.encodePacked(uint256(0)));
     }

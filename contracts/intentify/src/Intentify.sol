@@ -20,7 +20,6 @@ contract Intentify is TypesAndDecoders {
 
     /// @notice The hash of the domain separator used in the EIP712 domain hash.
     bytes32 public immutable DOMAIN_SEPARATOR;
-    bytes32 public immutable INTENT_TYPEHASH = keccak256("IntentBatch(address target)");
 
     /// @notice Multi nonce to handle replay protection for multiple queues
     mapping(address => mapping(uint256 => uint256)) internal multiNonce;
@@ -85,9 +84,7 @@ contract Intentify is TypesAndDecoders {
         pure
         returns (bytes memory)
     {
-        return abi.encodeWithSignature(
-            "execute((address,address,bytes),(address,bytes))", intent, hook
-        );
+        return abi.encodeWithSignature("execute((address,address,bytes),(address,bytes))", intent, hook);
     }
 
     function _execute(Intent memory intent) internal returns (bool success) {

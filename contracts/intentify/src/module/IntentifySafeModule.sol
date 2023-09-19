@@ -40,7 +40,7 @@ interface SafeMinimal {
         returns (bool success, bytes memory returnData);
 }
 
-contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, NonceManagerMultiTenant, ReentrancyGuard {
+contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, ReentrancyGuard {
     string public constant NAME = "Intentify";
     string public constant VERSION = "0";
 
@@ -101,7 +101,6 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, NonceManager
     /* Internal Functions                                                                    */
     /* ===================================================================================== */
 
-
     function _generateIntentCalldata(Intent memory intent) internal pure returns (bytes memory) {
         return abi.encodeWithSignature("execute((address,address,bytes))", intent);
     }
@@ -114,9 +113,7 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, NonceManager
         pure
         returns (bytes memory)
     {
-        return abi.encodeWithSignature(
-            "execute((address,address,bytes),(address,bytes))", intent, hook
-        );
+        return abi.encodeWithSignature("execute((address,address,bytes),(address,bytes))", intent, hook);
     }
 
     function _execute(Intent memory intent) internal returns (bool success) {

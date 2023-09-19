@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import { console2 } from "forge-std/console2.sol";
-
 import { ERC20 } from "solady/tokens/ERC20.sol";
-import { IHook } from "../interfaces/IHook.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { BytesLib } from "../libraries/BytesLib.sol";
 
@@ -20,7 +17,6 @@ contract LimitOrderIntent {
 
         uint256 tokenABalance = ERC20(tokenOut).balanceOf(intent.root);
         uint256 tokenBBalance = ERC20(tokenIn).balanceOf(intent.root);
-        console2.log("pre:tokenABalance", tokenABalance);
 
         till[intent.root][tokenOut] = tokenABalance - amountOutMax;
         till[intent.root][tokenIn] += tokenBBalance + amountInMin;

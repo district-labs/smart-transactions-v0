@@ -1,10 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import { PRBTest } from "@prb/test/PRBTest.sol";
-import { console2 } from "forge-std/console2.sol";
-import { StdCheats } from "forge-std/StdCheats.sol";
-
 import { ERC20Mintable } from "../mocks/ERC20Mintable.sol";
 
 import {
@@ -20,24 +16,21 @@ import { SwapRouter } from "../../src/periphery/SwapRouter.sol";
 import { TokenRouterReleaseIntent } from "../../src/intents/TokenRouterReleaseIntent.sol";
 import { TokenRouterReleaseIntent } from "../../src/intents/TokenRouterReleaseIntent.sol";
 
-contract TokenRouterReleaseIntentTest is PRBTest, StdCheats {
+import { BaseTest } from "../utils/Base.t.sol";
+
+contract TokenRouterReleaseIntentTest is BaseTest {
     Intentify internal _intentify;
     TokenRouterReleaseIntent internal _tokenRouterRelease;
     ERC20Mintable internal _tokenA;
 
-    address internal signer;
-    uint256 SIGNER = 0xA11CE;
     uint256 startingBalance = 1000;
 
-    Signature internal EMPTY_SIGNATURE = Signature({ r: bytes32(0x00), s: bytes32(0x00), v: uint8(0x00) });
     Hook EMPTY_HOOK = Hook({ target: address(0x00), data: bytes("") });
 
     event Release(address indexed account, address indexed token, uint256 amount);
 
-    /// @dev A function invoked before each test case is run.
     function setUp() public virtual {
-        // Instantiate the contract-under-test.
-        signer = vm.addr(SIGNER);
+        initializeBase();
         _intentify = new Intentify(signer, "Intentify", "V0");
         _tokenRouterRelease = new TokenRouterReleaseIntent();
         _tokenA = new ERC20Mintable();
@@ -70,8 +63,7 @@ contract TokenRouterReleaseIntentTest is PRBTest, StdCheats {
             data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
         });
 
-        IntentBatch memory intentBatch =
-            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -116,8 +108,7 @@ contract TokenRouterReleaseIntentTest is PRBTest, StdCheats {
             data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
         });
 
-        IntentBatch memory intentBatch =
-            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -142,8 +133,7 @@ contract TokenRouterReleaseIntentTest is PRBTest, StdCheats {
             data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
         });
 
-        IntentBatch memory intentBatch =
-            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);

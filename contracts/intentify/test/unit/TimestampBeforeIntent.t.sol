@@ -16,21 +16,18 @@ import {
 import { Intentify } from "../../src/Intentify.sol";
 import { TimestampBeforeIntent } from "../../src/intents/TimestampBeforeIntent.sol";
 
-contract TimestampBeforeIntentTest is PRBTest, StdCheats {
+import { BaseTest } from "../utils/Base.t.sol";
+
+contract TimestampBeforeIntentTest is BaseTest {
     Intentify internal _intentify;
     TimestampBeforeIntent internal _timestampBeforeIntent;
-
-    uint256 SIGNER = 0xA11CE;
-    address internal signer;
 
     Signature internal EMPTY_SIGNATURE = Signature({ r: bytes32(0x00), s: bytes32(0x00), v: uint8(0x00) });
     Hook EMPTY_HOOK = Hook({ target: address(0x00), data: bytes("") });
 
-    /// @dev A function invoked before each test case is run.
     function setUp() public virtual {
-        // Instantiate the contract-under-test.
-        signer = vm.addr(SIGNER);
-        _intentify = new Intentify(signer, "Intentify", "V0");
+        initializeBase();
+        _intentify = new Intentify(signer, "Intentify", "0");
         _timestampBeforeIntent = new TimestampBeforeIntent();
     }
 
@@ -54,8 +51,7 @@ contract TimestampBeforeIntentTest is PRBTest, StdCheats {
             data: _timestampBeforeIntent.encode(uint128(block.timestamp - pastSeconds))
         });
 
-        IntentBatch memory intentBatch =
-            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -92,8 +88,7 @@ contract TimestampBeforeIntentTest is PRBTest, StdCheats {
             data: _timestampBeforeIntent.encode(uint128(block.timestamp + pastSeconds))
         });
 
-        IntentBatch memory intentBatch =
-            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -117,8 +112,7 @@ contract TimestampBeforeIntentTest is PRBTest, StdCheats {
             data: _timestampBeforeIntent.encode(uint128(block.timestamp))
         });
 
-        IntentBatch memory intentBatch =
-            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -142,8 +136,7 @@ contract TimestampBeforeIntentTest is PRBTest, StdCheats {
             data: _timestampBeforeIntent.encode(uint128(block.timestamp - 100))
         });
 
-        IntentBatch memory intentBatch =
-            IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
