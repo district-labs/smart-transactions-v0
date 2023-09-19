@@ -17,3 +17,9 @@ export * from "./hooks/use-get-safe-proxy-factory-address";
 export * from "./hooks/use-get-wallet-factory-address";
 export * from "./hooks/use-is-safe-intent-module-enabled";
 export * from "./hooks/use-is-safe-materialized";
+
+export * from "./hooks/intents/use-get-intent-limit-order-address";
+export * from "./hooks/intents/use-get-intent-timestamp-after-address";
+export * from "./hooks/intents/use-get-intent-timestamp-before-address";
+export * from "./hooks/intents/use-get-intent-token-router-address";
+export * from "./hooks/intents/use-get-intent-uniswap-twab-address";
