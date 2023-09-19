@@ -1,26 +1,7 @@
-import { cookies } from "next/headers"
-import { db } from "@/db"
-import { users } from "@/db/schema"
-import { eq } from "drizzle-orm"
-
-import { getRequestCookie } from "@/lib/session"
 import { UpdateUserForm } from "@/components/forms/update-user-form"
 import { Icons } from "@/components/icons"
 
-export default async function OnboardingPage() {
-  const session = await getRequestCookie(cookies())
-
-  // TODO add session check
-  const dbUser = await db.query.users.findFirst({
-    where: eq(users.address, session!.user.address),
-  })
-
-  console.log(dbUser)
-
-  if (!dbUser) {
-    throw new Error("You shouldn't be here.")
-  }
-
+export default function OnboardingPage() {
   return (
     <div className="mx-auto w-full max-w-sm lg:max-w-none">
       <div className="space-y-2">
@@ -33,7 +14,7 @@ export default async function OnboardingPage() {
         </p>
       </div>
       <div className="mt-10 space-y-4">
-        <UpdateUserForm user={dbUser} />
+        <UpdateUserForm />
       </div>
     </div>
   )

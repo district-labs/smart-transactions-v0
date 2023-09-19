@@ -342,6 +342,9 @@ importers:
 
   apps/site:
     dependencies:
+      '@district-labs/intentify-react':
+        specifier: workspace:*
+        version: link:../../sdk/intentify-react
       '@headlessui/tailwindcss':
         specifier: ^0.2.0
         version: 0.2.0(tailwindcss@3.3.3)

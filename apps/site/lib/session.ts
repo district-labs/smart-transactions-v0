@@ -15,6 +15,7 @@ declare module "iron-session" {
     nonce: string
     siwe: SiweMessage
     user: User
+    address: string
   }
 }
 

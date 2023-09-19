@@ -1,5 +1,6 @@
 import {
   CaretSortIcon,
+  CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   Cross1Icon,
@@ -22,6 +23,7 @@ type IconProps = React.HTMLAttributes<SVGElement>
 
 export const Icons = {
   chain: Link2Icon,
+  check: CheckIcon,
   chevronLeft: ChevronLeftIcon,
   chevronRight: ChevronRightIcon,
   close: Cross1Icon,

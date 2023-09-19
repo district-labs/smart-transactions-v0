@@ -2,9 +2,9 @@
 
 import { useTransition } from "react"
 import { useRouter } from "next/navigation"
-import { type User } from "@/db/schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { useAccount } from "wagmi"
 import { type z } from "zod"
 
 import { siteConfig } from "@/config/site"
@@ -24,23 +24,15 @@ import {
 import { Input } from "../ui/input"
 import { toast } from "../ui/use-toast"
 
-interface UpdateUserFormProps {
-  user: User
-}
-
 type Inputs = z.infer<typeof userSchema>
 
-export function UpdateUserForm({ user }: UpdateUserFormProps) {
+export function UpdateUserForm() {
   const router = useRouter()
+  const { address } = useAccount()
   const [isPending, startTransition] = useTransition()
 
   const form = useForm<Inputs>({
     resolver: zodResolver(userSchema),
-    defaultValues: {
-      firstName: user.firstName ? user.firstName : "",
-      lastName: user.lastName ? user.lastName : "",
-      email: user.email ? user.email : "",
-    },
   })
 
   function onSubmit(data: Inputs) {
@@ -48,8 +40,7 @@ export function UpdateUserForm({ user }: UpdateUserFormProps) {
       try {
         await updateUserAction({
           ...data,
-          id: user.id,
-          address: user.address,
+          address: address as string,
         })
 
         // Route to next step in onboarding
@@ -77,7 +68,6 @@ export function UpdateUserForm({ user }: UpdateUserFormProps) {
                 aria-invalid={!!form.formState.errors.firstName}
                 placeholder="John"
                 {...form.register("firstName")}
-                defaultValue={user.firstName ? user.firstName : ""}
               />
             </FormControl>
             <UncontrolledFormMessage
@@ -91,7 +81,6 @@ export function UpdateUserForm({ user }: UpdateUserFormProps) {
                 aria-invalid={!!form.formState.errors.lastName}
                 placeholder="Wick"
                 {...form.register("lastName")}
-                defaultValue={user.lastName ? user.lastName : ""}
               />
             </FormControl>
             <UncontrolledFormMessage
@@ -108,7 +97,6 @@ export function UpdateUserForm({ user }: UpdateUserFormProps) {
               inputMode="email"
               placeholder="john@wick.com"
               {...form.register("email")}
-              defaultValue={user.email ? user.email : ""}
             />
           </FormControl>
           <UncontrolledFormMessage

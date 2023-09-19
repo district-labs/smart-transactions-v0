@@ -7,7 +7,7 @@ import { SiweMessage } from "siwe"
 import { z } from "zod"
 
 import { ironOptions } from "@/lib/session"
-import { getUserAction } from "@/app/_actions/user"
+import { checkExistingUserAction, getUserAction } from "@/app/_actions/user"
 
 const verifySchema = z.object({
   signature: z.string(),
@@ -36,16 +36,21 @@ export async function POST(req: Request) {
       })
 
     session.siwe = fields
+    session.address = fields.address
     await session.save()
 
     if (env.DATABASE_URL) {
-      const user = await getUserAction(fields.address)
-      if (!user) {
+      const userExists = await checkExistingUserAction(fields.address)
+
+      if (userExists) {
+        const user = await getUserAction(fields.address)
+        session.user = user
+        await session.save()
+      } else {
         await db.insert(users).values({
           address: fields.address,
         })
-      } else {
-        session.user = user
+        session.address = fields.address
         await session.save()
       }
     }
