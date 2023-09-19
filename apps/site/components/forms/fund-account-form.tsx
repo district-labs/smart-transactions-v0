@@ -73,9 +73,10 @@ export function FundAccountForm() {
         )}
       >
         <div className="space-y-0.5">
-          <Label>Install District Intent Module</Label>
+          <Label>Install District&apos;s Intent Module</Label>
           <p className="text-xs text-muted-foreground">
-            Lorem ipsum. Some description.
+            Enable your SAFE account to interact with the District Intent
+            Protocol.
           </p>
         </div>
         {isModuleEnabled ? (
@@ -90,50 +91,6 @@ export function FundAccountForm() {
             }
             safeAddress="0x88B28dc71B7C2f11072FF41Eb82e177E7E8eb30d"
           />
-        )}
-      </div>
-      <div
-        className={cn(
-          "flex flex-row items-center justify-between rounded-lg border p-4",
-          isModuleEnabled && "border-primary"
-        )}
-      >
-        <div className="space-y-0.5">
-          <Label>Enable District Intent Module</Label>
-          <p className="text-xs text-muted-foreground">
-            Enable&apos;s your SAFE account to interact with the District Intent
-            Protocol.
-          </p>
-        </div>
-        {/* TODO: Add a check for if it is enabled & signed. */}
-        {isModuleEnabled ? (
-          <Icons.check className="h-5 w-5 text-primary" />
-        ) : (
-          <SignIntentBundle
-            onError={() => alert("Rejected")}
-            intentBatch={{
-              nonce: {
-                queue: 0,
-                accumulator: 0,
-              },
-              intents: [
-                {
-                  exec: {
-                    root: "0x0000000000000000000000000000000000000000",
-                    target: "0x0000000000000000000000000000000000000000",
-                    data: "0x",
-                  },
-                  signature: {
-                    v: 0,
-                    r: "0x0000000000000000000000000000000000000000000000000000000000000000",
-                    s: "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  },
-                },
-              ],
-            }}
-          >
-            <Button disabled={!isModuleEnabled}>Enable</Button>
-          </SignIntentBundle>
         )}
       </div>
       <div className="div flex w-full justify-end p-4">
