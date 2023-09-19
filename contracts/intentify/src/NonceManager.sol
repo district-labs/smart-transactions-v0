@@ -6,27 +6,27 @@ pragma solidity >=0.8.19;
  * It packs 3 different types of nonces into a single bytes32 value.
  * The first byte is used to identify the nonce type.
  * The remaining bytes are used to store the nonce value.
- *
+ * 
  * Below are the 3 different types of nonces in struct form:
- *
+ * 
  * struct StandardNonce {
  *     uint8 nonceType;
  *     uint248 accumulator;
  * }
- *
+ * 
  * struct DimensionalNonce {
  *     uint8 nonceType;
  *     uint128 queue;
  *     uint120 accumulator;
  * }
- *
+ * 
  * struct TimeNonce {
  *     uint8 nonceType;
  *     uint32 id;
  *     uint128 delta; // time in seconds
  *     uint96 count; // number of transactions
  * }
- *
+ * 
  * The NonceManager contract doesn't use the structs directly.
  * They are only used to explain the nonce types.
  */
