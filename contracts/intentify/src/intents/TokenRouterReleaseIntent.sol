@@ -12,12 +12,12 @@ contract TokenRouterReleaseIntent {
     mapping(address => mapping(address => uint256)) public till;
 
     function execute(Intent calldata intent) external returns (bool) {
-        require(intent.exec.root == msg.sender, "TokenRouterReleaseIntent:invalid-root");
-        require(intent.exec.target == address(this), "TokenRouterReleaseIntent:invalid-target");
+        require(intent.root == msg.sender, "TokenRouterReleaseIntent:invalid-root");
+        require(intent.target == address(this), "TokenRouterReleaseIntent:invalid-target");
 
-        (address token, uint256 amount) = abi.decode(intent.exec.data, (address, uint256));
-        till[intent.exec.root][token] += amount;
-        emit Release(intent.exec.root, token, amount);
+        (address token, uint256 amount) = abi.decode(intent.data, (address, uint256));
+        till[intent.root][token] += amount;
+        emit Release(intent.root, token, amount);
         return true;
     }
 

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import { BaseTest } from "./utils/Base.t.sol";
-import { NonceManager } from "../src/NonceManager.sol";
+import { BaseTest } from "../utils/Base.t.sol";
+import { NonceManagerMultiTenant } from "../../src/nonce/NonceManagerMultiTenant.sol";
 
-contract NonceManagerMock is NonceManager {
+contract NonceManagerMultiTenantMock is NonceManagerMultiTenant {
     function nonceEnforcer(address account, bytes memory encodedNonce) external {
         _nonceEnforcer(account, encodedNonce);
     }
@@ -22,110 +22,110 @@ contract NonceManagerMock is NonceManager {
     }
 }
 
-contract NonceManagerTest is BaseTest {
-    NonceManagerMock internal _nonceManager;
+contract NonceManagerMultiTenantTest is BaseTest {
+    NonceManagerMultiTenantMock internal _nonceManager;
 
     function setUp() public virtual {
-        _nonceManager = new NonceManagerMock();
+        _nonceManager = new NonceManagerMultiTenantMock();
     }
 
     // Standard Nonce
 
-    function test_NonceManager_StandardNonce_Success() external {
+    function test_NonceManagerMultiTenant_StandardNonce_Success() external {
         bytes memory encodedStandardNonce = _nonceManager.encodeStandardNonce(0);
         _nonceManager.nonceEnforcer(wallet1, encodedStandardNonce);
     }
 
-    function test_NonceManager_StandardNonce_Failure() external {
+    function test_NonceManagerMultiTenant_StandardNonce_Failure() external {
         bytes memory encodedStandardNonce = _nonceManager.encodeStandardNonce(0);
         _nonceManager.nonceEnforcer(wallet1, encodedStandardNonce);
-        vm.expectRevert(bytes("NonceManager:nonce-out-of-order"));
+        vm.expectRevert(bytes("NonceManagerMultiTenant:nonce-out-of-order"));
         _nonceManager.nonceEnforcer(wallet1, encodedStandardNonce);
     }
 
     // Dimensional Nonce
 
-    function test_NonceManager_DimensionalNonce_Success() external {
+    function test_NonceManagerMultiTenant_DimensionalNonce_Success() external {
         bytes memory encodedDimensionalNonce = _nonceManager.encodeDimensionalNonce(0, 0);
         _nonceManager.nonceEnforcer(wallet1, encodedDimensionalNonce);
     }
 
-    function test_NonceManager_DimensionalNonce_SameQueue_Success() external {
+    function test_NonceManagerMultiTenant_DimensionalNonce_SameQueue_Success() external {
         bytes memory encodedDimensionalNonce = _nonceManager.encodeDimensionalNonce(0, 0);
         _nonceManager.nonceEnforcer(wallet1, encodedDimensionalNonce);
         bytes memory encodedDimensionalNonceNext = _nonceManager.encodeDimensionalNonce(0, 1);
         _nonceManager.nonceEnforcer(wallet1, encodedDimensionalNonceNext);
     }
 
-    function test_NonceManager_DimensionalNonce_NewQueue_Success() external {
+    function test_NonceManagerMultiTenant_DimensionalNonce_NewQueue_Success() external {
         bytes memory encodedDimensionalNonceQueueOne = _nonceManager.encodeDimensionalNonce(0, 0);
         _nonceManager.nonceEnforcer(wallet1, encodedDimensionalNonceQueueOne);
         bytes memory encodedDimensionalNonceQueueTwo = _nonceManager.encodeDimensionalNonce(1, 0);
         _nonceManager.nonceEnforcer(wallet1, encodedDimensionalNonceQueueTwo);
     }
 
-    function test_NonceManager_DimensionalNonce_Failure() external {
+    function test_NonceManagerMultiTenant_DimensionalNonce_Failure() external {
         bytes memory encodedDimensionalNonce = _nonceManager.encodeDimensionalNonce(0, 0);
         _nonceManager.nonceEnforcer(wallet1, encodedDimensionalNonce);
-        vm.expectRevert(bytes("NonceManager:nonce-out-of-order"));
+        vm.expectRevert(bytes("NonceManagerMultiTenant:nonce-out-of-order"));
         _nonceManager.nonceEnforcer(wallet1, encodedDimensionalNonce);
     }
 
     // Time Nonce
-    function test_NonceManager_TimeNonce_Success() external {
+    function test_NonceManagerMultiTenant_TimeNonce_Success() external {
         bytes memory encodedTimeNonce = _nonceManager.encodeTimeNonce(1, 100, 1);
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonce);
     }
 
-    function test_NonceManager_TimeNonce_InvalidId_Failure() external {
+    function test_NonceManagerMultiTenant_TimeNonce_InvalidId_Failure() external {
         bytes memory encodedTimeNonceOne = _nonceManager.encodeTimeNonce(42, 100, 1);
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonceOne);
         bytes memory encodedTimeNonceTwo = _nonceManager.encodeTimeNonce(42, 200, 1);
-        vm.expectRevert(bytes("NonceManager:id-used"));
+        vm.expectRevert(bytes("NonceManagerMultiTenant:id-used"));
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonceTwo);
     }
 
-    function test_NonceManager_TimeNonce_DeltaMet_Success() external {
+    function test_NonceManagerMultiTenant_TimeNonce_DeltaMet_Success() external {
         bytes memory encodedTimeNonce = _nonceManager.encodeTimeNonce(2, 100, 2);
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonce);
         vm.warp(block.timestamp + 100);
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonce);
     }
 
-    function test_NonceManager_TimeNonce_DeltaMet_Failure() external {
+    function test_NonceManagerMultiTenant_TimeNonce_DeltaMet_Failure() external {
         bytes memory encodedTimeNonce = _nonceManager.encodeTimeNonce(2, 100, 2);
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonce);
         vm.warp(block.timestamp + 99);
-        vm.expectRevert(bytes("NonceManager:delta-not-reached"));
+        vm.expectRevert(bytes("NonceManagerMultiTenant:delta-not-reached"));
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonce);
     }
 
-    function test_NonceManager_TimeNonce_CountReached_Failure() external {
+    function test_NonceManagerMultiTenant_TimeNonce_CountReached_Failure() external {
         bytes memory encodedTimeNonce = _nonceManager.encodeTimeNonce(3, 1, 1);
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonce);
         vm.warp(block.timestamp + 1);
-        vm.expectRevert(bytes("NonceManager:count-reached"));
+        vm.expectRevert(bytes("NonceManagerMultiTenant:count-reached"));
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonce);
     }
 
     // Invalid Nonce Type
-    function test_NonceManager_InvalidNonceType_Failure() external {
+    function test_NonceManagerMultiTenant_InvalidNonceType_Failure() external {
         bytes memory encodedInvalidNonce = abi.encodePacked(uint8(4), uint248(1));
-        vm.expectRevert(bytes("NonceManager:invalid-nonce-type"));
+        vm.expectRevert(bytes("NonceManagerMultiTenant:invalid-nonce-type"));
         _nonceManager.nonceEnforcer(wallet1, encodedInvalidNonce);
     }
 
     /* ===================================================================================== */
     /* Decoding                                                                              */
     /* ===================================================================================== */
-    function test_NonceManager_DecodeStandardNonce_Success() external {
+    function test_NonceManagerMultiTenant_DecodeStandardNonce_Success() external {
         bytes memory encodedInvalidNonce = _nonceManager.encodeStandardNonce(20);
         (uint8 nonceType, uint248 accumulator) = _nonceManager.decodeStandardNonce(encodedInvalidNonce);
         assertEq(nonceType, uint8(0));
         assertEq(accumulator, 20);
     }
 
-    function test_NonceManager_DecodeDimensionalNonce_Success() external {
+    function test_NonceManagerMultiTenant_DecodeDimensionalNonce_Success() external {
         bytes memory encodedInvalidNonce = _nonceManager.encodeDimensionalNonce(20, 30);
         (uint8 nonceType, uint120 queue, uint128 accumulator) =
             _nonceManager.decodeDimensionalNonce(encodedInvalidNonce);
@@ -134,7 +134,7 @@ contract NonceManagerTest is BaseTest {
         assertEq(accumulator, uint128(30));
     }
 
-    function test_NonceManager_DecodeTimeNonce_Success() external {
+    function test_NonceManagerMultiTenant_DecodeTimeNonce_Success() external {
         bytes memory encodedInvalidNonce = _nonceManager.encodeTimeNonce(20, 30, 5);
         (uint8 nonceType, uint32 id, uint128 delta, uint96 count) = _nonceManager.decodeTimeNonce(encodedInvalidNonce);
         assertEq(nonceType, uint8(2));

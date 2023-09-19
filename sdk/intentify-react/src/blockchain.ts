@@ -123,52 +123,15 @@ export const intentifyABI = [
             internalType: "struct IntentBatch",
             type: "tuple",
             components: [
-              {
-                name: "nonce",
-                internalType: "struct DimensionalNonce",
-                type: "tuple",
-                components: [
-                  { name: "queue", internalType: "uint128", type: "uint128" },
-                  {
-                    name: "accumulator",
-                    internalType: "uint128",
-                    type: "uint128",
-                  },
-                ],
-              },
+              { name: "nonce", internalType: "bytes", type: "bytes" },
               {
                 name: "intents",
                 internalType: "struct Intent[]",
                 type: "tuple[]",
                 components: [
-                  {
-                    name: "exec",
-                    internalType: "struct IntentExecution",
-                    type: "tuple",
-                    components: [
-                      {
-                        name: "root",
-                        internalType: "address",
-                        type: "address",
-                      },
-                      {
-                        name: "target",
-                        internalType: "address",
-                        type: "address",
-                      },
-                      { name: "data", internalType: "bytes", type: "bytes" },
-                    ],
-                  },
-                  {
-                    name: "signature",
-                    internalType: "struct Signature",
-                    type: "tuple",
-                    components: [
-                      { name: "r", internalType: "bytes32", type: "bytes32" },
-                      { name: "s", internalType: "bytes32", type: "bytes32" },
-                      { name: "v", internalType: "uint8", type: "uint8" },
-                    ],
-                  },
+                  { name: "root", internalType: "address", type: "address" },
+                  { name: "target", internalType: "address", type: "address" },
+                  { name: "data", internalType: "bytes", type: "bytes" },
                 ],
               },
             ],
@@ -207,40 +170,15 @@ export const intentifyABI = [
         internalType: "struct IntentBatch",
         type: "tuple",
         components: [
-          {
-            name: "nonce",
-            internalType: "struct DimensionalNonce",
-            type: "tuple",
-            components: [
-              { name: "queue", internalType: "uint128", type: "uint128" },
-              { name: "accumulator", internalType: "uint128", type: "uint128" },
-            ],
-          },
+          { name: "nonce", internalType: "bytes", type: "bytes" },
           {
             name: "intents",
             internalType: "struct Intent[]",
             type: "tuple[]",
             components: [
-              {
-                name: "exec",
-                internalType: "struct IntentExecution",
-                type: "tuple",
-                components: [
-                  { name: "root", internalType: "address", type: "address" },
-                  { name: "target", internalType: "address", type: "address" },
-                  { name: "data", internalType: "bytes", type: "bytes" },
-                ],
-              },
-              {
-                name: "signature",
-                internalType: "struct Signature",
-                type: "tuple",
-                components: [
-                  { name: "r", internalType: "bytes32", type: "bytes32" },
-                  { name: "s", internalType: "bytes32", type: "bytes32" },
-                  { name: "v", internalType: "uint8", type: "uint8" },
-                ],
-              },
+              { name: "root", internalType: "address", type: "address" },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
             ],
           },
         ],
@@ -255,47 +193,12 @@ export const intentifyABI = [
     inputs: [
       {
         name: "_input",
-        internalType: "struct IntentExecution",
-        type: "tuple",
+        internalType: "struct Intent[]",
+        type: "tuple[]",
         components: [
           { name: "root", internalType: "address", type: "address" },
           { name: "target", internalType: "address", type: "address" },
           { name: "data", internalType: "bytes", type: "bytes" },
-        ],
-      },
-    ],
-    name: "GET_INTENTEXECUTION_PACKETHASH",
-    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
-  },
-  {
-    stateMutability: "pure",
-    type: "function",
-    inputs: [
-      {
-        name: "_input",
-        internalType: "struct Intent[]",
-        type: "tuple[]",
-        components: [
-          {
-            name: "exec",
-            internalType: "struct IntentExecution",
-            type: "tuple",
-            components: [
-              { name: "root", internalType: "address", type: "address" },
-              { name: "target", internalType: "address", type: "address" },
-              { name: "data", internalType: "bytes", type: "bytes" },
-            ],
-          },
-          {
-            name: "signature",
-            internalType: "struct Signature",
-            type: "tuple",
-            components: [
-              { name: "r", internalType: "bytes32", type: "bytes32" },
-              { name: "s", internalType: "bytes32", type: "bytes32" },
-              { name: "v", internalType: "uint8", type: "uint8" },
-            ],
-          },
         ],
       },
     ],
@@ -311,26 +214,9 @@ export const intentifyABI = [
         internalType: "struct Intent",
         type: "tuple",
         components: [
-          {
-            name: "exec",
-            internalType: "struct IntentExecution",
-            type: "tuple",
-            components: [
-              { name: "root", internalType: "address", type: "address" },
-              { name: "target", internalType: "address", type: "address" },
-              { name: "data", internalType: "bytes", type: "bytes" },
-            ],
-          },
-          {
-            name: "signature",
-            internalType: "struct Signature",
-            type: "tuple",
-            components: [
-              { name: "r", internalType: "bytes32", type: "bytes32" },
-              { name: "s", internalType: "bytes32", type: "bytes32" },
-              { name: "v", internalType: "uint8", type: "uint8" },
-            ],
-          },
+          { name: "root", internalType: "address", type: "address" },
+          { name: "target", internalType: "address", type: "address" },
+          { name: "data", internalType: "bytes", type: "bytes" },
         ],
       },
     ],
@@ -356,13 +242,6 @@ export const intentifyABI = [
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
-    stateMutability: "view",
-    type: "function",
-    inputs: [],
-    name: "INTENT_TYPEHASH",
-    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
-  },
-  {
     stateMutability: "nonpayable",
     type: "function",
     inputs: [
@@ -376,52 +255,15 @@ export const intentifyABI = [
             internalType: "struct IntentBatch",
             type: "tuple",
             components: [
-              {
-                name: "nonce",
-                internalType: "struct DimensionalNonce",
-                type: "tuple",
-                components: [
-                  { name: "queue", internalType: "uint128", type: "uint128" },
-                  {
-                    name: "accumulator",
-                    internalType: "uint128",
-                    type: "uint128",
-                  },
-                ],
-              },
+              { name: "nonce", internalType: "bytes", type: "bytes" },
               {
                 name: "intents",
                 internalType: "struct Intent[]",
                 type: "tuple[]",
                 components: [
-                  {
-                    name: "exec",
-                    internalType: "struct IntentExecution",
-                    type: "tuple",
-                    components: [
-                      {
-                        name: "root",
-                        internalType: "address",
-                        type: "address",
-                      },
-                      {
-                        name: "target",
-                        internalType: "address",
-                        type: "address",
-                      },
-                      { name: "data", internalType: "bytes", type: "bytes" },
-                    ],
-                  },
-                  {
-                    name: "signature",
-                    internalType: "struct Signature",
-                    type: "tuple",
-                    components: [
-                      { name: "r", internalType: "bytes32", type: "bytes32" },
-                      { name: "s", internalType: "bytes32", type: "bytes32" },
-                      { name: "v", internalType: "uint8", type: "uint8" },
-                    ],
-                  },
+                  { name: "root", internalType: "address", type: "address" },
+                  { name: "target", internalType: "address", type: "address" },
+                  { name: "data", internalType: "bytes", type: "bytes" },
                 ],
               },
             ],
@@ -460,64 +302,21 @@ export const intentifyABI = [
         internalType: "struct IntentBatch",
         type: "tuple",
         components: [
-          {
-            name: "nonce",
-            internalType: "struct DimensionalNonce",
-            type: "tuple",
-            components: [
-              { name: "queue", internalType: "uint128", type: "uint128" },
-              { name: "accumulator", internalType: "uint128", type: "uint128" },
-            ],
-          },
+          { name: "nonce", internalType: "bytes", type: "bytes" },
           {
             name: "intents",
             internalType: "struct Intent[]",
             type: "tuple[]",
             components: [
-              {
-                name: "exec",
-                internalType: "struct IntentExecution",
-                type: "tuple",
-                components: [
-                  { name: "root", internalType: "address", type: "address" },
-                  { name: "target", internalType: "address", type: "address" },
-                  { name: "data", internalType: "bytes", type: "bytes" },
-                ],
-              },
-              {
-                name: "signature",
-                internalType: "struct Signature",
-                type: "tuple",
-                components: [
-                  { name: "r", internalType: "bytes32", type: "bytes32" },
-                  { name: "s", internalType: "bytes32", type: "bytes32" },
-                  { name: "v", internalType: "uint8", type: "uint8" },
-                ],
-              },
+              { name: "root", internalType: "address", type: "address" },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
             ],
           },
         ],
       },
     ],
     name: "getIntentBatchTypedDataHash",
-    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
-  },
-  {
-    stateMutability: "view",
-    type: "function",
-    inputs: [
-      {
-        name: "intentExecution",
-        internalType: "struct IntentExecution",
-        type: "tuple",
-        components: [
-          { name: "root", internalType: "address", type: "address" },
-          { name: "target", internalType: "address", type: "address" },
-          { name: "data", internalType: "bytes", type: "bytes" },
-        ],
-      },
-    ],
-    name: "getIntentExecutionTypedDataHash",
     outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
   {
@@ -630,52 +429,15 @@ export const intentifySafeModuleABI = [
             internalType: "struct IntentBatch",
             type: "tuple",
             components: [
-              {
-                name: "nonce",
-                internalType: "struct DimensionalNonce",
-                type: "tuple",
-                components: [
-                  { name: "queue", internalType: "uint128", type: "uint128" },
-                  {
-                    name: "accumulator",
-                    internalType: "uint128",
-                    type: "uint128",
-                  },
-                ],
-              },
+              { name: "nonce", internalType: "bytes", type: "bytes" },
               {
                 name: "intents",
                 internalType: "struct Intent[]",
                 type: "tuple[]",
                 components: [
-                  {
-                    name: "exec",
-                    internalType: "struct IntentExecution",
-                    type: "tuple",
-                    components: [
-                      {
-                        name: "root",
-                        internalType: "address",
-                        type: "address",
-                      },
-                      {
-                        name: "target",
-                        internalType: "address",
-                        type: "address",
-                      },
-                      { name: "data", internalType: "bytes", type: "bytes" },
-                    ],
-                  },
-                  {
-                    name: "signature",
-                    internalType: "struct Signature",
-                    type: "tuple",
-                    components: [
-                      { name: "r", internalType: "bytes32", type: "bytes32" },
-                      { name: "s", internalType: "bytes32", type: "bytes32" },
-                      { name: "v", internalType: "uint8", type: "uint8" },
-                    ],
-                  },
+                  { name: "root", internalType: "address", type: "address" },
+                  { name: "target", internalType: "address", type: "address" },
+                  { name: "data", internalType: "bytes", type: "bytes" },
                 ],
               },
             ],
@@ -714,40 +476,15 @@ export const intentifySafeModuleABI = [
         internalType: "struct IntentBatch",
         type: "tuple",
         components: [
-          {
-            name: "nonce",
-            internalType: "struct DimensionalNonce",
-            type: "tuple",
-            components: [
-              { name: "queue", internalType: "uint128", type: "uint128" },
-              { name: "accumulator", internalType: "uint128", type: "uint128" },
-            ],
-          },
+          { name: "nonce", internalType: "bytes", type: "bytes" },
           {
             name: "intents",
             internalType: "struct Intent[]",
             type: "tuple[]",
             components: [
-              {
-                name: "exec",
-                internalType: "struct IntentExecution",
-                type: "tuple",
-                components: [
-                  { name: "root", internalType: "address", type: "address" },
-                  { name: "target", internalType: "address", type: "address" },
-                  { name: "data", internalType: "bytes", type: "bytes" },
-                ],
-              },
-              {
-                name: "signature",
-                internalType: "struct Signature",
-                type: "tuple",
-                components: [
-                  { name: "r", internalType: "bytes32", type: "bytes32" },
-                  { name: "s", internalType: "bytes32", type: "bytes32" },
-                  { name: "v", internalType: "uint8", type: "uint8" },
-                ],
-              },
+              { name: "root", internalType: "address", type: "address" },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
             ],
           },
         ],
@@ -762,47 +499,12 @@ export const intentifySafeModuleABI = [
     inputs: [
       {
         name: "_input",
-        internalType: "struct IntentExecution",
-        type: "tuple",
+        internalType: "struct Intent[]",
+        type: "tuple[]",
         components: [
           { name: "root", internalType: "address", type: "address" },
           { name: "target", internalType: "address", type: "address" },
           { name: "data", internalType: "bytes", type: "bytes" },
-        ],
-      },
-    ],
-    name: "GET_INTENTEXECUTION_PACKETHASH",
-    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
-  },
-  {
-    stateMutability: "pure",
-    type: "function",
-    inputs: [
-      {
-        name: "_input",
-        internalType: "struct Intent[]",
-        type: "tuple[]",
-        components: [
-          {
-            name: "exec",
-            internalType: "struct IntentExecution",
-            type: "tuple",
-            components: [
-              { name: "root", internalType: "address", type: "address" },
-              { name: "target", internalType: "address", type: "address" },
-              { name: "data", internalType: "bytes", type: "bytes" },
-            ],
-          },
-          {
-            name: "signature",
-            internalType: "struct Signature",
-            type: "tuple",
-            components: [
-              { name: "r", internalType: "bytes32", type: "bytes32" },
-              { name: "s", internalType: "bytes32", type: "bytes32" },
-              { name: "v", internalType: "uint8", type: "uint8" },
-            ],
-          },
         ],
       },
     ],
@@ -818,26 +520,9 @@ export const intentifySafeModuleABI = [
         internalType: "struct Intent",
         type: "tuple",
         components: [
-          {
-            name: "exec",
-            internalType: "struct IntentExecution",
-            type: "tuple",
-            components: [
-              { name: "root", internalType: "address", type: "address" },
-              { name: "target", internalType: "address", type: "address" },
-              { name: "data", internalType: "bytes", type: "bytes" },
-            ],
-          },
-          {
-            name: "signature",
-            internalType: "struct Signature",
-            type: "tuple",
-            components: [
-              { name: "r", internalType: "bytes32", type: "bytes32" },
-              { name: "s", internalType: "bytes32", type: "bytes32" },
-              { name: "v", internalType: "uint8", type: "uint8" },
-            ],
-          },
+          { name: "root", internalType: "address", type: "address" },
+          { name: "target", internalType: "address", type: "address" },
+          { name: "data", internalType: "bytes", type: "bytes" },
         ],
       },
     ],
@@ -877,6 +562,67 @@ export const intentifySafeModuleABI = [
     outputs: [{ name: "", internalType: "string", type: "string" }],
   },
   {
+    stateMutability: "pure",
+    type: "function",
+    inputs: [{ name: "encodedNonce", internalType: "bytes", type: "bytes" }],
+    name: "_decodeDimensionalNonce",
+    outputs: [
+      { name: "nonceType", internalType: "uint8", type: "uint8" },
+      { name: "queue", internalType: "uint120", type: "uint120" },
+      { name: "accumulator", internalType: "uint128", type: "uint128" },
+    ],
+  },
+  {
+    stateMutability: "pure",
+    type: "function",
+    inputs: [{ name: "encodedNonce", internalType: "bytes", type: "bytes" }],
+    name: "_decodeStandardNonce",
+    outputs: [
+      { name: "nonceType", internalType: "uint8", type: "uint8" },
+      { name: "accumulator", internalType: "uint248", type: "uint248" },
+    ],
+  },
+  {
+    stateMutability: "pure",
+    type: "function",
+    inputs: [{ name: "encodedNonce", internalType: "bytes", type: "bytes" }],
+    name: "_decodeTimeNonce",
+    outputs: [
+      { name: "nonceType", internalType: "uint8", type: "uint8" },
+      { name: "id", internalType: "uint32", type: "uint32" },
+      { name: "delta", internalType: "uint128", type: "uint128" },
+      { name: "count", internalType: "uint88", type: "uint88" },
+    ],
+  },
+  {
+    stateMutability: "pure",
+    type: "function",
+    inputs: [
+      { name: "queue", internalType: "uint120", type: "uint120" },
+      { name: "accumulator", internalType: "uint128", type: "uint128" },
+    ],
+    name: "encodeDimensionalNonce",
+    outputs: [{ name: "encodedNonce", internalType: "bytes", type: "bytes" }],
+  },
+  {
+    stateMutability: "pure",
+    type: "function",
+    inputs: [{ name: "accumulator", internalType: "uint248", type: "uint248" }],
+    name: "encodeStandardNonce",
+    outputs: [{ name: "encodedNonce", internalType: "bytes", type: "bytes" }],
+  },
+  {
+    stateMutability: "pure",
+    type: "function",
+    inputs: [
+      { name: "id", internalType: "uint32", type: "uint32" },
+      { name: "delta", internalType: "uint128", type: "uint128" },
+      { name: "count", internalType: "uint88", type: "uint88" },
+    ],
+    name: "encodeTimeNonce",
+    outputs: [{ name: "encodedNonce", internalType: "bytes", type: "bytes" }],
+  },
+  {
     stateMutability: "nonpayable",
     type: "function",
     inputs: [
@@ -891,52 +637,15 @@ export const intentifySafeModuleABI = [
             internalType: "struct IntentBatch",
             type: "tuple",
             components: [
-              {
-                name: "nonce",
-                internalType: "struct DimensionalNonce",
-                type: "tuple",
-                components: [
-                  { name: "queue", internalType: "uint128", type: "uint128" },
-                  {
-                    name: "accumulator",
-                    internalType: "uint128",
-                    type: "uint128",
-                  },
-                ],
-              },
+              { name: "nonce", internalType: "bytes", type: "bytes" },
               {
                 name: "intents",
                 internalType: "struct Intent[]",
                 type: "tuple[]",
                 components: [
-                  {
-                    name: "exec",
-                    internalType: "struct IntentExecution",
-                    type: "tuple",
-                    components: [
-                      {
-                        name: "root",
-                        internalType: "address",
-                        type: "address",
-                      },
-                      {
-                        name: "target",
-                        internalType: "address",
-                        type: "address",
-                      },
-                      { name: "data", internalType: "bytes", type: "bytes" },
-                    ],
-                  },
-                  {
-                    name: "signature",
-                    internalType: "struct Signature",
-                    type: "tuple",
-                    components: [
-                      { name: "r", internalType: "bytes32", type: "bytes32" },
-                      { name: "s", internalType: "bytes32", type: "bytes32" },
-                      { name: "v", internalType: "uint8", type: "uint8" },
-                    ],
-                  },
+                  { name: "root", internalType: "address", type: "address" },
+                  { name: "target", internalType: "address", type: "address" },
+                  { name: "data", internalType: "bytes", type: "bytes" },
                 ],
               },
             ],
@@ -970,45 +679,30 @@ export const intentifySafeModuleABI = [
     stateMutability: "view",
     type: "function",
     inputs: [
+      { name: "account", internalType: "address", type: "address" },
+      { name: "queue", internalType: "uint120", type: "uint120" },
+    ],
+    name: "getDimensionalNonce",
+    outputs: [{ name: "", internalType: "uint128", type: "uint128" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
+    inputs: [
       {
         name: "intent",
         internalType: "struct IntentBatch",
         type: "tuple",
         components: [
-          {
-            name: "nonce",
-            internalType: "struct DimensionalNonce",
-            type: "tuple",
-            components: [
-              { name: "queue", internalType: "uint128", type: "uint128" },
-              { name: "accumulator", internalType: "uint128", type: "uint128" },
-            ],
-          },
+          { name: "nonce", internalType: "bytes", type: "bytes" },
           {
             name: "intents",
             internalType: "struct Intent[]",
             type: "tuple[]",
             components: [
-              {
-                name: "exec",
-                internalType: "struct IntentExecution",
-                type: "tuple",
-                components: [
-                  { name: "root", internalType: "address", type: "address" },
-                  { name: "target", internalType: "address", type: "address" },
-                  { name: "data", internalType: "bytes", type: "bytes" },
-                ],
-              },
-              {
-                name: "signature",
-                internalType: "struct Signature",
-                type: "tuple",
-                components: [
-                  { name: "r", internalType: "bytes32", type: "bytes32" },
-                  { name: "s", internalType: "bytes32", type: "bytes32" },
-                  { name: "v", internalType: "uint8", type: "uint8" },
-                ],
-              },
+              { name: "root", internalType: "address", type: "address" },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
             ],
           },
         ],
@@ -1020,20 +714,29 @@ export const intentifySafeModuleABI = [
   {
     stateMutability: "view",
     type: "function",
+    inputs: [{ name: "account", internalType: "address", type: "address" }],
+    name: "getStandardNonce",
+    outputs: [{ name: "", internalType: "uint248", type: "uint248" }],
+  },
+  {
+    stateMutability: "view",
+    type: "function",
     inputs: [
+      { name: "account", internalType: "address", type: "address" },
+      { name: "id", internalType: "uint32", type: "uint32" },
+    ],
+    name: "getTimeNonce",
+    outputs: [
       {
-        name: "intentExecution",
-        internalType: "struct IntentExecution",
+        name: "",
+        internalType: "struct TimeTracker",
         type: "tuple",
         components: [
-          { name: "root", internalType: "address", type: "address" },
-          { name: "target", internalType: "address", type: "address" },
-          { name: "data", internalType: "bytes", type: "bytes" },
+          { name: "delta", internalType: "uint128", type: "uint128" },
+          { name: "count", internalType: "uint96", type: "uint96" },
         ],
       },
     ],
-    name: "getIntentExecutionTypedDataHash",
-    outputs: [{ name: "", internalType: "bytes32", type: "bytes32" }],
   },
 ] as const;
 
@@ -1043,6 +746,18 @@ export const intentifySafeModuleABI = [
 
 export const limitOrderIntentABI = [
   {
+    stateMutability: "pure",
+    type: "function",
+    inputs: [
+      { name: "tokenOut", internalType: "address", type: "address" },
+      { name: "tokenIn", internalType: "address", type: "address" },
+      { name: "amountOutMax", internalType: "uint256", type: "uint256" },
+      { name: "amountInMin", internalType: "uint256", type: "uint256" },
+    ],
+    name: "encode",
+    outputs: [{ name: "data", internalType: "bytes", type: "bytes" }],
+  },
+  {
     stateMutability: "nonpayable",
     type: "function",
     inputs: [
@@ -1051,26 +766,9 @@ export const limitOrderIntentABI = [
         internalType: "struct Intent",
         type: "tuple",
         components: [
-          {
-            name: "exec",
-            internalType: "struct IntentExecution",
-            type: "tuple",
-            components: [
-              { name: "root", internalType: "address", type: "address" },
-              { name: "target", internalType: "address", type: "address" },
-              { name: "data", internalType: "bytes", type: "bytes" },
-            ],
-          },
-          {
-            name: "signature",
-            internalType: "struct Signature",
-            type: "tuple",
-            components: [
-              { name: "r", internalType: "bytes32", type: "bytes32" },
-              { name: "s", internalType: "bytes32", type: "bytes32" },
-              { name: "v", internalType: "uint8", type: "uint8" },
-            ],
-          },
+          { name: "root", internalType: "address", type: "address" },
+          { name: "target", internalType: "address", type: "address" },
+          { name: "data", internalType: "bytes", type: "bytes" },
         ],
       },
       {
@@ -1782,6 +1480,13 @@ export const safeProxyFactoryABI = [
 
 export const timestampBeforeIntentABI = [
   {
+    stateMutability: "pure",
+    type: "function",
+    inputs: [{ name: "timestamp", internalType: "uint128", type: "uint128" }],
+    name: "encode",
+    outputs: [{ name: "data", internalType: "bytes", type: "bytes" }],
+  },
+  {
     stateMutability: "view",
     type: "function",
     inputs: [
@@ -1790,26 +1495,9 @@ export const timestampBeforeIntentABI = [
         internalType: "struct Intent",
         type: "tuple",
         components: [
-          {
-            name: "exec",
-            internalType: "struct IntentExecution",
-            type: "tuple",
-            components: [
-              { name: "root", internalType: "address", type: "address" },
-              { name: "target", internalType: "address", type: "address" },
-              { name: "data", internalType: "bytes", type: "bytes" },
-            ],
-          },
-          {
-            name: "signature",
-            internalType: "struct Signature",
-            type: "tuple",
-            components: [
-              { name: "r", internalType: "bytes32", type: "bytes32" },
-              { name: "s", internalType: "bytes32", type: "bytes32" },
-              { name: "v", internalType: "uint8", type: "uint8" },
-            ],
-          },
+          { name: "root", internalType: "address", type: "address" },
+          { name: "target", internalType: "address", type: "address" },
+          { name: "data", internalType: "bytes", type: "bytes" },
         ],
       },
     ],
@@ -1861,6 +1549,16 @@ export const tokenRouterReleaseIntentABI = [
     outputs: [{ name: "", internalType: "bool", type: "bool" }],
   },
   {
+    stateMutability: "pure",
+    type: "function",
+    inputs: [
+      { name: "token", internalType: "address", type: "address" },
+      { name: "amount", internalType: "uint256", type: "uint256" },
+    ],
+    name: "encode",
+    outputs: [{ name: "data", internalType: "bytes", type: "bytes" }],
+  },
+  {
     stateMutability: "nonpayable",
     type: "function",
     inputs: [
@@ -1869,26 +1567,9 @@ export const tokenRouterReleaseIntentABI = [
         internalType: "struct Intent",
         type: "tuple",
         components: [
-          {
-            name: "exec",
-            internalType: "struct IntentExecution",
-            type: "tuple",
-            components: [
-              { name: "root", internalType: "address", type: "address" },
-              { name: "target", internalType: "address", type: "address" },
-              { name: "data", internalType: "bytes", type: "bytes" },
-            ],
-          },
-          {
-            name: "signature",
-            internalType: "struct Signature",
-            type: "tuple",
-            components: [
-              { name: "r", internalType: "bytes32", type: "bytes32" },
-              { name: "s", internalType: "bytes32", type: "bytes32" },
-              { name: "v", internalType: "uint8", type: "uint8" },
-            ],
-          },
+          { name: "root", internalType: "address", type: "address" },
+          { name: "target", internalType: "address", type: "address" },
+          { name: "data", internalType: "bytes", type: "bytes" },
         ],
       },
     ],
@@ -2182,25 +1863,6 @@ export function useIntentifyGetIntentbatchPackethash<
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_INTENTEXECUTION_PACKETHASH"`.
- */
-export function useIntentifyGetIntentexecutionPackethash<
-  TFunctionName extends "GET_INTENTEXECUTION_PACKETHASH",
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    "abi" | "functionName"
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: "GET_INTENTEXECUTION_PACKETHASH",
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
-}
-
-/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_INTENT_ARRAY_PACKETHASH"`.
  */
 export function useIntentifyGetIntentArrayPackethash<
@@ -2258,25 +1920,6 @@ export function useIntentifyGetSignaturePackethash<
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"INTENT_TYPEHASH"`.
- */
-export function useIntentifyIntentTypehash<
-  TFunctionName extends "INTENT_TYPEHASH",
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    "abi" | "functionName"
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: "INTENT_TYPEHASH",
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
-}
-
-/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"getIntentBatchTypedDataHash"`.
  */
 export function useIntentifyGetIntentBatchTypedDataHash<
@@ -2291,25 +1934,6 @@ export function useIntentifyGetIntentBatchTypedDataHash<
   return useContractRead({
     abi: intentifyABI,
     functionName: "getIntentBatchTypedDataHash",
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"getIntentExecutionTypedDataHash"`.
- */
-export function useIntentifyGetIntentExecutionTypedDataHash<
-  TFunctionName extends "getIntentExecutionTypedDataHash",
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    "abi" | "functionName"
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: "getIntentExecutionTypedDataHash",
     ...config,
   } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>);
 }
@@ -2657,36 +2281,6 @@ export function useIntentifySafeModuleGetIntentbatchPackethash<
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"GET_INTENTEXECUTION_PACKETHASH"`.
- */
-export function useIntentifySafeModuleGetIntentexecutionPackethash<
-  TFunctionName extends "GET_INTENTEXECUTION_PACKETHASH",
-  TSelectData = ReadContractResult<
-    typeof intentifySafeModuleABI,
-    TFunctionName
-  >,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof intentifySafeModuleABI,
-      TFunctionName,
-      TSelectData
-    >,
-    "abi" | "functionName"
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifySafeModuleABI,
-    functionName: "GET_INTENTEXECUTION_PACKETHASH",
-    ...config,
-  } as UseContractReadConfig<
-    typeof intentifySafeModuleABI,
-    TFunctionName,
-    TSelectData
-  >);
-}
-
-/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"GET_INTENT_ARRAY_PACKETHASH"`.
  */
 export function useIntentifySafeModuleGetIntentArrayPackethash<
@@ -2837,6 +2431,216 @@ export function useIntentifySafeModuleVersion<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"_decodeDimensionalNonce"`.
+ */
+export function useIntentifySafeModuleDecodeDimensionalNonce<
+  TFunctionName extends "_decodeDimensionalNonce",
+  TSelectData = ReadContractResult<
+    typeof intentifySafeModuleABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof intentifySafeModuleABI,
+      TFunctionName,
+      TSelectData
+    >,
+    "abi" | "functionName"
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: intentifySafeModuleABI,
+    functionName: "_decodeDimensionalNonce",
+    ...config,
+  } as UseContractReadConfig<
+    typeof intentifySafeModuleABI,
+    TFunctionName,
+    TSelectData
+  >);
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"_decodeStandardNonce"`.
+ */
+export function useIntentifySafeModuleDecodeStandardNonce<
+  TFunctionName extends "_decodeStandardNonce",
+  TSelectData = ReadContractResult<
+    typeof intentifySafeModuleABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof intentifySafeModuleABI,
+      TFunctionName,
+      TSelectData
+    >,
+    "abi" | "functionName"
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: intentifySafeModuleABI,
+    functionName: "_decodeStandardNonce",
+    ...config,
+  } as UseContractReadConfig<
+    typeof intentifySafeModuleABI,
+    TFunctionName,
+    TSelectData
+  >);
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"_decodeTimeNonce"`.
+ */
+export function useIntentifySafeModuleDecodeTimeNonce<
+  TFunctionName extends "_decodeTimeNonce",
+  TSelectData = ReadContractResult<
+    typeof intentifySafeModuleABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof intentifySafeModuleABI,
+      TFunctionName,
+      TSelectData
+    >,
+    "abi" | "functionName"
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: intentifySafeModuleABI,
+    functionName: "_decodeTimeNonce",
+    ...config,
+  } as UseContractReadConfig<
+    typeof intentifySafeModuleABI,
+    TFunctionName,
+    TSelectData
+  >);
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"encodeDimensionalNonce"`.
+ */
+export function useIntentifySafeModuleEncodeDimensionalNonce<
+  TFunctionName extends "encodeDimensionalNonce",
+  TSelectData = ReadContractResult<
+    typeof intentifySafeModuleABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof intentifySafeModuleABI,
+      TFunctionName,
+      TSelectData
+    >,
+    "abi" | "functionName"
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: intentifySafeModuleABI,
+    functionName: "encodeDimensionalNonce",
+    ...config,
+  } as UseContractReadConfig<
+    typeof intentifySafeModuleABI,
+    TFunctionName,
+    TSelectData
+  >);
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"encodeStandardNonce"`.
+ */
+export function useIntentifySafeModuleEncodeStandardNonce<
+  TFunctionName extends "encodeStandardNonce",
+  TSelectData = ReadContractResult<
+    typeof intentifySafeModuleABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof intentifySafeModuleABI,
+      TFunctionName,
+      TSelectData
+    >,
+    "abi" | "functionName"
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: intentifySafeModuleABI,
+    functionName: "encodeStandardNonce",
+    ...config,
+  } as UseContractReadConfig<
+    typeof intentifySafeModuleABI,
+    TFunctionName,
+    TSelectData
+  >);
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"encodeTimeNonce"`.
+ */
+export function useIntentifySafeModuleEncodeTimeNonce<
+  TFunctionName extends "encodeTimeNonce",
+  TSelectData = ReadContractResult<
+    typeof intentifySafeModuleABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof intentifySafeModuleABI,
+      TFunctionName,
+      TSelectData
+    >,
+    "abi" | "functionName"
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: intentifySafeModuleABI,
+    functionName: "encodeTimeNonce",
+    ...config,
+  } as UseContractReadConfig<
+    typeof intentifySafeModuleABI,
+    TFunctionName,
+    TSelectData
+  >);
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"getDimensionalNonce"`.
+ */
+export function useIntentifySafeModuleGetDimensionalNonce<
+  TFunctionName extends "getDimensionalNonce",
+  TSelectData = ReadContractResult<
+    typeof intentifySafeModuleABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof intentifySafeModuleABI,
+      TFunctionName,
+      TSelectData
+    >,
+    "abi" | "functionName"
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: intentifySafeModuleABI,
+    functionName: "getDimensionalNonce",
+    ...config,
+  } as UseContractReadConfig<
+    typeof intentifySafeModuleABI,
+    TFunctionName,
+    TSelectData
+  >);
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"getIntentBatchTypedDataHash"`.
  */
 export function useIntentifySafeModuleGetIntentBatchTypedDataHash<
@@ -2867,10 +2671,10 @@ export function useIntentifySafeModuleGetIntentBatchTypedDataHash<
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"getIntentExecutionTypedDataHash"`.
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"getStandardNonce"`.
  */
-export function useIntentifySafeModuleGetIntentExecutionTypedDataHash<
-  TFunctionName extends "getIntentExecutionTypedDataHash",
+export function useIntentifySafeModuleGetStandardNonce<
+  TFunctionName extends "getStandardNonce",
   TSelectData = ReadContractResult<
     typeof intentifySafeModuleABI,
     TFunctionName
@@ -2887,7 +2691,37 @@ export function useIntentifySafeModuleGetIntentExecutionTypedDataHash<
 ) {
   return useContractRead({
     abi: intentifySafeModuleABI,
-    functionName: "getIntentExecutionTypedDataHash",
+    functionName: "getStandardNonce",
+    ...config,
+  } as UseContractReadConfig<
+    typeof intentifySafeModuleABI,
+    TFunctionName,
+    TSelectData
+  >);
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"getTimeNonce"`.
+ */
+export function useIntentifySafeModuleGetTimeNonce<
+  TFunctionName extends "getTimeNonce",
+  TSelectData = ReadContractResult<
+    typeof intentifySafeModuleABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof intentifySafeModuleABI,
+      TFunctionName,
+      TSelectData
+    >,
+    "abi" | "functionName"
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: intentifySafeModuleABI,
+    functionName: "getTimeNonce",
     ...config,
   } as UseContractReadConfig<
     typeof intentifySafeModuleABI,
@@ -3011,6 +2845,33 @@ export function useLimitOrderIntentRead<
 ) {
   return useContractRead({
     abi: limitOrderIntentABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof limitOrderIntentABI,
+    TFunctionName,
+    TSelectData
+  >);
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link limitOrderIntentABI}__ and `functionName` set to `"encode"`.
+ */
+export function useLimitOrderIntentEncode<
+  TFunctionName extends "encode",
+  TSelectData = ReadContractResult<typeof limitOrderIntentABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof limitOrderIntentABI,
+      TFunctionName,
+      TSelectData
+    >,
+    "abi" | "functionName"
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: limitOrderIntentABI,
+    functionName: "encode",
     ...config,
   } as UseContractReadConfig<
     typeof limitOrderIntentABI,
@@ -4807,6 +4668,36 @@ export function useTimestampBeforeIntentRead<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link timestampBeforeIntentABI}__ and `functionName` set to `"encode"`.
+ */
+export function useTimestampBeforeIntentEncode<
+  TFunctionName extends "encode",
+  TSelectData = ReadContractResult<
+    typeof timestampBeforeIntentABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof timestampBeforeIntentABI,
+      TFunctionName,
+      TSelectData
+    >,
+    "abi" | "functionName"
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: timestampBeforeIntentABI,
+    functionName: "encode",
+    ...config,
+  } as UseContractReadConfig<
+    typeof timestampBeforeIntentABI,
+    TFunctionName,
+    TSelectData
+  >);
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link timestampBeforeIntentABI}__ and `functionName` set to `"execute"`.
  */
 export function useTimestampBeforeIntentExecute<
@@ -4857,6 +4748,36 @@ export function useTokenRouterReleaseIntentRead<
 ) {
   return useContractRead({
     abi: tokenRouterReleaseIntentABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof tokenRouterReleaseIntentABI,
+    TFunctionName,
+    TSelectData
+  >);
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link tokenRouterReleaseIntentABI}__ and `functionName` set to `"encode"`.
+ */
+export function useTokenRouterReleaseIntentEncode<
+  TFunctionName extends "encode",
+  TSelectData = ReadContractResult<
+    typeof tokenRouterReleaseIntentABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof tokenRouterReleaseIntentABI,
+      TFunctionName,
+      TSelectData
+    >,
+    "abi" | "functionName"
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: tokenRouterReleaseIntentABI,
+    functionName: "encode",
     ...config,
   } as UseContractReadConfig<
     typeof tokenRouterReleaseIntentABI,
