@@ -16,6 +16,7 @@ import {
     TypesAndDecoders
 } from "../TypesAndDecoders.sol";
 import { SignatureDecoder } from "./SignatureDecoder.sol";
+import { NonceManagerMultiTenant } from "../nonce/NonceManagerMultiTenant.sol";
 
 interface SafeMinimal {
     function isOwner(address owner) external view returns (bool);
@@ -39,9 +40,9 @@ interface SafeMinimal {
         returns (bool success, bytes memory returnData);
 }
 
-contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, ReentrancyGuard {
-    string public constant NAME = "Intentify Module";
-    string public constant VERSION = "0.0.0";
+contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, NonceManagerMultiTenant, ReentrancyGuard {
+    string public constant NAME = "Intentify";
+    string public constant VERSION = "0";
 
     /// @notice The hash of the domain separator used in the EIP712 domain hash.
     bytes32 public immutable DOMAIN_SEPARATOR;
@@ -66,7 +67,7 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, ReentrancyGu
         nonReentrant
         returns (bool executed)
     {
-        // _enforceReplayProtection(root, execution.batch.nonce);
+        _nonceEnforcer(root, execution.batch.nonce);
         require(execution.batch.intents.length == execution.hooks.length, "Intent:invalid-intent-length");
 
         bytes32 digest = getIntentBatchTypedDataHash(execution.batch);

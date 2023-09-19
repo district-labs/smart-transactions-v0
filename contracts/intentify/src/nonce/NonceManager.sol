@@ -3,7 +3,7 @@ pragma solidity >=0.8.19;
 
 /**
  * The NonceManager contract is used to handle replay protection for multiple queues.
- * It packs 3 different types of nonces into a single bytes32 value.
+ * It packs 3 different types of nonces into a single bytes calldata value.
  * The first byte is used to identify the nonce type.
  * The remaining bytes are used to store the nonce value.
  * ---
@@ -41,25 +41,25 @@ struct TimeTracker {
 
 contract NonceManager {
     /// @notice Standard Multi nonce to handle replay protection for multiple queues
-    mapping(address => uint248) internal standardNonce;
+    uint248 internal standardNonce;
 
     /// @notice Dimensional Multi nonce to handle replay protection for multiple queues
-    mapping(address => mapping(uint120 => uint128)) internal dimensionalNonce;
+    mapping(uint120 => uint128) internal dimensionalNonce;
 
     /// @notice Time Multi nonce to handle replay protection for multiple queues
-    mapping(address => mapping(uint32 => TimeTracker)) internal timeTracking;
-    mapping(address => mapping(uint32 => bytes32)) internal timeNonce;
+    mapping(uint32 => TimeTracker) internal timeTracking;
+    mapping(uint32 => bytes32) internal timeNonce;
 
-    function getStandardNonce(address account) public view returns (uint248) {
-        return standardNonce[account];
+    function getStandardNonce() public view returns (uint248) {
+        return standardNonce;
     }
 
-    function getDimensionalNonce(address account, uint120 queue) public view returns (uint128) {
-        return dimensionalNonce[account][queue];
+    function getDimensionalNonce(uint120 queue) public view returns (uint128) {
+        return dimensionalNonce[queue];
     }
 
-    function getTimeNonce(address account, uint32 id) public view returns (TimeTracker memory) {
-        return timeTracking[account][id];
+    function getTimeNonce(uint32 id) public view returns (TimeTracker memory) {
+        return timeTracking[id];
     }
 
     /* ===================================================================================== */
@@ -88,44 +88,44 @@ contract NonceManager {
     /* Nonce Enforcers                                                                       */
     /* ===================================================================================== */
 
-    function _nonceEnforcer(address account, bytes memory encodedNonce) internal {
+    function _nonceEnforcer(bytes calldata encodedNonce) internal {
         uint8 nonceType = uint8(encodedNonce[0]);
         if (nonceType == uint8(NonceType.Standard)) {
-            _enforceStandardNonce(account, encodedNonce);
+            _enforceStandardNonce(encodedNonce);
         } else if (nonceType == uint8(NonceType.Dimensional)) {
-            _enforceDimensionalNonce(account, encodedNonce);
+            _enforceDimensionalNonce(encodedNonce);
         } else if (nonceType == uint8(NonceType.Time)) {
-            _enforceTimeNonce(account, encodedNonce);
+            _enforceTimeNonce(encodedNonce);
         } else {
             revert("NonceManager:invalid-nonce-type");
         }
     }
 
-    function _enforceStandardNonce(address account, bytes memory encodedNonce) internal {
+    function _enforceStandardNonce(bytes calldata encodedNonce) internal {
         (, uint248 accumulator) = _decodeStandardNonce(encodedNonce);
-        require(accumulator == standardNonce[account]++, "NonceManager:nonce-out-of-order");
+        require(accumulator == standardNonce++, "NonceManager:nonce-out-of-order");
     }
 
-    function _enforceDimensionalNonce(address account, bytes memory encodedNonce) internal {
+    function _enforceDimensionalNonce(bytes calldata encodedNonce) internal {
         (, uint120 queue, uint128 accumulator) = _decodeDimensionalNonce(encodedNonce);
-        require(accumulator == (dimensionalNonce[account][queue]++), "NonceManager:nonce-out-of-order");
+        require(accumulator == (dimensionalNonce[queue]++), "NonceManager:nonce-out-of-order");
     }
 
-    function _enforceTimeNonce(address account, bytes memory encodedNonce) internal {
+    function _enforceTimeNonce(bytes calldata encodedNonce) internal {
         (, uint32 id, uint128 delta, uint88 count) = _decodeTimeNonce(encodedNonce);
         require(delta != 0, "NonceManager:must-use-delta");
         require(count != 0, "NonceManager:must-use-count");
 
-        bytes32 timeNonceIdStorage = timeNonce[account][id];
+        bytes32 timeNonceIdStorage = timeNonce[id];
         if (timeNonceIdStorage == 0) {
-            timeNonce[account][id] = keccak256(abi.encodePacked(id, delta, count));
+            timeNonce[id] = keccak256(abi.encodePacked(id, delta, count));
         } else {
             require(timeNonceIdStorage == keccak256(abi.encodePacked(id, delta, count)), "NonceManager:id-used");
         }
-        TimeTracker memory timeTracker = timeTracking[account][id];
+        TimeTracker memory timeTracker = timeTracking[id];
         require(timeTracker.delta + delta <= block.timestamp, "NonceManager:delta-not-reached");
         require(timeTracker.count + 1 <= count, "NonceManager:count-reached");
-        timeTracking[account][id] = TimeTracker(uint128(block.timestamp), timeTracker.count + 1);
+        timeTracking[id] = TimeTracker(uint128(block.timestamp), timeTracker.count + 1);
     }
 
     /* ===================================================================================== */
