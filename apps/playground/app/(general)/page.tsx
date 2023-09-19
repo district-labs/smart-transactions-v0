@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import {
   DeploySafe,
   EnableSafeIntentModule,
@@ -47,22 +46,12 @@ export default function HomePage() {
             onSuccess={(res) => alert(res)}
             onError={() => alert("Rejected")}
             intentBatch={{
-              nonce: {
-                queue: 0,
-                accumulator: 0,
-              },
+              nonce: '0x0000000000000000000000000000000000000000000000000000000000000000',
               intents: [
                 {
-                  exec: {
-                    root: constants.AddressZero,
-                    target: constants.AddressZero,
-                    data: "0x",
-                  },
-                  signature: {
-                    v: 0,
-                    r: constants.HashZero,
-                    s: constants.HashZero,
-                  },
+                  root: constants.AddressZero,
+                  target: constants.AddressZero,
+                  data: "0x",
                 },
               ],
             }}

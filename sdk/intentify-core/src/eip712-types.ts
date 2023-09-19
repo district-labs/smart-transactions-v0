@@ -14,17 +14,13 @@ export const eip712Types = {
     { name: 's', type: 'bytes32' },
     { name: 'v', type: 'uint8' },
   ],
-  IntentExecution: [
+  Intent: [
     { name: 'root', type: 'address' },
     { name: 'target', type: 'address' },
     { name: 'data', type: 'bytes' },
   ],
-  Intent: [
-    { name: 'exec', type: 'IntentExecution' },
-    { name: 'signature', type: 'Signature' },
-  ],
   IntentBatch: [
-    { name: 'nonce', type: 'DimensionalNonce' },
+    { name: 'nonce', type: 'bytes' },
     { name: 'intents', type: 'Intent[]' },
   ],
   Hook: [
