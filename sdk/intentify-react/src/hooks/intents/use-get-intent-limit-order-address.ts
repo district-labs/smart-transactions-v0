@@ -1,5 +1,5 @@
 import { LimitOrderIntentAddressList } from "@/intent-modules";
 
-export function useGetIntentTokenRouterAddress(chainId: number) {
+export function useGetIntentLimitOrderAddress(chainId: number) {
   return LimitOrderIntentAddressList[chainId];
 }
