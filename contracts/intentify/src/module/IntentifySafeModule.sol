@@ -2,6 +2,7 @@
 pragma solidity >=0.8.19;
 
 import { console2 } from "forge-std/console2.sol";
+import { ReentrancyGuard } from "@openzeppelin/security/ReentrancyGuard.sol";
 import { MultiSend } from "safe-contracts/libraries/MultiSend.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 
@@ -42,7 +43,7 @@ interface SafeMinimal {
         returns (bool success, bytes memory returnData);
 }
 
-contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder {
+contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, ReentrancyGuard {
     string public constant NAME = "Intentify Module";
     string public constant VERSION = "0.0.0";
 
@@ -52,7 +53,7 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder {
     /// @notice Multi nonce to handle replay protection for multiple queues
     mapping(address => mapping(uint256 => uint256)) internal multiNonce;
 
-    constructor() {
+    constructor() ReentrancyGuard() {
         DOMAIN_SEPARATOR = _getEIP712DomainHash(NAME, VERSION, block.chainid, address(this));
     }
 
@@ -66,6 +67,7 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder {
         IntentBatchExecution memory execution
     )
         public
+        nonReentrant
         returns (bool executed)
     {
         _enforceReplayProtection(root, execution.batch.nonce);
