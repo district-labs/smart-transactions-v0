@@ -30,7 +30,15 @@ export const intents = mysqlTable("intents", {
   name: varchar("name", { length: 255 }).notNull(),
   // Semver version of the intent e.g. 1.0.0
   version: char("version", { length: 5 }).notNull(),
-  intentArgs: json("intent_args").notNull(),
+  intentArgs: json("intent_args")
+    .$type<
+      {
+        name: string
+        type: string
+        value: string | number
+      }[]
+    >()
+    .notNull(),
   root: char("root", { length: 42 }).notNull(),
   target: char("target", { length: 42 }).notNull(),
   data: text("data"),
