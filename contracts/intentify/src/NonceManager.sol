@@ -6,28 +6,28 @@ pragma solidity >=0.8.19;
  * It packs 3 different types of nonces into a single bytes32 value.
  * The first byte is used to identify the nonce type.
  * The remaining bytes are used to store the nonce value.
- * 
+ *
  * Below are the 3 different types of nonces in struct form:
- * 
+ *
  * struct StandardNonce {
  *     uint8 nonceType;
  *     uint248 accumulator;
  * }
- * 
+ *
  * struct DimensionalNonce {
  *     uint8 nonceType;
  *     uint128 queue;
  *     uint120 accumulator;
  * }
- * 
+ *
  * struct TimeNonce {
  *     uint8 nonceType;
  *     uint32 id;
  *     uint128 delta; // time in seconds
  *     uint96 count; // number of transactions
  * }
- * 
- * The NonceManager contract doesn't use the structs directly. 
+ *
+ * The NonceManager contract doesn't use the structs directly.
  * They are only used to explain the nonce types.
  */
 
@@ -50,8 +50,8 @@ contract NonceManager {
     mapping(address => mapping(uint120 => uint128)) internal dimensionalNonce;
 
     /// @notice Time Multi nonce to handle replay protection for multiple queues
-    mapping(uint32 => uint128) internal timeDelta;
-    mapping(address => mapping(uint32 => TimeTracker)) internal timeNonce;
+    mapping(address => mapping(uint32 => TimeTracker)) internal timeTracking;
+    mapping(address => mapping(uint32 => bytes32)) internal timeNonce;
 
     function getStandardNonce(address account) public view returns (uint248) {
         return standardNonce[account];
@@ -62,7 +62,7 @@ contract NonceManager {
     }
 
     function getTimeNonce(address account, uint32 id) public view returns (TimeTracker memory) {
-        return timeNonce[account][id];
+        return timeTracking[account][id];
     }
 
     /* ===================================================================================== */
@@ -119,15 +119,16 @@ contract NonceManager {
         require(delta != 0, "NonceManager:must-use-delta");
         require(count != 0, "NonceManager:must-use-count");
 
-        TimeTracker memory timeNonceIdStorage = timeNonce[account][id];
-        if (timeNonceIdStorage.delta == 0) {
-            timeNonce[account][id] = TimeTracker(delta, count);
+        bytes32 timeNonceIdStorage = timeNonce[account][id];
+        if (timeNonceIdStorage == 0) {
+            timeNonce[account][id] = keccak256(abi.encodePacked(id, delta, count));
         } else {
-            require(timeNonceIdStorage.delta == delta, "NonceManager:delta-mismatch");
-            require(timeNonceIdStorage.count == count, "NonceManager:count-mismatch");
+            require(timeNonceIdStorage == keccak256(abi.encodePacked(id, delta, count)), "NonceManager:id-used");
         }
-        require(timeDelta[id] + delta <= block.timestamp, "NonceManager:delta-not-reached");
-        timeDelta[id] = uint128(block.timestamp);
+        TimeTracker memory timeTracker = timeTracking[account][id];
+        require(timeTracker.delta + delta <= block.timestamp, "NonceManager:delta-not-reached");
+        require(timeTracker.count + 1 <= count, "NonceManager:count-reached");
+        timeTracking[account][id] = TimeTracker(uint128(block.timestamp), timeTracker.count + 1);
     }
 
     /* ===================================================================================== */

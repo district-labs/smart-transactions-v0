@@ -77,25 +77,34 @@ contract NonceManagerTest is BaseTest {
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonce);
     }
 
+    function test_NonceManager_TimeNonce_InvalidId_Failure() external {
+        bytes memory encodedTimeNonceOne = _nonceManager.encodeTimeNonce(42, 100, 1);
+        _nonceManager.nonceEnforcer(wallet1, encodedTimeNonceOne);
+        bytes memory encodedTimeNonceTwo = _nonceManager.encodeTimeNonce(42, 200, 1);
+        vm.expectRevert(bytes("NonceManager:id-used"));
+        _nonceManager.nonceEnforcer(wallet1, encodedTimeNonceTwo);
+    }
+
     function test_NonceManager_TimeNonce_DeltaMet_Success() external {
-        bytes memory encodedTimeNonce = _nonceManager.encodeTimeNonce(1, 100, 2);
+        bytes memory encodedTimeNonce = _nonceManager.encodeTimeNonce(2, 100, 2);
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonce);
         vm.warp(block.timestamp + 100);
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonce);
     }
 
     function test_NonceManager_TimeNonce_DeltaMet_Failure() external {
-        bytes memory encodedTimeNonce = _nonceManager.encodeTimeNonce(1, 100, 2);
+        bytes memory encodedTimeNonce = _nonceManager.encodeTimeNonce(2, 100, 2);
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonce);
         vm.warp(block.timestamp + 99);
         vm.expectRevert(bytes("NonceManager:delta-not-reached"));
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonce);
     }
 
-    function test_NonceManager_TimeNonce_Failure() external {
-        bytes memory encodedTimeNonce = _nonceManager.encodeTimeNonce(1, 100, 1);
+    function test_NonceManager_TimeNonce_CountReached_Failure() external {
+        bytes memory encodedTimeNonce = _nonceManager.encodeTimeNonce(3, 1, 1);
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonce);
-        vm.expectRevert(bytes("NonceManager:delta-not-reached"));
+        vm.warp(block.timestamp + 1);
+        vm.expectRevert(bytes("NonceManager:count-reached"));
         _nonceManager.nonceEnforcer(wallet1, encodedTimeNonce);
     }
 
