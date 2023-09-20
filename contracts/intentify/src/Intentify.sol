@@ -73,7 +73,7 @@ contract Intentify is TypesAndDecoders {
     /* ===================================================================================== */
 
     function _generateIntentCalldata(Intent memory intent) internal pure returns (bytes memory) {
-        return abi.encodeWithSignature("execute((address,address,bytes))", intent);
+        return abi.encodeWithSignature("execute((address,address,uint256,bytes))", intent);
     }
 
     function _generateIntentWithHookCalldata(
@@ -84,7 +84,7 @@ contract Intentify is TypesAndDecoders {
         pure
         returns (bytes memory)
     {
-        return abi.encodeWithSignature("execute((address,address,bytes),(address,bytes))", intent, hook);
+        return abi.encodeWithSignature("execute((address,address,uint256,bytes),(address,bytes))", intent, hook);
     }
 
     function _execute(Intent memory intent) internal returns (bool success) {

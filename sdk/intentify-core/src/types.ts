@@ -19,6 +19,7 @@ export type Signature = {
 export type Intent = {
   readonly root: `0x{string}`; // Ethereum addresses are usually represented as strings in TypeScript
   readonly target: `0x{string}`; // Ethereum addresses are usually represented as strings in TypeScript
+  readonly value: bigint; // Ethereum addresses are usually represented as strings in TypeScript
   readonly data: `0x{string}`; // bytes can be represented as a hex string
 };
 

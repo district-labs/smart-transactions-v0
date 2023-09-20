@@ -17,6 +17,7 @@ export const eip712Types = {
   Intent: [
     { name: 'root', type: 'address' },
     { name: 'target', type: 'address' },
+    { name: 'value', type: 'uint256' },
     { name: 'data', type: 'bytes' },
   ],
   IntentBatch: [

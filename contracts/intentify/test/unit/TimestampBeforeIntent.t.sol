@@ -47,6 +47,7 @@ contract TimestampBeforeIntentTest is BaseTest {
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_timestampBeforeIntent),
             data: _timestampBeforeIntent.encode(uint128(block.timestamp - pastSeconds))
         });
@@ -85,6 +86,7 @@ contract TimestampBeforeIntentTest is BaseTest {
 
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_timestampBeforeIntent),
             data: _timestampBeforeIntent.encode(uint128(block.timestamp + pastSeconds))
         });
@@ -110,6 +112,7 @@ contract TimestampBeforeIntentTest is BaseTest {
 
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_timestampBeforeIntent),
             data: _timestampBeforeIntent.encode(uint128(block.timestamp))
         });
@@ -135,6 +138,7 @@ contract TimestampBeforeIntentTest is BaseTest {
 
         intents[0] = Intent({
             root: address(0),
+            value: 0,
             target: address(_timestampBeforeIntent),
             data: _timestampBeforeIntent.encode(uint128(block.timestamp - 100))
         });

@@ -56,6 +56,7 @@ contract TwapIntentTest is BaseTest {
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_twapIntent),
             data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
         });
@@ -106,6 +107,7 @@ contract TwapIntentTest is BaseTest {
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_twapIntent),
             data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
         });
@@ -133,6 +135,7 @@ contract TwapIntentTest is BaseTest {
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_twapIntent),
             data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
         });
@@ -160,6 +163,7 @@ contract TwapIntentTest is BaseTest {
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             root: address(0),
+            value: 0,
             target: address(_twapIntent),
             data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
         });

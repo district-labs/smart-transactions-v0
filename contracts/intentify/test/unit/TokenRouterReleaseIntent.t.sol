@@ -59,6 +59,7 @@ contract TokenRouterReleaseIntentTest is BaseTest {
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_tokenRouterRelease),
             data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
         });
@@ -105,6 +106,7 @@ contract TokenRouterReleaseIntentTest is BaseTest {
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             root: address(0),
+            value: 0,
             target: address(_tokenRouterRelease),
             data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
         });
@@ -131,6 +133,7 @@ contract TokenRouterReleaseIntentTest is BaseTest {
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_tokenRouterRelease),
             data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
         });

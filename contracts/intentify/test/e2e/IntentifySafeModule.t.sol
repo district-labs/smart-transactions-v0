@@ -43,7 +43,7 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
 
     function test_RevertWhen_intentSafeModule_IntentBundleCancelled_Success() external {
         Intent[] memory intents = new Intent[](1);
-        intents[0] = Intent({ root: address(_safeCreated), target: address(0), data: bytes("") });
+        intents[0] = Intent({ root: address(0), value: 0, target: address(0), data: bytes("") });
         IntentBatch memory intentBatch =
             IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
@@ -52,8 +52,9 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
 
         // Cancel the Intent Bundle
         {
-            bytes memory txdata =
-                abi.encodeWithSignature("cancelIntentBatch((address,bytes,(address,address,bytes)[]))", intentBatch);
+            bytes memory txdata = abi.encodeWithSignature(
+                "cancelIntentBatch((address,bytes,(address,address,uint256,bytes)[]))", intentBatch
+            );
             uint256 nonce = _safeCreated.nonce();
             bytes32 executedata = _safeCreated.getTransactionHash(
                 address(_intentifySafeModule), 0, txdata, Enum.Operation.Call, 0, 0, 0, address(0), address(0), nonce
@@ -81,6 +82,23 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
         vm.expectRevert("Intent:cancelled");
         bool _executed = _intentifySafeModule.execute(batchExecution);
+    }
+
+    function test_RevertWhen_intentSafeModule_IntentSendETH_Success() external {
+        Intent[] memory intents = new Intent[](1);
+        intents[0] = Intent({ root: address(_safeCreated), value: 1e18, target: address(0), data: bytes("") });
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
+        Hook[] memory hooks = new Hook[](1);
+        hooks[0] = Hook({ target: address(0), data: bytes("") });
+
+        vm.deal(address(_safeCreated), 1e18);
+        assertEq(address(_safeCreated).balance, 1e18);
+        IntentBatchExecution memory batchExecution =
+            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+        bool _executed = _intentifySafeModule.execute(batchExecution);
+        assertEq(address(_safeCreated).balance, 0);
     }
 
     function test_RevertWhen_intentSafeModule_IsReentered() external {
