@@ -88,7 +88,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
     /* ===================================================================================== */
 
     function _generateIntentCalldata(Intent memory intent) internal pure returns (bytes memory) {
-        return abi.encodeWithSignature("execute((address,address,bytes))", intent);
+        return abi.encodeWithSignature("execute((address,address,uint256,bytes))", intent);
     }
 
     function _generateIntentWithHookCalldata(
@@ -99,7 +99,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
         pure
         returns (bytes memory)
     {
-        return abi.encodeWithSignature("execute((address,address,bytes),(address,bytes))", intent, hook);
+        return abi.encodeWithSignature("execute((address,address,uint256,bytes),(address,bytes))", intent, hook);
     }
 
     function _execute(Intent memory intent) internal returns (bool success) {
@@ -108,7 +108,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
         SafeMinimal _safe = SafeMinimal(address(intent.root));
         (success, errorMessage) = _safe.execTransactionFromModuleReturnData(
             intent.target, // to
-            0, // value
+            intent.value, // value
             data, //calldata
             Enum.Operation.Call // operation
         );
@@ -128,7 +128,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
         SafeMinimal _safe = SafeMinimal(address(intent.root));
         (success, errorMessage) = _safe.execTransactionFromModuleReturnData(
             intent.target, // to
-            0, // value
+            intent.value, // value
             data, //calldata
             Enum.Operation.Call // operation
         );

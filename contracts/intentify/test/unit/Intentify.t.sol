@@ -34,7 +34,7 @@ contract IntentifyTest is BaseTest {
     function test_Execute() external {
         Intent[] memory intents = new Intent[](1);
 
-        intents[0] = Intent({ root: address(this), target: address(0x00), data: bytes("") });
+        intents[0] = Intent({ root: address(this), target: address(0), value: 0, data: bytes("") });
 
         IntentBatch memory intentBatch =
             IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });

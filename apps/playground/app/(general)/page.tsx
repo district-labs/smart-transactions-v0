@@ -22,6 +22,7 @@ const intentBatchExample = {
     {
       root: constants.AddressZero,
       target: constants.AddressZero,
+      value: BigInt(0),
       data: "0x",
     },
   ],

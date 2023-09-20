@@ -47,12 +47,14 @@ contract TimestampInRangeIntentTest is BaseTest {
         Intent[] memory intents = new Intent[](2);
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_timestampBeforeIntent),
             data: _timestampBeforeIntent.encode(uint128(block.timestamp - rangeSeconds))
         });
         intents[1] = Intent({
             root: address(_intentify),
             target: address(_timestampAfterIntent),
+            value: 0,
             data: _timestampAfterIntent.encode(uint128(block.timestamp + rangeSeconds))
         });
 
@@ -86,11 +88,13 @@ contract TimestampInRangeIntentTest is BaseTest {
 
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_timestampBeforeIntent),
             data: _timestampBeforeIntent.encode(uint128(block.timestamp + rangeSeconds))
         });
         intents[1] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_timestampAfterIntent),
             data: _timestampAfterIntent.encode(uint128(block.timestamp - rangeSeconds))
         });
@@ -117,11 +121,13 @@ contract TimestampInRangeIntentTest is BaseTest {
 
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_timestampBeforeIntent),
             data: _timestampBeforeIntent.encode(uint128(block.timestamp))
         });
         intents[1] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_timestampAfterIntent),
             data: _timestampBeforeIntent.encode(uint128(block.timestamp))
         });

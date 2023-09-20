@@ -87,6 +87,7 @@ contract LimitOrderIntentTest is BaseTest {
         // ------------------------------------------------------
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_tokenRouterReleaseIntent),
             data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
         });
@@ -97,6 +98,7 @@ contract LimitOrderIntentTest is BaseTest {
 
         intents[1] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_limitOrderIntent),
             data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
@@ -160,6 +162,7 @@ contract LimitOrderIntentTest is BaseTest {
         // ------------------------------------------------------
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_tokenRouterReleaseIntent),
             data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
         });
@@ -170,6 +173,7 @@ contract LimitOrderIntentTest is BaseTest {
 
         intents[1] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_limitOrderIntent),
             data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
@@ -236,6 +240,7 @@ contract LimitOrderIntentTest is BaseTest {
         // ------------------------------------------------------
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_tokenRouterReleaseIntent),
             data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
         });
@@ -246,6 +251,7 @@ contract LimitOrderIntentTest is BaseTest {
 
         intents[1] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_limitOrderIntent),
             data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
@@ -300,6 +306,7 @@ contract LimitOrderIntentTest is BaseTest {
         // ------------------------------------------------------
         intents[0] = Intent({
             root: address(_intentify),
+            value: 0,
             target: address(_tokenRouterReleaseIntent),
             data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
         });
@@ -310,6 +317,7 @@ contract LimitOrderIntentTest is BaseTest {
 
         intents[1] = Intent({
             root: address(0),
+            value: 0,
             target: address(_limitOrderIntent),
             data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
