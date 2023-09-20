@@ -7,7 +7,7 @@ import {
   serial,
   text,
   timestamp,
-  varchar
+  varchar,
 } from "drizzle-orm/mysql-core"
 
 import { intentBatchExecution } from "./intents"

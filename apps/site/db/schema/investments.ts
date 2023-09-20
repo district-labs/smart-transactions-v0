@@ -1,10 +1,5 @@
 import { relations } from "drizzle-orm"
-import {
-  int,
-  mysqlTable,
-  serial,
-  timestamp,
-} from "drizzle-orm/mysql-core"
+import { int, mysqlTable, serial, timestamp } from "drizzle-orm/mysql-core"
 
 import { strategies } from "./strategies"
 import { users } from "./users"

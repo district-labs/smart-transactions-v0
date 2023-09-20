@@ -14,12 +14,13 @@
     "db:push": "drizzle-kit push:mysql",
     "db:migrate": "drizzle-kit generate:mysql",
     "db:introspect": "drizzle-kit introspect:mysql",
-    "db:studio": "drizzle-kit studio --port 6000 --verbose",
+    "db:studio": "drizzle-kit studio",
     "email:dev": "email dev --dir src/components/emails -p 3001",
     "shadcn:add": "pnpm dlx shadcn-ui@latest add"
   },
   "dependencies": {
     "@district-labs/intentify-react": "workspace:*",
+    "@district-labs/intentify-utils": "workspace:*",
     "@headlessui/tailwindcss": "^0.2.0",
     "@hookform/resolvers": "^3.3.1",
     "@planetscale/database": "^1.11.0",

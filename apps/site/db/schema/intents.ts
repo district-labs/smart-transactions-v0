@@ -25,9 +25,11 @@ export const hooksRelations = relations(hooks, ({ one }) => ({
   }),
 }))
 
+export type Hook = typeof hooks.$inferSelect
+export type NewHook = typeof hooks.$inferInsert
+
 export const intents = mysqlTable("intents", {
-  // keecak256 hash of the name and version
-  id: char("id", { length: 66 }).primaryKey(),
+  id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   // Semver version of the intent e.g. 1.0.0
   version: char("version", { length: 5 }).notNull(),
@@ -43,6 +45,7 @@ export const intents = mysqlTable("intents", {
   root: char("root", { length: 42 }).notNull(),
   target: char("target", { length: 42 }).notNull(),
   data: text("data"),
+  value: int("value").default(0),
   intentBatchId: int("intent_batch_id").notNull(),
 })
 
@@ -53,8 +56,12 @@ export const intentsRelations = relations(intents, ({ one }) => ({
   }),
 }))
 
+export type Intent = typeof intents.$inferSelect
+export type NewIntent = typeof intents.$inferInsert
+
 export const intentBatch = mysqlTable("intent_batch", {
   id: serial("id").primaryKey(),
+  root: char("root", { length: 42 }).notNull(),
   // Dimensional nonce
   nonce: char("nonce", { length: 66 }).notNull(),
   intentBatchExecutionId: int("intent_batch_execution_id").notNull(),
@@ -63,6 +70,9 @@ export const intentBatch = mysqlTable("intent_batch", {
 export const intentBatchRelations = relations(intentBatch, ({ many }) => ({
   intents: many(intents),
 }))
+
+export type IntentBatch = typeof intentBatch.$inferSelect
+export type NewIntentBatch = typeof intentBatch.$inferInsert
 
 export const intentBatchExecution = mysqlTable("intent_batch_execution", {
   id: serial("id").primaryKey(),
@@ -84,3 +94,6 @@ export const intentBatchExecutionRelations = relations(
     hooks: many(hooks),
   })
 )
+
+export type IntentBatchExecution = typeof intentBatchExecution.$inferSelect
+export type NewIntentBatchExecution = typeof intentBatchExecution.$inferInsert

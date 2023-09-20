@@ -1,17 +1,17 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import {
   DeploySafe,
   EnableSafeIntentModule,
   useGetSafeAddress,
   useIsSafeIntentModuleEnabled,
-  useIsSafeMaterialized
+  useIsSafeMaterialized,
 } from "@district-labs/intentify-react"
-import { useRouter } from "next/navigation"
 import { useAccount } from "wagmi"
 
-import { updateUserAction } from "@/app/_actions/user"
 import { catchError, cn } from "@/lib/utils"
+import { updateUserAction } from "@/app/_actions/user"
 
 import { Icons } from "../icons"
 import { Button } from "../ui/button"
