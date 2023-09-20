@@ -18,6 +18,7 @@ import { SafeMinimal } from "../interfaces/SafeMinimal.sol";
 import { NonceManagerMultiTenant } from "../nonce/NonceManagerMultiTenant.sol";
 
 contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, ReentrancyGuard {
+    // EIP712 Domain Separator
     string public constant NAME = "Intentify Safe Module";
     string public constant VERSION = "0";
 
@@ -31,18 +32,22 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
         DOMAIN_SEPARATOR = _getEIP712DomainHash(NAME, VERSION, block.chainid, address(this));
     }
 
+    event IntentBatchExecuted(address executor, address root, bytes32 intentBatchId);
+
+    event IntentBatchCancelled(address root, bytes32 intentBatchId);
+
     /* ===================================================================================== */
     /* External Functions                                                                    */
     /* ===================================================================================== */
 
-    function cancelIntentBatch(IntentBatch memory intentBatch) external nonReentrant returns (bool success) {
+    function cancelIntentBatch(IntentBatch memory intentBatch) external nonReentrant {
         bytes32 digest = getIntentBatchTypedDataHash(intentBatch);
         require(!cancelledIntentBundles[msg.sender][digest], "Intent:already-cancelled");
         cancelledIntentBundles[msg.sender][digest] = true;
-        return true;
+        emit IntentBatchCancelled(intentBatch.root, digest);
     }
 
-    function execute(IntentBatchExecution memory execution) public nonReentrant returns (bool executed) {
+    function execute(IntentBatchExecution memory execution) external nonReentrant {
         _nonceEnforcer(execution.batch.root, execution.batch.nonce);
 
         // The length of the intents and hooks must be the same.
@@ -80,7 +85,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
             }
         }
 
-        return true;
+        emit IntentBatchExecuted(msg.sender, execution.batch.root, digest);
     }
 
     function getIntentBatchTypedDataHash(IntentBatch memory intent) public view returns (bytes32) {
@@ -102,14 +107,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
             data, //calldata
             Enum.Operation.Call // operation
         );
-        if (!success) {
-            if (errorMessage.length > 0) {
-                string memory reason = _extractRevertReason(errorMessage);
-                revert(reason);
-            } else {
-                revert("Intent::execution-failed");
-            }
-        }
+        _handleTransactionCallback(success, errorMessage);
     }
 
     function _executeIntent(Intent memory intent) internal returns (bool success) {
