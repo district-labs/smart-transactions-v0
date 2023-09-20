@@ -1,4 +1,4 @@
-import { PublicClient, createPublicClient, http } from "viem"
+import { createPublicClient, http, PublicClient } from "viem"
 import { goerli, mainnet } from "viem/chains"
 
 const transportMainnet = http(
@@ -19,10 +19,10 @@ export const goerliPublicClient = createPublicClient({
 })
 
 type KeyList = {
-[key: number]: PublicClient;
-};
+  [key: number]: PublicClient
+}
 
 export const publicClients: KeyList = {
-    1: mainnetPublicClient,
-    5: goerliPublicClient,
+  1: mainnetPublicClient,
+  5: goerliPublicClient,
 }
