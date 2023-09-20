@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "4bc562a7-6433-418e-8267-1826747145a2",
-  "prevId": "512399b9-d98c-41ff-8650-92792f8fe27b",
+  "id": "aba405d4-56ae-44ba-86b4-54a0b3eb9280",
+  "prevId": "2f14644e-d256-4bbd-8acb-1e55fbd01417",
   "tables": {
     "email_preferences": {
       "name": "email_preferences",
@@ -93,6 +93,13 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "intent_batch_execution_id": {
+          "name": "intent_batch_execution_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -116,6 +123,13 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": true
+        },
+        "root": {
+          "name": "root",
+          "type": "char(42)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         },
         "nonce": {
           "name": "nonce",
@@ -154,6 +168,13 @@
           "notNull": true,
           "autoincrement": true
         },
+        "chain_id": {
+          "name": "chain_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "signature": {
           "name": "signature",
           "type": "text",
@@ -168,6 +189,29 @@
           "notNull": false,
           "autoincrement": false,
           "default": "(now())"
+        },
+        "executed": {
+          "name": "executed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "cancelled": {
+          "name": "cancelled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "executed_at": {
+          "name": "executed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -187,10 +231,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "char(66)",
+          "type": "serial",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": true,
+          "autoincrement": true
         },
         "name": {
           "name": "name",
@@ -234,6 +278,14 @@
           "notNull": false,
           "autoincrement": false
         },
+        "value": {
+          "name": "value",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 0
+        },
         "intent_batch_id": {
           "name": "intent_batch_id",
           "type": "int",
@@ -244,7 +296,14 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "intents_id": {
+          "name": "intents_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "investments": {
@@ -256,14 +315,6 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": true
-        },
-        "amount": {
-          "name": "amount",
-          "type": "decimal(10,2)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'0'"
         },
         "created_at": {
           "name": "created_at",
@@ -338,38 +389,6 @@
           "notNull": true,
           "autoincrement": false,
           "default": "'strategy'"
-        },
-        "assets": {
-          "name": "assets",
-          "type": "decimal(12,2)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'0'"
-        },
-        "coins": {
-          "name": "coins",
-          "type": "json",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "('[\"ethereum\"]')"
-        },
-        "performance_fee": {
-          "name": "performance_fee",
-          "type": "decimal(5,2)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'10.00'"
-        },
-        "platform_fee": {
-          "name": "platform_fee",
-          "type": "decimal(5,2)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'0.25'"
         },
         "manager_id": {
           "name": "manager_id",
@@ -470,19 +489,6 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {
-      "\"email_preferences\".\"createdAt\"": "\"email_preferences\".\"created_at\"",
-      "\"email_preferences\".\"userId\"": "\"email_preferences\".\"user_id\"",
-      "\"investments\".\"createdAt\"": "\"investments\".\"created_at\"",
-      "\"investments\".\"userId\"": "\"investments\".\"user_id\"",
-      "\"investments\".\"strategyId\"": "\"investments\".\"strategy_id\"",
-      "\"strategies\".\"performanceFee\"": "\"strategies\".\"performance_fee\"",
-      "\"strategies\".\"platformFee\"": "\"strategies\".\"platform_fee\"",
-      "\"strategies\".\"managerId\"": "\"strategies\".\"manager_id\"",
-      "\"strategies\".\"createdAt\"": "\"strategies\".\"created_at\"",
-      "\"users\".\"firstName\"": "\"users\".\"first_name\"",
-      "\"users\".\"lastName\"": "\"users\".\"last_name\"",
-      "\"users\".\"createdAt\"": "\"users\".\"created_at\""
-    }
+    "columns": {}
   }
 }

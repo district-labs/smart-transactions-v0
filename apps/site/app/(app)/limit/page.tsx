@@ -1,10 +1,13 @@
 "use client"
 
-import { useState } from "react"
-import { Token } from "@/types"
+import { type Token } from "@/types"
 import { SelectValue } from "@radix-ui/react-select"
-import { type Address } from "viem"
+import { useState } from "react"
+import { useChainId } from "wagmi"
 
+import TokenInputAmount from "@/components/blockchain/token-input-amount"
+import LimitOrderChart from "@/components/charts/limit-order-chart"
+import { Icons } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -16,71 +19,32 @@ import {
   SelectTrigger,
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import TokenInputAmount from "@/components/blockchain/token-input-amount"
-import TokenSelector from "@/components/blockchain/token-selector"
-import LimitOrderChart from "@/components/charts/limit-order-chart"
-import { Icons } from "@/components/icons"
-import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
 
-const dummyData = [
-  {
-    sell: {
-      asset: "Ether",
-      amount: 2,
-    },
-    recieve: {
-      asset: "USDC",
-      amount: 4000,
-    },
-    limitPrice: "1000",
-    expiry: "October 21, 2023",
-    status: "open",
-  },
-  {
-    sell: {
-      asset: "Ether",
-      amount: 2,
-    },
-    recieve: {
-      asset: "USDC",
-      amount: 4000,
-    },
-    limitPrice: "1000",
-    expiry: "October 21, 2023",
-    status: "open",
-  },
-]
-
-const defaultToken = {
-  name: "Wrapped Ether",
-  address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" as Address,
-  symbol: "WETH",
-  decimals: 18,
-  chainId: 1,
-  logoURI:
-    "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
-  extensions: {
-    bridgeInfo: {
-      "10": {
-        tokenAddress: "0x4200000000000000000000000000000000000006",
-      },
-      "137": {
-        tokenAddress: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
-      },
-      "42161": {
-        tokenAddress: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
-      },
-      "42220": {
-        tokenAddress: "0x2DEf4285787d58a2f811AF24755A8150622f4361",
-      },
-    },
-  },
-}
+import { usePlaceOrder } from "./use-place-order"
+import { defaultTokenIn, defaultTokenOut } from "./utils"
 
 export default function LimitPage() {
-  const [amount, setAmount] = useState<number | undefined>()
-  const [selectedToken, setSelectedToken] = useState<Token>(defaultToken)
-  const [recieveToken, setRecieveToken] = useState<Token>(defaultToken)
+  const [amountOut, setAmountOut] = useState<number>()
+  const [amountIn, setAmountIn] = useState<number>()
+
+  const [expiry, setExpiry] = useState<string>("1d")
+  const [tokenOut, setTokenOut] = useState<Token>(defaultTokenOut)
+  const [tokenIn, setTokenIn] = useState<Token>(defaultTokenIn)
+
+  const chainId = useChainId()
+
+  const { mutationResult, isLoadingSign } = usePlaceOrder({
+    chainId,
+    amountIn,
+    amountOut,
+    expiry,
+    tokenIn,
+    tokenOut,
+  })
+
+  async function handlePlaceOrder() {
+    await mutationResult.mutateAsync()
+  }
 
   return (
     <>
@@ -96,10 +60,10 @@ export default function LimitPage() {
                 You&apos;re selling
               </Label>
               <TokenInputAmount
-                amount={amount}
-                setAmount={setAmount}
-                selectedToken={selectedToken}
-                setSelectedToken={setSelectedToken}
+                amount={amountOut}
+                setAmount={setAmountOut}
+                selectedToken={tokenOut}
+                setSelectedToken={setTokenOut}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -109,7 +73,7 @@ export default function LimitPage() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="selling">Expiry</Label>
-                <Select defaultValue="1d">
+                <Select onValueChange={setExpiry} value={expiry}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -132,17 +96,34 @@ export default function LimitPage() {
               </div>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="selling">To recieve</Label>
+              <Label htmlFor="selling">To receive</Label>
               <TokenInputAmount
-                amount={amount}
-                setAmount={setAmount}
-                selectedToken={recieveToken}
-                setSelectedToken={setRecieveToken}
+                amount={amountIn}
+                setAmount={setAmountIn}
+                selectedToken={tokenIn}
+                setSelectedToken={setTokenIn}
               />
             </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full">Place Limit Order</Button>
+            <Button
+              onClick={() => handlePlaceOrder()}
+              disabled={
+                isLoadingSign ||
+                mutationResult.isLoading ||
+                !amountOut ||
+                !amountIn
+              }
+              className="w-full"
+            >
+              {isLoadingSign
+                ? "Sign the message in your wallet"
+                : mutationResult.isLoading
+                ? "Placing Order..."
+                : mutationResult.isSuccess
+                ? "Order Placed!"
+                : "Place Limit Order"}
+            </Button>
           </CardFooter>
         </Card>
       </section>
