@@ -80,6 +80,7 @@ const defaultToken = {
 export default function LimitPage() {
   const [amount, setAmount] = useState<number | undefined>()
   const [selectedToken, setSelectedToken] = useState<Token>(defaultToken)
+  const [recieveToken, setRecieveToken] = useState<Token>(defaultToken)
 
   return (
     <>
@@ -135,8 +136,8 @@ export default function LimitPage() {
               <TokenInputAmount
                 amount={amount}
                 setAmount={setAmount}
-                selectedToken={selectedToken}
-                setSelectedToken={setSelectedToken}
+                selectedToken={recieveToken}
+                setSelectedToken={setRecieveToken}
               />
             </div>
           </CardContent>
