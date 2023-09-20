@@ -17,6 +17,7 @@ import {
 } from "../../src/TypesAndDecoders.sol";
 import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
+import { Counter } from "../mocks/Counter.sol";
 
 interface IERC20 {
     function balanceOf(address account) external view returns (uint256);
@@ -25,6 +26,7 @@ interface IERC20 {
 contract IntentifySafeModuleTest is SafeTestingUtils {
     Safe internal _safeCreated;
     IntentifySafeModule internal _intentifySafeModule;
+    Counter internal _counter;
 
     function setUp() public virtual {
         initializeBase();
@@ -32,9 +34,10 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
         _intentifySafeModule = new IntentifySafeModule();
         _safe = new Safe();
         _safeProxyFactory = new SafeProxyFactory();
-        console2.log("Signer: ", signer);
         _safeCreated = _setupSafe(signer);
         _enableIntentifyModule(SIGNER, _safeCreated, address(_intentifySafeModule));
+
+        _counter = new Counter();
     }
 
     /* ===================================================================================== */
@@ -86,6 +89,7 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
 
     function test_RevertWhen_intentSafeModule_IntentSendETH_Success() external {
         Intent[] memory intents = new Intent[](1);
+
         intents[0] = Intent({ root: address(_safeCreated), value: 1e18, target: address(0), data: bytes("") });
         IntentBatch memory intentBatch =
             IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
@@ -99,6 +103,26 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
         bool _executed = _intentifySafeModule.execute(batchExecution);
         assertEq(address(_safeCreated).balance, 0);
+    }
+
+    function test_RevertWhen_intentSafeModule_IntentDirect_Success() external {
+        bytes memory intentdata = abi.encodeWithSignature("increment()");
+        bytes memory intentTxData = abi.encode(address(_counter), intentdata);
+
+        Intent[] memory intents = new Intent[](1);
+        intents[0] =
+            Intent({ root: address(_safeCreated), value: 0, target: address(_safeCreated), data: intentTxData });
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
+        Hook[] memory hooks = new Hook[](1);
+        hooks[0] = Hook({ target: address(0), data: bytes("") });
+
+        assertEq(_counter.getCount(), 0);
+        IntentBatchExecution memory batchExecution =
+            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+        bool _executed = _intentifySafeModule.execute(batchExecution);
+        assertEq(_counter.getCount(), 1);
     }
 
     function test_RevertWhen_intentSafeModule_IsReentered() external {
