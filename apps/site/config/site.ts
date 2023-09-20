@@ -1,5 +1,6 @@
-import { Icons } from "@/components/icons"
 import { type MainNavItem } from "@/types"
+
+import { Icons } from "@/components/icons"
 
 export const siteConfig = {
   name: "District",

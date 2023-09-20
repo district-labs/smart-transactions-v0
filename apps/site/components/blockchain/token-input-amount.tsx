@@ -1,5 +1,5 @@
-import { type Token } from "@/types"
 import { type Dispatch, type SetStateAction } from "react"
+import { type Token } from "@/types"
 
 import TokenSelector from "./token-selector"
 
@@ -21,7 +21,7 @@ export default function TokenInputAmount({
       <input
         id="amount"
         type="number"
-        className="block w-full px-3 bg-transparent dark:bg-transparent py-1 text-sm font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        className="block w-full bg-transparent px-3 py-1 text-sm font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-transparent"
         placeholder="0.0"
         value={amount}
         onChange={(e) => setAmount(Number(e.target.value))}
