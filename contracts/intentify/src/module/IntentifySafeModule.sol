@@ -1,14 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import { console2 } from "forge-std/console2.sol";
 import { ReentrancyGuard } from "@openzeppelin/security/ReentrancyGuard.sol";
-import { MultiSend } from "safe-contracts/libraries/MultiSend.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 
-import { IHook } from "../interfaces/IHook.sol";
 import {
-    DimensionalNonce,
     Signature,
     Hook,
     Intent,
@@ -16,42 +12,20 @@ import {
     INTENT_TYPEHASH,
     IntentBatchExecution,
     EIP712DOMAIN_TYPEHASH,
-    IntentExecution,
     TypesAndDecoders
 } from "../TypesAndDecoders.sol";
-import "./SignatureDecoder.sol";
+import { SafeMinimal } from "../interfaces/SafeMinimal.sol";
+import { NonceManagerMultiTenant } from "../nonce/NonceManagerMultiTenant.sol";
 
-interface SafeMinimal {
-    function isOwner(address owner) external view returns (bool);
-
-    function execTransactionFromModule(
-        address to,
-        uint256 value,
-        bytes calldata data,
-        Enum.Operation operation
-    )
-        external
-        returns (bool success);
-
-    function execTransactionFromModuleReturnData(
-        address to,
-        uint256 value,
-        bytes memory data,
-        Enum.Operation operation
-    )
-        external
-        returns (bool success, bytes memory returnData);
-}
-
-contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, ReentrancyGuard {
-    string public constant NAME = "Intentify Module";
-    string public constant VERSION = "0.0.0";
+contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, ReentrancyGuard {
+    string public constant NAME = "Intentify Safe Module";
+    string public constant VERSION = "0";
 
     /// @notice The hash of the domain separator used in the EIP712 domain hash.
     bytes32 public immutable DOMAIN_SEPARATOR;
 
     /// @notice Multi nonce to handle replay protection for multiple queues
-    mapping(address => mapping(uint256 => uint256)) internal multiNonce;
+    mapping(address => mapping(bytes32 => bool)) internal cancelledIntentBundles;
 
     constructor() ReentrancyGuard() {
         DOMAIN_SEPARATOR = _getEIP712DomainHash(NAME, VERSION, block.chainid, address(this));
@@ -61,21 +35,30 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, ReentrancyGu
     /* External Functions                                                                    */
     /* ===================================================================================== */
 
-    function execute(
-        address root, // WARNING: This needs to be re-implemented in the IntentBatch struct. It's UNSAFE to pass in the
-            // root address as a parameter.
-        IntentBatchExecution memory execution
-    )
-        public
-        nonReentrant
-        returns (bool executed)
-    {
-        _enforceReplayProtection(root, execution.batch.nonce);
+    function cancelIntentBatch(IntentBatch memory intentBatch) external nonReentrant returns (bool success) {
+        bytes32 digest = getIntentBatchTypedDataHash(intentBatch);
+        require(!cancelledIntentBundles[msg.sender][digest], "Intent:already-cancelled");
+        cancelledIntentBundles[msg.sender][digest] = true;
+        return true;
+    }
+
+    function execute(IntentBatchExecution memory execution) public nonReentrant returns (bool executed) {
+        _nonceEnforcer(execution.batch.root, execution.batch.nonce);
+
+        // The length of the intents and hooks must be the same.
+        // This is because the hooks are meant to be executed in tandem with the intents.
+        // If no hook has empty address, then the intent is executed without a hook.
         require(execution.batch.intents.length == execution.hooks.length, "Intent:invalid-intent-length");
 
         bytes32 digest = getIntentBatchTypedDataHash(execution.batch);
+        require(!cancelledIntentBundles[execution.batch.root][digest], "Intent:cancelled");
         address signer = _recover(digest, execution.signature.v, execution.signature.r, execution.signature.s);
-        require(SafeMinimal(root).isOwner(signer), "Intent:invalid-signer");
+
+        // The signer must be the owner of the Safe
+        // We only require a single owner to sign the Intent Bundle.
+        // That's because in the alpha version we're expecting Safes to be 1-of-1 multisigs.
+        // In the future, we'll add support for multi-owner Safes. And more complex access controls.
+        require(SafeMinimal(execution.batch.root).isOwner(signer), "Intent:invalid-signer");
 
         for (uint256 index = 0; index < execution.batch.intents.length; index++) {
             // If the accompanying hook is not set, execute the intent directly
@@ -100,25 +83,12 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, ReentrancyGu
         return digest;
     }
 
-    function getIntentExecutionTypedDataHash(IntentExecution memory intentExecution) public view returns (bytes32) {
-        bytes32 digest =
-            keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, GET_INTENTEXECUTION_PACKETHASH(intentExecution)));
-        return digest;
-    }
-
     /* ===================================================================================== */
     /* Internal Functions                                                                    */
     /* ===================================================================================== */
 
-    function _enforceReplayProtection(address account, DimensionalNonce memory protection) internal {
-        uint256 queue = protection.queue;
-        uint256 accumulator = protection.accumulator;
-        require(accumulator == (multiNonce[account][queue] + 1), "Intentify:nonce-out-of-order");
-        multiNonce[account][queue] = accumulator;
-    }
-
     function _generateIntentCalldata(Intent memory intent) internal pure returns (bytes memory) {
-        return abi.encodeWithSignature("execute(((address,address,bytes),(bytes32,bytes32,uint8)))", intent);
+        return abi.encodeWithSignature("execute((address,address,uint256,bytes))", intent);
     }
 
     function _generateIntentWithHookCalldata(
@@ -129,18 +99,16 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, ReentrancyGu
         pure
         returns (bytes memory)
     {
-        return abi.encodeWithSignature(
-            "execute(((address,address,bytes),(bytes32,bytes32,uint8)),(address,bytes))", intent, hook
-        );
+        return abi.encodeWithSignature("execute((address,address,uint256,bytes),(address,bytes))", intent, hook);
     }
 
     function _execute(Intent memory intent) internal returns (bool success) {
         bytes memory errorMessage;
         bytes memory data = _generateIntentCalldata(intent);
-        SafeMinimal _safe = SafeMinimal(address(intent.exec.root));
+        SafeMinimal _safe = SafeMinimal(address(intent.root));
         (success, errorMessage) = _safe.execTransactionFromModuleReturnData(
-            intent.exec.target, // to
-            0, // value
+            intent.target, // to
+            intent.value, // value
             data, //calldata
             Enum.Operation.Call // operation
         );
@@ -157,10 +125,10 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, ReentrancyGu
     function _executeWithHook(Intent memory intent, Hook memory hook) internal returns (bool success) {
         bytes memory errorMessage;
         bytes memory data = _generateIntentWithHookCalldata(intent, hook);
-        SafeMinimal _safe = SafeMinimal(address(intent.exec.root));
+        SafeMinimal _safe = SafeMinimal(address(intent.root));
         (success, errorMessage) = _safe.execTransactionFromModuleReturnData(
-            intent.exec.target, // to
-            0, // value
+            intent.target, // to
+            intent.value, // value
             data, //calldata
             Enum.Operation.Call // operation
         );
@@ -208,11 +176,9 @@ contract IntentifySafeModule is TypesAndDecoders, SignatureDecoder, ReentrancyGu
         return keccak256(encoded);
     }
 
-    function _hashTypedDataV4(bytes32 structHash) internal view virtual returns (bytes32) {
-        return _toTypedDataHash(DOMAIN_SEPARATOR, structHash);
-    }
+    function _hashTypedDataV4(bytes32 structHash) internal view virtual returns (bytes32 data) {
+        bytes32 domainSeparator = DOMAIN_SEPARATOR;
 
-    function _toTypedDataHash(bytes32 domainSeparator, bytes32 structHash) internal pure returns (bytes32 data) {
         /// @solidity memory-safe-assembly
         assembly {
             let ptr := mload(0x40)

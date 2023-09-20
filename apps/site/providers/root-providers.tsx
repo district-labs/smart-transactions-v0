@@ -1,5 +1,6 @@
 "use client"
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { Provider as BalancerProvider } from "react-wrap-balancer"
 
@@ -11,6 +12,8 @@ interface RootProviderProps {
   children: React.ReactNode
 }
 
+const queryClient = new QueryClient()
+
 export default function RootProvider({ children }: RootProviderProps) {
   return (
     <NextThemesProvider
@@ -19,11 +22,13 @@ export default function RootProvider({ children }: RootProviderProps) {
       enableSystem
       disableTransitionOnChange
     >
-      <BalancerProvider>
-        <TooltipProvider>
-          <Web3Provider>{children}</Web3Provider>
-        </TooltipProvider>
-      </BalancerProvider>
+      <QueryClientProvider client={queryClient}>
+        <BalancerProvider>
+          <TooltipProvider>
+            <Web3Provider>{children}</Web3Provider>
+          </TooltipProvider>
+        </BalancerProvider>
+      </QueryClientProvider>
     </NextThemesProvider>
   )
 }

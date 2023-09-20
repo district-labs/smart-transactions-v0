@@ -1,17 +1,27 @@
 "use server"
 
 import { db } from "@/db"
-import { NewUser, users } from "@/db/schema"
+import { users, type NewUser } from "@/db/schema"
 import { eq } from "drizzle-orm"
 
-export async function checkUserAction(input: { address: string }) {
+export async function getUserAction(address: string) {
   const existingUser = await db.query.users.findFirst({
-    where: eq(users.address, input.address),
+    where: eq(users.address, address),
   })
 
-  if (existingUser) {
-    throw new Error("User already exists.")
+  if (!existingUser) {
+    throw new Error("User does not exist.")
   }
+
+  return existingUser
+}
+
+export async function checkExistingUserAction(address: string) {
+  const existingUser = await db.query.users.findFirst({
+    where: eq(users.address, address),
+  })
+
+  return !!existingUser
 }
 
 export async function updateUserAction(input: NewUser) {

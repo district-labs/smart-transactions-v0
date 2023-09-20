@@ -9,10 +9,10 @@ import { Icons } from "@/components/icons"
 import { IntentsAccordion } from "@/components/intents-accordion"
 
 const simpleSectionFeatures = [
-  { name: "Explore 100+ strategies", icon: Icons.search },
-  { name: "Explore 100+ strategies", icon: Icons.search },
-  { name: "Explore 100+ strategies", icon: Icons.search },
-  { name: "Explore 100+ strategies", icon: Icons.search },
+  { name: "Explore 10+ strategies", icon: Icons.search },
+  { name: "Get started with just $1", icon: Icons.search },
+  { name: "Use AI to generate strategies", icon: Icons.search },
+  { name: "Weight the pros and cons at a glance", icon: Icons.search },
 ]
 
 const faqs = [
@@ -76,7 +76,7 @@ export default function Home() {
           </div>
           <div className="order-first flex w-[48rem] max-w-none items-center justify-start rounded-xl bg-secondary p-8 shadow-xl ring-1 ring-primary sm:w-[57rem] md:-ml-4 md:px-16 lg:order-last lg:-ml-0 lg:h-[480px]">
             <Image
-              src="/build.png"
+              src="/images/build.png"
               alt="Strategy components"
               width={400}
               height={400}
@@ -117,7 +117,7 @@ export default function Home() {
           </div>
           <div className="order-first flex items-start justify-end">
             <Image
-              src="/smarter.png"
+              src="/images/smarter.png"
               alt="App screenshot"
               width={1028}
               height={686}

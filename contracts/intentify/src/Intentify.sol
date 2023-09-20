@@ -5,7 +5,6 @@ import { console2 } from "forge-std/console2.sol";
 import { IHook } from "./interfaces/IHook.sol";
 
 import {
-    DimensionalNonce,
     Signature,
     Hook,
     Intent,
@@ -13,7 +12,6 @@ import {
     INTENT_TYPEHASH,
     IntentBatchExecution,
     EIP712DOMAIN_TYPEHASH,
-    IntentExecution,
     TypesAndDecoders
 } from "./TypesAndDecoders.sol";
 
@@ -22,7 +20,6 @@ contract Intentify is TypesAndDecoders {
 
     /// @notice The hash of the domain separator used in the EIP712 domain hash.
     bytes32 public immutable DOMAIN_SEPARATOR;
-    bytes32 public immutable INTENT_TYPEHASH = keccak256("IntentBatch(address target)");
 
     /// @notice Multi nonce to handle replay protection for multiple queues
     mapping(address => mapping(uint256 => uint256)) internal multiNonce;
@@ -71,25 +68,12 @@ contract Intentify is TypesAndDecoders {
         return digest;
     }
 
-    function getIntentExecutionTypedDataHash(IntentExecution memory intentExecution) public view returns (bytes32) {
-        bytes32 digest =
-            keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, GET_INTENTEXECUTION_PACKETHASH(intentExecution)));
-        return digest;
-    }
-
     /* ===================================================================================== */
     /* Internal Functions                                                                    */
     /* ===================================================================================== */
 
-    function _enforceReplayProtection(address intendedSender, DimensionalNonce memory protection) internal {
-        uint256 queue = protection.queue;
-        uint256 nonce = protection.accumulator;
-        require(nonce == (multiNonce[intendedSender][queue] + 1), "Intent:nonce2-out-of-order");
-        multiNonce[intendedSender][queue] = nonce;
-    }
-
     function _generateIntentCalldata(Intent memory intent) internal pure returns (bytes memory) {
-        return abi.encodeWithSignature("execute(((address,address,bytes),(bytes32,bytes32,uint8)))", intent);
+        return abi.encodeWithSignature("execute((address,address,uint256,bytes))", intent);
     }
 
     function _generateIntentWithHookCalldata(
@@ -100,15 +84,13 @@ contract Intentify is TypesAndDecoders {
         pure
         returns (bytes memory)
     {
-        return abi.encodeWithSignature(
-            "execute(((address,address,bytes),(bytes32,bytes32,uint8)),(address,bytes))", intent, hook
-        );
+        return abi.encodeWithSignature("execute((address,address,uint256,bytes),(address,bytes))", intent, hook);
     }
 
     function _execute(Intent memory intent) internal returns (bool success) {
         bytes memory errorMessage;
         bytes memory data = _generateIntentCalldata(intent);
-        (success, errorMessage) = address(intent.exec.target).call{ value: 0 }(data);
+        (success, errorMessage) = address(intent.target).call{ value: 0 }(data);
         if (!success) {
             if (errorMessage.length > 0) {
                 string memory reason = _extractRevertReason(errorMessage);
@@ -122,7 +104,7 @@ contract Intentify is TypesAndDecoders {
     function _executeWithHook(Intent memory intent, Hook memory hook) internal returns (bool success) {
         bytes memory errorMessage;
         bytes memory data = _generateIntentWithHookCalldata(intent, hook);
-        (success, errorMessage) = address(intent.exec.target).call{ value: 0 }(data);
+        (success, errorMessage) = address(intent.target).call{ value: 0 }(data);
         if (!success) {
             if (errorMessage.length > 0) {
                 string memory reason = _extractRevertReason(errorMessage);

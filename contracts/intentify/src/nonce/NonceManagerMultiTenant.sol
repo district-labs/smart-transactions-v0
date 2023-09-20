@@ -39,7 +39,7 @@ struct TimeTracker {
     uint96 count; // number of transactions
 }
 
-contract NonceManager {
+contract NonceManagerMultiTenant {
     /// @notice Standard Multi nonce to handle replay protection for multiple queues
     mapping(address => uint248) internal standardNonce;
 
@@ -97,34 +97,36 @@ contract NonceManager {
         } else if (nonceType == uint8(NonceType.Time)) {
             _enforceTimeNonce(account, encodedNonce);
         } else {
-            revert("NonceManager:invalid-nonce-type");
+            revert("NonceManagerMultiTenant:invalid-nonce-type");
         }
     }
 
     function _enforceStandardNonce(address account, bytes memory encodedNonce) internal {
         (, uint248 accumulator) = _decodeStandardNonce(encodedNonce);
-        require(accumulator == standardNonce[account]++, "NonceManager:nonce-out-of-order");
+        require(accumulator == standardNonce[account]++, "NonceManagerMultiTenant:nonce-out-of-order");
     }
 
     function _enforceDimensionalNonce(address account, bytes memory encodedNonce) internal {
         (, uint120 queue, uint128 accumulator) = _decodeDimensionalNonce(encodedNonce);
-        require(accumulator == (dimensionalNonce[account][queue]++), "NonceManager:nonce-out-of-order");
+        require(accumulator == (dimensionalNonce[account][queue]++), "NonceManagerMultiTenant:nonce-out-of-order");
     }
 
     function _enforceTimeNonce(address account, bytes memory encodedNonce) internal {
         (, uint32 id, uint128 delta, uint88 count) = _decodeTimeNonce(encodedNonce);
-        require(delta != 0, "NonceManager:must-use-delta");
-        require(count != 0, "NonceManager:must-use-count");
+        require(delta != 0, "NonceManagerMultiTenant:must-use-delta");
+        require(count != 0, "NonceManagerMultiTenant:must-use-count");
 
         bytes32 timeNonceIdStorage = timeNonce[account][id];
         if (timeNonceIdStorage == 0) {
             timeNonce[account][id] = keccak256(abi.encodePacked(id, delta, count));
         } else {
-            require(timeNonceIdStorage == keccak256(abi.encodePacked(id, delta, count)), "NonceManager:id-used");
+            require(
+                timeNonceIdStorage == keccak256(abi.encodePacked(id, delta, count)), "NonceManagerMultiTenant:id-used"
+            );
         }
         TimeTracker memory timeTracker = timeTracking[account][id];
-        require(timeTracker.delta + delta <= block.timestamp, "NonceManager:delta-not-reached");
-        require(timeTracker.count + 1 <= count, "NonceManager:count-reached");
+        require(timeTracker.delta + delta <= block.timestamp, "NonceManagerMultiTenant:delta-not-reached");
+        require(timeTracker.count + 1 <= count, "NonceManagerMultiTenant:count-reached");
         timeTracking[account][id] = TimeTracker(uint128(block.timestamp), timeTracker.count + 1);
     }
 

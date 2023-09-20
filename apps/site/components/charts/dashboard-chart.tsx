@@ -1,7 +1,6 @@
 "use client"
 
 import { LineChart } from "@tremor/react"
-import { format } from "date-fns"
 
 import { formatDate, formatPrice } from "@/lib/utils"
 
