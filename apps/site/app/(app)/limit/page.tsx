@@ -18,7 +18,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import TokenInputAmount from "@/components/blockchain/token-input-amount"
 import TokenSelector from "@/components/blockchain/token-selector"
-import LimitOrderChart from "@/components/charts/limit-order-chart"
+import TokenPriceChart from "@/components/charts/token-price-chart"
 import { Icons } from "@/components/icons"
 import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
 
@@ -87,7 +87,7 @@ export default function LimitPage() {
       <section className="mt-8 grid gap-8 md:grid-cols-3">
         <div className="col-span-2">
           <h2 className="text-2xl tracking-tight sm:text-3xl">ETH/USDC</h2>
-          <LimitOrderChart />
+          <TokenPriceChart />
         </div>
         <Card>
           <CardContent className="grid gap-6 pt-4">

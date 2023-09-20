@@ -118,12 +118,7 @@ export function formatCoinsInput(coinsInputList: CoinsInput[]) {
  * Calculates the period for the chart
  */
 export const calculatePeriod = (
-  timeInterval:
-    | `${number}m`
-    | `${number}h`
-    | `${number}d`
-    | `${number}y`
-    | undefined,
+  timeInterval: `${number}m` | `${number}h` | `${number}d` | `${number}y`,
   span: number
 ) => {
   if (!timeInterval) {

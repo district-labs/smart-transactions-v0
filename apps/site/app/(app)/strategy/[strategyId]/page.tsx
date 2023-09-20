@@ -32,7 +32,6 @@ import DashboardChart from "@/components/charts/dashboard-chart"
 import { Icons } from "@/components/icons"
 import StrategyActions from "@/components/strategies/strategy-actions"
 import StrategyOverview from "@/components/strategies/strategy-overview"
-import { getCoinMarketChart } from "@/app/_actions/gecko"
 
 interface StrategyPageProps {
   params: {

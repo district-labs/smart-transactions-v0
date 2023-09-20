@@ -1,10 +1,8 @@
 import {
-  QueryObserverResult,
-  RefetchOptions,
-  RefetchQueryFilters,
+  type QueryObserverResult,
+  type RefetchOptions,
+  type RefetchQueryFilters,
 } from "@tanstack/react-query"
-
-import { UseChartResponse } from "@/hooks/use-chart"
 
 import { Toggle } from "../ui/toggle"
 
@@ -15,7 +13,15 @@ export interface ChartTimeFiltersOptions {
   >
   refetch: <TPageData>(
     options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined
-  ) => Promise<QueryObserverResult<UseChartResponse, unknown>>
+  ) => Promise<
+    QueryObserverResult<
+      {
+        timestamp: number
+        price: number
+      }[],
+      unknown
+    >
+  >
 }
 
 export function ChartTimeFilters({

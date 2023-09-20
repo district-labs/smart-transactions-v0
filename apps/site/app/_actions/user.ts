@@ -4,18 +4,6 @@ import { db } from "@/db"
 import { users, type NewUser } from "@/db/schema"
 import { eq } from "drizzle-orm"
 
-export async function getUserAction(address: string) {
-  const existingUser = await db.query.users.findFirst({
-    where: eq(users.address, address),
-  })
-
-  if (!existingUser) {
-    throw new Error("User does not exist.")
-  }
-
-  return existingUser
-}
-
 export async function checkExistingUserAction(address: string) {
   const existingUser = await db.query.users.findFirst({
     where: eq(users.address, address),

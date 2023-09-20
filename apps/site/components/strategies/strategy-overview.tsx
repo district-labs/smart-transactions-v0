@@ -4,7 +4,6 @@ import { useEffect, useState } from "react"
 import { Strategy } from "@/db/schema"
 
 import { formatPrice } from "@/lib/utils"
-import { getCoinMarketChart } from "@/app/_actions/gecko"
 
 import {
   ChartTimeFilters,
@@ -27,19 +26,19 @@ export default function StrategyOverview({
   const [chartRange, setChartRange] =
     useState<ChartTimeFiltersOptions["range"]>("30")
 
-  const fetchChartData = async () => {
-    for (const coin of coins) {
-      const res = await getCoinMarketChart({
-        coinId: coin,
-        days: chartRange,
-      })
-      setChartData(res.prices)
-    }
-  }
+  // const fetchChartData = async () => {
+  //   for (const coin of coins) {
+  //     const res = await getCoinMarketChart({
+  //       coinId: coin,
+  //       days: chartRange,
+  //     })
+  //     setChartData(res.prices)
+  //   }
+  // }
 
-  useEffect(() => {
-    fetchChartData()
-  }, [chartRange])
+  // useEffect(() => {
+  //   fetchChartData()
+  // }, [chartRange])
 
   return (
     <div className="col-span-3 space-y-4 lg:col-span-2">
@@ -59,7 +58,7 @@ export default function StrategyOverview({
             <span>27.2%</span>
           </div>
         </dl>
-        <ChartTimeFilters range={chartRange} setRange={setChartRange} />
+        {/* <ChartTimeFilters range={chartRange} setRange={setChartRange} /> */}
       </div>
       {chartData && <DashboardChart data={chartData} />}
       <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
