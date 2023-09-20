@@ -18,6 +18,7 @@ import { SafeMinimal } from "../interfaces/SafeMinimal.sol";
 import { NonceManagerMultiTenant } from "../nonce/NonceManagerMultiTenant.sol";
 
 contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, ReentrancyGuard {
+    // EIP712 Domain Separator
     string public constant NAME = "Intentify Safe Module";
     string public constant VERSION = "0";
 
@@ -31,18 +32,22 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
         DOMAIN_SEPARATOR = _getEIP712DomainHash(NAME, VERSION, block.chainid, address(this));
     }
 
+    event IntentBatchExecuted(address executor, address root, bytes32 intentBatchId);
+
+    event IntentBatchCancelled(address root, bytes32 intentBatchId);
+
     /* ===================================================================================== */
     /* External Functions                                                                    */
     /* ===================================================================================== */
 
-    function cancelIntentBatch(IntentBatch memory intentBatch) external nonReentrant returns (bool success) {
+    function cancelIntentBatch(IntentBatch memory intentBatch) external nonReentrant {
         bytes32 digest = getIntentBatchTypedDataHash(intentBatch);
         require(!cancelledIntentBundles[msg.sender][digest], "Intent:already-cancelled");
         cancelledIntentBundles[msg.sender][digest] = true;
-        return true;
+        emit IntentBatchCancelled(intentBatch.root, digest);
     }
 
-    function execute(IntentBatchExecution memory execution) public nonReentrant returns (bool executed) {
+    function execute(IntentBatchExecution memory execution) external nonReentrant {
         _nonceEnforcer(execution.batch.root, execution.batch.nonce);
 
         // The length of the intents and hooks must be the same.
@@ -61,21 +66,26 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
         require(SafeMinimal(execution.batch.root).isOwner(signer), "Intent:invalid-signer");
 
         for (uint256 index = 0; index < execution.batch.intents.length; index++) {
+            // If the intent target is the Safe itself, execute the intent directly
+            // as if it were a standard Safe transaction.
+            // The "true" target is encoded in the intent data field.
+            if (execution.batch.intents[index].target == address(execution.batch.root)) {
+                _execute(execution.batch.intents[index]);
+            }
             // If the accompanying hook is not set, execute the intent directly
             // This generally assumes the intent is a contract read i.e. a state constraint like timestamps, twaps or
             // other oracles.
             if (execution.hooks[index].target == address(0)) {
-                _execute(execution.batch.intents[index]);
-
+                _executeIntent(execution.batch.intents[index]);
                 // If the accompanying hook is set, execute the intent with the hook
                 // This generally assumes the intent is access control based and the hook is a contract write i.e. a
                 // state change.
             } else {
-                _executeWithHook(execution.batch.intents[index], execution.hooks[index]);
+                _executeIntentWithHook(execution.batch.intents[index], execution.hooks[index]);
             }
         }
 
-        return true;
+        emit IntentBatchExecuted(msg.sender, execution.batch.root, digest);
     }
 
     function getIntentBatchTypedDataHash(IntentBatch memory intent) public view returns (bytes32) {
@@ -87,22 +97,20 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
     /* Internal Functions                                                                    */
     /* ===================================================================================== */
 
-    function _generateIntentCalldata(Intent memory intent) internal pure returns (bytes memory) {
-        return abi.encodeWithSignature("execute((address,address,uint256,bytes))", intent);
-    }
-
-    function _generateIntentWithHookCalldata(
-        Intent memory intent,
-        Hook memory hook
-    )
-        internal
-        pure
-        returns (bytes memory)
-    {
-        return abi.encodeWithSignature("execute((address,address,uint256,bytes),(address,bytes))", intent, hook);
-    }
-
     function _execute(Intent memory intent) internal returns (bool success) {
+        bytes memory errorMessage;
+        SafeMinimal _safe = SafeMinimal(address(intent.root));
+        (address target, bytes memory data) = abi.decode(intent.data, (address, bytes));
+        (success, errorMessage) = _safe.execTransactionFromModuleReturnData(
+            target, // to
+            intent.value, // value
+            data, //calldata
+            Enum.Operation.Call // operation
+        );
+        _handleTransactionCallback(success, errorMessage);
+    }
+
+    function _executeIntent(Intent memory intent) internal returns (bool success) {
         bytes memory errorMessage;
         bytes memory data = _generateIntentCalldata(intent);
         SafeMinimal _safe = SafeMinimal(address(intent.root));
@@ -112,17 +120,10 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
             data, //calldata
             Enum.Operation.Call // operation
         );
-        if (!success) {
-            if (errorMessage.length > 0) {
-                string memory reason = _extractRevertReason(errorMessage);
-                revert(reason);
-            } else {
-                revert("Intent::execution-failed");
-            }
-        }
+        _handleTransactionCallback(success, errorMessage);
     }
 
-    function _executeWithHook(Intent memory intent, Hook memory hook) internal returns (bool success) {
+    function _executeIntentWithHook(Intent memory intent, Hook memory hook) internal returns (bool success) {
         bytes memory errorMessage;
         bytes memory data = _generateIntentWithHookCalldata(intent, hook);
         SafeMinimal _safe = SafeMinimal(address(intent.root));
@@ -132,9 +133,13 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
             data, //calldata
             Enum.Operation.Call // operation
         );
+        _handleTransactionCallback(success, errorMessage);
+    }
+
+    function _handleTransactionCallback(bool success, bytes memory returnData) internal pure {
         if (!success) {
-            if (errorMessage.length > 0) {
-                string memory reason = _extractRevertReason(errorMessage);
+            if (returnData.length > 0) {
+                string memory reason = _extractRevertReason(returnData);
                 revert(reason);
             } else {
                 revert("Intent::execution-failed");
@@ -160,6 +165,21 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
     /* ===================================================================================== */
     /* Helper Functions                                                                      */
     /* ===================================================================================== */
+    function _generateIntentCalldata(Intent memory intent) internal pure returns (bytes memory) {
+        return abi.encodeWithSignature("execute((address,address,uint256,bytes))", intent);
+    }
+
+    function _generateIntentWithHookCalldata(
+        Intent memory intent,
+        Hook memory hook
+    )
+        internal
+        pure
+        returns (bytes memory)
+    {
+        return abi.encodeWithSignature("execute((address,address,uint256,bytes),(address,bytes))", intent, hook);
+    }
+
     function _getEIP712DomainHash(
         string memory contractName,
         string memory version,
