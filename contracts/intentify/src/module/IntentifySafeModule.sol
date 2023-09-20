@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import { console2 } from "forge-std/console2.sol";
 import { ReentrancyGuard } from "@openzeppelin/security/ReentrancyGuard.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 
@@ -15,40 +14,18 @@ import {
     EIP712DOMAIN_TYPEHASH,
     TypesAndDecoders
 } from "../TypesAndDecoders.sol";
-import { SignatureDecoder } from "./SignatureDecoder.sol";
+import { SafeMinimal } from "../interfaces/SafeMinimal.sol";
 import { NonceManagerMultiTenant } from "../nonce/NonceManagerMultiTenant.sol";
 
-interface SafeMinimal {
-    function isOwner(address owner) external view returns (bool);
-
-    function execTransactionFromModule(
-        address to,
-        uint256 value,
-        bytes calldata data,
-        Enum.Operation operation
-    )
-        external
-        returns (bool success);
-
-    function execTransactionFromModuleReturnData(
-        address to,
-        uint256 value,
-        bytes memory data,
-        Enum.Operation operation
-    )
-        external
-        returns (bool success, bytes memory returnData);
-}
-
 contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, ReentrancyGuard {
-    string public constant NAME = "Intentify";
+    string public constant NAME = "Intentify Safe Module";
     string public constant VERSION = "0";
 
     /// @notice The hash of the domain separator used in the EIP712 domain hash.
     bytes32 public immutable DOMAIN_SEPARATOR;
 
     /// @notice Multi nonce to handle replay protection for multiple queues
-    mapping(address => mapping(uint256 => uint256)) internal multiNonce;
+    mapping(address => mapping(bytes32 => bool)) internal cancelledIntentBundles;
 
     constructor() ReentrancyGuard() {
         DOMAIN_SEPARATOR = _getEIP712DomainHash(NAME, VERSION, block.chainid, address(this));
@@ -58,21 +35,30 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
     /* External Functions                                                                    */
     /* ===================================================================================== */
 
-    function execute(
-        address root, // WARNING: This needs to be re-implemented in the IntentBatch struct. It's UNSAFE to pass in the
-            // root address as a parameter.
-        IntentBatchExecution memory execution
-    )
-        public
-        nonReentrant
-        returns (bool executed)
-    {
-        _nonceEnforcer(root, execution.batch.nonce);
+    function cancelIntentBatch(IntentBatch memory intentBatch) external nonReentrant returns (bool success) {
+        bytes32 digest = getIntentBatchTypedDataHash(intentBatch);
+        require(!cancelledIntentBundles[msg.sender][digest], "Intent:already-cancelled");
+        cancelledIntentBundles[msg.sender][digest] = true;
+        return true;
+    }
+
+    function execute(IntentBatchExecution memory execution) public nonReentrant returns (bool executed) {
+        _nonceEnforcer(execution.batch.root, execution.batch.nonce);
+
+        // The length of the intents and hooks must be the same.
+        // This is because the hooks are meant to be executed in tandem with the intents.
+        // If no hook has empty address, then the intent is executed without a hook.
         require(execution.batch.intents.length == execution.hooks.length, "Intent:invalid-intent-length");
 
         bytes32 digest = getIntentBatchTypedDataHash(execution.batch);
+        require(!cancelledIntentBundles[execution.batch.root][digest], "Intent:cancelled");
         address signer = _recover(digest, execution.signature.v, execution.signature.r, execution.signature.s);
-        require(SafeMinimal(root).isOwner(signer), "Intent:invalid-signer");
+
+        // The signer must be the owner of the Safe
+        // We only require a single owner to sign the Intent Bundle.
+        // That's because in the alpha version we're expecting Safes to be 1-of-1 multisigs.
+        // In the future, we'll add support for multi-owner Safes. And more complex access controls.
+        require(SafeMinimal(execution.batch.root).isOwner(signer), "Intent:invalid-signer");
 
         for (uint256 index = 0; index < execution.batch.intents.length; index++) {
             // If the accompanying hook is not set, execute the intent directly
@@ -190,11 +176,9 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
         return keccak256(encoded);
     }
 
-    function _hashTypedDataV4(bytes32 structHash) internal view virtual returns (bytes32) {
-        return _toTypedDataHash(DOMAIN_SEPARATOR, structHash);
-    }
+    function _hashTypedDataV4(bytes32 structHash) internal view virtual returns (bytes32 data) {
+        bytes32 domainSeparator = DOMAIN_SEPARATOR;
 
-    function _toTypedDataHash(bytes32 domainSeparator, bytes32 structHash) internal pure returns (bytes32 data) {
         /// @solidity memory-safe-assembly
         assembly {
             let ptr := mload(0x40)

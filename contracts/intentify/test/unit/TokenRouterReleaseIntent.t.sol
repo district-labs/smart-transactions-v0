@@ -63,7 +63,8 @@ contract TokenRouterReleaseIntentTest is BaseTest {
             data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
         });
 
-        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -108,7 +109,8 @@ contract TokenRouterReleaseIntentTest is BaseTest {
             data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
         });
 
-        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -133,7 +135,8 @@ contract TokenRouterReleaseIntentTest is BaseTest {
             data: _tokenRouterRelease.encode(address(_tokenA), startingBalance)
         });
 
-        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);

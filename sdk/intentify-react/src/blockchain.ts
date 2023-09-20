@@ -123,6 +123,7 @@ export const intentifyABI = [
             internalType: "struct IntentBatch",
             type: "tuple",
             components: [
+              { name: "root", internalType: "address", type: "address" },
               { name: "nonce", internalType: "bytes", type: "bytes" },
               {
                 name: "intents",
@@ -170,6 +171,7 @@ export const intentifyABI = [
         internalType: "struct IntentBatch",
         type: "tuple",
         components: [
+          { name: "root", internalType: "address", type: "address" },
           { name: "nonce", internalType: "bytes", type: "bytes" },
           {
             name: "intents",
@@ -255,6 +257,7 @@ export const intentifyABI = [
             internalType: "struct IntentBatch",
             type: "tuple",
             components: [
+              { name: "root", internalType: "address", type: "address" },
               { name: "nonce", internalType: "bytes", type: "bytes" },
               {
                 name: "intents",
@@ -302,6 +305,7 @@ export const intentifyABI = [
         internalType: "struct IntentBatch",
         type: "tuple",
         components: [
+          { name: "root", internalType: "address", type: "address" },
           { name: "nonce", internalType: "bytes", type: "bytes" },
           {
             name: "intents",
@@ -429,6 +433,7 @@ export const intentifySafeModuleABI = [
             internalType: "struct IntentBatch",
             type: "tuple",
             components: [
+              { name: "root", internalType: "address", type: "address" },
               { name: "nonce", internalType: "bytes", type: "bytes" },
               {
                 name: "intents",
@@ -476,6 +481,7 @@ export const intentifySafeModuleABI = [
         internalType: "struct IntentBatch",
         type: "tuple",
         components: [
+          { name: "root", internalType: "address", type: "address" },
           { name: "nonce", internalType: "bytes", type: "bytes" },
           {
             name: "intents",
@@ -595,6 +601,33 @@ export const intentifySafeModuleABI = [
     ],
   },
   {
+    stateMutability: "nonpayable",
+    type: "function",
+    inputs: [
+      {
+        name: "intentBatch",
+        internalType: "struct IntentBatch",
+        type: "tuple",
+        components: [
+          { name: "root", internalType: "address", type: "address" },
+          { name: "nonce", internalType: "bytes", type: "bytes" },
+          {
+            name: "intents",
+            internalType: "struct Intent[]",
+            type: "tuple[]",
+            components: [
+              { name: "root", internalType: "address", type: "address" },
+              { name: "target", internalType: "address", type: "address" },
+              { name: "data", internalType: "bytes", type: "bytes" },
+            ],
+          },
+        ],
+      },
+    ],
+    name: "cancelIntentBatch",
+    outputs: [{ name: "success", internalType: "bool", type: "bool" }],
+  },
+  {
     stateMutability: "pure",
     type: "function",
     inputs: [
@@ -626,7 +659,6 @@ export const intentifySafeModuleABI = [
     stateMutability: "nonpayable",
     type: "function",
     inputs: [
-      { name: "root", internalType: "address", type: "address" },
       {
         name: "execution",
         internalType: "struct IntentBatchExecution",
@@ -637,6 +669,7 @@ export const intentifySafeModuleABI = [
             internalType: "struct IntentBatch",
             type: "tuple",
             components: [
+              { name: "root", internalType: "address", type: "address" },
               { name: "nonce", internalType: "bytes", type: "bytes" },
               {
                 name: "intents",
@@ -694,6 +727,7 @@ export const intentifySafeModuleABI = [
         internalType: "struct IntentBatch",
         type: "tuple",
         components: [
+          { name: "root", internalType: "address", type: "address" },
           { name: "nonce", internalType: "bytes", type: "bytes" },
           {
             name: "intents",
@@ -793,21 +827,6 @@ export const limitOrderIntentABI = [
     ],
     name: "till",
     outputs: [{ name: "", internalType: "uint256", type: "uint256" }],
-  },
-] as const;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// MultiSend
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const multiSendABI = [
-  { stateMutability: "nonpayable", type: "constructor", inputs: [] },
-  {
-    stateMutability: "payable",
-    type: "function",
-    inputs: [{ name: "transactions", internalType: "bytes", type: "bytes" }],
-    name: "multiSend",
-    outputs: [],
   },
 ] as const;
 
@@ -2761,6 +2780,41 @@ export function useIntentifySafeModuleWrite<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"cancelIntentBatch"`.
+ */
+export function useIntentifySafeModuleCancelIntentBatch<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends "prepared"
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof intentifySafeModuleABI,
+          "cancelIntentBatch"
+        >["request"]["abi"],
+        "cancelIntentBatch",
+        TMode
+      > & { functionName?: "cancelIntentBatch" }
+    : UseContractWriteConfig<
+        typeof intentifySafeModuleABI,
+        "cancelIntentBatch",
+        TMode
+      > & {
+        abi?: never;
+        functionName?: "cancelIntentBatch";
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof intentifySafeModuleABI,
+    "cancelIntentBatch",
+    TMode
+  >({
+    abi: intentifySafeModuleABI,
+    functionName: "cancelIntentBatch",
+    ...config,
+  } as any);
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"execute"`.
  */
 export function useIntentifySafeModuleExecute<
@@ -2808,6 +2862,28 @@ export function usePrepareIntentifySafeModuleWrite<
   } as UsePrepareContractWriteConfig<
     typeof intentifySafeModuleABI,
     TFunctionName
+  >);
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link intentifySafeModuleABI}__ and `functionName` set to `"cancelIntentBatch"`.
+ */
+export function usePrepareIntentifySafeModuleCancelIntentBatch(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof intentifySafeModuleABI,
+      "cancelIntentBatch"
+    >,
+    "abi" | "functionName"
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: intentifySafeModuleABI,
+    functionName: "cancelIntentBatch",
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof intentifySafeModuleABI,
+    "cancelIntentBatch"
   >);
 }
 
@@ -2996,90 +3072,6 @@ export function usePrepareLimitOrderIntentExecute(
     functionName: "execute",
     ...config,
   } as UsePrepareContractWriteConfig<typeof limitOrderIntentABI, "execute">);
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link multiSendABI}__.
- */
-export function useMultiSendWrite<
-  TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends "prepared"
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof multiSendABI,
-          string
-        >["request"]["abi"],
-        TFunctionName,
-        TMode
-      >
-    : UseContractWriteConfig<typeof multiSendABI, TFunctionName, TMode> & {
-        abi?: never;
-      } = {} as any,
-) {
-  return useContractWrite<typeof multiSendABI, TFunctionName, TMode>({
-    abi: multiSendABI,
-    ...config,
-  } as any);
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link multiSendABI}__ and `functionName` set to `"multiSend"`.
- */
-export function useMultiSendMultiSend<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends "prepared"
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof multiSendABI,
-          "multiSend"
-        >["request"]["abi"],
-        "multiSend",
-        TMode
-      > & { functionName?: "multiSend" }
-    : UseContractWriteConfig<typeof multiSendABI, "multiSend", TMode> & {
-        abi?: never;
-        functionName?: "multiSend";
-      } = {} as any,
-) {
-  return useContractWrite<typeof multiSendABI, "multiSend", TMode>({
-    abi: multiSendABI,
-    functionName: "multiSend",
-    ...config,
-  } as any);
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link multiSendABI}__.
- */
-export function usePrepareMultiSendWrite<TFunctionName extends string>(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof multiSendABI, TFunctionName>,
-    "abi"
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: multiSendABI,
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof multiSendABI, TFunctionName>);
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link multiSendABI}__ and `functionName` set to `"multiSend"`.
- */
-export function usePrepareMultiSendMultiSend(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof multiSendABI, "multiSend">,
-    "abi" | "functionName"
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: multiSendABI,
-    functionName: "multiSend",
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof multiSendABI, "multiSend">);
 }
 
 /**

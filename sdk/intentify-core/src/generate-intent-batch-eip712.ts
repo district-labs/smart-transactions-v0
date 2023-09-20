@@ -15,7 +15,7 @@ export function generateIntentBatchEIP712({
   return {
     domain: {
       name: 'Intentify',
-      version: '1',
+      version: '0',
       chainId,
       verifyingContract,
     },

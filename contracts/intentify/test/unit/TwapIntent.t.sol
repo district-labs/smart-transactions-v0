@@ -60,7 +60,8 @@ contract TwapIntentTest is BaseTest {
             data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
         });
 
-        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -109,7 +110,8 @@ contract TwapIntentTest is BaseTest {
             data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
         });
 
-        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -135,7 +137,8 @@ contract TwapIntentTest is BaseTest {
             data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
         });
 
-        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -161,7 +164,8 @@ contract TwapIntentTest is BaseTest {
             data: _twapIntent.encode(UNISWAP_V3_POOL, uint32(100), minPriceX96, maxPriceX96)
         });
 
-        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);

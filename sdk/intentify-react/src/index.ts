@@ -7,6 +7,7 @@ export * from "./components/is-safe-intent-module-enabled";
 export * from "./components/is-safe-materialized";
 export * from "./components/safe-deterministic-address";
 export * from "./components/sign-intent-bundle";
+export * from "./components/cancel-intent-bundle";
 
 // Hooks
 export * from "./hooks/use-get-intentify-module-address";
