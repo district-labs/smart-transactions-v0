@@ -1,6 +1,7 @@
 "use client"
 
 import {
+  CancelIntentBundle,
   DeploySafe,
   EnableSafeIntentModule,
   IsSafeCounterfactual,
@@ -9,7 +10,6 @@ import {
   IsSafeMaterialized,
   SafeDeterministicAddress,
   SignIntentBundle,
-  CancelIntentBundle,
 } from "@district-labs/intentify-react"
 import { constants } from "ethers"
 
@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button"
 
 const intentBatchExample = {
   root: constants.AddressZero,
-  nonce: '0x0000000000000000000000000000000000000000000000000000000000000000',
+  nonce: "0x0000000000000000000000000000000000000000000000000000000000000000",
   intents: [
     {
       root: constants.AddressZero,
@@ -55,10 +55,10 @@ export default function HomePage() {
           </IsSafeIntentModuleDisabled>
         </IsSafeMaterialized>
         <IsSafeIntentModuleEnabled>
-          <div className='flex gap-x-10'>
+          <div className="flex gap-x-10">
             <SignIntentBundle
               loadingComponent={<Button type="button">Signing...</Button>}
-              onSuccess={(res:any) => alert(res)}
+              onSuccess={(res: any) => alert(res)}
               onError={() => alert("Rejected")}
               intentBatch={intentBatchExample}
             >
@@ -66,8 +66,12 @@ export default function HomePage() {
             </SignIntentBundle>
             <CancelIntentBundle
               loadingComponent={<Button type="button">Loading...</Button>}
-              signMessageComponent={<Button type="button">Approve Intent Cancel</Button>}
-              signTransactionComponent ={<Button type="button">Execute Intent Cancel</Button>}
+              signMessageComponent={
+                <Button type="button">Approve Intent Cancel</Button>
+              }
+              signTransactionComponent={
+                <Button type="button">Execute Intent Cancel</Button>
+              }
               intentBatch={intentBatchExample}
             >
               <Button>Cancel Intent Bundle</Button>
