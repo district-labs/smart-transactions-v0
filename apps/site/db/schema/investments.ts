@@ -1,6 +1,5 @@
 import { relations } from "drizzle-orm"
 import {
-  decimal,
   int,
   mysqlTable,
   serial,
@@ -12,7 +11,6 @@ import { users } from "./users"
 
 export const investments = mysqlTable("investments", {
   id: serial("id").primaryKey(),
-  amount: decimal("amount", { precision: 10, scale: 2 }).notNull().default("0"),
   createdAt: timestamp("created_at").defaultNow(),
   userId: int("user_id").notNull(),
   strategyId: int("strategy_id").notNull(),

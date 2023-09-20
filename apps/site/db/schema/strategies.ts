@@ -1,15 +1,13 @@
 import { relations } from "drizzle-orm"
 import {
   char,
-  decimal,
   int,
-  json,
   mysqlEnum,
   mysqlTable,
   serial,
   text,
   timestamp,
-  varchar,
+  varchar
 } from "drizzle-orm/mysql-core"
 
 import { intentBatchExecution } from "./intents"
@@ -23,14 +21,6 @@ export const strategies = mysqlTable("strategies", {
   category: mysqlEnum("category", ["strategy", "portfolio"])
     .notNull()
     .default("strategy"),
-  assets: decimal("assets", { precision: 12, scale: 2 }).notNull().default("0"),
-  coins: json("coins").$type<string[]>().notNull().default(["ethereum"]),
-  performanceFee: decimal("performance_fee", { precision: 5, scale: 2 })
-    .notNull()
-    .default("10.00"),
-  platformFee: decimal("platform_fee", { precision: 5, scale: 2 })
-    .notNull()
-    .default("0.25"),
   managerId: char("manager_id", { length: 42 }).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 })

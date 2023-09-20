@@ -66,9 +66,11 @@ export const intentBatchRelations = relations(intentBatch, ({ many }) => ({
 
 export const intentBatchExecution = mysqlTable("intent_batch_execution", {
   id: serial("id").primaryKey(),
+  chainId: int("chain_id").notNull(),
   signature: text("signature").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   executed: boolean("executed").notNull().default(false),
+  cancelled: boolean("cancelled").notNull().default(false),
   executedAt: timestamp("executed_at"),
 })
 
