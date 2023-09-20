@@ -1,3 +1,4 @@
+import { Icons } from "@/components/icons"
 import { type MainNavItem } from "@/types"
 
 export const siteConfig = {
@@ -57,6 +58,20 @@ export const siteConfig = {
       description:
         "Lorem ipsum dolor sit amet consectetur adipscing elit amet lorem upsum. Dolor sit consec tetur adip nunc sed.",
       href: "/onboarding/strategy",
+    },
+  ],
+  onboardingStepsMini: [
+    {
+      name: "Verify your identity",
+      icon: Icons.user,
+    },
+    {
+      name: "Fund your account",
+      icon: Icons.bank,
+    },
+    {
+      name: "Set up your first strategy",
+      icon: Icons.rocket,
     },
   ],
 }

@@ -6,7 +6,6 @@ import { strategies } from "@/db/schema"
 import { env } from "@/env.mjs"
 import { eq } from "drizzle-orm"
 
-import { getRequestCookie } from "@/lib/session"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -28,8 +27,6 @@ export const metadata: Metadata = {
 }
 
 export default async function DashboardPage() {
-  const user = await getRequestCookie(cookies())
-
   const allStrategies = await db
     .select({
       id: strategies.id,
