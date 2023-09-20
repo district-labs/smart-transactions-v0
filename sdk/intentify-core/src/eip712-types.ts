@@ -20,6 +20,7 @@ export const eip712Types = {
     { name: 'data', type: 'bytes' },
   ],
   IntentBatch: [
+    { name: 'root', type: 'address' },
     { name: 'nonce', type: 'bytes' },
     { name: 'intents', type: 'Intent[]' },
   ],

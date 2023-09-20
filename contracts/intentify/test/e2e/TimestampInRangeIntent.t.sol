@@ -56,7 +56,8 @@ contract TimestampInRangeIntentTest is BaseTest {
             data: _timestampAfterIntent.encode(uint128(block.timestamp + rangeSeconds))
         });
 
-        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -94,7 +95,8 @@ contract TimestampInRangeIntentTest is BaseTest {
             data: _timestampAfterIntent.encode(uint128(block.timestamp - rangeSeconds))
         });
 
-        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -124,7 +126,8 @@ contract TimestampInRangeIntentTest is BaseTest {
             data: _timestampBeforeIntent.encode(uint128(block.timestamp))
         });
 
-        IntentBatch memory intentBatch = IntentBatch({ nonce: abi.encodePacked(uint256(0)), intents: intents });
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);

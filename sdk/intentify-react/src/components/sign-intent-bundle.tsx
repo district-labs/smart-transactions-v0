@@ -8,60 +8,66 @@ import * as React from "react";
 import { useChainId, useSignTypedData } from "wagmi";
 
 type SignIntentBundle = React.HTMLAttributes<HTMLElement> & {
-  verifyingContract: string;
-  intentBatch: IntentBatch;
-  onSuccess?: (res) => void;
-  onError?: (res) => void;
-  onLoading?: () => void;
+	verifyingContract: string;
+	intentBatch: IntentBatch;
+	loadingComponent?: React.ReactNode;
+	onSuccess?: (res: any) => void;
+	onError?: (res: any) => void;
+	onLoading?: () => void;
 };
 
 export const SignIntentBundle = ({
-  children,
-  className,
-  verifyingContract = constants.AddressZero,
-  intentBatch,
-  onSuccess,
-  onError,
-  onLoading,
+	children,
+	className,
+	verifyingContract = constants.AddressZero,
+	intentBatch,
+	loadingComponent = <button type="button">Loading...</button>,
+	onSuccess,
+	onError,
+	onLoading,
 }: SignIntentBundle) => {
-  const classes = cn(className);
-  const chainId = useChainId();
+	const classes = cn(className);
+	const chainId = useChainId();
 
-  const { data, isError, isLoading, isSuccess, signTypedData } =
-    useSignTypedData(
-      generateIntentBatchEIP712({
-        chainId: chainId,
-        verifyingContract: verifyingContract,
-        intentBatch: intentBatch,
-      }),
-    );
+	const { data, error, isError, isLoading, isSuccess, signTypedData } =
+		useSignTypedData(
+			generateIntentBatchEIP712({
+				chainId: chainId,
+				verifyingContract: verifyingContract,
+				intentBatch: intentBatch,
+			}),
+		);
 
-  const handleSign = () => {
-    signTypedData();
-  };
+	const handleSign = () => {
+		signTypedData();
+	};
 
-  React.useEffect(() => {
-    if (isSuccess) {
-      onSuccess?.(data);
-    }
-  }, [data, isSuccess, onSuccess]);
+	React.useEffect(() => {
+		if (isSuccess) {
+			onSuccess?.(data);
+		}
+	}, [data, isSuccess, onSuccess]);
 
-  React.useEffect(() => {
-    if (isError) {
-      onError?.();
-    }
-  }, [isError, onError]);
+	React.useEffect(() => {
+		if (isError) {
+			onError?.(error);
+		}
+	}, [isError, onError]);
 
-  React.useEffect(() => {
-    if (isLoading) {
-      onLoading?.();
-    }
-  }, [isLoading, onLoading]);
+	React.useEffect(() => {
+		if (isLoading) {
+			onLoading?.();
+		}
+	}, [isLoading, onLoading]);
 
-  return (
-    // rome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-    <span onClick={handleSign} className={classes}>
-      {children}
-    </span>
-  );
+	if (isLoading) {
+		return loadingComponent;
+	}
+
+	return (
+		// rome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
+		<span onClick={handleSign} className={classes}>
+			{children}
+		</span>
+	);
 };
