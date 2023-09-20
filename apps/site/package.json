@@ -18,6 +18,7 @@
     "shadcn:add": "pnpm dlx shadcn-ui@latest add"
   },
   "dependencies": {
+    "@district-labs/intentify-react": "workspace:*",
     "@headlessui/tailwindcss": "^0.2.0",
     "@hookform/resolvers": "^3.3.1",
     "@planetscale/database": "^1.11.0",

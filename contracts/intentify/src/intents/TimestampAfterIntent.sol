@@ -5,16 +5,16 @@ import { IHook } from "../interfaces/IHook.sol";
 import { Intent } from "../TypesAndDecoders.sol";
 import { BytesLib } from "../libraries/BytesLib.sol";
 
-contract TimestampBeforeIntent is IHook {
+contract TimestampAfterIntent is IHook {
     function execute(Intent calldata intent) external view returns (bool) {
-        require(intent.root == msg.sender, "TimestampBeforeIntent:invalid-root");
-        require(intent.target == address(this), "TimestampBeforeIntent:invalid-target");
+        require(intent.root == msg.sender, "TimestampAfterIntent:invalid-root");
+        require(intent.target == address(this), "TimestampAfterIntent:invalid-target");
 
         uint128 timestamp = BytesLib.toUint128(intent.data, 0);
-        if (timestamp < block.timestamp) {
+        if (timestamp > block.timestamp) {
             return true;
         } else {
-            revert("TimestampBeforeIntent:expired");
+            revert("TimestampAfterIntent:expired");
         }
     }
 

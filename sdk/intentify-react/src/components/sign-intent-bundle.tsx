@@ -10,8 +10,9 @@ import { useChainId, useSignTypedData } from "wagmi";
 type SignIntentBundle = React.HTMLAttributes<HTMLElement> & {
   verifyingContract: string;
   intentBatch: IntentBatch;
-  onSuccess?: (res) => void;
-  onError?: (res) => void;
+  loadingComponent?: React.ReactNode;
+  onSuccess?: (res: any) => void;
+  onError?: (res: any) => void;
   onLoading?: () => void;
 };
 
@@ -20,6 +21,7 @@ export const SignIntentBundle = ({
   className,
   verifyingContract = constants.AddressZero,
   intentBatch,
+  loadingComponent = <button type="button">Loading...</button>,
   onSuccess,
   onError,
   onLoading,
@@ -27,7 +29,7 @@ export const SignIntentBundle = ({
   const classes = cn(className);
   const chainId = useChainId();
 
-  const { data, isError, isLoading, isSuccess, signTypedData } =
+  const { data, error, isError, isLoading, isSuccess, signTypedData } =
     useSignTypedData(
       generateIntentBatchEIP712({
         chainId: chainId,
@@ -48,7 +50,7 @@ export const SignIntentBundle = ({
 
   React.useEffect(() => {
     if (isError) {
-      onError?.();
+      onError?.(error);
     }
   }, [isError, onError]);
 
@@ -57,6 +59,10 @@ export const SignIntentBundle = ({
       onLoading?.();
     }
   }, [isLoading, onLoading]);
+
+  if (isLoading) {
+    return loadingComponent;
+  }
 
   return (
     // rome-ignore lint/a11y/useKeyWithClickEvents: <explanation>

@@ -21,17 +21,15 @@ const typedMessage = {
       { name: "s", type: "bytes32" },
       { name: "v", type: "uint8" },
     ],
-    IntentExecution: [
+    Intent: [
       { name: "root", type: "address" },
       { name: "target", type: "address" },
+      { name: "value", type: "uint256" },
       { name: "data", type: "bytes" },
     ],
-    Intent: [
-      { name: "exec", type: "IntentExecution" },
-      { name: "signature", type: "Signature" },
-    ],
     IntentBatch: [
-      { name: "nonce", type: "DimensionalNonce" },
+      { name: "root", type: "address" },
+      { name: "nonce", type: "bytes" },
       { name: "intents", type: "Intent[]" },
     ],
     Hook: [

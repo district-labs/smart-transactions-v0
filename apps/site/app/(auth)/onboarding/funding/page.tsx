@@ -10,7 +10,11 @@ export default function FundingPage() {
           Start with just $1
         </h2>
         <p className="text-sm leading-6 text-muted-foreground">
-          You&apos;re so close to building generational wealth.
+          You&apos;re almost there! Let&apos;s keep your funds safe, by
+          deploying a{" "}
+          <a href="https://safe.global/" className="text-green-500 underline">
+            SAFE Account
+          </a>
         </p>
       </div>
       <div className="mt-10 space-y-4">

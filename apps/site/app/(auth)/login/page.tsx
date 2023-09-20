@@ -5,7 +5,7 @@ import { env } from "@/env.mjs"
 import { faker } from "@faker-js/faker"
 
 import { siteConfig } from "@/config/site"
-import { Profile } from "@/components/auth/login-button"
+import { LogInButton } from "@/components/auth/login-button"
 import { Icons } from "@/components/icons"
 
 export const metadata: Metadata = {
@@ -59,7 +59,7 @@ export default function LoginPage() {
             </p>
           </div>
           <div className="mt-10 space-y-4">
-            <Profile />
+            <LogInButton />
           </div>
         </div>
       </main>

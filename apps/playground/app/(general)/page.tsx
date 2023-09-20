@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
 import {
+  CancelIntentBundle,
   DeploySafe,
   EnableSafeIntentModule,
   IsSafeCounterfactual,
@@ -14,6 +14,19 @@ import {
 import { constants } from "ethers"
 
 import { Button } from "@/components/ui/button"
+
+const intentBatchExample = {
+  root: constants.AddressZero,
+  nonce: "0x0000000000000000000000000000000000000000000000000000000000000000",
+  intents: [
+    {
+      root: constants.AddressZero,
+      target: constants.AddressZero,
+      value: BigInt(0),
+      data: "0x",
+    },
+  ],
+}
 
 export default function HomePage() {
   return (
@@ -43,32 +56,28 @@ export default function HomePage() {
           </IsSafeIntentModuleDisabled>
         </IsSafeMaterialized>
         <IsSafeIntentModuleEnabled>
-          <SignIntentBundle
-            onSuccess={(res) => alert(res)}
-            onError={() => alert("Rejected")}
-            intentBatch={{
-              nonce: {
-                queue: 0,
-                accumulator: 0,
-              },
-              intents: [
-                {
-                  exec: {
-                    root: constants.AddressZero,
-                    target: constants.AddressZero,
-                    data: "0x",
-                  },
-                  signature: {
-                    v: 0,
-                    r: constants.HashZero,
-                    s: constants.HashZero,
-                  },
-                },
-              ],
-            }}
-          >
-            <Button>Sign Intent Bundle</Button>
-          </SignIntentBundle>
+          <div className="flex gap-x-10">
+            <SignIntentBundle
+              loadingComponent={<Button type="button">Signing...</Button>}
+              onSuccess={(res: any) => alert(res)}
+              onError={() => alert("Rejected")}
+              intentBatch={intentBatchExample}
+            >
+              <Button>Sign Intent Bundle</Button>
+            </SignIntentBundle>
+            <CancelIntentBundle
+              loadingComponent={<Button type="button">Loading...</Button>}
+              signMessageComponent={
+                <Button type="button">Approve Intent Cancel</Button>
+              }
+              signTransactionComponent={
+                <Button type="button">Execute Intent Cancel</Button>
+              }
+              intentBatch={intentBatchExample}
+            >
+              <Button>Cancel Intent Bundle</Button>
+            </CancelIntentBundle>
+          </div>
         </IsSafeIntentModuleEnabled>
       </div>
     </div>
