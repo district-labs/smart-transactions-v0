@@ -1,57 +1,86 @@
-import { Button } from "../ui/button"
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  RefetchQueryFilters,
+} from "@tanstack/react-query"
+
+import { UseChartResponse } from "@/hooks/use-chart"
+
 import { Toggle } from "../ui/toggle"
 
 export interface ChartTimeFiltersOptions {
-  range: "1" | "7" | "30" | "90" | "365" | "1095"
+  range: "1d" | "7d" | "30d" | "90d" | "365d" | "1095d"
   setRange: React.Dispatch<
-    React.SetStateAction<"1" | "7" | "30" | "90" | "365" | "1095">
+    React.SetStateAction<"1d" | "7d" | "30d" | "90d" | "365d" | "1095d">
   >
+  refetch: <TPageData>(
+    options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined
+  ) => Promise<QueryObserverResult<UseChartResponse, unknown>>
 }
 
-export function ChartTimeFilters({ range, setRange }: ChartTimeFiltersOptions) {
+export function ChartTimeFilters({
+  range,
+  setRange,
+  refetch,
+}: ChartTimeFiltersOptions) {
   const isFilterSelected = (filter: string) => filter === range
 
   return (
     <div className="mt-2 flex justify-end space-x-2 text-muted-foreground lg:mt-0">
       <Toggle
         aria-label="Toggle 1D"
-        pressed={isFilterSelected("1")}
-        onPressedChange={() => setRange("1")}
+        pressed={isFilterSelected("1d")}
+        onPressedChange={() => {
+          setRange("1d")
+          refetch()
+        }}
       >
         1D
       </Toggle>
       <Toggle
         aria-label="Toggle 1W"
-        pressed={isFilterSelected("7")}
-        onPressedChange={() => setRange("7")}
+        pressed={isFilterSelected("7d")}
+        onPressedChange={() => {
+          setRange("7d")
+          refetch()
+        }}
       >
         1W
       </Toggle>
       <Toggle
         aria-label="Toggle 1M"
-        pressed={isFilterSelected("30")}
-        onPressedChange={() => setRange("30")}
+        pressed={isFilterSelected("30d")}
+        onPressedChange={() => {
+          setRange("30d")
+          refetch()
+        }}
       >
         1M
       </Toggle>
       <Toggle
         aria-label="Toggle 3M"
-        pressed={isFilterSelected("90")}
-        onPressedChange={() => setRange("90")}
+        pressed={isFilterSelected("90d")}
+        onPressedChange={() => {
+          setRange("90d")
+          refetch()
+        }}
       >
         3M
       </Toggle>
       <Toggle
         aria-label="Toggle 1Y"
-        pressed={isFilterSelected("365")}
-        onPressedChange={() => setRange("365")}
+        pressed={isFilterSelected("365d")}
+        onPressedChange={() => setRange("365d")}
       >
         1Y
       </Toggle>
       <Toggle
         aria-label="Toggle 3Y"
-        pressed={isFilterSelected("1095")}
-        onPressedChange={() => setRange("1095")}
+        pressed={isFilterSelected("1095d")}
+        onPressedChange={() => {
+          setRange("1095d")
+          refetch()
+        }}
       >
         3Y
       </Toggle>

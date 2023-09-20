@@ -1,6 +1,8 @@
 import {
+  ArrowDownIcon,
   CaretSortIcon,
   CheckIcon,
+  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   Cross1Icon,
@@ -15,6 +17,7 @@ import {
   MagnifyingGlassIcon,
   PersonIcon,
   PlusIcon,
+  QuestionMarkCircledIcon,
   RocketIcon,
   SlashIcon,
 } from "@radix-ui/react-icons"
@@ -22,8 +25,10 @@ import {
 type IconProps = React.HTMLAttributes<SVGElement>
 
 export const Icons = {
+  arrowdown: ArrowDownIcon,
   chain: Link2Icon,
   check: CheckIcon,
+  chevronDown: ChevronDownIcon,
   chevronLeft: ChevronLeftIcon,
   chevronRight: ChevronRightIcon,
   close: Cross1Icon,
@@ -40,6 +45,7 @@ export const Icons = {
   user: PersonIcon,
   verticalDots: DotsVerticalIcon,
   warning: ExclamationTriangleIcon,
+  questionCircle: QuestionMarkCircledIcon,
   logo: (props: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
