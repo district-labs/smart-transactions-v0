@@ -1,10 +1,13 @@
 "use client"
 
-import { useState } from "react"
 import { type Token } from "@/types"
 import { SelectValue } from "@radix-ui/react-select"
+import { useState } from "react"
 import { useChainId } from "wagmi"
 
+import TokenInputAmount from "@/components/blockchain/token-input-amount"
+import LimitOrderChart from "@/components/charts/limit-order-chart"
+import { Icons } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -16,9 +19,6 @@ import {
   SelectTrigger,
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import TokenInputAmount from "@/components/blockchain/token-input-amount"
-import LimitOrderChart from "@/components/charts/limit-order-chart"
-import { Icons } from "@/components/icons"
 
 import { usePlaceOrder } from "./use-place-order"
 import { defaultTokenIn, defaultTokenOut } from "./utils"
@@ -134,7 +134,7 @@ export default function LimitPage() {
             <TabsTrigger value="history">Order History</TabsTrigger>
           </TabsList>
           <TabsContent value="open">
-            {/* <OpenOrdersTableShell data={dummyData} /> */}
+            <OpenOrdersTableShell data={dummyData} />
           </TabsContent>
         </Tabs>
       </section>
