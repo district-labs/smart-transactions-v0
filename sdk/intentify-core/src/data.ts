@@ -10,6 +10,10 @@ export const IntentifyModuleAddressList: KeyList = {
   5: '0xF783Cc471Cd4ED273056F1DD571b4beafa6A5CDE',
 };
 
+export const IntentifyBundlerAddressList: KeyList = {
+  5: '0x00000',
+};
+
 export const WalletFactoryAddressList: KeyList = {
   5: '0x99217B2931f90aa5CeFbFfC74816E24aF66A522D',
 };

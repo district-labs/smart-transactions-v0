@@ -61,8 +61,6 @@ contract SafeTestingUtils is BaseTest {
             _safe.getTransactionHash(address(_safe), 0, txdata, Enum.Operation.Call, 0, 0, 0, address(0), address(0), 0);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(signer, executedata);
         bytes memory signatures = _combineRSV(r, s, v);
-        console2.log("signatures1");
-        console2.logBytes(signatures);
         // Initialize the Safe Intentiy Module
         _safe.execTransaction(
             address(_safe),

@@ -62,9 +62,10 @@ export type NewIntent = typeof intents.$inferInsert
 export const intentBatch = mysqlTable("intent_batch", {
   id: serial("id").primaryKey(),
   root: char("root", { length: 42 }).notNull(),
-  // Dimensional nonce
   nonce: char("nonce", { length: 66 }).notNull(),
-  intentBatchExecutionId: int("intent_batch_execution_id").notNull(),
+  chainId: int("chain_id").notNull(),
+  signature: text("signature").notNull(),
+  cancelledTxHash: char("cancelledTxHash", { length: 66 }).unique(),
 })
 
 export const intentBatchRelations = relations(intentBatch, ({ many }) => ({
@@ -76,11 +77,10 @@ export type NewIntentBatch = typeof intentBatch.$inferInsert
 
 export const intentBatchExecution = mysqlTable("intent_batch_execution", {
   id: serial("id").primaryKey(),
-  chainId: int("chain_id").notNull(),
-  signature: text("signature").notNull(),
+  intentBatchId: int("intent_batch_id"),
   createdAt: timestamp("created_at").defaultNow(),
-  executed: boolean("executed").notNull().default(false),
-  cancelled: boolean("cancelled").notNull().default(false),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  executedTxHash: char("executedTxHash", { length: 66 }).unique(),
   executedAt: timestamp("executed_at"),
 })
 
