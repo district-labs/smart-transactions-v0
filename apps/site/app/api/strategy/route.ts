@@ -16,7 +16,6 @@ export async function POST(req: NextRequest) {
     })
     .from(strategies)
     .where(like(strategies.name, `%${query}%`))
-    .orderBy(desc(strategies.assets))
     .limit(10)
 
   const strategiesByCategory = Object.values(

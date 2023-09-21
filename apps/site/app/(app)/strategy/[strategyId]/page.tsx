@@ -28,11 +28,7 @@ export default async function StrategyPage({ params }: StrategyPageProps) {
       id: true,
       name: true,
       description: true,
-      assets: true,
-      coins: true,
       category: true,
-      performanceFee: true,
-      platformFee: true,
       managerId: true,
     },
     where: eq(strategies.id, strategyId),
@@ -44,11 +40,11 @@ export default async function StrategyPage({ params }: StrategyPageProps) {
 
   const manager = await db.query.users.findFirst({
     columns: {
-      id: true,
+      address: true,
       firstName: true,
       about: true,
     },
-    where: eq(users.id, strategy.managerId),
+    where: eq(users.address, strategy.managerId),
   })
 
   return (
@@ -122,24 +118,24 @@ export default async function StrategyPage({ params }: StrategyPageProps) {
           </Label>
           <Table id="facts">
             <TableBody>
-              <TableRow>
+              {/* <TableRow>
                 <TableCell>Size of Fund (millions)</TableCell>
                 <TableCell className="text-right">{strategy.assets}</TableCell>
-              </TableRow>
+              </TableRow> */}
               <TableRow>
                 <TableCell>Category</TableCell>
                 <TableCell className="text-right">
                   {strategy.category}
                 </TableCell>
               </TableRow>
-              <TableRow>
+              {/* <TableRow>
                 <TableCell>Fee Structure</TableCell>
                 <TableCell className="text-right">
                   <span>Platform Fee - {strategy.platformFee}%</span>
                   <br />
                   <span>Performance Fee - {strategy.performanceFee}%</span>
                 </TableCell>
-              </TableRow>
+              </TableRow> */}
             </TableBody>
           </Table>
         </div>

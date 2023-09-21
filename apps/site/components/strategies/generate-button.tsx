@@ -19,11 +19,7 @@ export async function generateBearStrategy() {
     description:
       "Bearish on ethereum? Sell down your position as the price of ETH rises.",
     category: "strategy",
-    assets: "14000000",
-    coins: ["ethereum"],
-    performanceFee: "0",
-    platformFee: "0.25",
-    managerId: 2,
+    managerId: "1",
     createdAt: faker.date.past(),
   })
   await db.insert(strategies).values(allStrategies)

@@ -31,10 +31,8 @@ export default async function DashboardPage() {
       id: strategies.id,
       name: strategies.name,
       description: strategies.description,
-      assets: strategies.assets,
     })
     .from(strategies)
-    .where(eq(strategies.managerId, 2))
 
   return (
     <>
@@ -84,9 +82,9 @@ export default async function DashboardPage() {
                     {strategy.description}
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-col">
+                {/* <CardContent className="flex flex-col">
                   {`$${strategy.assets}`}
-                </CardContent>
+                </CardContent> */}
               </Card>
             ))}
           </div>

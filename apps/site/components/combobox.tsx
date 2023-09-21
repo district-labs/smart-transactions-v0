@@ -15,7 +15,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-import { filterStrategiesAction } from "@/app/_actions/strategy"
+// import { filterStrategiesAction } from "@/app/_actions/strategy"
 
 import { Icons } from "./icons"
 import { Button } from "./ui/button"
@@ -38,17 +38,17 @@ export function Combobox() {
   >(null)
   const [isPending, startTransition] = useTransition()
 
-  useEffect(() => {
-    if (debouncedQuery.length === 0) setData(null)
+  // useEffect(() => {
+  //   if (debouncedQuery.length === 0) setData(null)
 
-    if (debouncedQuery.length > 0)
-      [
-        startTransition(async () => {
-          const data = await filterStrategiesAction(debouncedQuery)
-          setData(data)
-        }),
-      ]
-  }, [debouncedQuery])
+  //   if (debouncedQuery.length > 0)
+  //     [
+  //       startTransition(async () => {
+  //         const data = await filterStrategiesAction(debouncedQuery)
+  //         setData(data)
+  //       }),
+  //     ]
+  // }, [debouncedQuery])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

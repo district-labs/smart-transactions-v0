@@ -39,16 +39,8 @@ export const strategies = mysqlTable("strategies", {
   category: mysqlEnum("category", ["strategy", "portfolio"])
     .notNull()
     .default("strategy"),
-  assets: decimal("assets", { precision: 12, scale: 2 }).notNull().default("0"),
-  coins: json("coins").$type<string[]>().notNull().default(["ethereum"]),
-  performanceFee: decimal("performanceFee", { precision: 5, scale: 2 })
-    .notNull()
-    .default("10.00"),
-  platformFee: decimal("platformFee", { precision: 5, scale: 2 })
-    .notNull()
-    .default("0.25"),
-  managerId: int("managerId").notNull(),
-  createdAt: timestamp("createdAt").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+  managerId: char("manager_id", { length: 42 }).notNull(),
 })
 
 export type Strategy = typeof strategies.$inferSelect
