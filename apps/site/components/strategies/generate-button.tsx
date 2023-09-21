@@ -1,15 +1,33 @@
 "use client"
 
 import { useTransition } from "react"
+import { db } from "@/db"
+import { strategies, Strategy } from "@/db/schema"
+import { faker } from "@faker-js/faker"
 
 import { catchError } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/use-toast"
 import { Icons } from "@/components/icons"
-import {
-  generateBearStrategy,
-  generateStrategies,
-} from "@/app/_actions/generate"
+
+export async function generateBearStrategy() {
+  const allStrategies: Strategy[] = []
+
+  allStrategies.push({
+    id: faker.number.int({ min: 1, max: 9999 }),
+    name: "ETH Bear Strategy",
+    description:
+      "Bearish on ethereum? Sell down your position as the price of ETH rises.",
+    category: "strategy",
+    assets: "14000000",
+    coins: ["ethereum"],
+    performanceFee: "0",
+    platformFee: "0.25",
+    managerId: 2,
+    createdAt: faker.date.past(),
+  })
+  await db.insert(strategies).values(allStrategies)
+}
 
 export function GenerateButton() {
   const [isPending, startTransition] = useTransition()

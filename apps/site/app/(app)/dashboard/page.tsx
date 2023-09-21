@@ -1,6 +1,5 @@
 import React from "react"
 import { type Metadata } from "next"
-import { cookies } from "next/headers"
 import { db } from "@/db"
 import { strategies } from "@/db/schema"
 import { env } from "@/env.mjs"
@@ -16,10 +15,8 @@ import {
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
-import DashboardOverview from "@/components/charts/dashboard-overview"
 import TokenPriceChart from "@/components/charts/token-price-chart"
 import { Icons } from "@/components/icons"
-import { GenerateButton } from "@/components/strategies/generate-button"
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
@@ -87,7 +84,6 @@ export default async function DashboardPage() {
               <Icons.plus className="mr-2 h-4 w-4" />
               New
             </Button>
-            <GenerateButton />
           </div>
           <Separator />
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
