@@ -30,6 +30,7 @@ export async function POST(req: Request) {
   try {
     const data = await req.json()
     await db.update(users).set(data).where(eq(users.address, data.address))
+    // TODO add upsert
 
     return new Response(JSON.stringify({ ok: true }))
   } catch (err) {

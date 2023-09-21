@@ -21,6 +21,8 @@ import { Icons } from "./icons"
 import { Button } from "./ui/button"
 import { Skeleton } from "./ui/skeleton"
 
+// TAKE OUT SEARCH
+
 export function Combobox() {
   const router = useRouter()
   const mounted = useMounted()

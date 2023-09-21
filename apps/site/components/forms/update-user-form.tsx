@@ -34,6 +34,7 @@ export function UpdateUserForm() {
     resolver: zodResolver(userSchema),
   })
 
+  // UPDATE TO FETCH from AXIOS
   const updateUserMutation = useMutation({
     mutationFn: (data: UserInput) => {
       return axios.post("api/user", {

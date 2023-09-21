@@ -27,6 +27,9 @@ interface GetTokenChartDataResponse {
   }
 }
 
+// TODO: make a current token price API
+
+// TODO: MOVE TO API ROUTE FOR FUTURE API KEY
 export async function getTokenChartData({
   coins,
   timestamp = {
