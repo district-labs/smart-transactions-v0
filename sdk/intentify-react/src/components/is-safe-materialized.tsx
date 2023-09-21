@@ -1,6 +1,6 @@
-import { useIsSafeMaterialized } from "@/hooks/use-is-safe-materialized";
-import { cn } from "@/utils";
 import * as React from "react";
+import { useIsSafeMaterialized } from "../hooks/use-is-safe-materialized";
+import { cn } from "../utils";
 
 type IsSafeMaterialized = React.HTMLAttributes<HTMLElement> & {
   watch?: boolean;

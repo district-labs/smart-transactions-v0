@@ -1,18 +1,17 @@
+import { constants } from "ethers";
+import * as React from "react";
+import { encodeFunctionData } from "viem";
+import { useChainId, useContractWrite, useWalletClient } from "wagmi";
 import { useGetSafeAddress } from "..";
-import { cn } from "../utils";
 import {
   safeABI,
   usePrepareSafeExecTransaction,
   useSafeGetTransactionHash,
   useSafeNonce,
-} from "@/blockchain";
-import { ADDRESS_ZERO } from "@/data";
-import { useGetIntentifyModuleAddress } from "@/hooks/use-get-intentify-module-address";
-import { constants } from "ethers";
-import { _TypedDataEncoder } from "ethers/lib/utils";
-import * as React from "react";
-import { encodeFunctionData } from "viem";
-import { useChainId, useContractWrite, useWalletClient } from "wagmi";
+} from "../blockchain";
+import { ADDRESS_ZERO } from "../data";
+import { useGetIntentifyModuleAddress } from "../hooks/use-get-intentify-module-address";
+import { cn } from "../utils";
 
 type EnableSafeIntentModule = React.HTMLAttributes<HTMLElement> & {
   safeAddressOverride: `0x${string}`;

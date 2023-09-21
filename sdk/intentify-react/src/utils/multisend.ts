@@ -1,9 +1,9 @@
+import { utils, type Contract } from "ethers";
 import {
   MetaTransaction,
   SafeTransaction,
   buildContractCall,
 } from "./execution";
-import { Contract, utils } from "ethers";
 
 const encodeMetaTransaction = (tx: MetaTransaction): string => {
   const data = utils.arrayify(tx.data);

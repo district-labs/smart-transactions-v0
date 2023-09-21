@@ -1,6 +1,6 @@
-import { useIsSafeIntentModuleEnabled } from "@/hooks/use-is-safe-intent-module-enabled";
-import { cn } from "@/utils";
 import * as React from "react";
+import { useIsSafeIntentModuleEnabled } from "../hooks/use-is-safe-intent-module-enabled";
+import { cn } from "../utils";
 
 type IsSafeIntentModuleDisabled = React.HTMLAttributes<HTMLElement> & {
   watch?: boolean;
