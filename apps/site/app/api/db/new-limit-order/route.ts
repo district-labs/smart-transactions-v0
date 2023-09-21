@@ -1,50 +1,12 @@
 import { db } from "@/db"
-import {
-  hooks as hooksDb,
-  intentBatch as intentBatchDb,
-  intentBatchExecution as intentBatchExecutionDb,
-  intents as intentsDb,
-} from "@/db/schema"
+import { intentBatch as intentBatchDb, intents as intentsDb } from "@/db/schema"
 // import { getIronSession } from "iron-session"
 // import { verifyTypedData, type Address } from "viem"
-import { z } from "zod"
+import { newLimitOrderSchema } from "@/lib/validations/db/new-limit-order"
 
 // import { ironOptions } from "@/lib/session"
 
-const verifySchema = z.object({
-  intentBatchEIP712: z.any(),
-  intentBatchExecution: z.object({
-    chainId: z.number(),
-    signature: z.string(),
-    hooks: z.array(
-      z.object({
-        target: z.string(),
-        data: z.string().nullable(),
-      })
-    ),
-    intentBatch: z.object({
-      nonce: z.string(),
-      root: z.string(),
-      intents: z.array(
-        z.object({
-          name: z.string(),
-          version: z.string(),
-          root: z.string(),
-          target: z.string(),
-          value: z.string(),
-          data: z.string().nullable(),
-          intentArgs: z.array(
-            z.object({
-              name: z.string(),
-              type: z.string(),
-              value: z.union([z.string(), z.number()]),
-            })
-          ),
-        })
-      ),
-    }),
-  }),
-})
+
 
 export async function POST(req: Request) {
   try {
@@ -58,9 +20,9 @@ export async function POST(req: Request) {
     //   )
     // }
 
-    const body = verifySchema.parse(await req.json())
-    const { intentBatchExecution, intentBatchEIP712 } = body
-    const { chainId, signature, intentBatch, hooks } = intentBatchExecution
+    const body = newLimitOrderSchema.parse(await req.json())
+    const { intentBatch, intentBatchEIP712 } = body
+    const { chainId, intents, nonce, root, signature } = intentBatch
 
     // const verification = await verifyTypedData({
     //   address: session.address as Address,
@@ -79,25 +41,19 @@ export async function POST(req: Request) {
     // }
 
     await db.transaction(async (tx) => {
-      const intentBatchExecutionResult = await tx
-        .insert(intentBatchExecutionDb)
-        .values({
-          chainId,
-          signature,
-        })
-      const intentBatchExecutionId = Number(intentBatchExecutionResult.insertId)
-
       const intentBatchResult = await tx.insert(intentBatchDb).values({
-        // TODO: Update nonce
-        nonce: intentBatch.nonce,
-        root: intentBatch.root,
-        intentBatchExecutionId,
+        nonce,
+        chainId,
+        root,
+        signature,
+        // Hardcoding strategyId for now
+        strategyId: 1,
       })
 
       const intentBatchId = Number(intentBatchResult.insertId)
 
       await tx.insert(intentsDb).values(
-        intentBatch.intents.map((intent) => ({
+        intents.map((intent) => ({
           name: intent.name,
           version: intent.version,
           intentArgs: intent.intentArgs,
@@ -105,14 +61,6 @@ export async function POST(req: Request) {
           target: intent.target,
           data: intent.data,
           intentBatchId,
-        }))
-      )
-
-      await tx.insert(hooksDb).values(
-        hooks.map((hook) => ({
-          target: hook.target,
-          data: hook.data,
-          intentBatchExecutionId,
         }))
       )
     })

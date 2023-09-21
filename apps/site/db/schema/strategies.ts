@@ -16,8 +16,8 @@ export const strategies = mysqlTable("strategies", {
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description"),
   category: mysqlEnum("category", ["strategy", "portfolio"])
-  .notNull()
-  .default("strategy"),
+    .notNull()
+    .default("strategy"),
   createdAt: timestamp("created_at").defaultNow(),
   managerId: char("manager_id", { length: 42 }).notNull(),
 })

@@ -11,12 +11,10 @@ import {
 } from "./chart-time-filters"
 import DashboardChart from "./dashboard-chart"
 
-interface DashboardOverviewProps {}
-
 export default function DashboardOverview() {
   const [chartData, setChartData] = useState<[number, number][] | null>(null)
   const [chartRange, setChartRange] =
-    useState<ChartTimeFiltersOptions["range"]>("30")
+    useState<ChartTimeFiltersOptions["range"]>("30d")
 
   const fetchChartData = async () => {
     const res = await getCoinMarketChart({

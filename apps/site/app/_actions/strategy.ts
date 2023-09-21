@@ -1,11 +1,11 @@
 "use server"
 
 import { db } from "@/db"
-import { strategies, Strategy } from "@/db/schema"
-import { and, asc, desc, gte, inArray, like, lte, sql } from "drizzle-orm"
-import { z } from "zod"
+import { strategies, type Strategy } from "@/db/schema"
+import { and, asc, desc, inArray, like, sql } from "drizzle-orm"
+import { type z } from "zod"
 
-import { getStrategiesSchema } from "@/lib/validations/strategy"
+import { type getStrategiesSchema } from "@/lib/validations/strategy"
 
 export async function filterStrategiesAction(query: string) {
   if (query.length === 0) return null
@@ -18,7 +18,7 @@ export async function filterStrategiesAction(query: string) {
     })
     .from(strategies)
     .where(like(strategies.name, `%${query}%`))
-    .orderBy(desc(strategies.assets))
+    // .orderBy(desc(strategies.assets))
     .limit(10)
 
   const strategiesByCategory = Object.values(
@@ -56,12 +56,12 @@ export async function getStrategiesAction(
         and(
           categories.length
             ? inArray(strategies.category, categories)
-            : undefined,
-          minAssets ? gte(strategies.assets, minAssets) : undefined,
-          maxAssets ? lte(strategies.assets, maxAssets) : undefined,
-          managerIds.length
-            ? inArray(strategies.managerId, managerIds)
             : undefined
+          // minAssets ? gte(strategies.assets, minAssets) : undefined,
+          // maxAssets ? lte(strategies.assets, maxAssets) : undefined,
+          // managerIds.length
+          //   ? inArray(strategies.managerId, managerIds)
+          //   : undefined
         )
       )
       .groupBy(strategies.id)
@@ -82,12 +82,12 @@ export async function getStrategiesAction(
         and(
           categories.length
             ? inArray(strategies.category, categories)
-            : undefined,
-          minAssets ? gte(strategies.assets, minAssets) : undefined,
-          maxAssets ? lte(strategies.assets, maxAssets) : undefined,
-          managerIds.length
-            ? inArray(strategies.managerId, managerIds)
             : undefined
+          // minAssets ? gte(strategies.assets, minAssets) : undefined,
+          // maxAssets ? lte(strategies.assets, maxAssets) : undefined,
+          // managerIds.length
+          //   ? inArray(strategies.managerId, managerIds)
+          //   : undefined
         )
       )
       .execute()

@@ -40,6 +40,7 @@ const nextConfig = {
     })
     return config
   },
+  transpilePackages: ["@district-labs/intentify-react"],
   ...withPWA({
     dest: "public",
     register: true,

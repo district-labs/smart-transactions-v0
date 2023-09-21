@@ -1,22 +1,23 @@
 "use client";
-import { useGetSafeAddress } from "..";
-import { cn } from "../utils";
-import {
-  intentifySafeModuleABI,
-  usePrepareSafeExecTransaction,
-  useSafeGetTransactionHash,
-  useSafeNonce,
-} from "@/blockchain";
-import { ADDRESS_ZERO } from "@/data";
+
 import type { IntentBatch } from "@district-labs/intentify-utils";
 import { constants } from "ethers";
 import * as React from "react";
 import { encodeFunctionData } from "viem";
 import { useContractWrite, useWalletClient } from "wagmi";
+import { useGetSafeAddress } from "..";
+import {
+  intentifySafeModuleABI,
+  usePrepareSafeExecTransaction,
+  useSafeGetTransactionHash,
+  useSafeNonce,
+} from "../blockchain";
+import { ADDRESS_ZERO } from "../data";
+import { cn } from "../utils";
 
 type CancelIntentBundle = React.HTMLAttributes<HTMLElement> & {
-  safeAddressOverride: `0x${string}`;
-  verifyingContract: string;
+  safeAddressOverride?: `0x${string}`;
+  verifyingContract?: string;
   intentBatch: IntentBatch;
   signMessageComponent?: React.ReactNode;
   signTransactionComponent?: React.ReactNode;
@@ -85,13 +86,14 @@ export const CancelIntentBundle = ({
 
   const { config } = usePrepareSafeExecTransaction({
     address: safeAddress,
+    value: BigInt(0),
     args: [...TRANSACTION, signature.signature],
     enabled: signature.signed,
-    onSuccess: (data) => {
-      onSuccess?.(data);
+    onSuccess: (value: any) => {
+      onSuccess?.(value);
     },
-    onError: (data) => {
-      onError?.(data);
+    onError: (value: any) => {
+      onError?.(value);
     },
   });
 

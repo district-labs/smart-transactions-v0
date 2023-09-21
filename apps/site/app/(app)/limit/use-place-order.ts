@@ -1,3 +1,4 @@
+import type { NewLimitOrderSchema } from "@/lib/validations/db/new-limit-order"
 import { type Token } from "@/types"
 import {
   useGetIntentifyModuleAddress,
@@ -40,11 +41,20 @@ export function usePlaceOrder({
 
   const mutationFn = async () => {
     const expiryTimestamp = expiryToTimestamp(expiry)
+    const parsedAmountIn = parseUnits(
+      (amountIn?.toString() || "0") as `${number}`,
+      tokenIn.decimals
+    )
+    const parsedAmountOut = parseUnits(
+      (amountOut?.toString() || "0") as `${number}`,
+      tokenOut.decimals
+    )
 
     const intentBatch = {
       nonce: encodePacked(["uint256"], [BigInt(0)]),
       // Eth address 42 characters of 0x + 0{40}
       root: intentifyAddress,
+      chainId,
       intents: [
         {
           name: "TimestampBeforeIntent",
@@ -71,10 +81,7 @@ export function usePlaceOrder({
               { type: "address", name: "token" },
               { type: "uint256", name: "amount" },
             ],
-            [
-              tokenOut.address,
-              parseUnits(amountOut?.toString() || "0", tokenOut.decimals),
-            ]
+            [tokenOut.address, parsedAmountOut]
           ),
           value: "0",
           intentArgs: [
@@ -86,10 +93,7 @@ export function usePlaceOrder({
             {
               name: "amount",
               type: "uint256",
-              value: parseUnits(
-                amountOut?.toString() || "0",
-                tokenOut.decimals
-              ).toString(),
+              value: parsedAmountOut.toString(),
             },
           ],
         },
@@ -105,12 +109,7 @@ export function usePlaceOrder({
               { type: "uint256", name: "amountOutMax" },
               { type: "uint256", name: "amountInMin" },
             ],
-            [
-              tokenOut.address,
-              tokenIn.address,
-              parseUnits(amountOut?.toString() || "0", tokenOut.decimals),
-              parseUnits(amountIn?.toString() || "0", tokenIn.decimals),
-            ]
+            [tokenOut.address, tokenIn.address, parsedAmountOut, parsedAmountIn]
           ),
           value: "0",
           intentArgs: [
@@ -127,18 +126,12 @@ export function usePlaceOrder({
             {
               name: "amountOutMax",
               type: "uint256",
-              value: parseUnits(
-                amountOut?.toString() || "0",
-                tokenOut.decimals
-              ).toString(),
+              value: parsedAmountOut.toString(),
             },
             {
               name: "amountInMin",
               type: "uint256",
-              value: parseUnits(
-                amountIn?.toString() || "0",
-                tokenIn.decimals
-              ).toString(),
+              value: parsedAmountIn.toString(),
             },
           ],
         },
@@ -148,31 +141,20 @@ export function usePlaceOrder({
     const intentBatchEIP712 = generateIntentBatchEIP712({
       chainId: chainId,
       verifyingContract: intentifyAddress,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       intentBatch: intentBatch,
     })
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const signature = await signTypedDataAsync(intentBatchEIP712)
 
-    const body = {
+    const body: NewLimitOrderSchema = {
       intentBatchEIP712,
-      intentBatchExecution: {
-        chainId,
+      intentBatch: {
+        ...intentBatch,
         signature,
-        intentBatch,
-        hooks: [
-          {
-            target: "0x0000000000000000000000000000000000000000",
-            data: "0x",
-          },
-          {
-            target: "0x0000000000000000000000000000000000000000",
-            data: "0x",
-          },
-          {
-            target: "0x0000000000000000000000000000000000000000",
-            data: "0x",
-          },
-        ],
       },
     }
 
@@ -184,11 +166,16 @@ export function usePlaceOrder({
       },
     })
 
-    const data: {
-      ok: true
-    } = await response.json()
+    if (response.ok) {
+      const data: {
+        ok: true
+      } = await response.json()
 
-    return data
+      return data
+    }
+
+    const data = await response.text()
+    throw new Error(data)
   }
 
   const mutationResult = useMutation(

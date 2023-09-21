@@ -1,19 +1,9 @@
 {
   "extends": "tsconfig/react-library.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["."],
   "exclude": ["dist", "build", "node_modules"],
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-  },
   "compilerOptions": {
-    "preserveSymlinks": true,
-    "composite": false,
     "declaration": true,
-    "baseUrl": "./",
-    "moduleResolution": "Node",
-    "module": "ESNext",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "preserveSymlinks": true
   }
 }

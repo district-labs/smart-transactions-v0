@@ -1,15 +1,20 @@
-import { db } from "..";
+import { db } from ".."
 
-export const selectAllIntentBatchExecutionQuery = db.query.intentBatchExecution.findMany({
+export const selectAllIntentBatchQuery = db.query.intentBatch.findMany({
   with: {
-    hooks: true,
-    intentBatch: {
+    intentBatchExecution: {
       with: {
-        intents: true
-      }
-    }
-  }
+        hooks: true,
+      },
+    },
+    intents: true,
+    strategy: true,
+  },
 })
 
-export type SelectAllIntentBatchExecutionQuery = Awaited<ReturnType<typeof selectAllIntentBatchExecutionQuery.execute>>
-export type SelectOneIntentBatchExecutionQuery = Awaited<ReturnType<typeof selectAllIntentBatchExecutionQuery.execute>>[number]
+export type SelectAllIntentBatchExecutionQuery = Awaited<
+  ReturnType<typeof selectAllIntentBatchQuery.execute>
+>
+export type SelectOneIntentBatchExecutionQuery = Awaited<
+  ReturnType<typeof selectAllIntentBatchQuery.execute>
+>[number]

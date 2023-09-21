@@ -19,25 +19,7 @@ export async function generateStrategies({
       name: faker.finance.accountName(),
       description: faker.company.buzzPhrase(),
       category: "strategy",
-      assets: faker.number
-        .float({ min: 0, max: 1000000, precision: 0.01 })
-        .toString(),
-      coins: ["ethereum"],
-      performanceFee: faker.number
-        .float({
-          min: 0,
-          max: 100,
-          precision: 0.01,
-        })
-        .toString(),
-      platformFee: faker.number
-        .float({
-          min: 0,
-          max: 100,
-          precision: 0.01,
-        })
-        .toString(),
-      managerId,
+      managerId: String(managerId),
       createdAt: faker.date.past(),
     })
   }
@@ -53,11 +35,7 @@ export async function generateBearStrategy() {
     description:
       "Bearish on ethereum? Sell down your position as the price of ETH rises.",
     category: "strategy",
-    assets: "14000000",
-    coins: ["ethereum"],
-    performanceFee: "0",
-    platformFee: "0.25",
-    managerId: 2,
+    managerId: "2",
     createdAt: faker.date.past(),
   })
   await db.insert(strategies).values(allStrategies)

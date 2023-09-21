@@ -1,13 +1,10 @@
 "use client"
 
+import { useState } from "react"
 import { type Token } from "@/types"
 import { SelectValue } from "@radix-ui/react-select"
-import { useState } from "react"
 import { useChainId } from "wagmi"
 
-import TokenInputAmount from "@/components/blockchain/token-input-amount"
-import LimitOrderChart from "@/components/charts/limit-order-chart"
-import { Icons } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -19,9 +16,42 @@ import {
   SelectTrigger,
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import TokenInputAmount from "@/components/blockchain/token-input-amount"
+import LimitOrderChart from "@/components/charts/limit-order-chart"
+import { Icons } from "@/components/icons"
+import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
 
 import { usePlaceOrder } from "./use-place-order"
 import { defaultTokenIn, defaultTokenOut } from "./utils"
+
+const dummyData = [
+  {
+    sell: {
+      asset: "Ether",
+      amount: 2,
+    },
+    recieve: {
+      asset: "USDC",
+      amount: 4000,
+    },
+    limitPrice: "1000",
+    expiry: "October 21, 2023",
+    status: "open" as const,
+  },
+  {
+    sell: {
+      asset: "Ether",
+      amount: 2,
+    },
+    recieve: {
+      asset: "USDC",
+      amount: 4000,
+    },
+    limitPrice: "1000",
+    expiry: "October 21, 2023",
+    status: "open" as const,
+  },
+]
 
 export default function LimitPage() {
   const [amountOut, setAmountOut] = useState<number>()
@@ -105,7 +135,7 @@ export default function LimitPage() {
               />
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex flex-col gap-y-3">
             <Button
               onClick={() => handlePlaceOrder()}
               disabled={
@@ -124,6 +154,13 @@ export default function LimitPage() {
                 ? "Order Placed!"
                 : "Place Limit Order"}
             </Button>
+            {mutationResult.isError && (
+              <div className="text-sm text-red-500">
+                {mutationResult?.error instanceof Error
+                  ? `Error: ${mutationResult?.error?.message}`
+                  : "An error occurred while placing your order."}
+              </div>
+            )}
           </CardFooter>
         </Card>
       </section>
@@ -134,7 +171,7 @@ export default function LimitPage() {
             <TabsTrigger value="history">Order History</TabsTrigger>
           </TabsList>
           <TabsContent value="open">
-            <OpenOrdersTableShell data={dummyData} />
+            <OpenOrdersTableShell pageCount={1} data={dummyData} />
           </TabsContent>
         </Tabs>
       </section>

@@ -7,8 +7,9 @@ import {
   serial,
   text,
   timestamp,
-  varchar
+  varchar,
 } from "drizzle-orm/mysql-core"
+
 import { strategies } from "."
 
 export const intentBatch = mysqlTable("intent_batch", {
@@ -102,4 +103,3 @@ export const intentsRelations = relations(intents, ({ one }) => ({
 
 export type Intent = typeof intents.$inferSelect
 export type NewIntent = typeof intents.$inferInsert
-

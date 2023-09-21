@@ -1,10 +1,10 @@
 import {
-  QueryObserverResult,
-  RefetchOptions,
-  RefetchQueryFilters,
+  type QueryObserverResult,
+  type RefetchOptions,
+  type RefetchQueryFilters,
 } from "@tanstack/react-query"
 
-import { UseChartResponse } from "@/hooks/use-chart"
+import { type UseChartResponse } from "@/hooks/use-chart"
 
 import { Toggle } from "../ui/toggle"
 
@@ -13,7 +13,7 @@ export interface ChartTimeFiltersOptions {
   setRange: React.Dispatch<
     React.SetStateAction<"1d" | "7d" | "30d" | "90d" | "365d" | "1095d">
   >
-  refetch: <TPageData>(
+  refetch?: <TPageData>(
     options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined
   ) => Promise<QueryObserverResult<UseChartResponse, unknown>>
 }
@@ -32,7 +32,7 @@ export function ChartTimeFilters({
         pressed={isFilterSelected("1d")}
         onPressedChange={() => {
           setRange("1d")
-          refetch()
+          refetch?.()
         }}
       >
         1D
@@ -42,7 +42,7 @@ export function ChartTimeFilters({
         pressed={isFilterSelected("7d")}
         onPressedChange={() => {
           setRange("7d")
-          refetch()
+          refetch?.()
         }}
       >
         1W
@@ -52,7 +52,7 @@ export function ChartTimeFilters({
         pressed={isFilterSelected("30d")}
         onPressedChange={() => {
           setRange("30d")
-          refetch()
+          refetch?.()
         }}
       >
         1M
@@ -62,7 +62,7 @@ export function ChartTimeFilters({
         pressed={isFilterSelected("90d")}
         onPressedChange={() => {
           setRange("90d")
-          refetch()
+          refetch?.()
         }}
       >
         3M
@@ -79,7 +79,7 @@ export function ChartTimeFilters({
         pressed={isFilterSelected("1095d")}
         onPressedChange={() => {
           setRange("1095d")
-          refetch()
+          refetch?.()
         }}
       >
         3Y

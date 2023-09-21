@@ -1,4 +1,4 @@
-import { CoinsInput } from "@/types"
+import { type CoinsInput } from "@/types"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { z } from "zod"
@@ -57,7 +57,8 @@ export function isMacOs() {
   return window.navigator.userAgent.includes("Mac")
 }
 
-export function toTitleCase(str: string) {
+export function toTitleCase(str: string | undefined) {
+  if (!str) return ""
   return str.replace(
     /\w\S*/g,
     (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase()

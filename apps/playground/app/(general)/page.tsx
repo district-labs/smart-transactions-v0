@@ -37,7 +37,7 @@ export default function HomePage() {
           <SafeDeterministicAddress />
         </div>
         <IsSafeCounterfactual>
-          <DeploySafe>
+          <DeploySafe salt={BigInt(0)}>
             <Button>Deploy Safe</Button>
           </DeploySafe>
         </IsSafeCounterfactual>
@@ -51,7 +51,7 @@ export default function HomePage() {
               signTransactionComponent={
                 <Button>Execute Enable Transaction</Button>
               }
-              safeAddress="0x88B28dc71B7C2f11072FF41Eb82e177E7E8eb30d"
+              safeAddressOverride="0x88B28dc71B7C2f11072FF41Eb82e177E7E8eb30d"
             />
           </IsSafeIntentModuleDisabled>
         </IsSafeMaterialized>
