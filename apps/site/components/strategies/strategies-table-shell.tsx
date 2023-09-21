@@ -1,9 +1,9 @@
 "use client"
 
-import { useMemo } from "react"
-import Link from "next/link"
 import { strategies, type Strategy } from "@/db/schema"
 import { type ColumnDef } from "@tanstack/react-table"
+import Link from "next/link"
+import { useMemo } from "react"
 
 import { cn } from "@/lib/utils"
 

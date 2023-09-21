@@ -1,9 +1,9 @@
-import React from "react"
+import type { ReactNode } from "react"
 
 import AppHeader from "@/components/layouts/app-header"
 
 interface AppLayoutProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {

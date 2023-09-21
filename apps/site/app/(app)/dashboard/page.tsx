@@ -1,9 +1,7 @@
-import React from "react"
 import { type Metadata } from "next"
 import { db } from "@/db"
 import { strategies } from "@/db/schema"
 import { env } from "@/env.mjs"
-import { eq } from "drizzle-orm"
 
 import { Button } from "@/components/ui/button"
 import {

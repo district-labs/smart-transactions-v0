@@ -5,8 +5,7 @@ import { useQuery } from "@tanstack/react-query"
 import { formatPrice } from "@/lib/utils"
 
 export default function DashboardOverview() {
-  const currentPriceQuery = useQuery({
-    queryKey: ["tokenPrice"],
+  const {data, isLoading} = useQuery(["tokenPrice"],{
     queryFn: () =>
       fetch("/api/token/current-price", {
         method: "POST",
@@ -31,11 +30,11 @@ export default function DashboardOverview() {
           <div className="flex flex-col gap-y-2 pl-6">
             <dt className="text-sm leading-6">Return (chart value)</dt>
             <dd className="text-3xl font-semibold tracking-tight">
-              {currentPriceQuery.isLoading ? (
+              {isLoading ? (
                 <div className="h-6 w-full animate-pulse bg-muted" />
               ) : (
                 <>
-                  {formatPrice(currentPriceQuery.data, {
+                  {formatPrice(data, {
                     notation: "standard",
                   })}
                 </>

@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { LineChart } from "@tremor/react"
+import { useState } from "react"
 
 import { formatPrice } from "@/lib/utils"
 
@@ -16,8 +16,8 @@ export default function TokenPriceChart() {
   const [chartRange, setChartRange] =
     useState<ChartTimeFiltersOptions["range"]>("30d")
 
-  const chartDataQuery = useQuery({
-    queryKey: ["tokenChart", chartRange],
+  const {data, status, refetch} = useQuery(["tokenChart", chartRange],
+  {
     queryFn: () =>
       fetch("/api/token/chart-data", {
         method: "POST",
@@ -32,20 +32,20 @@ export default function TokenPriceChart() {
       }).then((res) => res.json()),
   })
 
-  if (chartDataQuery.status === "error") return <p>Failed to load chart</p>
+  if (status === "error") return <p>Failed to load chart</p>
 
   return (
     <div>
       <ChartTimeFilters
         range={chartRange}
         setRange={setChartRange}
-        refetch={chartDataQuery.refetch}
+        refetch={refetch}
       />
-      {chartDataQuery.status === "loading" ? (
+      {status === "loading" ? (
         <ChartLoadingSkeleton />
       ) : (
         <LineChart
-          data={chartDataQuery.data}
+          data={data}
           index="timestamp"
           categories={["price"]}
           yAxisWidth={64}

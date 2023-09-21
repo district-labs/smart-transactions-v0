@@ -36,7 +36,6 @@ export async function POST(req: Request) {
 
     session.siwe = fields
     session.address = fields.address
-    await session.save()
 
     if (env.DATABASE_URL) {
       const user = await db.query.users.findFirst({
@@ -45,16 +44,15 @@ export async function POST(req: Request) {
 
       if (user) {
         session.user = user
-        await session.save()
       } else {
         await db.insert(users).values({
           address: fields.address,
         })
         session.address = fields.address
-        await session.save()
       }
     }
 
+    await session.save()
     return res
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : String(e)

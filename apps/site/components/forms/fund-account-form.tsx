@@ -1,6 +1,5 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import {
   DeploySafe,
   EnableSafeIntentModule,
@@ -9,7 +8,7 @@ import {
   useIsSafeMaterialized,
 } from "@district-labs/intentify-react"
 import { useMutation } from "@tanstack/react-query"
-import axios from "axios"
+import { useRouter } from "next/navigation"
 import { useAccount } from "wagmi"
 
 import { catchError, cn } from "@/lib/utils"
@@ -26,11 +25,17 @@ export function FundAccountForm() {
   const isSafeDeployed = useIsSafeMaterialized()
   const isModuleEnabled = useIsSafeIntentModuleEnabled()
 
-  const updateUserMutation = useMutation({
+  const {mutate} = useMutation({
     mutationFn: () => {
-      return axios.post("api/user", {
-        address,
-        safeAddress,
+      return fetch("/api/user", {
+        method: "POST",
+        body: JSON.stringify({
+          address,
+          safeAddress,
+          }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
     },
     onSuccess: () => {
@@ -64,7 +69,7 @@ export function FundAccountForm() {
         ) : (
           <DeploySafe
             salt={BigInt(0)}
-            onSuccess={() => updateUserMutation.mutate()}
+            onSuccess={mutate}
           >
             <Button>Deploy</Button>
           </DeploySafe>

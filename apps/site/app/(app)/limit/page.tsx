@@ -1,10 +1,13 @@
 "use client"
 
-import { useState } from "react"
 import { type Token } from "@/types"
-import { SelectValue } from "@radix-ui/react-select"
+import { useState } from "react"
 import { type Address } from "viem"
 
+import TokenInputAmount from "@/components/blockchain/token-input-amount"
+import TokenPriceChart from "@/components/charts/token-price-chart"
+import { Icons } from "@/components/icons"
+import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -14,12 +17,9 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import TokenInputAmount from "@/components/blockchain/token-input-amount"
-import TokenPriceChart from "@/components/charts/token-price-chart"
-import { Icons } from "@/components/icons"
-import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
 
 const dummyData = [
   {

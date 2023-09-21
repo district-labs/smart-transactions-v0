@@ -1,12 +1,11 @@
 import { type NextRequest } from "next/server"
 import { db } from "@/db"
 import { strategies } from "@/db/schema"
-import { desc, like } from "drizzle-orm"
+import { like } from "drizzle-orm"
 
 export async function POST(req: NextRequest) {
-  const query = req.nextUrl.searchParams.get("query") as string
-  console.log(query)
-  if (query.length === 0) return null
+  const query = req.nextUrl.searchParams.get("query")
+  if (!query || query.length === 0) return null
 
   const filteredStrategies = await db
     .select({
