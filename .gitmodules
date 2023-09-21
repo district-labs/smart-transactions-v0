@@ -17,3 +17,6 @@
 	path = contracts/intentify/lib/@uniswap/v3-core
 	url = https://github.com/Uniswap/v3-core
 	branch = 0.8
+[submodule "contracts/intentify/lib/v3-periphery"]
+	path = contracts/intentify/lib/v3-periphery
+	url = https://github.com/uniswap/v3-periphery
