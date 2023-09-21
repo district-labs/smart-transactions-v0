@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import {
   DeploySafe,
   EnableSafeIntentModule,
@@ -8,7 +9,6 @@ import {
   useIsSafeMaterialized,
 } from "@district-labs/intentify-react"
 import { useMutation } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
 import { useAccount } from "wagmi"
 
 import { catchError, cn } from "@/lib/utils"
@@ -25,14 +25,14 @@ export function FundAccountForm() {
   const isSafeDeployed = useIsSafeMaterialized()
   const isModuleEnabled = useIsSafeIntentModuleEnabled()
 
-  const {mutate} = useMutation({
+  const { mutate } = useMutation({
     mutationFn: () => {
       return fetch("/api/user", {
         method: "POST",
         body: JSON.stringify({
           address,
           safeAddress,
-          }),
+        }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -67,10 +67,7 @@ export function FundAccountForm() {
         {isSafeDeployed ? (
           <Icons.check className="h-5 w-5 text-primary" />
         ) : (
-          <DeploySafe
-            salt={BigInt(0)}
-            onSuccess={mutate}
-          >
+          <DeploySafe salt={BigInt(0)} onSuccess={mutate}>
             <Button>Deploy</Button>
           </DeploySafe>
         )}

@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query"
 import { formatPrice } from "@/lib/utils"
 
 export default function DashboardOverview() {
-  const {data, isLoading} = useQuery(["tokenPrice"],{
+  const { data, isLoading } = useQuery(["tokenPrice"], {
     queryFn: () =>
       fetch("/api/token/current-price", {
         method: "POST",

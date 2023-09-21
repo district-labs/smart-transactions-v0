@@ -1,8 +1,8 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { useAccount } from "wagmi"
 import { type z } from "zod"

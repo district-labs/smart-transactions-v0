@@ -1,4 +1,4 @@
-import { FundAccountForm } from "@/components/forms/fund-account-form"
+// import { FundAccountForm } from "@/components/forms/fund-account-form"
 import { Icons } from "@/components/icons"
 
 export default function FundingPage() {
@@ -18,7 +18,9 @@ export default function FundingPage() {
         </p>
       </div>
       <div className="mt-10 space-y-4">
-        <FundAccountForm />
+        {/* 
+        TODO: Fix Wagmi config issue
+        <FundAccountForm /> */}
       </div>
     </div>
   )

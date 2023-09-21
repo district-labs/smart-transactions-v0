@@ -1,13 +1,9 @@
 "use client"
 
-import { type Token } from "@/types"
 import { useState } from "react"
+import { type Token } from "@/types"
 import { type Address } from "viem"
 
-import TokenInputAmount from "@/components/blockchain/token-input-amount"
-import TokenPriceChart from "@/components/charts/token-price-chart"
-import { Icons } from "@/components/icons"
-import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -20,6 +16,10 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import TokenInputAmount from "@/components/blockchain/token-input-amount"
+import TokenPriceChart from "@/components/charts/token-price-chart"
+import { Icons } from "@/components/icons"
+import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
 
 const dummyData = [
   {
