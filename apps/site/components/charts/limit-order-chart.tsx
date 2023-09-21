@@ -14,7 +14,12 @@ import {
 export default function LimitOrderChart() {
   const [chartRange, setChartRange] =
     useState<ChartTimeFiltersOptions["range"]>("30d")
-  const [chartData, setChartData] = useState([])
+  const [chartData, setChartData] = useState<
+    {
+      timestamp: string
+      price: number
+    }[]
+  >([])
 
   const { data, refetch } = useChart({
     coins: {
@@ -42,7 +47,7 @@ export default function LimitOrderChart() {
         }
       }
     )
-    setChartData(formattedData)
+    setChartData(formattedData || [])
   }, [data, chartRange])
 
   return (

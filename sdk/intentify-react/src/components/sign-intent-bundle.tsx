@@ -1,14 +1,14 @@
-// @ts-nocheck
 "use client";
-import { cn } from "../utils";
-import { generateIntentBatchEIP712 } from "@district-labs/intentify-utils";
+
 import type { IntentBatch } from "@district-labs/intentify-utils";
+import { generateIntentBatchEIP712 } from "@district-labs/intentify-utils";
 import { constants } from "ethers";
 import * as React from "react";
 import { useChainId, useSignTypedData } from "wagmi";
+import { cn } from "../utils";
 
 type SignIntentBundle = React.HTMLAttributes<HTMLElement> & {
-  verifyingContract: string;
+  verifyingContract?: string;
   intentBatch: IntentBatch;
   loadingComponent?: React.ReactNode;
   onSuccess?: (res: any) => void;
@@ -31,6 +31,7 @@ export const SignIntentBundle = ({
 
   const { data, error, isError, isLoading, isSuccess, signTypedData } =
     useSignTypedData(
+      // @ts-ignore
       generateIntentBatchEIP712({
         chainId: chainId,
         verifyingContract: verifyingContract,

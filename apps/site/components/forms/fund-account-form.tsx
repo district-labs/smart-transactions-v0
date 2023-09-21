@@ -59,7 +59,7 @@ export function FundAccountForm() {
         {isSafeDeployed ? (
           <Icons.check className="h-5 w-5 text-primary" />
         ) : (
-          <DeploySafe onSuccess={onDeploySafe}>
+          <DeploySafe salt={BigInt(0)} onSuccess={onDeploySafe}>
             <Button>Deploy</Button>
           </DeploySafe>
         )}
@@ -87,7 +87,7 @@ export function FundAccountForm() {
             signTransactionComponent={
               <Button disabled={!isSafeDeployed}>Install</Button>
             }
-            safeAddress="0x88B28dc71B7C2f11072FF41Eb82e177E7E8eb30d"
+            safeAddressOverride="0x88B28dc71B7C2f11072FF41Eb82e177E7E8eb30d"
           />
         )}
       </div>
