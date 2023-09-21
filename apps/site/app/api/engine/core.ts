@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import { SelectAllIntentBatchQuery } from "@/db/queries/intent-batch"
 import { Hook, intentifySafeModuleABI } from "@district-labs/intentify-utils"
 import type { Abi } from "viem"

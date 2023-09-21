@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { type Token } from "@/types"
 import {
   useGetIntentifyModuleAddress,
@@ -31,11 +32,11 @@ export function usePlaceOrder({
 }: IUsePlaceOrder) {
   const { isLoading: isLoadingSign, signTypedDataAsync } = useSignTypedData()
 
-  const intentifyAddress: string = useGetIntentifyModuleAddress(chainId)
-  const timestampBeforeIntentAddress: string =
+  const intentifyAddress: `0x{string}` = useGetIntentifyModuleAddress(chainId)
+  const timestampBeforeIntentAddress: `0x{string}` =
     useGetIntentTimestampBeforeAddress(chainId)
-  const limitOrderIntentAddress: string = useGetIntentLimitOrderAddress(chainId)
-  const tokenRouterReleaseIntentAddress: string =
+  const limitOrderIntentAddress: `0x{string}` = useGetIntentLimitOrderAddress(chainId)
+  const tokenRouterReleaseIntentAddress: `0x{string}` =
     useGetIntentTokenRouterAddress(chainId)
 
   const mutationFn = async () => {

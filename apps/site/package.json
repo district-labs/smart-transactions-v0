@@ -10,7 +10,7 @@
     "lint:fix": "next lint --fix",
     "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",
-    "postinstall": "db:migrate",
+    "postinstall": "pnpm db:migrate",
     "db:push": "drizzle-kit push:mysql",
     "db:migrate": "drizzle-kit generate:mysql",
     "db:introspect": "drizzle-kit introspect:mysql",

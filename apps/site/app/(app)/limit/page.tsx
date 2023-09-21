@@ -22,6 +22,7 @@ import { Icons } from "@/components/icons"
 
 import { usePlaceOrder } from "./use-place-order"
 import { defaultTokenIn, defaultTokenOut } from "./utils"
+import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
 
 export default function LimitPage() {
   const [amountOut, setAmountOut] = useState<number>()
@@ -134,7 +135,7 @@ export default function LimitPage() {
             <TabsTrigger value="history">Order History</TabsTrigger>
           </TabsList>
           <TabsContent value="open">
-            <OpenOrdersTableShell data={dummyData} />
+            {/* <OpenOrdersTableShell page={1} data={dummyData} /> */}
           </TabsContent>
         </Tabs>
       </section>
