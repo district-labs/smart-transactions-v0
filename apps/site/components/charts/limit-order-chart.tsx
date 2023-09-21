@@ -1,10 +1,10 @@
 "use client"
 
-import { LineChart } from "@tremor/react"
 import { useEffect, useState } from "react"
+import { LineChart } from "@tremor/react"
 
-import { useChart } from "@/hooks/use-chart"
 import { calculatePeriod, formatDate, formatPrice } from "@/lib/utils"
+import { useChart } from "@/hooks/use-chart"
 
 import {
   ChartTimeFilters,
@@ -14,12 +14,12 @@ import {
 export default function LimitOrderChart() {
   const [chartRange, setChartRange] =
     useState<ChartTimeFiltersOptions["range"]>("30d")
-  const [chartData, setChartData] = useState<{
-    timestamp: string;
-    price: number;
-  }[]>([])
-
-
+  const [chartData, setChartData] = useState<
+    {
+      timestamp: string
+      price: number
+    }[]
+  >([])
 
   const { data, refetch } = useChart({
     coins: {

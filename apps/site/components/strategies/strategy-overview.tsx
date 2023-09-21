@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react"
 
-import { getCoinMarketChart } from "@/app/_actions/gecko"
 import { formatPrice } from "@/lib/utils"
+import { getCoinMarketChart } from "@/app/_actions/gecko"
 
 import {
   ChartTimeFilters,

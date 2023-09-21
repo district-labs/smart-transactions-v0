@@ -1,5 +1,6 @@
 import { type Strategy } from "@/db/schema"
 
+import { toTitleCase } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -19,7 +20,6 @@ import {
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { toTitleCase } from "@/lib/utils"
 
 interface StrategyActionsProps {
   strategy: Partial<Strategy>
