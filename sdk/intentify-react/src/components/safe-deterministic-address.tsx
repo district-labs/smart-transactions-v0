@@ -1,7 +1,6 @@
-import { useGetSafeAddress } from "..";
-import { useIsSafeMaterialized } from "@/hooks/use-is-safe-materialized";
-import { cn } from "@/utils";
 import * as React from "react";
+import { useGetSafeAddress } from "..";
+import { cn } from "../utils";
 
 type SafeDeterministicAddress = React.HTMLAttributes<HTMLElement>;
 

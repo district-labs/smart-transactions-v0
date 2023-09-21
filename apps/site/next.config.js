@@ -6,6 +6,7 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding")
     return config
   },
+  transpilePackages: ["@district-labs/intentify-react"],
 }
 
 module.exports = nextConfig

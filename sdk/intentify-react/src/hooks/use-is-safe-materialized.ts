@@ -1,8 +1,8 @@
+import { useAccount, useChainId } from "wagmi";
+import { useWalletFactoryIsWalletMaterialized } from "../blockchain";
 import { ADDRESS_ZERO, DEFAULT_SALT } from "../data";
 import { useGetSafeProxyAddress } from "./use-get-safe-proxy-address";
 import { useGetWalletFactoryAddress } from "./use-get-wallet-factory-address";
-import { useWalletFactoryIsWalletMaterialized } from "@/blockchain";
-import { useAccount, useChainId } from "wagmi";
 
 export function useIsSafeMaterialized(watch = true) {
   const chainId = useChainId();

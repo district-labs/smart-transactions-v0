@@ -34,7 +34,7 @@ const dummyData = [
     },
     limitPrice: "1000",
     expiry: "October 21, 2023",
-    status: "open",
+    status: "open" as const,
   },
   {
     sell: {
@@ -47,7 +47,7 @@ const dummyData = [
     },
     limitPrice: "1000",
     expiry: "October 21, 2023",
-    status: "open",
+    status: "open" as const,
   },
 ]
 
@@ -153,7 +153,7 @@ export default function LimitPage() {
             <TabsTrigger value="history">Order History</TabsTrigger>
           </TabsList>
           <TabsContent value="open">
-            <OpenOrdersTableShell data={dummyData} />
+            <OpenOrdersTableShell pageCount={1} data={dummyData} />
           </TabsContent>
         </Tabs>
       </section>

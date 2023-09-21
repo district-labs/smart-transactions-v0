@@ -57,7 +57,8 @@ export function isMacOs() {
   return window.navigator.userAgent.includes("Mac")
 }
 
-export function toTitleCase(str: string) {
+export function toTitleCase(str: string | undefined) {
+  if (!str) return ""
   return str.replace(
     /\w\S*/g,
     (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase()
