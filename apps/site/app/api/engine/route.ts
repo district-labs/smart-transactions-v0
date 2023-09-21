@@ -41,7 +41,6 @@ async function calculateAndDispatch() {
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function GET(req: Request) {
   const res = new Response()
-
   // await calculateAndDispatch()
 
   console.log("Hello from Cron Job")
