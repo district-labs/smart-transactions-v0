@@ -2,7 +2,7 @@
 
 import { useTransition } from "react"
 import { db } from "@/db"
-import { strategies, Strategy } from "@/db/schema"
+import { strategies, type Strategy } from "@/db/schema"
 import { faker } from "@faker-js/faker"
 
 import { catchError } from "@/lib/utils"

@@ -2,28 +2,15 @@ import { type NextRequest } from "next/server"
 import { db } from "@/db"
 import { users } from "@/db/schema"
 import { eq } from "drizzle-orm"
+import { getIronSession } from "iron-session"
+
+import { ironOptions } from "@/lib/session"
 
 export async function GET(req: NextRequest) {
-  try {
-    const address = req.nextUrl.searchParams.get("address")
-    const user = await db.query.users.findFirst({
-      columns: {
-        address: true,
-        firstName: true,
-      },
-      where: eq(users.address, address as string),
-    })
+  const res = new Response()
+  const session = await getIronSession(req, res, ironOptions)
 
-    if (!user) {
-      throw new Error("Could not find user.")
-    }
-
-    return new Response(JSON.stringify(user))
-  } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : String(err)
-    console.error(errorMessage)
-    return new Response("Erorr updating user", { status: 500 })
-  }
+  return new Response(JSON.stringify({ user: session.user }))
 }
 
 export async function POST(req: Request) {

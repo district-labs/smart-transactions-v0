@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server"
+import { type NextRequest } from "next/server"
 import { db } from "@/db"
 import { strategies } from "@/db/schema"
 import { desc, like } from "drizzle-orm"

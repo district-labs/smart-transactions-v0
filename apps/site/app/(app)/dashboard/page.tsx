@@ -16,6 +16,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import TokenPriceChart from "@/components/charts/token-price-chart"
+import DashboardOverview from "@/components/dashboard-overview"
 import { Icons } from "@/components/icons"
 
 export const metadata: Metadata = {
@@ -38,22 +39,7 @@ export default async function DashboardPage() {
   return (
     <>
       <section id="overview" aria-label="overview-heading">
-        <h2 className="text-2xl tracking-tight sm:text-3xl">Overview</h2>
-        <div className="flex flex-col justify-between md:flex-row md:items-end">
-          <dl className="mt-4 flex max-w-2xl gap-x-8 divide-x lg:mx-0 lg:max-w-none">
-            <div className="flex flex-col gap-y-2">
-              <dt className="text-sm leading-6">Current Balance</dt>
-              <dd className="text-3xl font-semibold tracking-tight">$24,789</dd>
-            </div>
-            <div className="flex flex-col gap-y-2 pl-6">
-              <dt className="text-sm leading-6">Return (chart value)</dt>
-              <dd className="text-3xl font-semibold tracking-tight">
-                $12,345.00
-              </dd>
-              <span>27.2%</span>
-            </div>
-          </dl>
-        </div>
+        <DashboardOverview />
         <TokenPriceChart />
         <div className="my-2 md:my-4">
           <p className="text-muted-foreground">Compare with:</p>

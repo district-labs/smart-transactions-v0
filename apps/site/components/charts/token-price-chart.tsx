@@ -4,7 +4,6 @@ import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { LineChart } from "@tremor/react"
 
-import { getTokenChartData } from "@/lib/fetchers"
 import { formatPrice } from "@/lib/utils"
 
 import ChartLoadingSkeleton from "./chart-loading-skeleton"
@@ -20,11 +19,17 @@ export default function TokenPriceChart() {
   const chartDataQuery = useQuery({
     queryKey: ["tokenChart", chartRange],
     queryFn: () =>
-      getTokenChartData({
-        coins: { chainId: 1, type: "native" },
-        period: chartRange,
-        spanDataPoints: 50,
-      }),
+      fetch("/api/token/chart-data", {
+        method: "POST",
+        body: JSON.stringify({
+          coins: { chainId: 1, type: "native" },
+          period: chartRange,
+          spanDataPoints: 50,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => res.json()),
   })
 
   if (chartDataQuery.status === "error") return <p>Failed to load chart</p>

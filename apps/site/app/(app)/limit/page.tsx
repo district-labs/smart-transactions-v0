@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Token } from "@/types"
+import { type Token } from "@/types"
 import { SelectValue } from "@radix-ui/react-select"
 import { type Address } from "viem"
 

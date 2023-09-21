@@ -1,4 +1,4 @@
-import { CoinsInput } from "@/types"
+import { type CoinsInput } from "@/types"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { z } from "zod"
