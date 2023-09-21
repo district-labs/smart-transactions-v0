@@ -68,6 +68,7 @@ export const EnableSafeIntentModule = ({
 
   const { config } = usePrepareSafeExecTransaction({
     address: safeAddress,
+    value: BigInt(0),
     args: [
       safeAddress || safeAddressOverride || ADDRESS_ZERO, // to
       BigInt(0), // value

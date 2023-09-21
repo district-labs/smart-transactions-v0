@@ -1,4 +1,5 @@
 "use client";
+
 import type { IntentBatch } from "@district-labs/intentify-utils";
 import { constants } from "ethers";
 import * as React from "react";
@@ -85,13 +86,14 @@ export const CancelIntentBundle = ({
 
   const { config } = usePrepareSafeExecTransaction({
     address: safeAddress,
+    value: BigInt(0),
     args: [...TRANSACTION, signature.signature],
     enabled: signature.signed,
-    onSuccess: (data) => {
-      onSuccess?.(data);
+    onSuccess: (value: any) => {
+      onSuccess?.(value);
     },
-    onError: (data) => {
-      onError?.(data);
+    onError: (value: any) => {
+      onError?.(value);
     },
   });
 
