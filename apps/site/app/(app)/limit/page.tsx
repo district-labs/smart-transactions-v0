@@ -19,10 +19,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import TokenInputAmount from "@/components/blockchain/token-input-amount"
 import LimitOrderChart from "@/components/charts/limit-order-chart"
 import { Icons } from "@/components/icons"
+import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
 
 import { usePlaceOrder } from "./use-place-order"
 import { defaultTokenIn, defaultTokenOut } from "./utils"
-import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
 
 export default function LimitPage() {
   const [amountOut, setAmountOut] = useState<number>()

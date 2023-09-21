@@ -35,7 +35,8 @@ export function usePlaceOrder({
   const intentifyAddress: `0x{string}` = useGetIntentifyModuleAddress(chainId)
   const timestampBeforeIntentAddress: `0x{string}` =
     useGetIntentTimestampBeforeAddress(chainId)
-  const limitOrderIntentAddress: `0x{string}` = useGetIntentLimitOrderAddress(chainId)
+  const limitOrderIntentAddress: `0x{string}` =
+    useGetIntentLimitOrderAddress(chainId)
   const tokenRouterReleaseIntentAddress: `0x{string}` =
     useGetIntentTokenRouterAddress(chainId)
 
