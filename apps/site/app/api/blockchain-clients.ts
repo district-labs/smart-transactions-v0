@@ -1,9 +1,11 @@
 import { createWalletClient, http } from "viem"
 import type { WalletClient } from "viem"
-import { privateKeyToAccount } from 'viem/accounts'
+import { privateKeyToAccount } from "viem/accounts"
 import { goerli, mainnet } from "viem/chains"
 
-const account = privateKeyToAccount(process.env.PRIVATE_KEY as `0x{string}` || '0x00')
+const account = privateKeyToAccount(
+  (process.env.PRIVATE_KEY as `0x{string}`) || "0x00"
+)
 
 const transportMainnet = http(
   `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`

@@ -1,7 +1,7 @@
 import { db } from ".."
 
-export const selectAllIntentBatchQuery =
-  db.query.intentBatchRelations.findMany({
+export const selectAllIntentBatchQuery = db.query.intentBatchRelations.findMany(
+  {
     with: {
       intentBatch: {
         with: {
@@ -9,7 +9,8 @@ export const selectAllIntentBatchQuery =
         },
       },
     },
-  })
+  }
+)
 
 export type SelectAllIntentBatchQuery = Awaited<
   ReturnType<typeof selectAllIntentBatchQuery.execute>
