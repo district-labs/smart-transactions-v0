@@ -16,8 +16,17 @@ export async function GET(req: NextRequest) {
 export async function POST(req: Request) {
   try {
     const data = await req.json()
-    await db.update(users).set(data).where(eq(users.address, data.address))
-    // TODO add upsert
+
+    // Check if user exists
+    const existingUser = await db.query.users.findFirst({
+      where: eq(users.address, data.address),
+    })
+
+    if (existingUser) {
+      await db.update(users).set(data).where(eq(users.address, data.address))
+    } else {
+      await db.insert(users).values(data)
+    }
 
     return new Response(JSON.stringify({ ok: true }))
   } catch (err) {
