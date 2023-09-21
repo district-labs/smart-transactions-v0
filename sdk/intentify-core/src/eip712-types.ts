@@ -34,4 +34,4 @@ export const eip712Types = {
     { name: 'signature', type: 'Signature' },
     { name: 'hooks', type: 'Hook[]' },
   ],
-};
+} as const;
