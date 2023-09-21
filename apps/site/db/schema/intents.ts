@@ -1,6 +1,5 @@
 import { relations } from "drizzle-orm"
 import {
-  boolean,
   char,
   int,
   json,
@@ -8,8 +7,53 @@ import {
   serial,
   text,
   timestamp,
-  varchar,
+  varchar
 } from "drizzle-orm/mysql-core"
+import { strategies } from "."
+
+export const intentBatch = mysqlTable("intent_batch", {
+  id: serial("id").primaryKey(),
+  root: char("root", { length: 42 }).notNull(),
+  nonce: char("nonce", { length: 66 }).notNull(),
+  chainId: int("chain_id").notNull(),
+  signature: text("signature").notNull(),
+  cancelledTxHash: char("cancelled_tx_hash", { length: 66 }).unique(),
+  strategyId: int("strategy_id").notNull(),
+})
+
+export const intentBatchRelations = relations(intentBatch, ({ one, many }) => ({
+  intents: many(intents),
+  strategy: one(strategies, {
+    fields: [intentBatch.strategyId],
+    references: [strategies.id],
+  }),
+  intentBatchExecution: one(intentBatchExecution, {
+    fields: [intentBatch.id],
+    references: [intentBatchExecution.intentBatchId],
+  }),
+}))
+
+export type IntentBatch = typeof intentBatch.$inferSelect
+export type NewIntentBatch = typeof intentBatch.$inferInsert
+
+export const intentBatchExecution = mysqlTable("intent_batch_execution", {
+  id: serial("id").primaryKey(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  executedTxHash: char("executedTxHash", { length: 66 }).unique(),
+  executedAt: timestamp("executed_at"),
+  intentBatchId: int("intent_batch_id"),
+})
+
+export const intentBatchExecutionRelations = relations(
+  intentBatchExecution,
+  ({ many }) => ({
+    hooks: many(hooks),
+  })
+)
+
+export type IntentBatchExecution = typeof intentBatchExecution.$inferSelect
+export type NewIntentBatchExecution = typeof intentBatchExecution.$inferInsert
 
 export const hooks = mysqlTable("hooks", {
   id: serial("id").primaryKey(),
@@ -59,41 +103,3 @@ export const intentsRelations = relations(intents, ({ one }) => ({
 export type Intent = typeof intents.$inferSelect
 export type NewIntent = typeof intents.$inferInsert
 
-export const intentBatch = mysqlTable("intent_batch", {
-  id: serial("id").primaryKey(),
-  root: char("root", { length: 42 }).notNull(),
-  // Dimensional nonce
-  nonce: char("nonce", { length: 66 }).notNull(),
-  intentBatchExecutionId: int("intent_batch_execution_id").notNull(),
-})
-
-export const intentBatchRelations = relations(intentBatch, ({ many }) => ({
-  intents: many(intents),
-}))
-
-export type IntentBatch = typeof intentBatch.$inferSelect
-export type NewIntentBatch = typeof intentBatch.$inferInsert
-
-export const intentBatchExecution = mysqlTable("intent_batch_execution", {
-  id: serial("id").primaryKey(),
-  chainId: int("chain_id").notNull(),
-  signature: text("signature").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-  executed: boolean("executed").notNull().default(false),
-  cancelled: boolean("cancelled").notNull().default(false),
-  executedAt: timestamp("executed_at"),
-})
-
-export const intentBatchExecutionRelations = relations(
-  intentBatchExecution,
-  ({ one, many }) => ({
-    intentBatch: one(intentBatch, {
-      fields: [intentBatchExecution.id],
-      references: [intentBatch.intentBatchExecutionId],
-    }),
-    hooks: many(hooks),
-  })
-)
-
-export type IntentBatchExecution = typeof intentBatchExecution.$inferSelect
-export type NewIntentBatchExecution = typeof intentBatchExecution.$inferInsert

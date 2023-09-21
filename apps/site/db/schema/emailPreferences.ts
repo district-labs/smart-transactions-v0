@@ -8,7 +8,6 @@ import {
 
 export const emailPreferences = mysqlTable("email_preferences", {
   id: serial("id").primaryKey(),
-  token: varchar("token", { length: 255 }).notNull(),
   newsletter: boolean("newsletter"),
   marketing: boolean("marketing"),
   transactional: boolean("transactional"),

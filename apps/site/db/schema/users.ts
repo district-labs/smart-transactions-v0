@@ -7,9 +7,7 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core"
 
-import { emailPreferences } from "./emailPreferences"
-import { investments } from "./investments"
-import { strategies } from "./strategies"
+import { emailPreferences, strategies } from "."
 
 export const users = mysqlTable("users", {
   address: char("address", { length: 42 }).primaryKey(),
@@ -26,7 +24,6 @@ export type NewUser = typeof users.$inferInsert
 
 export const usersRelations = relations(users, ({ one, many }) => ({
   strategies: many(strategies),
-  investments: many(investments),
   emailPreferences: one(emailPreferences, {
     fields: [users.address],
     references: [emailPreferences.userId],
