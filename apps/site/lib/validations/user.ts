@@ -12,8 +12,3 @@ export const userSchema = z.object({
   }),
   about: z.string().optional(),
 })
-
-export const getUserSchema = z.object({
-  id: z.number(),
-  address: z.string(),
-})
