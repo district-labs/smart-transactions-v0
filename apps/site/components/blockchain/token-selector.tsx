@@ -36,7 +36,7 @@ export default function TokenSelector({
   const { chain } = useNetwork()
   const [open, setOpen] = useState(false)
   const [searchValue, setSearchValue] = useState("")
-  const [tokenListIndex, _] = useState(0)
+  const [tokenListIndex, _setTokenListIndex] = useState(0)
 
   const tokenList = useMemo(
     () =>

@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils"
 import useScroll from "@/hooks/use-scroll"
 import { ProfileButton } from "@/components/auth/profile-button"
-import { Combobox } from "@/components/combobox"
 import { AppNav } from "@/components/layouts/app-nav"
 import MobileAppNav from "@/components/layouts/mobile-app-nav"
 

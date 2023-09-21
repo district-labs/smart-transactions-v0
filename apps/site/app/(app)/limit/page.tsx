@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import TokenInputAmount from "@/components/blockchain/token-input-amount"
-import TokenSelector from "@/components/blockchain/token-selector"
 import TokenPriceChart from "@/components/charts/token-price-chart"
 import { Icons } from "@/components/icons"
 import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"

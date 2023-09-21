@@ -2,33 +2,14 @@ import { notFound } from "next/navigation"
 import { db } from "@/db"
 import { strategies, users } from "@/db/schema"
 import { eq } from "drizzle-orm"
-import { char } from "drizzle-orm/mysql-core"
 
-import { toTitleCase } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Breadcrumbs } from "@/components/breadcrumbs"
-import DashboardChart from "@/components/charts/dashboard-chart"
 import { Icons } from "@/components/icons"
 import StrategyActions from "@/components/strategies/strategy-actions"
 import StrategyOverview from "@/components/strategies/strategy-overview"
@@ -94,7 +75,7 @@ export default async function StrategyPage({ params }: StrategyPageProps) {
         aria-label="strategy-heading"
         className="my-8 grid grid-cols-3 gap-8"
       >
-        <StrategyOverview {...strategy} />
+        <StrategyOverview />
         <StrategyActions strategy={strategy} />
       </section>
       <section

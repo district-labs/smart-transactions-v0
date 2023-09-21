@@ -1,13 +1,13 @@
 import Balancer from "react-wrap-balancer"
 
-interface StrategiesPageProps {
-  searchParams: {
-    [key: string]: string | string[] | undefined
-  }
-}
+// interface StrategiesPageProps {
+//   searchParams?: {
+//     [key: string]: string | string[] | undefined
+//   }
+// }
 
-export default function StrategiesPage({ searchParams }: StrategiesPageProps) {
-  const { page, per_page, sort, category, assets_range } = searchParams
+export default function StrategiesPage() {
+  // const { page, per_page, sort, category, assets_range } = searchParams
 
   // Strategies transaction
   // const limit = typeof per_page === "string" ? parseInt(per_page) : 8

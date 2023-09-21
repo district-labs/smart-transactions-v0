@@ -2,9 +2,6 @@ import {
   type QueryObserverResult,
   type RefetchOptions,
   type RefetchQueryFilters,
-  type QueryObserverResult,
-  type RefetchOptions,
-  type RefetchQueryFilters,
 } from "@tanstack/react-query"
 
 import { Toggle } from "../ui/toggle"

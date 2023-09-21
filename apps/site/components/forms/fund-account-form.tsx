@@ -62,7 +62,10 @@ export function FundAccountForm() {
         {isSafeDeployed ? (
           <Icons.check className="h-5 w-5 text-primary" />
         ) : (
-          <DeploySafe salt={BigInt(0)} onSuccess={() => updateUserMutation.mutate()}>
+          <DeploySafe
+            salt={BigInt(0)}
+            onSuccess={() => updateUserMutation.mutate()}
+          >
             <Button>Deploy</Button>
           </DeploySafe>
         )}
