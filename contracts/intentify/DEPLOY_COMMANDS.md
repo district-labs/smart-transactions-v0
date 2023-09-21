@@ -15,3 +15,6 @@ script/intents/TimestampBeforeIntentDeploy.s.sol:TimestampBeforeIntentDeploy --r
 
 // forge script script/intents/TokenRouterReleaseIntentDeploy.s.sol:TokenRouterReleaseIntentDeploy --fork-url http://localhost:8545 --broadcast // forge script
 script/intents/TokenRouterReleaseIntentDeploy.s.sol:TokenRouterReleaseIntentDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify
+
+// forge script script/UniswapV3PoolDeploy.s.sol:UniswapV3PoolDeploy --fork-url http://localhost:8545 --broadcast // forge script
+script/UniswapV3PoolDeploy.s.sol:UniswapV3PoolDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify

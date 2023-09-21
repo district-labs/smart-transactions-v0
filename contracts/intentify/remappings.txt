@@ -1,5 +1,5 @@
 @prb/test/=lib/prb-test/src/
 forge-std/=lib/forge-std/src/
 solady/=lib/solady/src/
-@openzeppelin/=lib/openzeppelin-contracts/contracts
+@openzeppelin/=lib/openzeppelin-contracts
 safe-contracts/=lib/safe-contracts/contracts

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import { ReentrancyGuard } from "@openzeppelin/security/ReentrancyGuard.sol";
+import { ReentrancyGuard } from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 
 import {
