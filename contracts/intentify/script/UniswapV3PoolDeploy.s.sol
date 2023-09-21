@@ -2,6 +2,7 @@
 pragma solidity >=0.8.19;
 
 import { TickMath } from "@uniswap/v3-core/contracts/libraries/TickMath.sol";
+import { TransferHelper } from "v3-periphery/libraries/TransferHelper.sol";
 import { INonfungiblePositionManager } from "v3-periphery/interfaces/INonfungiblePositionManager.sol";
 import { IUniswapV3Factory } from "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
 import { IUniswapV3Pool } from "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
@@ -22,14 +23,16 @@ contract UniswapV3PoolDeploy is Script {
         ERC20Mintable disWETH = new ERC20Mintable("Test WETH","testWETH",18);
 
         uint24 poolFee = uint24(3000);
+        uint160 sqrtPriceX96 = TickMath.getSqrtRatioAtTick(TickMath.MAX_TICK);
 
         address uniswapV3PoolAddress =
-            IUniswapV3Factory(uniswapV3Factory).createPool(address(disUSDC), address(disWETH), poolFee);
+            IUniswapV3Factory(uniswapV3Factory).createPool(address(disUSDC), address(disWETH), poolFee );
 
         IUniswapV3Pool uniswapV3Pool = IUniswapV3Pool(uniswapV3PoolAddress);
+        uniswapV3Pool.initialize(sqrtPriceX96);
 
         // Mint to TESTING account
-        address metamask = 0x8C46e53dC60EC32e8DD67Fb11f076fF3EcDc5211;
+        address metamask = 0xbcB93066f45d7e10DABBd233c4898509cf271216;
         disUSDC.mint(metamask, 10_000e6);
         disWETH.mint(metamask, 10_000e18);
 
@@ -37,12 +40,14 @@ contract UniswapV3PoolDeploy is Script {
         // Mint to DEPLOYER address
         disUSDC.mint(address(executor), 10_000e6);
         disWETH.mint(address(executor), 10_000e18);
-        disUSDC.approve(address(nonfungiblePositionManager), type(uint256).max);
-        disWETH.approve(address(nonfungiblePositionManager), type(uint256).max);
+        TransferHelper.safeApprove(address(disUSDC), address(nonfungiblePositionManager), 10_000e6);
+        TransferHelper.safeApprove(address(disWETH), address(nonfungiblePositionManager), 10_000e18);
+        // disUSDC.approve(address(nonfungiblePositionManager), type(uint256).max);
+        // disWETH.approve(address(nonfungiblePositionManager), type(uint256).max);
 
-        address recipient = address(this);
-        uint256 amount0Desired = 100e6;
-        uint256 amount1Desired = 15_000e18;
+        address recipient = address(metamask);
+        uint256 amount0Desired = 1000;
+        uint256 amount1Desired = 1000;
 
         INonfungiblePositionManager.MintParams memory params = INonfungiblePositionManager.MintParams({
             token0: address(disUSDC),
