@@ -1,10 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Strategy } from "@/db/schema"
 
-import { formatPrice } from "@/lib/utils"
 import { getCoinMarketChart } from "@/app/_actions/gecko"
+import { formatPrice } from "@/lib/utils"
 
 import {
   ChartTimeFilters,
@@ -25,7 +24,7 @@ export default function StrategyOverview({
 }: StrategyOverviewProps) {
   const [chartData, setChartData] = useState<[number, number][] | null>(null)
   const [chartRange, setChartRange] =
-    useState<ChartTimeFiltersOptions["range"]>("30")
+    useState<ChartTimeFiltersOptions["range"]>("30d")
 
   const fetchChartData = async () => {
     for (const coin of coins) {

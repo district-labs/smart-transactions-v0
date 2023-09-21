@@ -9,6 +9,7 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
+  transpilePackages: ["@district-labs/intentify-react"],
 }
 
 module.exports = nextConfig

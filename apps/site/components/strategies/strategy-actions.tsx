@@ -1,6 +1,5 @@
 import { type Strategy } from "@/db/schema"
 
-import { toTitleCase } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -20,6 +19,7 @@ import {
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { toTitleCase } from "@/lib/utils"
 
 interface StrategyActionsProps {
   strategy: Partial<Strategy>
@@ -41,7 +41,7 @@ export default function StrategyActions({ strategy }: StrategyActionsProps) {
           <CardContent className="grid gap-6">
             <div className="grid gap-2">
               <Label htmlFor="deposit">
-                {toTitleCase(strategy.coins[0])} Deposit{" "}
+                {toTitleCase(strategy?.coins?.[0])} Deposit{" "}
               </Label>
               <Input id="deposit" type="number" placeholder="0.0" />
             </div>

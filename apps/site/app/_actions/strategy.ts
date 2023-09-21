@@ -1,11 +1,11 @@
 "use server"
 
 import { db } from "@/db"
-import { strategies, Strategy } from "@/db/schema"
+import { strategies, type Strategy } from "@/db/schema"
 import { and, asc, desc, gte, inArray, like, lte, sql } from "drizzle-orm"
-import { z } from "zod"
+import { type z } from "zod"
 
-import { getStrategiesSchema } from "@/lib/validations/strategy"
+import { type getStrategiesSchema } from "@/lib/validations/strategy"
 
 export async function filterStrategiesAction(query: string) {
   if (query.length === 0) return null

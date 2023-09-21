@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Token } from "@/types"
+import { type Token } from "@/types"
 import { SelectValue } from "@radix-ui/react-select"
 import { type Address } from "viem"
 
@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import TokenInputAmount from "@/components/blockchain/token-input-amount"
-import TokenSelector from "@/components/blockchain/token-selector"
 import LimitOrderChart from "@/components/charts/limit-order-chart"
 import { Icons } from "@/components/icons"
 import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
@@ -34,7 +33,7 @@ const dummyData = [
     },
     limitPrice: "1000",
     expiry: "October 21, 2023",
-    status: "open",
+    status: "open" as const,
   },
   {
     sell: {
@@ -47,7 +46,7 @@ const dummyData = [
     },
     limitPrice: "1000",
     expiry: "October 21, 2023",
-    status: "open",
+    status: "open" as const,
   },
 ]
 
@@ -153,7 +152,7 @@ export default function LimitPage() {
             <TabsTrigger value="history">Order History</TabsTrigger>
           </TabsList>
           <TabsContent value="open">
-            <OpenOrdersTableShell data={dummyData} />
+            <OpenOrdersTableShell pageCount={1} data={dummyData} />
           </TabsContent>
         </Tabs>
       </section>
