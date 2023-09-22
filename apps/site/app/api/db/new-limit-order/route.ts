@@ -6,8 +6,6 @@ import { newLimitOrderSchema } from "@/lib/validations/db/new-limit-order"
 
 // import { ironOptions } from "@/lib/session"
 
-
-
 export async function POST(req: Request) {
   try {
     // const res = new Response(JSON.stringify({ ok: true }))
@@ -54,8 +52,7 @@ export async function POST(req: Request) {
 
       await tx.insert(intentsDb).values(
         intents.map((intent) => ({
-          name: intent.name,
-          version: intent.version,
+          intentId: intent.intentId,
           intentArgs: intent.intentArgs,
           root: intent.root,
           target: intent.target,

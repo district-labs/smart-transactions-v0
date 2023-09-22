@@ -6,7 +6,7 @@ import {
   useGetIntentTimestampBeforeAddress,
   useGetIntentTokenRouterAddress,
 } from "@district-labs/intentify-react"
-import { generateIntentBatchEIP712 } from "@district-labs/intentify-utils"
+import { generateIntentBatchEIP712, generateIntentModuleId } from "@district-labs/intentify-utils"
 import { useMutation } from "@tanstack/react-query"
 import { encodeAbiParameters, encodePacked, parseUnits } from "viem"
 import { useSignTypedData } from "wagmi"
@@ -57,8 +57,7 @@ export function usePlaceOrder({
       chainId,
       intents: [
         {
-          name: "TimestampBeforeIntent",
-          version: "0.0.1",
+          intentId: generateIntentModuleId("TimestampBeforeIntent", "1"),
           root: intentifyAddress,
           target: timestampBeforeIntentAddress,
           data: encodePacked(["uint128"], [BigInt(expiryTimestamp)]),
@@ -72,8 +71,7 @@ export function usePlaceOrder({
           ],
         },
         {
-          name: "TokenRouterReleaseIntent",
-          version: "0.0.1",
+          intentId: generateIntentModuleId("TokenRouterReleaseIntent", "1"),
           root: intentifyAddress,
           target: tokenRouterReleaseIntentAddress,
           data: encodeAbiParameters(
@@ -98,8 +96,7 @@ export function usePlaceOrder({
           ],
         },
         {
-          name: "LimitOrderIntent",
-          version: "0.0.1",
+          intentId: generateIntentModuleId("LimitOrderIntent", "1"),
           root: intentifyAddress,
           target: limitOrderIntentAddress,
           data: encodeAbiParameters(

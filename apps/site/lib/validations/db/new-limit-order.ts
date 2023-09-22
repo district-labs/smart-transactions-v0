@@ -11,8 +11,7 @@ export const newLimitOrderSchema = z.object({
     signature: z.string(),
     intents: z.array(
       z.object({
-        name: z.string(),
-        version: z.string(),
+        intentId: z.string(),
         root: z.string(),
         target: z.string(),
         value: z.string(),
