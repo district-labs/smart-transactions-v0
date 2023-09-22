@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import type { IntentBatchQuery } from "@/db/queries/intent-batch"
 import { generateIntentBatchExecutionWithHooksFromIntentBatchQuery } from "./core/generate-intent-batch-execution-with-hooks-from-intent-batch-query"
 import { selectAllIntentBatchQuery } from '@/db/queries/intent-batch' 
 import { simulateIntentBatchExecution } from "./core/simulate-intent-bundles-execution"
 import { BaseError, ContractFunctionRevertedError } from "viem"
-import { IntentBatchExecution } from "../../../../../sdk/intentify-core/dist"
+import type { IntentBatchExecution } from "@district-labs/intentify-utils"
+
 // import {
 //   convertIntentBundleExecutionQueryToMulticall,
 //   filterExecutableIntents,

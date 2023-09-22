@@ -1,6 +1,5 @@
 import {
-  IntentBatchQuery,
-  SelectAllIntentBatchQuery,
+  IntentBatchQuery
 } from "@/db/queries/intent-batch"
 import type { Hook } from "@district-labs/intentify-utils"
 import { generateHooksForLimitOrderBasic } from "./intent-hooks/generate-hooks-for-limit-order-basic"
@@ -27,10 +26,11 @@ export function generateIntentBatchExecutionWithHooksFromIntentBatchQuery(
 }
 
 function generateHooksForIntentBatch(
-  intentBatch: SelectAllIntentBatchQuery
+  intentBatch: IntentBatchQuery
 ): Hook[] {
-  switch (intentBatch.intent) {
-    case "0x00000000":
+  switch (intentBatch.strategyId) {
+    // case "limit-order-basic
+    case 1:
       return generateHooksForLimitOrderBasic(intentBatch.chainId)
     default:
       throw new Error(`No hooks for intentBatch ${intentBatch.id}`)
