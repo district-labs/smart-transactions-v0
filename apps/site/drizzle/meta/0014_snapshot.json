@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "4bc562a7-6433-418e-8267-1826747145a2",
-  "prevId": "512399b9-d98c-41ff-8650-92792f8fe27b",
+  "id": "841ab19b-4514-406d-9d72-c3cb874a6952",
+  "prevId": "4bc562a7-6433-418e-8267-1826747145a2",
   "tables": {
     "email_preferences": {
       "name": "email_preferences",
@@ -189,7 +189,7 @@
           "name": "id",
           "type": "char(66)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "name": {
@@ -244,7 +244,14 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "intents_id": {
+          "name": "intents_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "investments": {
@@ -470,19 +477,6 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {
-      "\"email_preferences\".\"createdAt\"": "\"email_preferences\".\"created_at\"",
-      "\"email_preferences\".\"userId\"": "\"email_preferences\".\"user_id\"",
-      "\"investments\".\"createdAt\"": "\"investments\".\"created_at\"",
-      "\"investments\".\"userId\"": "\"investments\".\"user_id\"",
-      "\"investments\".\"strategyId\"": "\"investments\".\"strategy_id\"",
-      "\"strategies\".\"performanceFee\"": "\"strategies\".\"performance_fee\"",
-      "\"strategies\".\"platformFee\"": "\"strategies\".\"platform_fee\"",
-      "\"strategies\".\"managerId\"": "\"strategies\".\"manager_id\"",
-      "\"strategies\".\"createdAt\"": "\"strategies\".\"created_at\"",
-      "\"users\".\"firstName\"": "\"users\".\"first_name\"",
-      "\"users\".\"lastName\"": "\"users\".\"last_name\"",
-      "\"users\".\"createdAt\"": "\"users\".\"created_at\""
-    }
+    "columns": {}
   }
 }

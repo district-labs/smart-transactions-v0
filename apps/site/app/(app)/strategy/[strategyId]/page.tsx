@@ -12,7 +12,6 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 import { Breadcrumbs } from "@/components/breadcrumbs"
 import { Icons } from "@/components/icons"
 import StrategyActions from "@/components/strategies/strategy-actions"
-import StrategyOverview from "@/components/strategies/strategy-overview"
 
 interface StrategyPageProps {
   params: {
@@ -71,7 +70,7 @@ export default async function StrategyPage({ params }: StrategyPageProps) {
         aria-label="strategy-heading"
         className="my-8 grid grid-cols-3 gap-8"
       >
-        <StrategyOverview />
+        {/* <StrategyOverview {...strategy} /> */}
         <StrategyActions strategy={strategy} />
       </section>
       <section

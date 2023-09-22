@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "4bc562a7-6433-418e-8267-1826747145a2",
-  "prevId": "512399b9-d98c-41ff-8650-92792f8fe27b",
+  "id": "f57300a6-509e-46f7-933a-fc8f86853d0c",
+  "prevId": "138dd90e-ad0f-481a-a945-54fbebec3cf3",
   "tables": {
     "email_preferences": {
       "name": "email_preferences",
@@ -93,6 +93,13 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "intent_batch_execution_id": {
+          "name": "intent_batch_execution_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -168,6 +175,21 @@
           "notNull": false,
           "autoincrement": false,
           "default": "(now())"
+        },
+        "executed": {
+          "name": "executed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "executed_at": {
+          "name": "executed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -189,7 +211,7 @@
           "name": "id",
           "type": "char(66)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "name": {
@@ -244,7 +266,14 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "intents_id": {
+          "name": "intents_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
       "uniqueConstraints": {}
     },
     "investments": {
@@ -470,19 +499,6 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {
-      "\"email_preferences\".\"createdAt\"": "\"email_preferences\".\"created_at\"",
-      "\"email_preferences\".\"userId\"": "\"email_preferences\".\"user_id\"",
-      "\"investments\".\"createdAt\"": "\"investments\".\"created_at\"",
-      "\"investments\".\"userId\"": "\"investments\".\"user_id\"",
-      "\"investments\".\"strategyId\"": "\"investments\".\"strategy_id\"",
-      "\"strategies\".\"performanceFee\"": "\"strategies\".\"performance_fee\"",
-      "\"strategies\".\"platformFee\"": "\"strategies\".\"platform_fee\"",
-      "\"strategies\".\"managerId\"": "\"strategies\".\"manager_id\"",
-      "\"strategies\".\"createdAt\"": "\"strategies\".\"created_at\"",
-      "\"users\".\"firstName\"": "\"users\".\"first_name\"",
-      "\"users\".\"lastName\"": "\"users\".\"last_name\"",
-      "\"users\".\"createdAt\"": "\"users\".\"created_at\""
-    }
+    "columns": {}
   }
 }

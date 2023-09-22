@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "4bc562a7-6433-418e-8267-1826747145a2",
-  "prevId": "512399b9-d98c-41ff-8650-92792f8fe27b",
+  "id": "07486794-2988-4455-a7b1-999ca239cea7",
+  "prevId": "aba405d4-56ae-44ba-86b4-54a0b3eb9280",
   "tables": {
     "email_preferences": {
       "name": "email_preferences",
@@ -13,13 +13,6 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": true
-        },
-        "token": {
-          "name": "token",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
         },
         "newsletter": {
           "name": "newsletter",
@@ -93,6 +86,13 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
+        },
+        "intent_batch_execution_id": {
+          "name": "intent_batch_execution_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -117,6 +117,13 @@
           "notNull": true,
           "autoincrement": true
         },
+        "root": {
+          "name": "root",
+          "type": "char(42)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "nonce": {
           "name": "nonce",
           "type": "char(66)",
@@ -124,8 +131,29 @@
           "notNull": true,
           "autoincrement": false
         },
-        "intent_batch_execution_id": {
-          "name": "intent_batch_execution_id",
+        "chain_id": {
+          "name": "chain_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "signature": {
+          "name": "signature",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "cancelled_tx_hash": {
+          "name": "cancelled_tx_hash",
+          "type": "char(66)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "strategy_id": {
+          "name": "strategy_id",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
@@ -142,7 +170,14 @@
           ]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "intent_batch_cancelled_tx_hash_unique": {
+          "name": "intent_batch_cancelled_tx_hash_unique",
+          "columns": [
+            "cancelled_tx_hash"
+          ]
+        }
+      }
     },
     "intent_batch_execution": {
       "name": "intent_batch_execution",
@@ -154,13 +189,6 @@
           "notNull": true,
           "autoincrement": true
         },
-        "signature": {
-          "name": "signature",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -168,6 +196,35 @@
           "notNull": false,
           "autoincrement": false,
           "default": "(now())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "executedTxHash": {
+          "name": "executedTxHash",
+          "type": "char(66)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "executed_at": {
+          "name": "executed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "intent_batch_id": {
+          "name": "intent_batch_id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -180,17 +237,24 @@
           ]
         }
       },
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "intent_batch_execution_executedTxHash_unique": {
+          "name": "intent_batch_execution_executedTxHash_unique",
+          "columns": [
+            "executedTxHash"
+          ]
+        }
+      }
     },
     "intents": {
       "name": "intents",
       "columns": {
         "id": {
           "name": "id",
-          "type": "char(66)",
+          "type": "serial",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": true,
+          "autoincrement": true
         },
         "name": {
           "name": "name",
@@ -234,6 +298,14 @@
           "notNull": false,
           "autoincrement": false
         },
+        "value": {
+          "name": "value",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 0
+        },
         "intent_batch_id": {
           "name": "intent_batch_id",
           "type": "int",
@@ -244,55 +316,9 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "investments": {
-      "name": "investments",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
-        "amount": {
-          "name": "amount",
-          "type": "decimal(10,2)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'0'"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "(now())"
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "strategy_id": {
-          "name": "strategy_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
       "compositePrimaryKeys": {
-        "investments_id": {
-          "name": "investments_id",
+        "intents_id": {
+          "name": "intents_id",
           "columns": [
             "id"
           ]
@@ -324,13 +350,6 @@
           "notNull": false,
           "autoincrement": false
         },
-        "intent_batch_execution_id": {
-          "name": "intent_batch_execution_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "category": {
           "name": "category",
           "type": "enum('strategy','portfolio')",
@@ -339,45 +358,6 @@
           "autoincrement": false,
           "default": "'strategy'"
         },
-        "assets": {
-          "name": "assets",
-          "type": "decimal(12,2)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'0'"
-        },
-        "coins": {
-          "name": "coins",
-          "type": "json",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "('[\"ethereum\"]')"
-        },
-        "performance_fee": {
-          "name": "performance_fee",
-          "type": "decimal(5,2)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'10.00'"
-        },
-        "platform_fee": {
-          "name": "platform_fee",
-          "type": "decimal(5,2)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'0.25'"
-        },
-        "manager_id": {
-          "name": "manager_id",
-          "type": "char(42)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -385,6 +365,13 @@
           "notNull": false,
           "autoincrement": false,
           "default": "(now())"
+        },
+        "manager_id": {
+          "name": "manager_id",
+          "type": "char(42)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -470,19 +457,6 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {
-      "\"email_preferences\".\"createdAt\"": "\"email_preferences\".\"created_at\"",
-      "\"email_preferences\".\"userId\"": "\"email_preferences\".\"user_id\"",
-      "\"investments\".\"createdAt\"": "\"investments\".\"created_at\"",
-      "\"investments\".\"userId\"": "\"investments\".\"user_id\"",
-      "\"investments\".\"strategyId\"": "\"investments\".\"strategy_id\"",
-      "\"strategies\".\"performanceFee\"": "\"strategies\".\"performance_fee\"",
-      "\"strategies\".\"platformFee\"": "\"strategies\".\"platform_fee\"",
-      "\"strategies\".\"managerId\"": "\"strategies\".\"manager_id\"",
-      "\"strategies\".\"createdAt\"": "\"strategies\".\"created_at\"",
-      "\"users\".\"firstName\"": "\"users\".\"first_name\"",
-      "\"users\".\"lastName\"": "\"users\".\"last_name\"",
-      "\"users\".\"createdAt\"": "\"users\".\"created_at\""
-    }
+    "columns": {}
   }
 }
