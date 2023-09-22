@@ -13,9 +13,9 @@ import {
 } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
-import DashboardOverview from "@/components/charts/dashboard-overview"
+import TokenPriceChart from "@/components/charts/token-price-chart"
+import DashboardOverview from "@/components/dashboard-overview"
 import { Icons } from "@/components/icons"
-import { GenerateButton } from "@/components/strategies/generate-button"
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
@@ -34,7 +34,24 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <DashboardOverview />
+      <section id="overview" aria-label="overview-heading">
+        <DashboardOverview />
+        <TokenPriceChart />
+        <div className="my-2 md:my-4">
+          <p className="text-muted-foreground">Compare with:</p>
+          <div className="mt-2 flex space-x-2">
+            <Button size="sm" className="h-7 bg-blue-500 px-10">
+              ETH
+            </Button>
+            <Button size="sm" className="h-7 bg-orange-500 px-10">
+              BTC
+            </Button>
+            <Button size="sm" className="h-7 bg-yellow-500 px-10">
+              S&P
+            </Button>
+          </div>
+        </div>
+      </section>
       <section
         id="strategy"
         aria-label="strategy-heading"
@@ -49,7 +66,6 @@ export default async function DashboardPage() {
               <Icons.plus className="mr-2 h-4 w-4" />
               New
             </Button>
-            <GenerateButton />
           </div>
           <Separator />
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">

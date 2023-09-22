@@ -1,12 +1,14 @@
-import type { NewLimitOrderSchema } from "@/lib/validations/db/new-limit-order"
-import { type Token } from "@/types"
+import { type DefiLlamaToken, type NewLimitOrder } from "@/types"
 import {
   useGetIntentifyModuleAddress,
   useGetIntentLimitOrderAddress,
   useGetIntentTimestampBeforeAddress,
   useGetIntentTokenRouterAddress,
 } from "@district-labs/intentify-react"
-import { generateIntentBatchEIP712, generateIntentModuleId } from "@district-labs/intentify-utils"
+import {
+  generateIntentBatchEIP712,
+  generateIntentModuleId,
+} from "@district-labs/intentify-utils"
 import { useMutation } from "@tanstack/react-query"
 import { encodeAbiParameters, encodePacked, parseUnits } from "viem"
 import { useSignTypedData } from "wagmi"
@@ -16,9 +18,9 @@ import { expiryToTimestamp } from "./utils"
 interface IUsePlaceOrder {
   expiry: string
   chainId: number
-  tokenOut: Token
+  tokenOut: DefiLlamaToken
   amountOut: number | undefined
-  tokenIn: Token
+  tokenIn: DefiLlamaToken
   amountIn: number | undefined
 }
 
@@ -147,7 +149,7 @@ export function usePlaceOrder({
     // @ts-ignore
     const signature = await signTypedDataAsync(intentBatchEIP712)
 
-    const body: NewLimitOrderSchema = {
+    const body: NewLimitOrder = {
       intentBatchEIP712,
       intentBatch: {
         ...intentBatch,

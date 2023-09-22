@@ -1,16 +1,14 @@
 "use client"
 
-import { useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { useAccount } from "wagmi"
 import { type z } from "zod"
 
 import { siteConfig } from "@/config/site"
-import { catchError } from "@/lib/utils"
 import { userSchema } from "@/lib/validations/user"
-import { updateUserAction } from "@/app/_actions/user"
 
 import { Icons } from "../icons"
 import { Button } from "../ui/button"
@@ -24,33 +22,42 @@ import {
 import { Input } from "../ui/input"
 import { toast } from "../ui/use-toast"
 
-type Inputs = z.infer<typeof userSchema>
+type UserInput = z.infer<typeof userSchema>
 
 export function UpdateUserForm() {
   const router = useRouter()
   const { address } = useAccount()
-  const [isPending, startTransition] = useTransition()
 
-  const form = useForm<Inputs>({
+  const form = useForm<UserInput>({
     resolver: zodResolver(userSchema),
   })
 
-  function onSubmit(data: Inputs) {
-    startTransition(async () => {
-      try {
-        await updateUserAction({
+  const updateUserMutation = useMutation({
+    mutationFn: (data: UserInput) => {
+      return fetch("/api/user", {
+        method: "POST",
+        body: JSON.stringify({
           ...data,
-          address: address as string,
-        })
+          address,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+    },
+    onSuccess: () => {
+      router.push(siteConfig.onboardingSteps[1].href)
+      toast({
+        description: "User info updated successfully.",
+      })
+    },
+  })
 
-        // Route to next step in onboarding
-        router.push(siteConfig.onboardingSteps[1].href)
-        toast({
-          description: "Info updated successfully.",
-        })
-      } catch (err) {
-        catchError(err)
-      }
+  function onSubmit({ firstName, lastName, email }: UserInput) {
+    updateUserMutation.mutate({
+      firstName,
+      lastName,
+      email,
     })
   }
 
@@ -103,8 +110,8 @@ export function UpdateUserForm() {
             message={form.formState.errors.email?.message}
           />
         </FormItem>
-        <Button disabled={isPending}>
-          {isPending && (
+        <Button disabled={updateUserMutation.isLoading}>
+          {updateUserMutation.isLoading && (
             <Icons.spinner
               className="mr-2 h-4 w-4 animate-spin"
               aria-hidden="true"

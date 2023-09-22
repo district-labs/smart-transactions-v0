@@ -8,7 +8,7 @@ import {
   type SetStateAction,
 } from "react"
 import Image from "next/image"
-import { type Token } from "@/types"
+import { type DefiLlamaToken } from "@/types"
 import { useNetwork } from "wagmi"
 
 import { cn } from "@/lib/utils"
@@ -23,8 +23,8 @@ import {
 import { defaultTokenList } from "./default-token-list"
 
 interface TokenSelectorProps {
-  selectedToken: Token
-  setSelectedToken: Dispatch<SetStateAction<Token>>
+  selectedToken: DefiLlamaToken
+  setSelectedToken: Dispatch<SetStateAction<DefiLlamaToken>>
   className?: string
 }
 
@@ -36,7 +36,7 @@ export default function TokenSelector({
   const { chain } = useNetwork()
   const [open, setOpen] = useState(false)
   const [searchValue, setSearchValue] = useState("")
-  const [tokenListIndex, _] = useState(0)
+  const [tokenListIndex, _setTokenListIndex] = useState(0)
 
   const tokenList = useMemo(
     () =>
@@ -64,7 +64,7 @@ export default function TokenSelector({
   )
 
   const handleSelect = useCallback(
-    (token: Token) => {
+    (token: DefiLlamaToken) => {
       setSelectedToken(token)
       setOpen(false)
       setSearchValue("")

@@ -1,8 +1,9 @@
 import { db } from "@/db"
 import { intentBatch as intentBatchDb, intents as intentsDb } from "@/db/schema"
+
 // import { getIronSession } from "iron-session"
 // import { verifyTypedData, type Address } from "viem"
-import { newLimitOrderSchema } from "@/lib/validations/db/new-limit-order"
+import { newLimitOrderSchema } from "@/lib/validations/limit-order"
 
 // import { ironOptions } from "@/lib/session"
 

@@ -1,4 +1,4 @@
-import { type TokenList } from "@/types"
+import { type DefiLlamaTokenList } from "@/types"
 import tokenList from "@uniswap/default-token-list"
 
-export const defaultTokenList: TokenList[] = [tokenList] as TokenList[]
+export const defaultTokenList: DefiLlamaTokenList[] = [tokenList] as DefiLlamaTokenList[]

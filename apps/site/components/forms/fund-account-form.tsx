@@ -8,10 +8,10 @@ import {
   useIsSafeIntentModuleEnabled,
   useIsSafeMaterialized,
 } from "@district-labs/intentify-react"
+import { useMutation } from "@tanstack/react-query"
 import { useAccount } from "wagmi"
 
 import { catchError, cn } from "@/lib/utils"
-import { updateUserAction } from "@/app/_actions/user"
 
 import { Icons } from "../icons"
 import { Button } from "../ui/button"
@@ -25,20 +25,28 @@ export function FundAccountForm() {
   const isSafeDeployed = useIsSafeMaterialized()
   const isModuleEnabled = useIsSafeIntentModuleEnabled()
 
-  async function onDeploySafe() {
-    try {
-      await updateUserAction({
-        safeAddress,
-        address: address as string,
+  const { mutate } = useMutation({
+    mutationFn: () => {
+      return fetch("/api/user", {
+        method: "POST",
+        body: JSON.stringify({
+          address,
+          safeAddress,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
-
+    },
+    onSuccess: () => {
       toast({
         description: "Safe deployed successfully.",
       })
-    } catch (err) {
+    },
+    onError: (err) => {
       catchError(err)
-    }
-  }
+    },
+  })
 
   // TODO: Funding Buttons - Direct transfer (existing wallet) or buy via MoonPay / Sardine
   // TODO: Loading States for transactions
@@ -59,7 +67,7 @@ export function FundAccountForm() {
         {isSafeDeployed ? (
           <Icons.check className="h-5 w-5 text-primary" />
         ) : (
-          <DeploySafe salt={BigInt(0)} onSuccess={onDeploySafe}>
+          <DeploySafe salt={BigInt(0)} onSuccess={mutate}>
             <Button>Deploy</Button>
           </DeploySafe>
         )}

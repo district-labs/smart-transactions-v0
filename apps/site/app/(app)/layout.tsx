@@ -1,22 +1,12 @@
-import React from "react"
-import { cookies } from "next/headers"
-import { redirect } from "next/navigation"
+import type { ReactNode } from "react"
 
-import { getRequestCookie } from "@/lib/session"
 import AppHeader from "@/components/layouts/app-header"
 
 interface AppLayoutProps {
-  children: React.ReactNode
+  children: ReactNode
 }
 
-export default async function AppLayout({ children }: AppLayoutProps) {
-  const user = await getRequestCookie(cookies())
-
-  // Send logged user to dashboard
-  // if (!user?.siwe) {
-  //   redirect("/login")
-  // }
-
+export default function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
       <AppHeader />

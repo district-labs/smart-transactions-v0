@@ -3,12 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { type User } from "@/db/schema"
-import {
-  ConnectButton,
-  useAccountModal,
-  useChainModal,
-} from "@rainbow-me/rainbowkit"
-import { useAccount } from "wagmi"
+import { useAccountModal, useChainModal } from "@rainbow-me/rainbowkit"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"

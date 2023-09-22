@@ -1,5 +1,5 @@
 import * as React from "react"
-import { type Option } from "@/types"
+import { type DataTableOption } from "@/types"
 import { CheckIcon, PlusCircledIcon } from "@radix-ui/react-icons"
 import { type Column } from "@tanstack/react-table"
 
@@ -25,7 +25,7 @@ import { Separator } from "@/components/ui/separator"
 interface DataTableFacetedFilter<TData, TValue> {
   column?: Column<TData, TValue>
   title?: string
-  options: Option[]
+  options: DataTableOption[]
 }
 
 export function DataTableFacetedFilter<TData, TValue>({

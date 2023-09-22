@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils"
 import useScroll from "@/hooks/use-scroll"
 import { ProfileButton } from "@/components/auth/profile-button"
-import { Combobox } from "@/components/combobox"
 import { AppNav } from "@/components/layouts/app-nav"
 import MobileAppNav from "@/components/layouts/mobile-app-nav"
 
@@ -22,7 +21,7 @@ export default function AppHeader() {
         <MobileAppNav />
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-2">
-            <Combobox />
+            {/* <Combobox /> */}
             <ProfileButton />
           </nav>
         </div>
