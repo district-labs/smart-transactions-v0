@@ -6,8 +6,6 @@ import { SelectAllIntentBatchQuery } from "@/db/queries/intent-batch"
 import { Hook, intentifySafeModuleABI } from "@district-labs/intentify-utils"
 import type { Abi } from "viem"
 
-import { publicClients } from "@/app/api/engine/networks"
-
 type IntentBundleExecutionParsed = {
   readonly address: `0x${string}`
   abi: Abi
@@ -15,67 +13,31 @@ type IntentBundleExecutionParsed = {
   args?: unknown[]
 }
 
-export function filterExecutableIntents(calls: any[]) {
-  return calls.filter((call) => {
-    return call.success
-  })
-}
-
-export async function simulateMultipleIntentBundleWithMulticall(
-  chainId: number,
-  bundleBatch: IntentBundleExecutionParsed
-) {
-  const publicClient = publicClients[chainId]
-  if (!publicClient) throw new Error(`No client for chainId ${chainId}`)
-
-  return await publicClient.multicall({
-    // @ts-ignore
-    contracts: bundleBatch,
-  })
-}
-
-export function convertIntentBundleExecutionQueryToMulticall(
-  address: `0x{string}`,
-  intentBatchQuery: SelectAllIntentBatchQuery[]
-): IntentBundleExecutionParsed[] {
-  return intentBatchQuery.map((intentBatch) => {
-    intentBatch
-    const IntentBatch = {
-      root: intentBatch.root,
-      nonce: intentBatch.nonce,
-      intents: intentBatch.intents,
-    }
-
-    // Return object to be used in multicall and simulateTransaction
-    return {
-      address: address,
-      abi: intentifySafeModuleABI,
-      functionName: "execute",
-      args: [
-        {
-          batch: IntentBatch,
-          signature: intentBatch.signature,
-          hooks: generateHooksForIntentBatch(intentBatch),
-        },
-      ],
-    }
-  })
-}
-
 function generateHooksForIntentBatch(
   intentBatch: SelectAllIntentBatchQuery
 ): Hook[] {
-  // TODO: Make a better id system for intentBatches. This is just a placeholder.
+  // TODO: Match the intentId to the correct hooks
   switch (intentBatch.id) {
-    case 1:
-      return generateHooksForLimitOrderBasic()
+    case "0x00000000":
+      return generateHooksForLimitOrderBasic(intentBatch.chainId)
     default:
       throw new Error(`No hooks for intentBatch ${intentBatch.id}`)
   }
 }
 
 function generateHooksForLimitOrderBasic() {
+  // 1. Timestamp Intent == No Hook
+  // 2. Token Release Intent == No Hook
+  // 3. Limit Order Intent == Fill on Uniswap
   return [
+    {
+      target: "0x",
+      data: "0x",
+    },
+    {
+      target: "0x",
+      data: "0x",
+    },
     {
       target: "0x",
       data: "0x",

@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import type { NextRequest } from "next/server"
+import { newIntentExecutionBatch } from "@/db/queries/intent-batch-execution"
 import {
   IntentifyBundlerAddressList,
   intentifySafeModuleBundlerABI,
@@ -14,7 +15,7 @@ import { mainnetWalletClient } from "../blockchain-clients"
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function POST(req: NextRequest) {
   const res = new Response()
-  const { chainId, intentBundles } = req?.body
+  const { chainId, intentExecutionBundles } = req?.body
 
   let transactionHash: `0x${string}`
 
@@ -25,8 +26,19 @@ export async function POST(req: NextRequest) {
         abi: intentifySafeModuleBundlerABI,
         walletClient: mainnetWalletClient,
       })
-
-      transactionHash = await mainnetIntentModule.executeBundle(intentBundles)
+      for (
+        let intentBun = 0;
+        intentBun < intentExecutionBundles.length;
+        intentBun++
+      ) {
+        const element = intentExecutionBundles[intentBun]
+        newIntentExecutionBatch({
+          intentBatchId: element.intentBatchId,
+        })
+      }
+      transactionHash = await mainnetIntentModule.executeBundle(
+        intentExecutionBundles
+      )
       break
     case 5:
       const goerliIntentModule = getContract({
@@ -35,7 +47,9 @@ export async function POST(req: NextRequest) {
         walletClient: mainnetWalletClient,
       })
 
-      transactionHash = await goerliIntentModule.executeBundle(intentBundles)
+      transactionHash = await goerliIntentModule.executeBundle(
+        intentExecutionBundles
+      )
       break
     default:
       throw new Error(`No client for chainId ${chainId}`)

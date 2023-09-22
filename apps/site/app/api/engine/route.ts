@@ -1,42 +1,43 @@
+import type { SelectAllIntentBatchQuery } from "@/db/queries/intent-batch"
 import { IntentBatch } from "@/db/schema"
 
-import {
-  convertIntentBundleExecutionQueryToMulticall,
-  filterExecutableIntents,
-  simulateMultipleIntentBundleWithMulticall,
-} from "./core"
+// import {
+//   convertIntentBundleExecutionQueryToMulticall,
+//   filterExecutableIntents,
+//   simulateMultipleIntentBundleWithMulticall,
+// } from "./core"
 
-const API_URL_EXECUTE_INTENT_BUNDLES = "https://api.intentify.io/api/execute"
+// const API_URL_EXECUTE_INTENT_BUNDLES = "api/execute"
 
-async function calculateAndDispatch() {
-  const INTENTIFY_SAFE_MODULE = "0x00" as `0x${string}`
+// async function calculateAndDispatch() {
+//   const INTENTIFY_SAFE_MODULE = `0x00` as `0x{string}`
 
-  const intentBatchExecutionQuery: IntentBatch = []
-  const executableIntentBundles = filterExecutableIntents(
-    await simulateMultipleIntentBundleWithMulticall(
-      1,
-      convertIntentBundleExecutionQueryToMulticall(
-        INTENTIFY_SAFE_MODULE,
-        intentBatchExecutionQuery
-      )
-    )
-  )
+//   const intentBatchExecutionQuery: SelectAllIntentBatchQuery = []
+//   const executableIntentBundles = filterExecutableIntents(
+//     await simulateMultipleIntentBundleWithMulticall(
+//       1,
+//       convertIntentBundleExecutionQueryToMulticall(
+//         INTENTIFY_SAFE_MODULE,
+//         intentBatchExecutionQuery
+//       )
+//     )
+//   )
 
-  if (executableIntentBundles.length === 0) return
+//   if (executableIntentBundles.length === 0) return
 
-  const res = await fetch(API_URL_EXECUTE_INTENT_BUNDLES, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(executableIntentBundles),
-  })
+//   const res = await fetch(API_URL_EXECUTE_INTENT_BUNDLES, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(executableIntentBundles),
+//   })
 
-  if (!res.ok) {
-    console.error(res.statusText)
-    return
-  }
-}
+//   if (!res.ok) {
+//     console.error(res.statusText)
+//     return
+//   }
+// }
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function GET(req: Request) {

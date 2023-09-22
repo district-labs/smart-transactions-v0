@@ -12,6 +12,10 @@ export const selectAllIntentBatchQuery = db.query.intentBatchRelations.findMany(
   }
 )
 
+export type IntentBatchQuery = ReturnType<
+  typeof selectAllIntentBatchQuery.execute
+>
+
 export type SelectAllIntentBatchQuery = Awaited<
   ReturnType<typeof selectAllIntentBatchQuery.execute>
 >

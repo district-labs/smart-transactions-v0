@@ -30,7 +30,7 @@ type KeyList = {
   [key: number]: WalletClient
 }
 
-export const publicClients: KeyList = {
+export const walletClients: KeyList = {
   1: mainnetWalletClient,
   5: goerliWalletClient,
 }
