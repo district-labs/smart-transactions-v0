@@ -1,6 +1,5 @@
 import { type Strategy } from "@/db/schema"
 
-import { toTitleCase } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -41,7 +40,7 @@ export default function StrategyActions({ strategy }: StrategyActionsProps) {
           <CardContent className="grid gap-6">
             <div className="grid gap-2">
               <Label htmlFor="deposit">
-                {toTitleCase(strategy?.coins?.[0])} Deposit{" "}
+                {/* {toTitleCase(strategy?.coins?.[0])} Deposit{" "} */}
               </Label>
               <Input id="deposit" type="number" placeholder="0.0" />
             </div>
@@ -112,11 +111,11 @@ export default function StrategyActions({ strategy }: StrategyActionsProps) {
           <CardFooter className="flex w-full flex-col gap-y-2 border-t pt-2 text-sm">
             <div className="flex w-full items-center justify-between">
               <p>Platform Fee: </p>
-              <p>{`${strategy.platformFee}%`}</p>
+              {/* <p>{`${strategy.platformFee}%`}</p> */}
             </div>
             <div className="flex w-full items-center justify-between">
               <p>Performance Fee: </p>
-              <p>{`${strategy.performanceFee}%`}</p>
+              {/* <p>{`${strategy.performanceFee}%`}</p> */}
             </div>
           </CardFooter>
         </Card>

@@ -1,10 +1,7 @@
-import React from "react"
 import { type Metadata } from "next"
-import { cookies } from "next/headers"
 import { db } from "@/db"
 import { strategies } from "@/db/schema"
 import { env } from "@/env.mjs"
-import { eq } from "drizzle-orm"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -32,10 +29,8 @@ export default async function DashboardPage() {
       id: strategies.id,
       name: strategies.name,
       description: strategies.description,
-      assets: strategies.assets,
     })
     .from(strategies)
-    .where(eq(strategies.managerId, 2))
 
   return (
     <>
@@ -69,9 +64,9 @@ export default async function DashboardPage() {
                     {strategy.description}
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-col">
+                {/* <CardContent className="flex flex-col">
                   {`$${strategy.assets}`}
-                </CardContent>
+                </CardContent> */}
               </Card>
             ))}
           </div>
