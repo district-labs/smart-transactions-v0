@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { type Token } from "@/types"
+import { type DefiLlamaToken } from "@/types"
 import { useChainId } from "wagmi"
 
 import { Button } from "@/components/ui/button"
@@ -58,8 +58,8 @@ export default function LimitPage() {
   const [amountIn, setAmountIn] = useState<number>()
 
   const [expiry, setExpiry] = useState<string>("1d")
-  const [tokenOut, setTokenOut] = useState<Token>(defaultTokenOut)
-  const [tokenIn, setTokenIn] = useState<Token>(defaultTokenIn)
+  const [tokenOut, setTokenOut] = useState<DefiLlamaToken>(defaultTokenOut)
+  const [tokenIn, setTokenIn] = useState<DefiLlamaToken>(defaultTokenIn)
 
   const chainId = useChainId()
 

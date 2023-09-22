@@ -1,6 +1,4 @@
-import { z } from "zod";
-
-export type NewLimitOrderSchema = z.infer<typeof newLimitOrderSchema>
+import { z } from "zod"
 
 export const newLimitOrderSchema = z.object({
   intentBatchEIP712: z.any(),

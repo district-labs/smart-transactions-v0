@@ -1,13 +1,13 @@
 import { type Dispatch, type SetStateAction } from "react"
-import { type Token } from "@/types"
+import { type DefiLlamaToken } from "@/types"
 
 import TokenSelector from "./token-selector"
 
 interface TokenInputAmountProps {
   amount: number | undefined
   setAmount: Dispatch<SetStateAction<number | undefined>>
-  selectedToken: Token
-  setSelectedToken: Dispatch<SetStateAction<Token>>
+  selectedToken: DefiLlamaToken
+  setSelectedToken: Dispatch<SetStateAction<DefiLlamaToken>>
 }
 
 export default function TokenInputAmount({
