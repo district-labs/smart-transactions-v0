@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import LimitPriceInput from "@/components/blockchain/limit-price-input"
 import TokenInputAmount from "@/components/blockchain/token-input-amount"
 import TokenPriceChart from "@/components/charts/token-price-chart"
 import { Icons } from "@/components/icons"
@@ -62,19 +63,6 @@ export default function LimitPage() {
   const [tokenOut, setTokenOut] = useState<DefiLlamaToken>(defaultTokenOut)
   const [tokenIn, setTokenIn] = useState<DefiLlamaToken>(defaultTokenIn)
 
-  const { price, refetch } = useCurrentPrice({
-    tokenOut: {
-      chainId: tokenOut.chainId,
-      type: "erc20",
-      address: tokenOut.address,
-    },
-    tokenIn: {
-      chainId: tokenIn.chainId,
-      type: "erc20",
-      address: tokenIn.address,
-    },
-  })
-
   const { mutationResult, isLoadingSign } = usePlaceOrder({
     chainId,
     amountIn,
@@ -86,11 +74,6 @@ export default function LimitPage() {
 
   async function handlePlaceOrder() {
     await mutationResult.mutateAsync()
-  }
-
-  async function handleRefetch() {
-    await refetch()
-    setLimitPrice(price)
   }
 
   useEffect(() => {
@@ -124,32 +107,12 @@ export default function LimitPage() {
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <div className="flex items-end justify-between">
-                  <Label htmlFor="limit" className="text-muted-foreground">
-                    Buy {tokenIn.symbol} for
-                  </Label>
-                  <span
-                    className="cursor-pointer text-xs text-muted-foreground underline"
-                    onClick={handleRefetch}
-                  >
-                    Use Market
-                  </span>
-                </div>
-                <div className="group relative flex items-center justify-between gap-2 rounded-md border py-1">
-                  <input
-                    id="limit"
-                    type="number"
-                    className="block w-full bg-transparent px-3 py-1 text-sm font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-transparent"
-                    placeholder="0.0"
-                    value={limitPrice}
-                    onChange={(e) => setLimitPrice(parseInt(e.target.value))}
-                  />
-                  <span className="mr-2 text-sm font-medium">
-                    {tokenOut.symbol}
-                  </span>
-                </div>
-              </div>
+              <LimitPriceInput
+                tokenIn={tokenIn}
+                tokenOut={tokenOut}
+                limitPrice={limitPrice}
+                setLimitPrice={setLimitPrice}
+              />
               <div className="grid gap-2">
                 <Label htmlFor="selling">Expiry</Label>
                 <Select onValueChange={setExpiry} value={expiry}>
