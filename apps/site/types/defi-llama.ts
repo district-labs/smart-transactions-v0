@@ -13,12 +13,12 @@ export type DeFiLlamaPeriod = `${number}${"w" | "d" | "h" | "m"}`
 export type DeFiLlamaCoinsInput =
   | {
       chainId: number
-      type: "native"
+      type: "erc20"
+      address: string
     }
   | {
       chainId: number
-      type: "erc20"
-      address: string
+      type: "native"
     }
 
 export type DeFiLlamaPriceResponse = {

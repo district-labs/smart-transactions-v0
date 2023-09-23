@@ -6,7 +6,6 @@ import { useChainId } from "wagmi"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
   Select,
@@ -63,12 +62,16 @@ export default function LimitPage() {
   const [tokenOut, setTokenOut] = useState<DefiLlamaToken>(defaultTokenOut)
   const [tokenIn, setTokenIn] = useState<DefiLlamaToken>(defaultTokenIn)
 
-  // TODO: only able to fetch prices in USD
-  const currentPrice = useCurrentPrice({
-    token: {
+  const { price, refetch } = useCurrentPrice({
+    tokenOut: {
       chainId: tokenOut.chainId,
       type: "erc20",
       address: tokenOut.address,
+    },
+    tokenIn: {
+      chainId: tokenIn.chainId,
+      type: "erc20",
+      address: tokenIn.address,
     },
   })
 
@@ -86,8 +89,8 @@ export default function LimitPage() {
   }
 
   async function handleRefetch() {
-    await currentPrice.refetch()
-    setLimitPrice(currentPrice.data)
+    await refetch()
+    setLimitPrice(price)
   }
 
   useEffect(() => {
