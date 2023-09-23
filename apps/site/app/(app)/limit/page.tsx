@@ -1,9 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { type DefiLlamaToken } from "@/types"
+import { useEffect, useRef, useState } from "react"
 import { useChainId } from "wagmi"
 
+import LimitPriceInput from "@/components/blockchain/limit-price-input"
+import TokenInputAmount from "@/components/blockchain/token-input-amount"
+import TokenPriceChart from "@/components/charts/token-price-chart"
+import { Icons } from "@/components/icons"
+import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -15,13 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import LimitPriceInput from "@/components/blockchain/limit-price-input"
-import TokenInputAmount from "@/components/blockchain/token-input-amount"
-import TokenPriceChart from "@/components/charts/token-price-chart"
-import { Icons } from "@/components/icons"
-import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
 
-import { useCurrentPrice } from "./use-current-price"
 import { usePlaceOrder } from "./use-place-order"
 import { defaultTokenIn, defaultTokenOut } from "./utils"
 
@@ -57,11 +56,14 @@ const dummyData = [
 export default function LimitPage() {
   const chainId = useChainId()
   const [amountOut, setAmountOut] = useState<number>()
-  const [amountIn, setAmountIn] = useState<number>()
-  const [limitPrice, setLimitPrice] = useState<number>()
+  const [amountIn, setAmountIn] = useState<number | undefined>()
+  const [limitPrice, setLimitPrice] = useState<number | undefined>()
   const [expiry, setExpiry] = useState<string>("1d")
   const [tokenOut, setTokenOut] = useState<DefiLlamaToken>(defaultTokenOut)
   const [tokenIn, setTokenIn] = useState<DefiLlamaToken>(defaultTokenIn)
+
+  const prevAmountOut = useRef<number | undefined>(amountOut)
+  const prevAmountIn = useRef<number | undefined>(amountIn)
 
   const { mutationResult, isLoadingSign } = usePlaceOrder({
     chainId,
@@ -76,15 +78,23 @@ export default function LimitPage() {
     await mutationResult.mutateAsync()
   }
 
-  useEffect(() => {
-    if (!amountOut || !limitPrice) return
-    setAmountIn(amountOut / limitPrice)
-  }, [amountOut, limitPrice])
+useEffect(() => {
+  if(!limitPrice) return;
 
-  useEffect(() => {
-    if (!amountIn || !limitPrice) return
-    setAmountOut(amountIn * limitPrice)
-  }, [amountIn])
+  // Only update amountIn if amountOut has changed from its previous value
+  if(amountOut && (!prevAmountOut.current || amountOut !== prevAmountOut.current)) {
+    setAmountIn(amountOut ? amountOut / limitPrice : 0);
+    prevAmountOut.current = amountOut; // Set the current value to the ref
+  }
+
+  // Only update amountOut if amountIn has changed from its previous value
+  if(amountIn && (!prevAmountIn.current || amountIn !== prevAmountIn.current)) {
+    setAmountOut(amountIn ? amountIn * limitPrice : 0);
+    prevAmountIn.current = amountIn; // Set the current value to the ref
+  }
+
+}, [amountOut, amountIn, limitPrice]);
+
 
   return (
     <>
