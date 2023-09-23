@@ -24,7 +24,7 @@ export default function TokenInputAmount({
         className="block w-full bg-transparent px-3 py-1 text-sm font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-transparent"
         placeholder="0.0"
         value={amount}
-        onChange={(e) => setAmount(Number(e.target.value))}
+        onChange={(e) => setAmount(parseInt(e.target.value))}
       />
       <span className="text-sm font-medium">{selectedToken.symbol}</span>
       <TokenSelector

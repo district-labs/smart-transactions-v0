@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { type DefiLlamaToken } from "@/types"
 import { useChainId } from "wagmi"
 
@@ -21,6 +21,7 @@ import TokenPriceChart from "@/components/charts/token-price-chart"
 import { Icons } from "@/components/icons"
 import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
 
+import { useCurrentPrice } from "./use-current-price"
 import { usePlaceOrder } from "./use-place-order"
 import { defaultTokenIn, defaultTokenOut } from "./utils"
 
@@ -54,14 +55,22 @@ const dummyData = [
 ]
 
 export default function LimitPage() {
+  const chainId = useChainId()
   const [amountOut, setAmountOut] = useState<number>()
   const [amountIn, setAmountIn] = useState<number>()
-
+  const [limitPrice, setLimitPrice] = useState<number>()
   const [expiry, setExpiry] = useState<string>("1d")
   const [tokenOut, setTokenOut] = useState<DefiLlamaToken>(defaultTokenOut)
   const [tokenIn, setTokenIn] = useState<DefiLlamaToken>(defaultTokenIn)
 
-  const chainId = useChainId()
+  // TODO: only able to fetch prices in USD
+  const currentPrice = useCurrentPrice({
+    token: {
+      chainId: tokenOut.chainId,
+      type: "erc20",
+      address: tokenOut.address,
+    },
+  })
 
   const { mutationResult, isLoadingSign } = usePlaceOrder({
     chainId,
@@ -76,6 +85,21 @@ export default function LimitPage() {
     await mutationResult.mutateAsync()
   }
 
+  async function handleRefetch() {
+    await currentPrice.refetch()
+    setLimitPrice(currentPrice.data)
+  }
+
+  useEffect(() => {
+    if (!amountOut || !limitPrice) return
+    setAmountIn(amountOut / limitPrice)
+  }, [amountOut, limitPrice])
+
+  useEffect(() => {
+    if (!amountIn || !limitPrice) return
+    setAmountOut(amountIn * limitPrice)
+  }, [amountIn])
+
   return (
     <>
       <section className="mt-8 grid gap-8 md:grid-cols-3">
@@ -86,7 +110,7 @@ export default function LimitPage() {
         <Card>
           <CardContent className="grid gap-6 pt-4">
             <div className="grid gap-2">
-              <Label htmlFor="selling" className="">
+              <Label htmlFor="selling" className="text-muted-foreground">
                 You&apos;re selling
               </Label>
               <TokenInputAmount
@@ -98,8 +122,30 @@ export default function LimitPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="selling">Limit</Label>
-                <Input placeholder="1000.0" />
+                <div className="flex items-end justify-between">
+                  <Label htmlFor="limit" className="text-muted-foreground">
+                    Buy {tokenIn.symbol} for
+                  </Label>
+                  <span
+                    className="cursor-pointer text-xs text-muted-foreground underline"
+                    onClick={handleRefetch}
+                  >
+                    Use Market
+                  </span>
+                </div>
+                <div className="group relative flex items-center justify-between gap-2 rounded-md border py-1">
+                  <input
+                    id="limit"
+                    type="number"
+                    className="block w-full bg-transparent px-3 py-1 text-sm font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-transparent"
+                    placeholder="0.0"
+                    value={limitPrice}
+                    onChange={(e) => setLimitPrice(parseInt(e.target.value))}
+                  />
+                  <span className="mr-2 text-sm font-medium">
+                    {tokenOut.symbol}
+                  </span>
+                </div>
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="selling">Expiry</Label>

@@ -28,3 +28,4 @@ export const calculatePeriod = (
 
   return `${periodMinutes}m` as const
 }
+
