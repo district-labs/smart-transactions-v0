@@ -11,6 +11,6 @@
       "@/generated": ["./generated/index.ts"]
     }
   },
-  "include": ["./**/*.ts", "ponder.config.cts"],
+  "include": ["./**/*.ts", "ponder.config.ts"],
   "exclude": ["node_modules"]
 }

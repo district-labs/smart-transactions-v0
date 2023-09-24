@@ -1,6 +1,5 @@
 {
   "private": true,
-  "type": "commonjs",
   "scripts": {
     "dev": "ponder dev",
     "start": "ponder start",

@@ -1,5 +1,7 @@
-import { IntentifyModuleAddressList, intentifySafeModuleABI } from "@district-labs/intentify-utils/index";
+import { IntentifyModuleAddressList, intentifySafeModuleABI } from "@district-labs/intentify-utils";
 import type { Config } from "@ponder/core";
+
+const ABI = intentifySafeModuleABI
 
 export const config: Config = {
   networks: [
@@ -8,26 +10,26 @@ export const config: Config = {
     { name: "testnet", chainId: 31337, rpcUrl: process.env.PONDER_RPC_URL_TESTNET },
   ],
   contracts: [
+    // {
+    //   name: "IntentifySafeModule",
+    //   network: "mainnet",
+    //   address: IntentifyModuleAddressList[1],
+    //   abi: intentifySafeModuleABI,
+    //   startBlock: 1234567,
+    // },
     {
-      name: "IntentifySafeModule",
-      network: "mainnet",
-      address: IntentifyModuleAddressList[1],
-      abi: intentifySafeModuleABI,
-      startBlock: 1234567,
-    },
-    {
-      name: "IntentifySafeModule",
+      name: "IntentifySafeModuleGoerli",
       network: "goerli",
       address: IntentifyModuleAddressList[5],
       abi: intentifySafeModuleABI,
-      startBlock: 1234567,
+      startBlock: 9684295,
     },
     {
-      name: "IntentifySafeModule",
+      name: "IntentifySafeModuleTestnet",
       network: "testnet",
       address: IntentifyModuleAddressList[31337],
       abi: intentifySafeModuleABI,
-      startBlock: 1234567,
+      startBlock: 1,
     },
   ],
 };
