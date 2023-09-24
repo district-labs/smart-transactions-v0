@@ -1,0 +1,950 @@
+[
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "root",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "intentBatchId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "IntentBatchCancelled",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "executor",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "root",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "intentBatchId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "IntentBatchExecuted",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "DOMAIN_SEPARATOR",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint128",
+              "name": "queue",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "accumulator",
+              "type": "uint128"
+            }
+          ],
+          "internalType": "struct DimensionalNonce",
+          "name": "_input",
+          "type": "tuple"
+        }
+      ],
+      "name": "GET_DIMENSIONALNONCE_PACKETHASH",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "name",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "version",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "chainId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "verifyingContract",
+              "type": "address"
+            }
+          ],
+          "internalType": "struct EIP712Domain",
+          "name": "_input",
+          "type": "tuple"
+        }
+      ],
+      "name": "GET_EIP712DOMAIN_PACKETHASH",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "target",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "internalType": "struct Hook[]",
+          "name": "_input",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "GET_HOOK_ARRAY_PACKETHASH",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "target",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "internalType": "struct Hook",
+          "name": "_input",
+          "type": "tuple"
+        }
+      ],
+      "name": "GET_HOOK_PACKETHASH",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "root",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "nonce",
+                  "type": "bytes"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "root",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "target",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "value",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "bytes",
+                      "name": "data",
+                      "type": "bytes"
+                    }
+                  ],
+                  "internalType": "struct Intent[]",
+                  "name": "intents",
+                  "type": "tuple[]"
+                }
+              ],
+              "internalType": "struct IntentBatch",
+              "name": "batch",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "r",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "s",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint8",
+                  "name": "v",
+                  "type": "uint8"
+                }
+              ],
+              "internalType": "struct Signature",
+              "name": "signature",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "target",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "data",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct Hook[]",
+              "name": "hooks",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct IntentBatchExecution",
+          "name": "_input",
+          "type": "tuple"
+        }
+      ],
+      "name": "GET_INTENTBATCHEXECUTION_PACKETHASH",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "root",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "nonce",
+              "type": "bytes"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "root",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "target",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "value",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "data",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct Intent[]",
+              "name": "intents",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct IntentBatch",
+          "name": "_input",
+          "type": "tuple"
+        }
+      ],
+      "name": "GET_INTENTBATCH_PACKETHASH",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "root",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "target",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "internalType": "struct Intent[]",
+          "name": "_input",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "GET_INTENT_ARRAY_PACKETHASH",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "root",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "target",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes",
+              "name": "data",
+              "type": "bytes"
+            }
+          ],
+          "internalType": "struct Intent",
+          "name": "_input",
+          "type": "tuple"
+        }
+      ],
+      "name": "GET_INTENT_PACKETHASH",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "r",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "s",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint8",
+              "name": "v",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct Signature",
+          "name": "_input",
+          "type": "tuple"
+        }
+      ],
+      "name": "GET_SIGNATURE_PACKETHASH",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "NAME",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "VERSION",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "encodedNonce",
+          "type": "bytes"
+        }
+      ],
+      "name": "_decodeDimensionalNonce",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "nonceType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint120",
+          "name": "queue",
+          "type": "uint120"
+        },
+        {
+          "internalType": "uint128",
+          "name": "accumulator",
+          "type": "uint128"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "encodedNonce",
+          "type": "bytes"
+        }
+      ],
+      "name": "_decodeStandardNonce",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "nonceType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint248",
+          "name": "accumulator",
+          "type": "uint248"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes",
+          "name": "encodedNonce",
+          "type": "bytes"
+        }
+      ],
+      "name": "_decodeTimeNonce",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "nonceType",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint32",
+          "name": "id",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint128",
+          "name": "delta",
+          "type": "uint128"
+        },
+        {
+          "internalType": "uint88",
+          "name": "count",
+          "type": "uint88"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "root",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "nonce",
+              "type": "bytes"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "root",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "target",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "value",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "data",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct Intent[]",
+              "name": "intents",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct IntentBatch",
+          "name": "intentBatch",
+          "type": "tuple"
+        }
+      ],
+      "name": "cancelIntentBatch",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint120",
+          "name": "queue",
+          "type": "uint120"
+        },
+        {
+          "internalType": "uint128",
+          "name": "accumulator",
+          "type": "uint128"
+        }
+      ],
+      "name": "encodeDimensionalNonce",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "encodedNonce",
+          "type": "bytes"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint248",
+          "name": "accumulator",
+          "type": "uint248"
+        }
+      ],
+      "name": "encodeStandardNonce",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "encodedNonce",
+          "type": "bytes"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint32",
+          "name": "id",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint128",
+          "name": "delta",
+          "type": "uint128"
+        },
+        {
+          "internalType": "uint88",
+          "name": "count",
+          "type": "uint88"
+        }
+      ],
+      "name": "encodeTimeNonce",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "encodedNonce",
+          "type": "bytes"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "root",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "nonce",
+                  "type": "bytes"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "address",
+                      "name": "root",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "address",
+                      "name": "target",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "value",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "bytes",
+                      "name": "data",
+                      "type": "bytes"
+                    }
+                  ],
+                  "internalType": "struct Intent[]",
+                  "name": "intents",
+                  "type": "tuple[]"
+                }
+              ],
+              "internalType": "struct IntentBatch",
+              "name": "batch",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "r",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "s",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint8",
+                  "name": "v",
+                  "type": "uint8"
+                }
+              ],
+              "internalType": "struct Signature",
+              "name": "signature",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "target",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "data",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct Hook[]",
+              "name": "hooks",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct IntentBatchExecution",
+          "name": "execution",
+          "type": "tuple"
+        }
+      ],
+      "name": "execute",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint120",
+          "name": "queue",
+          "type": "uint120"
+        }
+      ],
+      "name": "getDimensionalNonce",
+      "outputs": [
+        {
+          "internalType": "uint128",
+          "name": "",
+          "type": "uint128"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "root",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "nonce",
+              "type": "bytes"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "root",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address",
+                  "name": "target",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "value",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "data",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct Intent[]",
+              "name": "intents",
+              "type": "tuple[]"
+            }
+          ],
+          "internalType": "struct IntentBatch",
+          "name": "intent",
+          "type": "tuple"
+        }
+      ],
+      "name": "getIntentBatchTypedDataHash",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "getStandardNonce",
+      "outputs": [
+        {
+          "internalType": "uint248",
+          "name": "",
+          "type": "uint248"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint32",
+          "name": "id",
+          "type": "uint32"
+        }
+      ],
+      "name": "getTimeNonce",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint128",
+              "name": "delta",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint96",
+              "name": "count",
+              "type": "uint96"
+            }
+          ],
+          "internalType": "struct TimeTracker",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
