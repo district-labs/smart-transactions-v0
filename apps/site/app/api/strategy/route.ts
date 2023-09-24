@@ -1,11 +1,13 @@
-import { type NextRequest } from "next/server"
 import { db } from "@/db"
 import { strategies } from "@/db/schema"
 import { like } from "drizzle-orm"
+import { type NextRequest } from "next/server"
 
 export async function POST(req: NextRequest) {
   const query = req.nextUrl.searchParams.get("query")
-  if (!query || query.length === 0) return null
+  if (!query || query.length === 0) {
+    return new Response("Missing required 'query' parameter", { status: 422 })
+  }
 
   const filteredStrategies = await db
     .select({
@@ -26,5 +28,9 @@ export async function POST(req: NextRequest) {
     ),
   }))
 
-  return strategiesByCategory
+  return new Response(JSON.stringify(strategiesByCategory), {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
 }
