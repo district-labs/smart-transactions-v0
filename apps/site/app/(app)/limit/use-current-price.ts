@@ -1,61 +1,90 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, type UseQueryOptions } from "@tanstack/react-query"
+import { useChainId } from "wagmi"
 
-interface UseCurrentPriceProps {
-  tokenOut: {
-    chainId: number
-    type: "erc20"
-    address: string
+type Token =
+  | {
+      chainId?: number
+      type: "erc20"
+      address: string
+    }
+  | {
+      chainId?: number
+      type: "native"
+    }
+
+interface QueryOptions
+  extends Omit<
+    UseQueryOptions<number, unknown, number, (string | Token)[]>,
+    "initialData" | "queryKey"
+  > {
+  initialData?: (() => undefined) | undefined
+}
+
+interface UseCurrentPriceProps extends QueryOptions {
+  token: Token
+}
+
+export function useCurrentPrice({
+  token,
+  ...queryOptions
+}: UseCurrentPriceProps) {
+  const defaultChainId = useChainId()
+
+  const fetcher = async () => {
+    const response = await fetch("/api/token/current-price", {
+      method: "POST",
+      body: JSON.stringify({
+        coins: {
+          ...token,
+          chainId: token.chainId || defaultChainId,
+        },
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => res.json())
+
+    if (typeof response !== "number") {
+      throw new Error("Error fetching current price")
+    }
+
+    return response
   }
-  tokenIn: {
-    chainId: number
-    type: "erc20"
+
+  return useQuery({
+    queryKey: ["token-current-price", token],
+    queryFn: fetcher,
+    ...queryOptions,
+  })
+}
+
+type useCurrentPriceERC20Props = QueryOptions & {
+  token: {
+    chainId?: number
     address: string
   }
 }
 
-export function useCurrentPrice({ tokenOut, tokenIn }: UseCurrentPriceProps) {
-  const tokenOutCurrentPriceQuery = useQuery({
-    queryKey: ["tokenPrice", tokenOut.chainId, tokenOut.type, tokenOut.address],
-    queryFn: () =>
-      fetch("/api/token/current-price", {
-        method: "POST",
-        body: JSON.stringify({
-          coins: tokenOut,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((res) => res.json()),
+// Wrapper for useCurrentPrice that sets type to erc20
+export function useCurrentPriceERC20({ token }: useCurrentPriceERC20Props) {
+  return useCurrentPrice({
+    token: { ...token, type: "erc20" },
   })
+}
 
-  const tokenInCurrentPriceQuery = useQuery({
-    queryKey: ["tokenPrice", tokenIn.chainId, tokenIn.type, tokenIn.address],
-    queryFn: () =>
-      fetch("/api/token/current-price", {
-        method: "POST",
-        body: JSON.stringify({
-          coins: tokenIn,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((res) => res.json()),
-    enabled: !!tokenIn,
+type useCurrentPriceNativeProps = QueryOptions &
+  Pick<UseCurrentPriceProps["token"], "chainId">
+
+// Wrapper for useCurrentPrice that sets type to native
+export function useCurrentPriceNative({
+  chainId,
+  ...queryOptions
+}: useCurrentPriceNativeProps) {
+  return useCurrentPrice({
+    token: {
+      chainId,
+      type: "native",
+    },
+    ...queryOptions,
   })
-
-  const tokenOutPrice = tokenOutCurrentPriceQuery.data
-  const tokenInPrice = tokenInCurrentPriceQuery.data
-  const price = tokenInPrice / tokenOutPrice
-
-  async function refetch() {
-    await tokenOutCurrentPriceQuery.refetch()
-    await tokenInCurrentPriceQuery.refetch()
-  }
-
-  const isLoading =
-    tokenOutCurrentPriceQuery.isLoading || tokenInCurrentPriceQuery.isLoading
-  const isError =
-    tokenOutCurrentPriceQuery.isError || tokenInCurrentPriceQuery.isError
-
-  return { price, refetch, tokenOutPrice, tokenInPrice, isLoading, isError }
 }

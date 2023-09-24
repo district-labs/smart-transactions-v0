@@ -2,7 +2,7 @@ import { type Dispatch, type SetStateAction } from "react"
 import { type DefiLlamaToken } from "@/types"
 
 import { Label } from "@/components/ui/label"
-import { useCurrentPrice } from "@/app/(app)/limit/use-current-price"
+import { useCurrentPriceERC20 } from "@/app/(app)/limit/use-current-price"
 
 interface LimitPriceInputProps {
   tokenIn: DefiLlamaToken
@@ -17,22 +17,26 @@ export default function LimitPriceInput({
   limitPrice,
   setLimitPrice,
 }: LimitPriceInputProps) {
-  const { price, refetch } = useCurrentPrice({
-    tokenOut: {
-      chainId: tokenOut.chainId,
-      type: "erc20",
-      address: tokenOut.address,
-    },
-    tokenIn: {
-      chainId: tokenIn.chainId,
-      type: "erc20",
+  const { data: tokenInPrice, refetch: refetchTokenIn } = useCurrentPriceERC20({
+    token: {
       address: tokenIn.address,
+      chainId: tokenIn.chainId,
     },
   })
 
+  const { data: tokenOutPrice, refetch: refetchTokenOut } =
+    useCurrentPriceERC20({
+      token: {
+        address: tokenOut.address,
+        chainId: tokenOut.chainId,
+      },
+    })
+
   async function handleRefetch() {
-    await refetch()
-    setLimitPrice(price)
+    await Promise.all([refetchTokenIn(), refetchTokenOut()])
+    if (!tokenInPrice || !tokenOutPrice) return
+
+    setLimitPrice(tokenInPrice / tokenOutPrice)
   }
 
   return (
