@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "dev": "ponder dev",
+    "serve2": "ponder dev",
     "start": "ponder start",
     "lint": "eslint .",
     "codegen": "ponder codegen"

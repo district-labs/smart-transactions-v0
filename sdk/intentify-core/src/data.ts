@@ -8,7 +8,7 @@ export const DEFAULT_SALT = BigInt(0);
 
 export const IntentifyModuleAddressList: KeyList = {
   5: '0xF783Cc471Cd4ED273056F1DD571b4beafa6A5CDE',
-  31337: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+  31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
 };
 
 export const IntentifyBundlerAddressList: KeyList = {

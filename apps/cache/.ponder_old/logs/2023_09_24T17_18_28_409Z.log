@@ -1,0 +1,9 @@
+{"level":20,"time":1695575908515,"pid":70046,"hostname":"metasudo.local","service":"codegen","msg":"Wrote new file at generated/index.ts"}
+{"level":20,"time":1695575908527,"pid":70046,"hostname":"metasudo.local","service":"codegen","msg":"Wrote new file at generated/index.ts"}
+{"level":20,"time":1695575908533,"pid":70046,"hostname":"metasudo.local","service":"codegen","msg":"Wrote new file at generated/schema.graphql"}
+{"level":20,"time":1695575908537,"pid":70046,"hostname":"metasudo.local","service":"realtime","msg":"Killed realtime sync service (network=mainnet)"}
+{"level":20,"time":1695575908537,"pid":70046,"hostname":"metasudo.local","service":"historical","msg":"Killed historical sync service (network=mainnet)"}
+{"level":20,"time":1695575908537,"pid":70046,"hostname":"metasudo.local","service":"build","msg":"Killed build service"}
+{"level":20,"time":1695575908537,"pid":70046,"hostname":"metasudo.local","service":"handlers","msg":"Killed user handler service"}
+{"level":20,"time":1695575908537,"pid":70046,"hostname":"metasudo.local","service":"server","msg":"Stopped listening on port 42069"}
+{"level":20,"time":1695575908796,"pid":70046,"hostname":"metasudo.local","service":"app","msg":"Finished shutdown sequence"}

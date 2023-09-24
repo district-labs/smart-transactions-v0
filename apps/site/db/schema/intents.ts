@@ -46,6 +46,7 @@ export type NewIntent = typeof intents.$inferInsert
 
 export const intentBatch = mysqlTable("intent_batch", {
   id: serial("id").primaryKey(),
+  intentBatchHash: char("intent_batch_hash", { length: 66 }).unique(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").onUpdateNow(),
   root: char("root", { length: 42 }).notNull(),

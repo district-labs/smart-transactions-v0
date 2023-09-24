@@ -1,0 +1,274 @@
+{"level":40,"time":1695584560660,"pid":79116,"hostname":"metasudo.local","service":"app","msg":"No log filters found (network=mainnet)"}
+{"level":20,"time":1695584560706,"pid":79116,"hostname":"metasudo.local","service":"app","msg":"Started using config file: ponder.config.ts"}
+{"level":30,"time":1695584560708,"pid":79116,"hostname":"metasudo.local","service":"server","msg":"Started listening on port 42069"}
+{"level":20,"time":1695584560876,"pid":79116,"hostname":"metasudo.local","service":"codegen","msg":"Wrote new file at generated/index.ts"}
+{"level":20,"time":1695584560949,"pid":79116,"hostname":"metasudo.local","service":"codegen","msg":"Wrote new file at generated/index.ts"}
+{"level":20,"time":1695584560963,"pid":79116,"hostname":"metasudo.local","service":"codegen","msg":"Wrote new file at generated/schema.graphql"}
+{"level":50,"time":1695584560998,"pid":79116,"hostname":"metasudo.local","service":"build","error":{"type":"UserError","message":"Error while building handlers: Build failed with 1 error:\ngenerated/index.ts:384:6: ERROR: The symbol \"IntentifySafeModuleAbi\" has already been declared","stack":"\u001b[31m✘ \u001b[41;31m[\u001b[41;97mERROR\u001b[41;31m]\u001b[0m \u001b[1mThe symbol \"IntentifySafeModuleAbi\" has already been declared\u001b[0m\n\n    generated/index.ts:384:6:\n\u001b[37m      384 │ const \u001b[32mIntentifySafeModuleAbi\u001b[37m = [\n          ╵       \u001b[32m~~~~~~~~~~~~~~~~~~~~~~\u001b[0m\n\n  The symbol \"IntentifySafeModuleAbi\" was originally declared here:\n\n    generated/index.ts:18:6:\n\u001b[37m      18 │ const \u001b[32mIntentifySafeModuleAbi\u001b[37m = [\n         ╵       \u001b[32m~~~~~~~~~~~~~~~~~~~~~~\u001b[0m\n\n","name":"UserError"}}
+{"level":30,"time":1695584561025,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Fetched latest block at 4 (network=testnet)"}
+{"level":40,"time":1695584561025,"pid":79116,"hostname":"metasudo.local","service":"historical","msg":"Start block is not finalized, skipping historical sync (logFilter=IntentifySafeModule)"}
+{"level":30,"time":1695584561026,"pid":79116,"hostname":"metasudo.local","service":"historical","msg":"Completed sync (network=testnet)","network":"testnet"}
+{"level":10,"time":1695584561027,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New historical checkpoint at 1695584561 [Sep 24, 2023] (chainId=31337)"}
+{"level":30,"time":1695584561029,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Fetched finalized block at 0 (network=testnet)"}
+{"level":30,"time":1695584561033,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Fetched missing blocks [1, 3] (network=testnet)"}
+{"level":20,"time":1695584561033,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 1 (network=testnet)"}
+{"level":20,"time":1695584561034,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 1 using bloom filter (network=testnet)"}
+{"level":20,"time":1695584561034,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 1 (network=testnet)"}
+{"level":10,"time":1695584561034,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695583370 [Sep 24, 2023] (chainId=31337)"}
+{"level":20,"time":1695584561034,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 2 (network=testnet)"}
+{"level":20,"time":1695584561035,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 2 using bloom filter (network=testnet)"}
+{"level":20,"time":1695584561035,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 2 (network=testnet)"}
+{"level":10,"time":1695584561035,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695583371 [Sep 24, 2023] (chainId=31337)"}
+{"level":20,"time":1695584561035,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 3 (network=testnet)"}
+{"level":20,"time":1695584561035,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 3 using bloom filter (network=testnet)"}
+{"level":20,"time":1695584561035,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 3 (network=testnet)"}
+{"level":10,"time":1695584561035,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695583372 [Sep 24, 2023] (chainId=31337)"}
+{"level":20,"time":1695584561035,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 4 (network=testnet)"}
+{"level":20,"time":1695584561035,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 4 using bloom filter (network=testnet)"}
+{"level":20,"time":1695584561035,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 4 (network=testnet)"}
+{"level":10,"time":1695584561035,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695583373 [Sep 24, 2023] (chainId=31337)"}
+{"level":30,"time":1695584561187,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Fetched latest block at 9752798 (network=goerli)"}
+{"level":30,"time":1695584561189,"pid":79116,"hostname":"metasudo.local","service":"historical","msg":"Started sync with 100% cached (logFilter=IntentifySafeModule network=goerli)","network":"goerli","logFilter":"IntentifySafeModule","totalBlockCount":8518200,"cacheRate":0.9999987086473668}
+{"level":10,"time":1695584561291,"pid":79116,"hostname":"metasudo.local","service":"historical","msg":"Completed log sync task [9752756, 9752766] (logFilter=IntentifySafeModule, network=goerli)","network":"goerli","logFilter":"IntentifySafeModule","fromBlock":9752756,"toBlock":9752766}
+{"level":30,"time":1695584561297,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Fetched finalized block at 9752766 (network=goerli)"}
+{"level":10,"time":1695584561929,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New historical checkpoint at 1695584100 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584561929,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584100 [Sep 24, 2023]"}
+{"level":30,"time":1695584561930,"pid":79116,"hostname":"metasudo.local","service":"historical","msg":"Completed sync in 741ms (network=goerli)","network":"goerli","duration":741}
+{"level":20,"time":1695584561930,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"Completed historical sync across all networks"}
+{"level":10,"time":1695584561930,"pid":79116,"hostname":"metasudo.local","service":"historical","msg":"Completed block sync task 9752766, cached from 9752756 (logFilter=IntentifySafeModule, network=goerli)","network":"goerli","logFilter":"IntentifySafeModule","blockNumberToCacheFrom":9752756,"blockNumber":9752766,"requiredTransactionCount":0}
+{"level":10,"time":1695584562038,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":30,"time":1695584562401,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Fetched missing blocks [9752767, 9752797] (network=goerli)"}
+{"level":20,"time":1695584562401,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752767 (network=goerli)"}
+{"level":20,"time":1695584562402,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752767 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562402,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752767 (network=goerli)"}
+{"level":10,"time":1695584562402,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584112 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562402,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584112 [Sep 24, 2023]"}
+{"level":20,"time":1695584562402,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752768 (network=goerli)"}
+{"level":20,"time":1695584562402,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752768 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562402,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752768 (network=goerli)"}
+{"level":10,"time":1695584562402,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584124 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562402,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584124 [Sep 24, 2023]"}
+{"level":20,"time":1695584562403,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752769 (network=goerli)"}
+{"level":20,"time":1695584562403,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752769 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562403,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752769 (network=goerli)"}
+{"level":10,"time":1695584562403,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584136 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562403,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584136 [Sep 24, 2023]"}
+{"level":20,"time":1695584562403,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752770 (network=goerli)"}
+{"level":20,"time":1695584562403,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752770 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562403,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752770 (network=goerli)"}
+{"level":10,"time":1695584562403,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584148 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562403,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584148 [Sep 24, 2023]"}
+{"level":20,"time":1695584562404,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752771 (network=goerli)"}
+{"level":20,"time":1695584562404,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752771 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562404,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752771 (network=goerli)"}
+{"level":10,"time":1695584562404,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584172 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562404,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584172 [Sep 24, 2023]"}
+{"level":20,"time":1695584562404,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752772 (network=goerli)"}
+{"level":20,"time":1695584562407,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752772 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562408,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752772 (network=goerli)"}
+{"level":10,"time":1695584562408,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584184 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562408,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584184 [Sep 24, 2023]"}
+{"level":20,"time":1695584562408,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752773 (network=goerli)"}
+{"level":20,"time":1695584562408,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752773 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562408,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752773 (network=goerli)"}
+{"level":10,"time":1695584562408,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584208 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562408,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584208 [Sep 24, 2023]"}
+{"level":20,"time":1695584562408,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752774 (network=goerli)"}
+{"level":20,"time":1695584562409,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752774 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562409,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752774 (network=goerli)"}
+{"level":10,"time":1695584562409,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584232 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562409,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584232 [Sep 24, 2023]"}
+{"level":20,"time":1695584562409,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752775 (network=goerli)"}
+{"level":20,"time":1695584562409,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752775 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562409,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752775 (network=goerli)"}
+{"level":10,"time":1695584562409,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584244 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562409,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584244 [Sep 24, 2023]"}
+{"level":20,"time":1695584562409,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752776 (network=goerli)"}
+{"level":20,"time":1695584562409,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752776 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562409,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752776 (network=goerli)"}
+{"level":10,"time":1695584562409,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584256 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562409,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584256 [Sep 24, 2023]"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752777 (network=goerli)"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752777 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752777 (network=goerli)"}
+{"level":10,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584268 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584268 [Sep 24, 2023]"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752778 (network=goerli)"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752778 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752778 (network=goerli)"}
+{"level":10,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584280 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584280 [Sep 24, 2023]"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752779 (network=goerli)"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752779 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752779 (network=goerli)"}
+{"level":10,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584292 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584292 [Sep 24, 2023]"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752780 (network=goerli)"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752780 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752780 (network=goerli)"}
+{"level":10,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584304 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584304 [Sep 24, 2023]"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752781 (network=goerli)"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752781 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752781 (network=goerli)"}
+{"level":10,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584316 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584316 [Sep 24, 2023]"}
+{"level":20,"time":1695584562410,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752782 (network=goerli)"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752782 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752782 (network=goerli)"}
+{"level":10,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584328 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584328 [Sep 24, 2023]"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752783 (network=goerli)"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752783 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752783 (network=goerli)"}
+{"level":10,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584340 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584340 [Sep 24, 2023]"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752784 (network=goerli)"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752784 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752784 (network=goerli)"}
+{"level":10,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584364 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584364 [Sep 24, 2023]"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752785 (network=goerli)"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752785 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752785 (network=goerli)"}
+{"level":10,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584376 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584376 [Sep 24, 2023]"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752786 (network=goerli)"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752786 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752786 (network=goerli)"}
+{"level":10,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584388 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584388 [Sep 24, 2023]"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752787 (network=goerli)"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752787 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752787 (network=goerli)"}
+{"level":10,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584400 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584400 [Sep 24, 2023]"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752788 (network=goerli)"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752788 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752788 (network=goerli)"}
+{"level":10,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584412 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584412 [Sep 24, 2023]"}
+{"level":20,"time":1695584562411,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752789 (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752789 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752789 (network=goerli)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584424 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584424 [Sep 24, 2023]"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752790 (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752790 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752790 (network=goerli)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584436 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584436 [Sep 24, 2023]"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752791 (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752791 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752791 (network=goerli)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584448 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584448 [Sep 24, 2023]"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752792 (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752792 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752792 (network=goerli)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584460 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584460 [Sep 24, 2023]"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752793 (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752793 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752793 (network=goerli)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584472 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584472 [Sep 24, 2023]"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752794 (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752794 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752794 (network=goerli)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584484 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584484 [Sep 24, 2023]"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752795 (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752795 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752795 (network=goerli)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584496 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584496 [Sep 24, 2023]"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752796 (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752796 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752796 (network=goerli)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584532 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584532 [Sep 24, 2023]"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752797 (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752797 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752797 (network=goerli)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584544 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584544 [Sep 24, 2023]"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752798 (network=goerli)"}
+{"level":20,"time":1695584562412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752798 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584562413,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752798 (network=goerli)"}
+{"level":10,"time":1695584562413,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584556 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584562413,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584556 [Sep 24, 2023]"}
+{"level":10,"time":1695584562454,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752798 (network=goerli)"}
+{"level":10,"time":1695584563052,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584563623,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752798 (network=goerli)"}
+{"level":10,"time":1695584564060,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584564776,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752798 (network=goerli)"}
+{"level":10,"time":1695584565068,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584565918,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752798 (network=goerli)"}
+{"level":10,"time":1695584566075,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584567059,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752798 (network=goerli)"}
+{"level":10,"time":1695584567080,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584568088,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584568204,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752798 (network=goerli)"}
+{"level":10,"time":1695584569095,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":20,"time":1695584569345,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752799 (network=goerli)"}
+{"level":20,"time":1695584569345,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752799 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584569345,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752799 (network=goerli)"}
+{"level":10,"time":1695584569345,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584568 [Sep 24, 2023] (chainId=5)"}
+{"level":10,"time":1695584569345,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New event checkpoint at 1695584561 [Sep 24, 2023]"}
+{"level":10,"time":1695584570110,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584570519,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584571116,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584571665,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584572128,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584572810,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584573135,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584573964,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584574143,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584575106,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584575151,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584576166,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584576266,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584577176,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584577412,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584578182,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584578555,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584579190,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584579698,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584580197,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584580845,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584581205,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584581989,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584582213,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584583151,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584583220,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584584232,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584584304,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584585240,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584585445,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584586248,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584586585,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584587257,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584588269,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584588750,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584589280,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584589900,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584590290,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584591044,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584591295,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584592204,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 9752799 (network=goerli)"}
+{"level":10,"time":1695584592303,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":10,"time":1695584593309,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Already processed block at 4 (network=testnet)"}
+{"level":20,"time":1695584593401,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Started processing new head block 9752800 (network=goerli)"}
+{"level":20,"time":1695584593401,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"No logs found in block 9752800 using bloom filter (network=goerli)"}
+{"level":20,"time":1695584593401,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Finished processing new head block 9752800 (network=goerli)"}
+{"level":10,"time":1695584593401,"pid":79116,"hostname":"metasudo.local","service":"aggregator","msg":"New realtime checkpoint at 1695584592 [Sep 24, 2023] (chainId=5)"}
+{"level":60,"time":1695584593973,"pid":79116,"hostname":"metasudo.local","service":"build","msg":"Detected change in ponder.config.ts"}
+{"level":20,"time":1695584593974,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Killed realtime sync service (network=goerli)"}
+{"level":20,"time":1695584593974,"pid":79116,"hostname":"metasudo.local","service":"realtime","msg":"Killed realtime sync service (network=testnet)"}
+{"level":20,"time":1695584593975,"pid":79116,"hostname":"metasudo.local","service":"historical","msg":"Killed historical sync service (network=goerli)"}
+{"level":20,"time":1695584593975,"pid":79116,"hostname":"metasudo.local","service":"historical","msg":"Killed historical sync service (network=testnet)"}
+{"level":20,"time":1695584593975,"pid":79116,"hostname":"metasudo.local","service":"build","msg":"Killed build service"}
+{"level":20,"time":1695584593976,"pid":79116,"hostname":"metasudo.local","service":"handlers","msg":"Killed user handler service"}
+{"level":20,"time":1695584593976,"pid":79116,"hostname":"metasudo.local","service":"server","msg":"Stopped listening on port 42069"}
+{"level":20,"time":1695584593981,"pid":79116,"hostname":"metasudo.local","service":"app","msg":"Finished shutdown sequence"}
