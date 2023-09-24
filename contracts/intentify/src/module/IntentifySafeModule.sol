@@ -32,9 +32,9 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
         DOMAIN_SEPARATOR = _getEIP712DomainHash(NAME, VERSION, block.chainid, address(this));
     }
 
-    event IntentBatchExecuted(address executor, address root, bytes32 intentBatchId);
+    event IntentBatchExecuted(address executor, address indexed root, bytes32 indexed intentBatchId);
 
-    event IntentBatchCancelled(address root, bytes32 intentBatchId);
+    event IntentBatchCancelled(address root, bytes32 indexed intentBatchId);
 
     /* ===================================================================================== */
     /* External Functions                                                                    */

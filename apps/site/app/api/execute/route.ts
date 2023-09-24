@@ -15,7 +15,7 @@ import { mainnetWalletClient } from "../blockchain-clients"
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function POST(req: NextRequest) {
   const res = new Response()
-  const { chainId, intentExecutionBundles } = req?.body
+  const { chainId, executableIntentBatchBundle } = req?.body
 
   let transactionHash: `0x${string}`
 
@@ -28,16 +28,16 @@ export async function POST(req: NextRequest) {
       })
       for (
         let intentBun = 0;
-        intentBun < intentExecutionBundles.length;
+        intentBun < executableIntentBatchBundle.length;
         intentBun++
       ) {
-        const element = intentExecutionBundles[intentBun]
+        const element = executableIntentBatchBundle[intentBun]
         newIntentExecutionBatch({
           intentBatchId: element.intentBatchId,
         })
       }
       transactionHash = await mainnetIntentModule.executeBundle(
-        intentExecutionBundles
+        executableIntentBatchBundle
       )
       break
     case 5:
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       })
 
       transactionHash = await goerliIntentModule.executeBundle(
-        intentExecutionBundles
+        executableIntentBatchBundle
       )
       break
     default:

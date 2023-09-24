@@ -1,7 +1,6 @@
 import { intentifySafeModuleABI, IntentifyModuleAddressList } from "@district-labs/intentify-utils"
 import type { IntentBatchExecution } from "@district-labs/intentify-utils"
-
-import { publicClients } from "@/app/api/engine/networks"
+import { publicClients } from "../../blockchain-clients"
 
 export async function simulateIntentBatchExecution(
   chainId: number,

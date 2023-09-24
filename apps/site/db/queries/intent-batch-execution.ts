@@ -4,6 +4,16 @@ import { db } from ".."
 import { intentBatchExecution } from "../schema"
 import type { IntentBatchExecution } from "../schema"
 
+export const selectAllIntentBatchQuery = db.query.intentBatchExecution.findMany({
+  with: {
+    intentBatch: {
+      with: {
+        intents: true,
+      },
+    },
+  },
+})
+
 export function newIntentExecutionBatch(ieb: IntentBatchExecution) {
   return db.insert(intentBatchExecution).values(ieb)
 }

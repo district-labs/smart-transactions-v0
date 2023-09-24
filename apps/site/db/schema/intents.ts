@@ -52,8 +52,10 @@ export const intentBatch = mysqlTable("intent_batch", {
   nonce: char("nonce", { length: 66 }).notNull(),
   chainId: int("chain_id").notNull(),
   signature: text("signature").notNull(),
+  executedTxHash: char("executed_tx_hash", { length: 66 }).unique(),
+  executedAt: timestamp("executed_at"),
   cancelledTxHash: char("cancelled_tx_hash", { length: 66 }).unique(),
-  cancelledAt: timestamp("executed_at"),
+  cancelledAt: timestamp("cancelled_at"),
   strategyId: int("strategy_id").notNull(),
 })
 
@@ -66,6 +68,7 @@ export const intentBatchRelations = relations(intentBatch, ({ one, many }) => ({
   intentBatchExecution: one(intentBatchExecution, {
     fields: [intentBatch.id],
     references: [intentBatchExecution.intentBatchId],
+    
   }),
 }))
 
@@ -106,7 +109,10 @@ export const intentBatchExecutionRelations = relations(
   intentBatchExecution,
   ({ one, many }) => ({
     hooks: many(hooks),
-    intentBatch: one(intentBatch),
+    intentBatch: one(intentBatch, {
+      fields: [intentBatchExecution.intentBatchId],
+      references: [intentBatch.id],
+    }),
   })
 )
 
