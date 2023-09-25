@@ -1,21 +1,8 @@
 import { z } from "zod"
 
-import { calculatePeriod, formatCoinsInput } from "@/lib/utils"
+import { calculatePeriod, formatChartData, formatCoinsInput, formatDate } from "@/lib/utils"
 import { getTokenChartDataSchema } from "@/lib/validations/token"
-
-interface GetTokenChartDataResponse {
-  coins: {
-    [key: string]: {
-      symbol: string
-      confidence: number
-      decimals?: number
-      prices: {
-        timestamp: number
-        price: number
-      }[]
-    }
-  }
-}
+import { GetTokenChartDataResponse } from "@/types"
 
 export async function POST(req: Request) {
   const input = getTokenChartDataSchema.parse(await req.json())
@@ -74,10 +61,19 @@ export async function POST(req: Request) {
 
     const data = (await response.json()) as GetTokenChartDataResponse
 
-    return new Response(
-      JSON.stringify(data.coins[formattedCoins].prices, null, 2),
-      { status: 200 }
-    )
+    let chartData
+
+    if (Object.keys(data.coins).length > 1) {
+      chartData = formatChartData(
+        data,
+        formattedCoins.split(",")[0],
+        formattedCoins.split(",")[1]
+      )
+    } else {
+      chartData = formatChartData(data, formattedCoins)
+    }
+
+    return new Response(JSON.stringify(chartData, null, 2), { status: 200 })
   } catch (err) {
     console.error(err)
 

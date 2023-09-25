@@ -1,10 +1,9 @@
 "use client"
 
 import { useState } from "react"
+import { DefiLlamaToken } from "@/types"
 import { useQuery } from "@tanstack/react-query"
 import { LineChart } from "@tremor/react"
-
-import { formatPrice } from "@/lib/utils"
 
 import ChartLoadingSkeleton from "./chart-loading-skeleton"
 import {
@@ -12,24 +11,46 @@ import {
   type ChartTimeFiltersOptions,
 } from "./chart-time-filters"
 
-export default function TokenPriceChart() {
+interface TokenPriceChartProps {
+  outToken: DefiLlamaToken
+  inToken: DefiLlamaToken
+}
+
+export default function TokenPriceChart({
+  outToken,
+  inToken,
+}: TokenPriceChartProps) {
   const [chartRange, setChartRange] =
     useState<ChartTimeFiltersOptions["range"]>("30d")
 
-  const { data, status, refetch } = useQuery(["tokenChart", chartRange], {
-    queryFn: () =>
-      fetch("/api/token/chart-data", {
-        method: "POST",
-        body: JSON.stringify({
-          coins: { chainId: 1, type: "native" },
-          period: chartRange,
-          spanDataPoints: 50,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((res) => res.json()),
-  })
+  const { data, status, refetch } = useQuery(
+    ["tokenChart", `${outToken.symbol}-${inToken.symbol}`, chartRange],
+    {
+      queryFn: () =>
+        fetch("/api/token/chart-data", {
+          method: "POST",
+          body: JSON.stringify({
+            coins: [
+              {
+                chainId: outToken.chainId,
+                type: "erc20",
+                address: outToken.address,
+              },
+              {
+                chainId: inToken.chainId,
+                type: "erc20",
+                address: inToken.address,
+              },
+            ],
+            period: chartRange,
+            spanDataPoints: 50,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then((res) => res.json()),
+    }
+  )
 
   if (status === "error") return <p>Failed to load chart</p>
 
@@ -45,13 +66,10 @@ export default function TokenPriceChart() {
       ) : (
         <LineChart
           data={data}
-          index="timestamp"
+          index="time"
           categories={["price"]}
           yAxisWidth={64}
           autoMinValue={true}
-          valueFormatter={(value) =>
-            formatPrice(value, { notation: "standard" })
-          }
         />
       )}
     </div>

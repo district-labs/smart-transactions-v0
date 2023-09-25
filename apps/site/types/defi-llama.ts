@@ -68,3 +68,17 @@ export interface DefiLlamaTokenList {
     patch: number
   }
 }
+
+export interface GetTokenChartDataResponse {
+  coins: {
+    [key: string]: {
+      symbol: string
+      confidence: number
+      decimals?: number
+      prices: {
+        timestamp: number
+        price: number
+      }[]
+    }
+  }
+}
