@@ -1,7 +1,8 @@
 # E2E Testing
-forge script script/e2e/ExecuteIntent.s.sol:ExecuteIntent --rpc-url http://localhost:8545 --broadcast
 forge script script/e2e/TestnetDeploy.s.sol:TestnetDeploy --rpc-url http://localhost:8545 --broadcast
 forge script script/e2e/SmartWalletSetup.s.sol:SmartWalletSetup --rpc-url http://localhost:8545 --broadcast
+forge script script/e2e/ExecuteIntent.s.sol:ExecuteIntent --rpc-url http://localhost:8545 --broadcast
+forge script script/e2e/SaveIntent.s.sol:SaveIntent --rpc-url http://localhost:8545 --broadcast
 
 # Deploying
 

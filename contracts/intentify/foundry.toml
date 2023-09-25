@@ -23,6 +23,7 @@
   verbosity = 4
 
 [fmt]
+  ffi = true
   bracket_spacing = true
   int_types = "long"
   line_length = 120
