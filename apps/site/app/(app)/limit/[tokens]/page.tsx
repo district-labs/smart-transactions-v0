@@ -51,9 +51,6 @@ export default function LimitOrderPage({
     <>
       <section className="mt-8 grid gap-8 md:grid-cols-3">
         <div className="col-span-2">
-          <h2 className="text-2xl font-medium tracking-tight">
-            {tokens.replace("-", "/").toUpperCase()}
-          </h2>
           <TokenPriceChart
             outToken={outToken || defaultTokenOut}
             inToken={inToken || defaultTokenIn}

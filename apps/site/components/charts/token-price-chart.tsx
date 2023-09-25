@@ -32,14 +32,14 @@ export default function TokenPriceChart({
           body: JSON.stringify({
             coins: [
               {
-                chainId: outToken.chainId,
-                type: "erc20",
-                address: outToken.address,
-              },
-              {
                 chainId: inToken.chainId,
                 type: "erc20",
                 address: inToken.address,
+              },
+              {
+                chainId: outToken.chainId,
+                type: "erc20",
+                address: outToken.address,
               },
             ],
             period: chartRange,
@@ -55,12 +55,33 @@ export default function TokenPriceChart({
   if (status === "error") return <p>Failed to load chart</p>
 
   return (
-    <div>
-      <ChartTimeFilters
-        range={chartRange}
-        setRange={setChartRange}
-        refetch={refetch}
-      />
+    <>
+      <div className="flex w-full items-center justify-between">
+        <div className="flex items-center space-x-2">
+          {outToken && inToken && (
+            <div className="flex -space-x-1">
+              <img
+                src={outToken?.logoURI}
+                alt={outToken.name}
+                className="inline-block h-8 w-8 rounded-full ring-2 ring-background"
+              />
+              <img
+                src={inToken?.logoURI}
+                alt={inToken.name}
+                className="inline-block h-8 w-8 rounded-full ring-2 ring-background"
+              />
+            </div>
+          )}
+          <h2 className="text-2xl font-medium tracking-tight">
+            {`${inToken.symbol}/${outToken.symbol}`}
+          </h2>
+        </div>
+        <ChartTimeFilters
+          range={chartRange}
+          setRange={setChartRange}
+          refetch={refetch}
+        />
+      </div>
       {status === "loading" ? (
         <ChartLoadingSkeleton />
       ) : (
@@ -72,6 +93,6 @@ export default function TokenPriceChart({
           autoMinValue={true}
         />
       )}
-    </div>
+    </>
   )
 }
