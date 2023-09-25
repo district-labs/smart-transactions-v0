@@ -24,6 +24,7 @@ export type Intent = {
 };
 
 export type IntentBatch = {
+  intentBatchId?: number; // Used for the intent batch id in the database. This is not part of the EIP712 signature.
   readonly root: `0x${string}`;
   readonly nonce: `0x${string}`;
   readonly intents: Intent[];

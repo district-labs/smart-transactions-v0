@@ -7,12 +7,10 @@ import { selectIntentBatchActiveQuery } from '@/db/queries/intent-batch'
 import { simulateIntentBatchExecution } from "./core/simulate-intent-bundles-execution"
 import { BaseError, ContractFunctionRevertedError } from "viem"
 import type { IntentBatchExecution } from "@district-labs/intentify-utils"
-
-const API_URL_EXECUTE_INTENT_BUNDLES = "http://localhost:3000/api/execute"
-
+import { convertIntentBigIntToNumber } from "./core/convert-intent-bigint-to-number"
+import { env } from "@/env.mjs"
 async function calculateAndDispatch(chainId: number) {
   const intentBatchExecutionQuery = await selectIntentBatchActiveQuery.execute()
-
   if(intentBatchExecutionQuery.length === 0) return;
 
   const intentBatchExecutionObjects = intentBatchExecutionQuery.map((intentBatch: DBIntentBatchActiveItem) => {
@@ -37,7 +35,7 @@ async function calculateAndDispatch(chainId: number) {
       }
     } catch (err) {
       if (err instanceof BaseError) {
-        console.log(err)
+        console.log(err.cause)
         const revertError = err.walk(err => err instanceof ContractFunctionRevertedError)
         if (revertError instanceof ContractFunctionRevertedError) {
           const errorName = revertError?.data?.errorName ?? ''
@@ -49,7 +47,7 @@ async function calculateAndDispatch(chainId: number) {
 
   if (executableIntentBatchBundle.length === 0) return
 
-  const res = await fetch(API_URL_EXECUTE_INTENT_BUNDLES, {
+  const res = await fetch(env.API_EXECUTE_INTENT_BATCHES, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -68,26 +66,10 @@ async function calculateAndDispatch(chainId: number) {
 
 export async function GET(req: Request) {
   const res = new Response()
+  // const { chainId } = await req.json()
   await calculateAndDispatch(31337)
   console.log("Hello from Intent Engine")
   return res
 }
 
 
-function convertIntentBigIntToNumber(intentBatch: IntentBatchExecution) {
-  const convertedIntents = intentBatch.batch.intents.map((intent) => {
-    return {
-      ...intent,
-      value: Number(intent.value)
-    }
-  })
-
-  return {
-    ...intentBatch,
-    batch: {
-      ...intentBatch.batch,
-      intents: convertedIntents
-    }
-      
-  }
-}

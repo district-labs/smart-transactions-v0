@@ -1,8 +1,8 @@
-import { dbDeleteAllIntentBatches } from "@/db/writes/intent-batch"
+import { dbDeleteAllDbIntentBatchExecutions } from "@/db/writes/intent-batch-execution"
 
 export async function GET() {
   try {
-    await dbDeleteAllIntentBatches()
+    await dbDeleteAllDbIntentBatchExecutions()
     return new Response(JSON.stringify({ ok: true }))
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : String(e)

@@ -1,6 +1,6 @@
 import { db } from ".."
 
-export const selectAllIntentBatchQuery = db.query.intentBatchExecution.findMany({
+export const selectAllIntentBatchExecutionQuery = db.query.intentBatchExecution.findMany({
   with: {
     intentBatch: {
       with: {

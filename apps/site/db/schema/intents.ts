@@ -39,8 +39,8 @@ export const intentsRelations = relations(intents, ({ one }) => ({
   }),
 }))
 
-export type Intent = typeof intents.$inferSelect
-export type NewIntent = typeof intents.$inferInsert
+export type DbIntent = typeof intents.$inferSelect
+export type DbNewIntent = typeof intents.$inferInsert
 
 // ------------------ INTENT BATCH ------------------ //
 
@@ -73,9 +73,8 @@ export const intentBatchRelations = relations(intentBatch, ({ one, many }) => ({
   }),
 }))
 
-export type IntentBatch = typeof intentBatch.$inferSelect
-export type DBIntentBatch = typeof intentBatch.$inferSelect
-export type NewIntentBatch = typeof intentBatch.$inferInsert
+export type DbIntentBatch = typeof intentBatch.$inferSelect
+export type DbNewIntentBatch = typeof intentBatch.$inferInsert
 
 // ------------------ HOOKS ------------------ //
 
@@ -93,8 +92,8 @@ export const hooksRelations = relations(hooks, ({ one }) => ({
   }),
 }))
 
-export type Hook = typeof hooks.$inferSelect
-export type NewHook = typeof hooks.$inferInsert
+export type DbHook = typeof hooks.$inferSelect
+export type DbNewHook = typeof hooks.$inferInsert
 
 // ------------------ INTENT BATCH EXECUTION ------------------ //
 
@@ -103,8 +102,6 @@ export const intentBatchExecution = mysqlTable("intent_batch_execution", {
   intentBatchId: int("intent_batch_id"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").onUpdateNow(),
-  executedTxHash: char("executed_tx_hash", { length: 66 }).unique(),
-  executedAt: timestamp("executed_at"),
 })
 
 export const intentBatchExecutionRelations = relations(
@@ -118,5 +115,5 @@ export const intentBatchExecutionRelations = relations(
   })
 )
 
-export type IntentBatchExecution = typeof intentBatchExecution.$inferSelect
-export type NewIntentBatchExecution = typeof intentBatchExecution.$inferInsert
+export type DbIntentBatchExecution = typeof intentBatchExecution.$inferSelect
+export type DbNewIntentBatchExecution = typeof intentBatchExecution.$inferInsert

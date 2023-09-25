@@ -5,7 +5,7 @@ export async function POST(req: Request) {
   const { chainId, intentBatchId, transactionHash } = await req.json()
 
   console.log("Hello from Event Cancelled")
-  updateIntentBatchCancelled(intentBatchId, {
+  await updateIntentBatchCancelled(intentBatchId, {
     cancelledTxHash: transactionHash,
     cancelledAt: new Date(), // TODO: Use the timestamp from the event/transaction
   })

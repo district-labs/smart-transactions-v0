@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
-import { newIntentExecutionBatch } from "@/db/queries/intent-batch-execution"
 import {
   IntentifyBundlerAddressList,
   intentifySafeModuleBundlerABI,
@@ -11,36 +6,15 @@ import { getContract } from "viem"
 
 import { localWalletClient, mainnetWalletClient } from "../blockchain-clients"
 import { IntentifyModuleAddressList } from "@district-labs/intentify-utils"
+import { createIntentExecutionBatchWithHooks } from "@/db/writes/intent-batch-execution"
+import { ApiIntentBatchExecution, ApiIntentBatchExecutionBundle } from "@/lib/validations/api/intent-batch-execution-bundle"
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export async function POST(req: Request) {
-  const { chainId, executableIntentBatchBundle } = await req.json()
-
-  console.log(chainId, executableIntentBatchBundle)
-
-  let transactionHash: `0x${string}`
+  const body = await req.json()
+  const data = ApiIntentBatchExecutionBundle.parse(body)
+  const { chainId, executableIntentBatchBundle } = data
 
   switch (chainId) {
-    case 1:
-      const mainnetIntentModule = getContract({
-        address: IntentifyBundlerAddressList[1],
-        abi: intentifySafeModuleBundlerABI,
-        walletClient: mainnetWalletClient,
-      })
-      for (
-        let intentBun = 0;
-        intentBun < executableIntentBatchBundle.length;
-        intentBun++
-      ) {
-        const element = executableIntentBatchBundle[intentBun]
-        newIntentExecutionBatch({
-          intentBatchId: element.intentBatchId,
-        })
-      }
-      transactionHash = await mainnetIntentModule.executeBundle(
-        executableIntentBatchBundle
-      )
-      break
     case 5:
       const goerliIntentModule = getContract({
         address: IntentifyBundlerAddressList[5],
@@ -48,31 +22,92 @@ export async function POST(req: Request) {
         walletClient: mainnetWalletClient,
       })
 
-      goerliIntentModule.write.executeBundle([executableIntentBatchBundle])
-
-      // transactionHash = await goerliIntentModule.executeBundle(
-      //   executableIntentBatchBundle
-      // )
+      const txdataGoerli = executableIntentBatchBundle.map(createContractArguments)
+      goerliIntentModule.write.executeBundle([IntentifyModuleAddressList[5], txdataGoerli], {
+        gas: BigInt(500000)
+      })
       break
     case 31337:
-      console.log(IntentifyBundlerAddressList[31337])
-      const localItentModule = getContract({
+      const localIntentModule = getContract({
         address: IntentifyBundlerAddressList[31337],
         abi: intentifySafeModuleBundlerABI,
         walletClient: localWalletClient,
       })
 
-      localItentModule.write.executeBundle([IntentifyModuleAddressList[31337], executableIntentBatchBundle], {
-        gas: 569420n
+      const txdataLocal = executableIntentBatchBundle.map(createContractArguments)
+      localIntentModule.write.executeBundle([IntentifyModuleAddressList[31337], txdataLocal], {
+        gas: BigInt(500000)
       })
+
+      executableIntentBatchBundle.map((intentBatch) => {
+        const { hooks } = intentBatch
+        createIntentExecutionBatchWithHooks(
+          intentBatch.batch.intentBatchId,
+          hooks.map((hook) => ({
+            target: hook.target,
+            data: hook.data,
+          }))
+        )
+      })
+
 
       break
     default:
       throw new Error(`No client for chainId ${chainId}`)
-    // TODO: Update database with executed intent bundles
-    // updateIntentBundleExecutionStatus(intentBundleQuery, transactionHash)
   }
 
   console.log("Hello from Execute")
-  return new Response({ok: true})
+  return new Response()
+}
+
+function createContractArguments(intentBatchExecution: ApiIntentBatchExecution): {
+  batch: {
+    nonce: `0x${string}`
+    root: `0x${string}`
+    intents: {
+      root: `0x${string}`
+      target: `0x${string}`
+      value: bigint
+      data: `0x${string}`
+    }[]
+  },
+  signature: {
+    v: number
+    r: `0x${string}`
+    s: `0x${string}`
+  }
+  hooks: {
+    target:  `0x${string}`
+    data:  `0x${string}`
+  }[]
+} {
+
+  const { batch, signature, hooks } = intentBatchExecution
+  const batchNew = {
+    nonce: batch.nonce as `0x${string}`,
+    root: batch.root as `0x${string}`,
+    intents: batch.intents?.map((intent) => ({
+      root: intent.root as `0x${string}`,
+      target: intent.target as `0x${string}`,
+      value: BigInt(intent.value),
+      data: intent.data as `0x${string}`
+    }))
+  }
+
+  const sig = {
+    v: signature.v,
+    r: signature.r as `0x${string}`,
+    s: signature.s as `0x${string}`
+  }
+
+  const hooksNew = hooks.map((hook) => ({
+    target: hook.target as `0x${string}`,
+    data: hook.data as `0x${string}`
+  }))
+
+  return {
+    batch:batchNew ,
+    signature: sig,
+    hooks: hooksNew
+  }
 }

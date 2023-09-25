@@ -9,6 +9,7 @@ export function generateIntentBatchExecutionWithHooksFromIntentBatchQuery(
   const signatureSplit = splitSignature(intentBatch.signature)
   const intentBatchExecution: IntentBatchExecution = {
     batch: {
+      intentBatchId: intentBatch.id,
       root: intentBatch.root as `0x${string}`,
       nonce: intentBatch.nonce as `0x${string}`,
       intents: intentBatch.intents.map(intent => ({

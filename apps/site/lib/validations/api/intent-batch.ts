@@ -1,7 +1,8 @@
 import { z } from "zod"
 
-export const intentBatchSchema = z.object({
+export const ApiIntentBatch = z.object({
   intentBatch: z.object({
+    intentBatchHash: z.string(),
     nonce: z.string(),
     root: z.string(),
     chainId: z.string(),

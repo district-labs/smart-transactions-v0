@@ -7,7 +7,11 @@ export const selectAllIntentBatchQuery = db.query.intentBatch.findMany(
   {
     with: {
       intents: true,
-      intentBatchExecution: true,
+      intentBatchExecution: {
+        with: {
+          hooks: true,
+        },
+      },
     },
   }
 )

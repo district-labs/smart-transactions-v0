@@ -5,11 +5,10 @@ export async function POST(req: Request) {
   const { chainId, intentBatchId, transactionHash } = await req.json()
 
   console.log(chainId, intentBatchId, transactionHash)
-  updateIntentBatchExecuted(intentBatchId, {
+  await updateIntentBatchExecuted(intentBatchId, {
     executedTxHash: transactionHash,
     executedAt: new Date(), // TODO: Use the timestamp from the event/transaction
   })
   console.log("Hello from Event Executed")
-
   return res
 }
