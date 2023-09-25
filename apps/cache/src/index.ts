@@ -8,6 +8,7 @@ import { dispatchIntentCancelled } from "./dispatch-intent-cancelled";
 ponder.on("IntentifySafeModuleTestnet:IntentBatchExecuted",async ({context, event}) => {
     const { IntentBatch  } = context.entities;
     // Dispatch a message to the API to notify that the intent batch has been executed 
+    console.log(event.params.intentBatchId)
     await dispatchIntentExecution(5, event.params.intentBatchId, event.transaction.hash)
     await IntentBatch.upsert({
       id: event.params.intentBatchId,

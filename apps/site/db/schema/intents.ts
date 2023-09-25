@@ -74,6 +74,7 @@ export const intentBatchRelations = relations(intentBatch, ({ one, many }) => ({
 }))
 
 export type IntentBatch = typeof intentBatch.$inferSelect
+export type DBIntentBatch = typeof intentBatch.$inferSelect
 export type NewIntentBatch = typeof intentBatch.$inferInsert
 
 // ------------------ HOOKS ------------------ //

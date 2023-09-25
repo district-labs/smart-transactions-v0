@@ -1,6 +1,6 @@
 import { intentifySafeModuleABI, IntentifyModuleAddressList } from "@district-labs/intentify-utils"
 import type { IntentBatchExecution } from "@district-labs/intentify-utils"
-import { publicClients } from "../../blockchain-clients"
+import { accountShared, publicClients } from "../../blockchain-clients"
 
 export async function simulateIntentBatchExecution(
   chainId: number,
@@ -11,11 +11,13 @@ export async function simulateIntentBatchExecution(
 
   const address = IntentifyModuleAddressList[chainId]
   if (!address) throw new Error(`No IntentifyModuleAddress for chainId ${chainId}`)
+  console.log(chainId, 'chainId')
 
   return await publicClient.simulateContract({
     address: address,
     abi: intentifySafeModuleABI,
     functionName: "execute",
     args: [intentBatchExecution],
+    account: accountShared
   })
 }

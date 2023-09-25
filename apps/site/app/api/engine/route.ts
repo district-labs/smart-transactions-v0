@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 
-import type { DBIntentBatchActiveItem, DBIntentBatchActiveQuery } from "@/db/queries/intent-batch"
+import type { DBIntentBatchActiveItem } from "@/db/queries/intent-batch"
 import { generateIntentBatchExecutionWithHooksFromIntentBatchQuery } from "./core/generate-intent-batch-execution-with-hooks-from-intent-batch-query"
-import { selectActiveIntentBatchQuery } from '@/db/queries/intent-batch' 
+import { selectIntentBatchActiveQuery } from '@/db/queries/intent-batch' 
 import { simulateIntentBatchExecution } from "./core/simulate-intent-bundles-execution"
 import { BaseError, ContractFunctionRevertedError } from "viem"
 import type { IntentBatchExecution } from "@district-labs/intentify-utils"
@@ -11,7 +11,7 @@ import type { IntentBatchExecution } from "@district-labs/intentify-utils"
 const API_URL_EXECUTE_INTENT_BUNDLES = "http://localhost:3000/api/execute"
 
 async function calculateAndDispatch(chainId: number) {
-  const intentBatchExecutionQuery = await selectActiveIntentBatchQuery.execute()
+  const intentBatchExecutionQuery = await selectIntentBatchActiveQuery.execute()
 
   if(intentBatchExecutionQuery.length === 0) return;
 
@@ -37,7 +37,7 @@ async function calculateAndDispatch(chainId: number) {
       }
     } catch (err) {
       if (err instanceof BaseError) {
-        console.log(err.details)
+        console.log(err)
         const revertError = err.walk(err => err instanceof ContractFunctionRevertedError)
         if (revertError instanceof ContractFunctionRevertedError) {
           const errorName = revertError?.data?.errorName ?? ''
@@ -55,8 +55,8 @@ async function calculateAndDispatch(chainId: number) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      chainId,
-      executableIntentBatchBundle,
+      chainId: 31337,
+      executableIntentBatchBundle: executableIntentBatchBundle.map(convertIntentBigIntToNumber),
     }),
   })
 
@@ -68,7 +68,26 @@ async function calculateAndDispatch(chainId: number) {
 
 export async function GET(req: Request) {
   const res = new Response()
-  await calculateAndDispatch(5)
+  await calculateAndDispatch(31337)
   console.log("Hello from Intent Engine")
   return res
+}
+
+
+function convertIntentBigIntToNumber(intentBatch: IntentBatchExecution) {
+  const convertedIntents = intentBatch.batch.intents.map((intent) => {
+    return {
+      ...intent,
+      value: Number(intent.value)
+    }
+  })
+
+  return {
+    ...intentBatch,
+    batch: {
+      ...intentBatch.batch,
+      intents: convertedIntents
+    }
+      
+  }
 }

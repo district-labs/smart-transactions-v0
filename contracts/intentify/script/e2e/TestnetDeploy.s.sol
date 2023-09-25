@@ -3,6 +3,7 @@ pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
 import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
+import { IntentifySafeModuleBundler } from "../../src/module/IntentifySafeModuleBundler.sol";
 import { WalletFactory } from "../../src/WalletFactory.sol";
 import { LimitOrderIntent } from "../../src/intents/LimitOrderIntent.sol";
 import { TimestampAfterIntent } from "../../src/intents/TimestampAfterIntent.sol";
@@ -25,6 +26,7 @@ contract TestnetDeploy is Script {
         new TimestampBeforeIntent();
         new TokenRouterReleaseIntent();
         new TwapIntent();
+        new IntentifySafeModuleBundler();
         vm.stopBroadcast();
     }
 }

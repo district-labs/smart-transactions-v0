@@ -44,14 +44,14 @@ contract SmartWalletSetup is Script {
             0, // payment
             payable(address(0)) // paymentReceiver
         );
-        
+
         SafeProxy _safeProxy = _safeProxyFactory.createProxyWithNonce(address(_safe), initializer, uint256(0));
         Safe _safe = Safe(payable(address(_safeProxy)));
         _enableIntentifyModule(DEPLOYER_PRIVATE, _safe, address(_intentifySafeModule));
         vm.stopBroadcast();
     }
 
-     function _setupSafe(address owner) internal returns (Safe safe) {
+    function _setupSafe(address owner) internal returns (Safe safe) {
         address[] memory owners = new address[](1);
         bytes memory data = new bytes(0);
         owners[0] = owner;

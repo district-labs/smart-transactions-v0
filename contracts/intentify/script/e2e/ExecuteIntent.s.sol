@@ -47,8 +47,7 @@ contract ExecuteIntent is Script, StdCheats {
             data: _timestampBeforeIntent.encode(uint128(block.timestamp - 100))
         });
 
-        IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_safe), nonce: nonceStandard, intents: intents });
+        IntentBatch memory intentBatch = IntentBatch({ root: address(_safe), nonce: nonceStandard, intents: intents });
 
         bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(DEPLOYER_PRIVATE, digest);

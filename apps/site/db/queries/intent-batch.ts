@@ -1,6 +1,4 @@
-import { asc, eq, isNotNull, isNull, sql } from "drizzle-orm"
 import { db } from ".."
-import { intentBatch, intentBatchExecution, intents } from "../schema"
 
 // ----------------------------------------
 // Select All Intent Batch Query
@@ -26,9 +24,9 @@ export type SelectOneIntentBatchQuery = Awaited<
 >[number]
 
 // ----------------------------------------
-// Select All Intent Batch Query
+// Select Active Intent Batch Query
 // ----------------------------------------
-export const selectActiveIntentBatchQuery = db.query.intentBatch.findMany(
+export const selectIntentBatchActiveQuery = db.query.intentBatch.findMany(
   {
     where: (intentBatch, { eq, isNull, and}) => and(
       eq(intentBatch.cancelledAt, isNull(intentBatch.cancelledAt)), 
@@ -37,9 +35,6 @@ export const selectActiveIntentBatchQuery = db.query.intentBatch.findMany(
     with: {
       intents: true,
       intentBatchExecution: {
-        columns: {
-          executedTxHash: true,
-        },
         with: {
           hooks: true,
         },
@@ -49,53 +44,36 @@ export const selectActiveIntentBatchQuery = db.query.intentBatch.findMany(
 )
 
 export type DBIntentBatchActiveQuery = Awaited<ReturnType<
-  typeof selectActiveIntentBatchQuery.execute
+  typeof selectIntentBatchActiveQuery.execute
 >>
 
 export type DBIntentBatchActiveItem = Awaited<
-  ReturnType<typeof selectActiveIntentBatchQuery.execute>
+  ReturnType<typeof selectIntentBatchActiveQuery.execute>
 >[number]
 
 // ----------------------------------------
-// Active Intent Batch Query
+// Select Cancelled Intent Batch Query
 // ----------------------------------------
-export const intentBatchActiveQuery = await db
-.select({
-  intentBatch: intentBatch,
-  // intentBatchExecution: intentBatchExecution,
-  intentsList: sql`GROUP_CONCAT(JSON_OBJECT(
-    'id', intents.id,
-    'root', intents.root,
-    'target', intents.target,
-    'data', intents.data,
-    'value', intents.value
-  )) AS intents`
-})
-.from(intentBatch)
-.where(eq(intentBatch.cancelledTxHash, isNull(intentBatch.cancelledTxHash)))
-.leftJoin(intentBatchExecution, eq(intentBatchExecution.executedTxHash, isNull(intentBatchExecution.executedTxHash)))
-.leftJoin(intents, eq(intents.intentBatchId, intentBatch.id))
-.groupBy(intentBatch.id) // Group by intentBatch.id
-.orderBy(asc(intentBatch.createdAt))
+export const selectIntentBatchCancelledQuery = db.query.intentBatch.findMany(
+  {
+    where: (intentBatch, { eq, isNotNull, and}) => and(
+      eq(intentBatch.cancelledAt, isNotNull(intentBatch.cancelledAt)), 
+    ),
+    with: {
+      intents: true,
+      intentBatchExecution: {
+        with: {
+          hooks: true,
+        },
+      },
+    },
+  }
+)
 
-export type SelectActiveIntentBatchQuery = Awaited<
-  typeof intentBatchActiveQuery
->
+export type DBIntentBatchCancelledQuery = Awaited<ReturnType<
+  typeof selectIntentBatchCancelledQuery.execute
+>>
 
-export type SelectActiveIntentBatchQueryItem = Awaited<
-  typeof intentBatchActiveQuery
+export type DBIntentBatchCancelledItem = Awaited<
+  ReturnType<typeof selectIntentBatchCancelledQuery.execute>
 >[number]
-
-// ----------------------------------------
-// Cancelled Intent Batch Query
-// ----------------------------------------
-export const intentBatchCancelledQuery = await db
-.select({
-  id: intentBatch.id,
-  intentId: intents.id
-})
-.from(intentBatch)
-.where(eq(intentBatch.cancelledTxHash, isNotNull(intentBatch.cancelledTxHash)))
-.leftJoin(intents, eq(intents.intentBatchId, eq(intentBatch.id, intentBatch.id)))
-.leftJoin(intentBatchExecution, eq(intentBatchExecution.executedTxHash, isNull(intentBatchExecution.executedTxHash)))
-.orderBy(asc(intentBatch.createdAt))

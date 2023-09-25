@@ -1,7 +1,7 @@
 import type { DBIntentBatchActiveItem } from "@/db/queries/intent-batch"
 import type { Hook, IntentBatchExecution } from "@district-labs/intentify-utils"
-import { generateHooksForLimitOrderBasic } from "./intent-hooks/generate-hooks-for-limit-order-basic"
 import { splitSignature } from "./split-signature"
+import { generateHooksForTimestamp } from "./intent-hooks/generate-hooks-for-timestamp"
 
 export function generateIntentBatchExecutionWithHooksFromIntentBatchQuery(
   intentBatch: DBIntentBatchActiveItem
@@ -35,7 +35,8 @@ function generateHooksForIntentBatch(
   switch (intentBatch.strategyId) {
     // case "limit-order-basic
     case 1:
-      return generateHooksForLimitOrderBasic(intentBatch.chainId)
+      return generateHooksForTimestamp(intentBatch.chainId)
+      // return generateHooksForLimitOrderBasic(intentBatch.chainId)
     default:
       throw new Error(`No hooks for intentBatch ${intentBatch.id}`)
   }

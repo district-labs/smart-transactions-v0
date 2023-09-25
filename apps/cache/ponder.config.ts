@@ -22,7 +22,7 @@ export const config: Config = {
       network: "testnet",
       address: IntentifyModuleAddressList[31337],
       abi: intentifySafeModuleABI,
-      startBlock: 1,
+      startBlock: 0,
     },
   ],
 };

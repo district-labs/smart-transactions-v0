@@ -2,11 +2,11 @@
 pragma solidity >=0.8.19;
 
 // Forge Contracts
-import {console2} from "forge-std/console2.sol";
+import { console2 } from "forge-std/console2.sol";
 import { Script } from "forge-std/Script.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
 
-import {Surl} from "surl/Surl.sol";
+import { Surl } from "surl/Surl.sol";
 
 // Intentify Contracts
 import {
@@ -25,18 +25,19 @@ import { WalletFactory } from "../../src/WalletFactory.sol";
 
 contract SaveIntent is Script, StdCheats {
     using Surl for *;
+
     TimestampBeforeIntent _timestampBeforeIntent = new TimestampBeforeIntent();
     Hook EMPTY_HOOK = Hook({ target: address(0), data: bytes("") });
 
     // Deterministicaly deploted in TestnetDeploy.s.sol
     IntentifySafeModule internal _intentifySafeModule = IntentifySafeModule(0x5FbDB2315678afecb367f032d93F642f64180aa3);
-    address internal _safe = 0x930d7714a8D543b10F1BeFE2B80cE11c9B168160;
+    address internal _safe = 0x8EB74E3d253d479A4b3A354f71FB7dDC664c8929;
 
     // Anvil Account 1
     address DEPLOYER_PUBLIC = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
     uint256 DEPLOYER_PRIVATE = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
 
-     struct DBIntentArg {
+    struct DBIntentArg {
         string name;
         string argType;
         string value;
@@ -55,6 +56,7 @@ contract SaveIntent is Script, StdCheats {
         string nonce;
         address root;
         string chainId;
+        string intentBatchHash;
         bytes signature;
         DBIntent[] intents;
     }
@@ -74,11 +76,10 @@ contract SaveIntent is Script, StdCheats {
             data: _timestampBeforeIntent.encode(uint128(block.timestamp - 100))
         });
 
-        IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_safe), nonce: nonceStandard, intents: intents });
+        IntentBatch memory intentBatch = IntentBatch({ root: address(_safe), nonce: nonceStandard, intents: intents });
 
-        bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(DEPLOYER_PRIVATE, digest);
+        bytes32 intentBatchHash = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(DEPLOYER_PRIVATE, intentBatchHash);
 
         Hook[] memory hooks = new Hook[](1);
         hooks[0] = EMPTY_HOOK;
@@ -87,21 +88,26 @@ contract SaveIntent is Script, StdCheats {
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
         // Perform a post request with headers and JSON body
-        save(nonceStandard, intentBatch, batchExecution);
+        save(nonceStandard, intentBatchHash, intentBatch, batchExecution);
         vm.stopBroadcast();
     }
 
-    function save(bytes memory nonce, IntentBatch memory intentBatch, IntentBatchExecution memory batchExecution) internal {
-                string[] memory headers = new string[](1);
+    function save(
+        bytes memory nonce,
+        bytes32 intentBatchHash,
+        IntentBatch memory intentBatch,
+        IntentBatchExecution memory batchExecution
+    )
+        internal
+    {
+        string[] memory headers = new string[](1);
         headers[0] = "Content-Type: application/json";
         string memory URL = "http://localhost:3000/api/intent-batch/create";
 
         DBIntentArg[] memory dbIntentArgs = new DBIntentArg[](1);
-        dbIntentArgs[0] = DBIntentArg({
-            name: "timestamp",
-            argType: "uint128",
-            value: uintToString(block.timestamp - 100)
-        });
+        dbIntentArgs[0] =
+            DBIntentArg({ name: "timestamp", argType: "uint128", value: uintToString(block.timestamp - 100) });
+
         DBIntent memory dbIntent = DBIntent({
             intentId: bytesToString(abi.encodePacked("TimestampBefore", "0")),
             root: batchExecution.batch.intents[0].root,
@@ -118,17 +124,22 @@ contract SaveIntent is Script, StdCheats {
             chainId: uintToString(block.chainid),
             nonce: bytesToString(nonce),
             root: intentBatch.root,
+            intentBatchHash: bytesToString(abi.encodePacked(intentBatchHash)),
             signature: _combineRSV(batchExecution.signature.r, batchExecution.signature.s, batchExecution.signature.v),
             intents: dbIntents
         });
         console2.log(createDBIntentBatchString(dbIntentBatch));
-        (,bytes memory response) = URL.post(string.concat("{\"intentBatch\":", createDBIntentBatchString(dbIntentBatch), "}"));
+        (, bytes memory response) =
+            URL.post(string.concat("{\"intentBatch\":", createDBIntentBatchString(dbIntentBatch), "}"));
     }
 
     function createDBIntentBatchString(DBIntentBatch memory intentBatch) internal pure returns (string memory) {
         string memory intentBatchString = "{";
         intentBatchString = string.concat(intentBatchString, "\"chainId\": \"", intentBatch.chainId, "\",");
-        intentBatchString = string.concat(intentBatchString, "\"signature\": \"", bytesToString(intentBatch.signature), "\",");
+        intentBatchString =
+            string.concat(intentBatchString, "\"intentBatchHash\": \"", intentBatch.intentBatchHash, "\",");
+        intentBatchString =
+            string.concat(intentBatchString, "\"signature\": \"", bytesToString(intentBatch.signature), "\",");
         intentBatchString = string.concat(intentBatchString, "\"root\": \"", addressToString(intentBatch.root), "\",");
         intentBatchString = string.concat(intentBatchString, "\"nonce\": \"", intentBatch.nonce, "\",");
         intentBatchString = string.concat(intentBatchString, "\"intents\": [");
@@ -172,22 +183,21 @@ contract SaveIntent is Script, StdCheats {
         return intentArgString;
     }
 
-    function addressToString(address _addr) public pure returns(string memory) {
+    function addressToString(address _addr) public pure returns (string memory) {
         bytes32 value = bytes32(uint256(uint160(_addr)));
         bytes memory alphabet = "0123456789abcdef";
-        
+
         bytes memory str = new bytes(42);
-        str[0] = '0';
-        str[1] = 'x';
+        str[0] = "0";
+        str[1] = "x";
         for (uint256 i = 0; i < 20; i++) {
-            str[2+i*2] = alphabet[uint8(value[i + 12] >> 4)];
-            str[3+i*2] = alphabet[uint8(value[i + 12] & 0x0f)];
+            str[2 + i * 2] = alphabet[uint8(value[i + 12] >> 4)];
+            str[3 + i * 2] = alphabet[uint8(value[i + 12] & 0x0f)];
         }
         return string(str);
     }
 
     function bytesToString(bytes memory buffer) public pure returns (string memory) {
-
         // Fixed buffer size for hexadecimal convertion
         bytes memory converted = new bytes(buffer.length * 2);
 
@@ -205,21 +215,21 @@ contract SaveIntent is Script, StdCheats {
         if (value == 0) {
             return "0";
         }
-        
+
         uint256 temp = value;
         uint256 digits;
         while (temp != 0) {
             digits++;
             temp /= 10;
         }
-        
+
         bytes memory buffer = new bytes(digits);
         while (value != 0) {
             digits -= 1;
             buffer[digits] = bytes1(uint8(48 + value % 10));
             value /= 10;
         }
-        
+
         return string(buffer);
     }
 
