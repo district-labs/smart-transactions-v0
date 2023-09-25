@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
+import { console2 } from "forge-std/console2.sol";
+import { Ownable } from "solady/auth/Ownable.sol";
+
 import { EngineHub } from "../../src/periphery/EngineHub.sol";
 import { ERC20Mintable } from "../../src/periphery/ERC20Mintable.sol";
-import { console2 } from "forge-std/console2.sol";
 import { BaseTest } from "../utils/Base.t.sol";
 
 contract EngineHubTest is BaseTest {
@@ -76,7 +78,7 @@ contract EngineHubTest is BaseTest {
         data[0] = abi.encodeWithSignature("mint(address,uint256)", address(this), amount);
 
         vm.startPrank(signer);
-        vm.expectRevert("EngineHub:not-owner");
+        vm.expectRevert(Ownable.Unauthorized.selector);
         _engineHub.multiCall(targets, data);
         vm.stopPrank();
     }

@@ -2,21 +2,15 @@
 pragma solidity >=0.8.19;
 
 import { ERC20Mintable } from "./ERC20Mintable.sol";
+import { Ownable } from "solady/auth/Ownable.sol";
 
 import { TokenRouterReleaseIntent } from "../intents/TokenRouterReleaseIntent.sol";
 
-contract EngineHub {
-    address public immutable owner;
-
+contract EngineHub is Ownable {
     event MultiCallAction(address indexed target, bytes data, bytes result);
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "EngineHub:not-owner");
-        _;
-    }
-
     constructor(address _owner) {
-        owner = _owner;
+        _initializeOwner(_owner);
     }
 
     function multiCall(
