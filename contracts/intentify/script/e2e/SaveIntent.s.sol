@@ -2,11 +2,11 @@
 pragma solidity >=0.8.19;
 
 // Forge Contracts
-import { console2 } from "forge-std/console2.sol";
-import { Script } from "forge-std/Script.sol";
-import { StdCheats } from "forge-std/StdCheats.sol";
+import {console2} from "forge-std/console2.sol";
+import {Script} from "forge-std/Script.sol";
+import {StdCheats} from "forge-std/StdCheats.sol";
 
-import { Surl } from "surl/Surl.sol";
+import {Surl} from "surl/Surl.sol";
 
 // Intentify Contracts
 import {
@@ -19,15 +19,15 @@ import {
 } from "../../src/TypesAndDecoders.sol";
 
 // Protocol Contracts
-import { TimestampBeforeIntent } from "../../src/intents/TimestampBeforeIntent.sol";
-import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
-import { WalletFactory } from "../../src/WalletFactory.sol";
+import {TimestampBeforeIntent} from "../../src/intents/TimestampBeforeIntent.sol";
+import {IntentifySafeModule} from "../../src/module/IntentifySafeModule.sol";
+import {WalletFactory} from "../../src/WalletFactory.sol";
 
 contract SaveIntent is Script, StdCheats {
     using Surl for *;
 
     TimestampBeforeIntent _timestampBeforeIntent = new TimestampBeforeIntent();
-    Hook EMPTY_HOOK = Hook({ target: address(0), data: bytes("") });
+    Hook EMPTY_HOOK = Hook({target: address(0), data: bytes("")});
 
     // Deterministicaly deploted in TestnetDeploy.s.sol
     IntentifySafeModule internal _intentifySafeModule = IntentifySafeModule(0x5FbDB2315678afecb367f032d93F642f64180aa3);
@@ -76,7 +76,7 @@ contract SaveIntent is Script, StdCheats {
             data: _timestampBeforeIntent.encode(uint128(block.timestamp - 100))
         });
 
-        IntentBatch memory intentBatch = IntentBatch({ root: address(_safe), nonce: nonceStandard, intents: intents });
+        IntentBatch memory intentBatch = IntentBatch({root: address(_safe), nonce: nonceStandard, intents: intents});
 
         bytes32 intentBatchHash = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(DEPLOYER_PRIVATE, intentBatchHash);
@@ -85,7 +85,7 @@ contract SaveIntent is Script, StdCheats {
         hooks[0] = EMPTY_HOOK;
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         // Perform a post request with headers and JSON body
         save(nonceStandard, intentBatchHash, intentBatch, batchExecution);
@@ -97,16 +97,14 @@ contract SaveIntent is Script, StdCheats {
         bytes32 intentBatchHash,
         IntentBatch memory intentBatch,
         IntentBatchExecution memory batchExecution
-    )
-        internal
-    {
+    ) internal {
         string[] memory headers = new string[](1);
         headers[0] = "Content-Type: application/json";
         string memory URL = "http://localhost:3000/api/intent-batch/create";
 
         DBIntentArg[] memory dbIntentArgs = new DBIntentArg[](1);
         dbIntentArgs[0] =
-            DBIntentArg({ name: "timestamp", argType: "uint128", value: uintToString(block.timestamp - 100) });
+            DBIntentArg({name: "timestamp", argType: "uint128", value: uintToString(block.timestamp - 100)});
 
         DBIntent memory dbIntent = DBIntent({
             intentId: bytesToString(abi.encodePacked("TimestampBefore", "0")),

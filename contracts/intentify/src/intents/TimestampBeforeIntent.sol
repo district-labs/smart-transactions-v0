@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import { IHook } from "../interfaces/IHook.sol";
-import { Intent } from "../TypesAndDecoders.sol";
-import { BytesLib } from "../libraries/BytesLib.sol";
+import {IHook} from "../interfaces/IHook.sol";
+import {Intent} from "../TypesAndDecoders.sol";
+import {BytesLib} from "../libraries/BytesLib.sol";
 
 contract TimestampBeforeIntent is IHook {
     function execute(Intent calldata intent) external view returns (bool) {

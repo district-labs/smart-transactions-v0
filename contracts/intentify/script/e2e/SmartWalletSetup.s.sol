@@ -5,14 +5,14 @@ pragma solidity >=0.8.19;
 import "forge-std/Script.sol";
 
 // Safe Contracts
-import { Safe } from "safe-contracts/Safe.sol";
-import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
-import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
-import { Enum } from "safe-contracts/common/Enum.sol";
+import {Safe} from "safe-contracts/Safe.sol";
+import {SafeProxy} from "safe-contracts/proxies/SafeProxy.sol";
+import {SafeProxyFactory} from "safe-contracts/proxies/SafeProxyFactory.sol";
+import {Enum} from "safe-contracts/common/Enum.sol";
 
 // Protocol Contracts
-import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
-import { WalletFactory } from "../../src/WalletFactory.sol";
+import {IntentifySafeModule} from "../../src/module/IntentifySafeModule.sol";
+import {WalletFactory} from "../../src/WalletFactory.sol";
 
 contract SmartWalletSetup is Script {
     Safe internal _safe;

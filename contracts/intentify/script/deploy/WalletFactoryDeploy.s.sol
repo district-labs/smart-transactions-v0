@@ -2,7 +2,7 @@
 pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
-import { WalletFactory } from "../../src/WalletFactory.sol";
+import {WalletFactory} from "../../src/WalletFactory.sol";
 
 contract WalletFactoryDeploy is Script {
     function run() external {

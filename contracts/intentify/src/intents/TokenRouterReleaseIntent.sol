@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import { ERC20 } from "solady/tokens/ERC20.sol";
-import { IHook } from "../interfaces/IHook.sol";
-import { Intent, Hook } from "../TypesAndDecoders.sol";
-import { BytesLib } from "../libraries/BytesLib.sol";
+import {ERC20} from "solady/tokens/ERC20.sol";
+import {IHook} from "../interfaces/IHook.sol";
+import {Intent, Hook} from "../TypesAndDecoders.sol";
+import {BytesLib} from "../libraries/BytesLib.sol";
 
 contract TokenRouterReleaseIntent {
     event Release(address indexed account, address indexed token, uint256 amount);

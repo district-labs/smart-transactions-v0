@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import { ERC20Mintable } from "../mocks/ERC20Mintable.sol";
+import {ERC20Mintable} from "../mocks/ERC20Mintable.sol";
 
 import {
     Intent,
@@ -11,12 +11,12 @@ import {
     Hook,
     TypesAndDecoders
 } from "../../src/TypesAndDecoders.sol";
-import { Intentify } from "../../src/Intentify.sol";
-import { SwapRouter } from "../../src/periphery/SwapRouter.sol";
-import { TokenRouterReleaseIntent } from "../../src/intents/TokenRouterReleaseIntent.sol";
-import { TokenRouterReleaseIntent } from "../../src/intents/TokenRouterReleaseIntent.sol";
+import {Intentify} from "../../src/Intentify.sol";
+import {SwapRouter} from "../../src/periphery/SwapRouter.sol";
+import {TokenRouterReleaseIntent} from "../../src/intents/TokenRouterReleaseIntent.sol";
+import {TokenRouterReleaseIntent} from "../../src/intents/TokenRouterReleaseIntent.sol";
 
-import { BaseTest } from "../utils/Base.t.sol";
+import {BaseTest} from "../utils/Base.t.sol";
 
 contract TokenRouterReleaseIntentTest is BaseTest {
     Intentify internal _intentify;
@@ -25,7 +25,7 @@ contract TokenRouterReleaseIntentTest is BaseTest {
 
     uint256 startingBalance = 1000;
 
-    Hook EMPTY_HOOK = Hook({ target: address(0x00), data: bytes("") });
+    Hook EMPTY_HOOK = Hook({target: address(0x00), data: bytes("")});
 
     event Release(address indexed account, address indexed token, uint256 amount);
 
@@ -36,12 +36,7 @@ contract TokenRouterReleaseIntentTest is BaseTest {
         _tokenA = new ERC20Mintable();
     }
 
-    function setupBalanceAndApprovals(
-        address account,
-        address token,
-        uint256 amount,
-        address approvalTarget
-    )
+    function setupBalanceAndApprovals(address account, address token, uint256 amount, address approvalTarget)
         internal
     {
         ERC20Mintable(token).mint(account, amount);
@@ -65,7 +60,7 @@ contract TokenRouterReleaseIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -74,7 +69,7 @@ contract TokenRouterReleaseIntentTest is BaseTest {
         hooks[0] = EMPTY_HOOK;
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         vm.expectEmit(true, true, false, true);
         emit Release(address(_intentify), address(_tokenA), startingBalance);
@@ -112,7 +107,7 @@ contract TokenRouterReleaseIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -121,7 +116,7 @@ contract TokenRouterReleaseIntentTest is BaseTest {
         hooks[0] = EMPTY_HOOK;
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         vm.expectRevert(bytes("TokenRouterReleaseIntent:invalid-root"));
         _intentify.execute(batchExecution);
@@ -139,7 +134,7 @@ contract TokenRouterReleaseIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -148,7 +143,7 @@ contract TokenRouterReleaseIntentTest is BaseTest {
         hooks[0] = EMPTY_HOOK;
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         vm.expectEmit(true, true, false, true);
         emit Release(address(_intentify), address(_tokenA), startingBalance);

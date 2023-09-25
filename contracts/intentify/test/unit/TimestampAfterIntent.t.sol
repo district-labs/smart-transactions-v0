@@ -9,16 +9,16 @@ import {
     Hook,
     TypesAndDecoders
 } from "../../src/TypesAndDecoders.sol";
-import { Intentify } from "../../src/Intentify.sol";
-import { TimestampAfterIntent } from "../../src/intents/TimestampAfterIntent.sol";
+import {Intentify} from "../../src/Intentify.sol";
+import {TimestampAfterIntent} from "../../src/intents/TimestampAfterIntent.sol";
 
-import { BaseTest } from "../utils/Base.t.sol";
+import {BaseTest} from "../utils/Base.t.sol";
 
 contract TimestampAfterIntentTest is BaseTest {
     Intentify internal _intentify;
     TimestampAfterIntent internal _timestampAfterIntent;
 
-    Hook EMPTY_HOOK = Hook({ target: address(0x00), data: bytes("") });
+    Hook EMPTY_HOOK = Hook({target: address(0x00), data: bytes("")});
 
     function setUp() public virtual {
         initializeBase();
@@ -48,7 +48,7 @@ contract TimestampAfterIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -57,7 +57,7 @@ contract TimestampAfterIntentTest is BaseTest {
         hooks[0] = EMPTY_HOOK;
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         bool _executed = _intentify.execute(batchExecution);
         assertEq(true, _executed);
@@ -87,7 +87,7 @@ contract TimestampAfterIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -96,7 +96,7 @@ contract TimestampAfterIntentTest is BaseTest {
         hooks[0] = EMPTY_HOOK;
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         vm.expectRevert(bytes("TimestampAfterIntent:expired"));
         _intentify.execute(batchExecution);
@@ -113,7 +113,7 @@ contract TimestampAfterIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -122,7 +122,7 @@ contract TimestampAfterIntentTest is BaseTest {
         hooks[0] = EMPTY_HOOK;
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         vm.expectRevert(bytes("TimestampAfterIntent:expired"));
         _intentify.execute(batchExecution);
@@ -139,7 +139,7 @@ contract TimestampAfterIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -148,7 +148,7 @@ contract TimestampAfterIntentTest is BaseTest {
         hooks[0] = EMPTY_HOOK;
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         vm.expectRevert(bytes("TimestampAfterIntent:invalid-root"));
         _intentify.execute(batchExecution);

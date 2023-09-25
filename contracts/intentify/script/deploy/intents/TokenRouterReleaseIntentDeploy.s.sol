@@ -2,7 +2,7 @@
 pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
-import { TokenRouterReleaseIntent } from "../../../src/intents/TokenRouterReleaseIntent.sol";
+import {TokenRouterReleaseIntent} from "../../../src/intents/TokenRouterReleaseIntent.sol";
 
 contract TokenRouterReleaseIntentDeploy is Script {
     function run() external {

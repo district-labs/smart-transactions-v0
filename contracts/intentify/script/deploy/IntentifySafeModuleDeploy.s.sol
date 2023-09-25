@@ -2,7 +2,7 @@
 pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
-import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
+import {IntentifySafeModule} from "../../src/module/IntentifySafeModule.sol";
 
 contract IntentifySafeModuleDeploy is Script {
     function run() external {

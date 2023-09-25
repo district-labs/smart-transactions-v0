@@ -5,3 +5,5 @@ export * from "./components";
 export * from "./hooks";
 export * from "./hooks/intents";
 
+// Data
+export * from "./data";

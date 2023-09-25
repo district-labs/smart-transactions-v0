@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import { PRBTest } from "@prb/test/PRBTest.sol";
-import { console2 } from "forge-std/console2.sol";
-import { StdCheats } from "forge-std/StdCheats.sol";
+import {PRBTest} from "@prb/test/PRBTest.sol";
+import {console2} from "forge-std/console2.sol";
+import {StdCheats} from "forge-std/StdCheats.sol";
 
 import {
     Intent,
@@ -13,17 +13,17 @@ import {
     Hook,
     TypesAndDecoders
 } from "../../src/TypesAndDecoders.sol";
-import { Intentify } from "../../src/Intentify.sol";
-import { TimestampBeforeIntent } from "../../src/intents/TimestampBeforeIntent.sol";
+import {Intentify} from "../../src/Intentify.sol";
+import {TimestampBeforeIntent} from "../../src/intents/TimestampBeforeIntent.sol";
 
-import { BaseTest } from "../utils/Base.t.sol";
+import {BaseTest} from "../utils/Base.t.sol";
 
 contract TimestampBeforeIntentTest is BaseTest {
     Intentify internal _intentify;
     TimestampBeforeIntent internal _timestampBeforeIntent;
 
-    Signature internal EMPTY_SIGNATURE = Signature({ r: bytes32(0x00), s: bytes32(0x00), v: uint8(0x00) });
-    Hook EMPTY_HOOK = Hook({ target: address(0x00), data: bytes("") });
+    Signature internal EMPTY_SIGNATURE = Signature({r: bytes32(0x00), s: bytes32(0x00), v: uint8(0x00)});
+    Hook EMPTY_HOOK = Hook({target: address(0x00), data: bytes("")});
 
     function setUp() public virtual {
         initializeBase();
@@ -53,7 +53,7 @@ contract TimestampBeforeIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -62,7 +62,7 @@ contract TimestampBeforeIntentTest is BaseTest {
         hooks[0] = EMPTY_HOOK;
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         bool _executed = _intentify.execute(batchExecution);
         assertEq(true, _executed);
@@ -92,7 +92,7 @@ contract TimestampBeforeIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -101,7 +101,7 @@ contract TimestampBeforeIntentTest is BaseTest {
         hooks[0] = EMPTY_HOOK;
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         vm.expectRevert(bytes("TimestampBeforeIntent:expired"));
         _intentify.execute(batchExecution);
@@ -118,7 +118,7 @@ contract TimestampBeforeIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -127,7 +127,7 @@ contract TimestampBeforeIntentTest is BaseTest {
         hooks[0] = EMPTY_HOOK;
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         vm.expectRevert(bytes("TimestampBeforeIntent:expired"));
         _intentify.execute(batchExecution);
@@ -144,7 +144,7 @@ contract TimestampBeforeIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -153,7 +153,7 @@ contract TimestampBeforeIntentTest is BaseTest {
         hooks[0] = EMPTY_HOOK;
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         vm.expectRevert(bytes("TimestampBeforeIntent:invalid-root"));
         _intentify.execute(batchExecution);

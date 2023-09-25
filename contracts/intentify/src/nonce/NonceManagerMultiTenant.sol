@@ -69,10 +69,7 @@ contract NonceManagerMultiTenant {
         return abi.encodePacked(uint8(NonceType.Standard), accumulator);
     }
 
-    function encodeDimensionalNonce(
-        uint120 queue,
-        uint128 accumulator
-    )
+    function encodeDimensionalNonce(uint120 queue, uint128 accumulator)
         public
         pure
         returns (bytes memory encodedNonce)

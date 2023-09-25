@@ -1,4 +1,4 @@
-import { ADDRESS_ZERO, Hook } from "@district-labs/intentify-utils";
+import { ADDRESS_ZERO, type Hook } from "@district-labs/intentify-utils";
 
 export function generateHooksForLimitOrderBasic(chainId: number):Hook[] {
   // 1. Timestamp Intent == No Hook

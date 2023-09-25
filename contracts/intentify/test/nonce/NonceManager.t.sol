@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import { BaseTest } from "../utils/Base.t.sol";
-import { NonceManager } from "../../src/nonce/NonceManager.sol";
+import {BaseTest} from "../utils/Base.t.sol";
+import {NonceManager} from "../../src/nonce/NonceManager.sol";
 
 contract NonceManagerMock is NonceManager {
     function nonceEnforcer(bytes calldata encodedNonce) external {

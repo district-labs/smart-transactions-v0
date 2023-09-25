@@ -2,7 +2,7 @@
 pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
-import { TimestampAfterIntent } from "../../../src/intents/TimestampAfterIntent.sol";
+import {TimestampAfterIntent} from "../../../src/intents/TimestampAfterIntent.sol";
 
 contract TimestampAfterIntentDeploy is Script {
     function run() external {

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import { ERC20Mintable } from "../mocks/ERC20Mintable.sol";
+import {ERC20Mintable} from "../mocks/ERC20Mintable.sol";
 import {
     Intent,
     IntentBatch,
@@ -10,12 +10,12 @@ import {
     Hook,
     TypesAndDecoders
 } from "../../src/TypesAndDecoders.sol";
-import { Intentify } from "../../src/Intentify.sol";
-import { SwapRouter } from "../../src/periphery/SwapRouter.sol";
-import { TokenRouterReleaseIntent } from "../../src/intents/TokenRouterReleaseIntent.sol";
-import { LimitOrderIntent } from "../../src/intents/LimitOrderIntent.sol";
+import {Intentify} from "../../src/Intentify.sol";
+import {SwapRouter} from "../../src/periphery/SwapRouter.sol";
+import {TokenRouterReleaseIntent} from "../../src/intents/TokenRouterReleaseIntent.sol";
+import {LimitOrderIntent} from "../../src/intents/LimitOrderIntent.sol";
 
-import { BaseTest } from "../utils/Base.t.sol";
+import {BaseTest} from "../utils/Base.t.sol";
 
 contract LimitOrderIntentHarness is LimitOrderIntent {
     function exposed_unlock(address account, address tokenOut, address tokenIn) external view returns (bool) {
@@ -43,8 +43,8 @@ contract LimitOrderIntentTest is BaseTest {
     uint256 startingBalance = 1000;
     uint256 endingBalance = 2000;
 
-    Signature internal EMPTY_SIGNATURE = Signature({ r: bytes32(0x00), s: bytes32(0x00), v: uint8(0x00) });
-    Hook EMPTY_HOOK = Hook({ target: address(0x00), data: bytes("") });
+    Signature internal EMPTY_SIGNATURE = Signature({r: bytes32(0x00), s: bytes32(0x00), v: uint8(0x00)});
+    Hook EMPTY_HOOK = Hook({target: address(0x00), data: bytes("")});
 
     function setUp() public virtual {
         initializeBase();
@@ -58,12 +58,7 @@ contract LimitOrderIntentTest is BaseTest {
         _swapRouter = new SwapRouter();
     }
 
-    function setupBalanceAndApprovals(
-        address account,
-        address token,
-        uint256 amount,
-        address approvalTarget
-    )
+    function setupBalanceAndApprovals(address account, address token, uint256 amount, address approvalTarget)
         internal
     {
         ERC20Mintable(token).mint(account, amount);
@@ -104,7 +99,7 @@ contract LimitOrderIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -135,7 +130,7 @@ contract LimitOrderIntentTest is BaseTest {
         // ------------------------------------------------------
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         bool _executed = _intentify.execute(batchExecution);
 
@@ -179,7 +174,7 @@ contract LimitOrderIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -210,7 +205,7 @@ contract LimitOrderIntentTest is BaseTest {
         // ------------------------------------------------------
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         bool _executed = _intentify.execute(batchExecution);
         assertEq(true, _executed);
@@ -257,7 +252,7 @@ contract LimitOrderIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -288,7 +283,7 @@ contract LimitOrderIntentTest is BaseTest {
         // ------------------------------------------------------
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         vm.expectRevert(bytes("LimitOrderIntent:unlock:tokenIn:insufficient-balance"));
         _intentify.execute(batchExecution);
@@ -323,7 +318,7 @@ contract LimitOrderIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents});
 
         bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
@@ -354,7 +349,7 @@ contract LimitOrderIntentTest is BaseTest {
         // ------------------------------------------------------
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         vm.expectRevert(bytes("LimitOrderIntent:invalid-root"));
         _intentify.execute(batchExecution);

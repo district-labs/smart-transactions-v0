@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import { console2 } from "forge-std/console2.sol";
-import { IHook } from "./interfaces/IHook.sol";
+import {console2} from "forge-std/console2.sol";
+import {IHook} from "./interfaces/IHook.sol";
 
 import {
     Signature,
@@ -76,10 +76,7 @@ contract Intentify is TypesAndDecoders {
         return abi.encodeWithSignature("execute((address,address,uint256,bytes))", intent);
     }
 
-    function _generateIntentWithHookCalldata(
-        Intent memory intent,
-        Hook memory hook
-    )
+    function _generateIntentWithHookCalldata(Intent memory intent, Hook memory hook)
         internal
         pure
         returns (bytes memory)
@@ -90,7 +87,7 @@ contract Intentify is TypesAndDecoders {
     function _execute(Intent memory intent) internal returns (bool success) {
         bytes memory errorMessage;
         bytes memory data = _generateIntentCalldata(intent);
-        (success, errorMessage) = address(intent.target).call{ value: 0 }(data);
+        (success, errorMessage) = address(intent.target).call{value: 0}(data);
         if (!success) {
             if (errorMessage.length > 0) {
                 string memory reason = _extractRevertReason(errorMessage);
@@ -104,7 +101,7 @@ contract Intentify is TypesAndDecoders {
     function _executeWithHook(Intent memory intent, Hook memory hook) internal returns (bool success) {
         bytes memory errorMessage;
         bytes memory data = _generateIntentWithHookCalldata(intent, hook);
-        (success, errorMessage) = address(intent.target).call{ value: 0 }(data);
+        (success, errorMessage) = address(intent.target).call{value: 0}(data);
         if (!success) {
             if (errorMessage.length > 0) {
                 string memory reason = _extractRevertReason(errorMessage);
@@ -138,11 +135,7 @@ contract Intentify is TypesAndDecoders {
         string memory version,
         uint256 chainId,
         address verifyingContract
-    )
-        internal
-        pure
-        returns (bytes32)
-    {
+    ) internal pure returns (bytes32) {
         bytes memory encoded = abi.encode(
             EIP712DOMAIN_TYPEHASH, keccak256(bytes(contractName)), keccak256(bytes(version)), chainId, verifyingContract
         );

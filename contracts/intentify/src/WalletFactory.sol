@@ -1,16 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import { Safe } from "safe-contracts/Safe.sol";
-import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
-import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
+import {Safe} from "safe-contracts/Safe.sol";
+import {SafeProxy} from "safe-contracts/proxies/SafeProxy.sol";
+import {SafeProxyFactory} from "safe-contracts/proxies/SafeProxyFactory.sol";
 
 contract WalletFactory is SafeProxyFactory {
-    function getDeterministicWalletAddress(
-        address _singleton,
-        address owner,
-        uint256 saltNonce
-    )
+    function getDeterministicWalletAddress(address _singleton, address owner, uint256 saltNonce)
         public
         view
         returns (address proxy)
@@ -35,11 +31,7 @@ contract WalletFactory is SafeProxyFactory {
         return address(uint160(uint256(hash)));
     }
 
-    function createDeterministicWallet(
-        address _singleton,
-        address owner,
-        uint256 saltNonce
-    )
+    function createDeterministicWallet(address _singleton, address owner, uint256 saltNonce)
         public
         returns (SafeProxy proxy)
     {

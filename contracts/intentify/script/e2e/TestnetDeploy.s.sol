@@ -2,14 +2,14 @@
 pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
-import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
-import { IntentifySafeModuleBundler } from "../../src/module/IntentifySafeModuleBundler.sol";
-import { WalletFactory } from "../../src/WalletFactory.sol";
-import { LimitOrderIntent } from "../../src/intents/LimitOrderIntent.sol";
-import { TimestampAfterIntent } from "../../src/intents/TimestampAfterIntent.sol";
-import { TimestampBeforeIntent } from "../../src/intents/TimestampBeforeIntent.sol";
-import { TokenRouterReleaseIntent } from "../../src/intents/TokenRouterReleaseIntent.sol";
-import { TwapIntent } from "../../src/intents/TwapIntent.sol";
+import {IntentifySafeModule} from "../../src/module/IntentifySafeModule.sol";
+import {IntentifySafeModuleBundler} from "../../src/module/IntentifySafeModuleBundler.sol";
+import {WalletFactory} from "../../src/WalletFactory.sol";
+import {LimitOrderIntent} from "../../src/intents/LimitOrderIntent.sol";
+import {TimestampAfterIntent} from "../../src/intents/TimestampAfterIntent.sol";
+import {TimestampBeforeIntent} from "../../src/intents/TimestampBeforeIntent.sol";
+import {TokenRouterReleaseIntent} from "../../src/intents/TokenRouterReleaseIntent.sol";
+import {TwapIntent} from "../../src/intents/TwapIntent.sol";
 
 contract TestnetDeploy is Script {
     function run() external {

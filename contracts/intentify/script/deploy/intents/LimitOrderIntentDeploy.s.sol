@@ -2,7 +2,7 @@
 pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
-import { LimitOrderIntent } from "../../../src/intents/LimitOrderIntent.sol";
+import {LimitOrderIntent} from "../../../src/intents/LimitOrderIntent.sol";
 
 contract LimitOrderIntentDeploy is Script {
     function run() external {

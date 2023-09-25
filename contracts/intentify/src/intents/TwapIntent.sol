@@ -6,9 +6,9 @@ import "@uniswap/v3-core/contracts/libraries/TickMath.sol";
 import "@uniswap/v3-core/contracts/libraries/FixedPoint96.sol";
 import "@uniswap/v3-core/contracts/libraries/FullMath.sol";
 
-import { IHook } from "../interfaces/IHook.sol";
-import { Intent } from "../TypesAndDecoders.sol";
-import { BytesLib } from "../libraries/BytesLib.sol";
+import {IHook} from "../interfaces/IHook.sol";
+import {Intent} from "../TypesAndDecoders.sol";
+import {BytesLib} from "../libraries/BytesLib.sol";
 
 contract TwapIntent is IHook {
     function execute(Intent calldata intent) external view returns (bool) {
@@ -30,12 +30,7 @@ contract TwapIntent is IHook {
         return true;
     }
 
-    function encode(
-        address uniswapV3Pool,
-        uint32 twapIntervalSeconds,
-        uint256 minPriceX96,
-        uint256 maxPriceX96
-    )
+    function encode(address uniswapV3Pool, uint32 twapIntervalSeconds, uint256 minPriceX96, uint256 maxPriceX96)
         external
         pure
         returns (bytes memory data)

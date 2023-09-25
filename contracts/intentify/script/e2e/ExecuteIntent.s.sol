@@ -2,8 +2,8 @@
 pragma solidity >=0.8.19;
 
 // Forge Contracts
-import { Script } from "forge-std/Script.sol";
-import { StdCheats } from "forge-std/StdCheats.sol";
+import {Script} from "forge-std/Script.sol";
+import {StdCheats} from "forge-std/StdCheats.sol";
 
 // Intentify Contracts
 import {
@@ -16,13 +16,13 @@ import {
 } from "../../src/TypesAndDecoders.sol";
 
 // Protocol Contracts
-import { TimestampBeforeIntent } from "../../src/intents/TimestampBeforeIntent.sol";
-import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
-import { WalletFactory } from "../../src/WalletFactory.sol";
+import {TimestampBeforeIntent} from "../../src/intents/TimestampBeforeIntent.sol";
+import {IntentifySafeModule} from "../../src/module/IntentifySafeModule.sol";
+import {WalletFactory} from "../../src/WalletFactory.sol";
 
 contract ExecuteIntent is Script, StdCheats {
     TimestampBeforeIntent _timestampBeforeIntent = new TimestampBeforeIntent();
-    Hook EMPTY_HOOK = Hook({ target: address(0), data: bytes("") });
+    Hook EMPTY_HOOK = Hook({target: address(0), data: bytes("")});
 
     // Deterministicaly deploted in TestnetDeploy.s.sol
     IntentifySafeModule internal _intentifySafeModule = IntentifySafeModule(0x5FbDB2315678afecb367f032d93F642f64180aa3);
@@ -47,7 +47,7 @@ contract ExecuteIntent is Script, StdCheats {
             data: _timestampBeforeIntent.encode(uint128(block.timestamp - 100))
         });
 
-        IntentBatch memory intentBatch = IntentBatch({ root: address(_safe), nonce: nonceStandard, intents: intents });
+        IntentBatch memory intentBatch = IntentBatch({root: address(_safe), nonce: nonceStandard, intents: intents});
 
         bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(DEPLOYER_PRIVATE, digest);
@@ -56,7 +56,7 @@ contract ExecuteIntent is Script, StdCheats {
         hooks[0] = EMPTY_HOOK;
 
         IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+            IntentBatchExecution({batch: intentBatch, signature: Signature({r: r, s: s, v: v}), hooks: hooks});
 
         _intentifySafeModule.execute(batchExecution);
 

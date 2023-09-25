@@ -2,7 +2,7 @@
 pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
-import { Intentify } from "../../src/Intentify.sol";
+import {Intentify} from "../../src/Intentify.sol";
 
 contract TwapIntentDeploy is Script {
     function run() external {

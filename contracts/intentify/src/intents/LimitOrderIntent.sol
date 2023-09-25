@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import { ERC20 } from "solady/tokens/ERC20.sol";
-import { Intent, Hook } from "../TypesAndDecoders.sol";
-import { BytesLib } from "../libraries/BytesLib.sol";
+import {ERC20} from "solady/tokens/ERC20.sol";
+import {Intent, Hook} from "../TypesAndDecoders.sol";
+import {BytesLib} from "../libraries/BytesLib.sol";
 
 contract LimitOrderIntent {
     mapping(address => mapping(address => uint256)) public till;
@@ -30,12 +30,7 @@ contract LimitOrderIntent {
         return true;
     }
 
-    function encode(
-        address tokenOut,
-        address tokenIn,
-        uint256 amountOutMax,
-        uint256 amountInMin
-    )
+    function encode(address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin)
         external
         pure
         returns (bytes memory data)
@@ -53,7 +48,7 @@ contract LimitOrderIntent {
 
     function _hook(Hook calldata hook) internal returns (bool success) {
         bytes memory errorMessage;
-        (success, errorMessage) = address(hook.target).call{ value: 0 }(hook.data);
+        (success, errorMessage) = address(hook.target).call{value: 0}(hook.data);
 
         if (!success) {
             if (errorMessage.length > 0) {

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import { ReentrancyGuard } from "@openzeppelin/security/ReentrancyGuard.sol";
-import { Enum } from "safe-contracts/common/Enum.sol";
+import {ReentrancyGuard} from "@openzeppelin/security/ReentrancyGuard.sol";
+import {Enum} from "safe-contracts/common/Enum.sol";
 
 import {
     Signature,
@@ -14,8 +14,8 @@ import {
     EIP712DOMAIN_TYPEHASH,
     TypesAndDecoders
 } from "../TypesAndDecoders.sol";
-import { SafeMinimal } from "../interfaces/SafeMinimal.sol";
-import { NonceManagerMultiTenant } from "../nonce/NonceManagerMultiTenant.sol";
+import {SafeMinimal} from "../interfaces/SafeMinimal.sol";
+import {NonceManagerMultiTenant} from "../nonce/NonceManagerMultiTenant.sol";
 
 contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, ReentrancyGuard {
     // EIP712 Domain Separator
@@ -169,10 +169,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
         return abi.encodeWithSignature("execute((address,address,uint256,bytes))", intent);
     }
 
-    function _generateIntentWithHookCalldata(
-        Intent memory intent,
-        Hook memory hook
-    )
+    function _generateIntentWithHookCalldata(Intent memory intent, Hook memory hook)
         internal
         pure
         returns (bytes memory)
@@ -185,11 +182,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
         string memory version,
         uint256 chainId,
         address verifyingContract
-    )
-        internal
-        pure
-        returns (bytes32)
-    {
+    ) internal pure returns (bytes32) {
         bytes memory encoded = abi.encode(
             EIP712DOMAIN_TYPEHASH, keccak256(bytes(contractName)), keccak256(bytes(version)), chainId, verifyingContract
         );
