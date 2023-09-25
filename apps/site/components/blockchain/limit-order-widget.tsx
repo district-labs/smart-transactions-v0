@@ -39,6 +39,7 @@ export default function LimitOrderWidget({
   const [expiry, setExpiry] = useState<string>("1d")
   const [tokenOut, setTokenOut] = useState<DefiLlamaToken>(outToken)
   const [tokenIn, setTokenIn] = useState<DefiLlamaToken>(inToken)
+  const [delta, setDelta] = useState<number>(0)
 
   const prevAmountOut = useRef<number | undefined>(amountOut)
   const prevAmountIn = useRef<number | undefined>(amountIn)
@@ -110,12 +111,14 @@ export default function LimitOrderWidget({
                 formatPrice(tokenOutUSD, { notation: "standard" })}
           </span>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 items-start gap-4">
           <LimitPriceInput
             tokenIn={tokenIn}
             tokenOut={tokenOut}
             limitPrice={limitPrice}
             setLimitPrice={setLimitPrice}
+            delta={delta}
+            setDelta={setDelta}
           />
           <div className="grid gap-2">
             <Label htmlFor="selling">Expiry</Label>
@@ -130,6 +133,15 @@ export default function LimitOrderWidget({
               </SelectContent>
             </Select>
           </div>
+          {delta > 0.05 && (
+            <div className="col-span-2 -mt-2 rounded-sm border border-amber-500 bg-amber-500/10 px-3 py-2">
+              <p className="text-xs text-amber-600">
+                Limit price is {delta.toFixed(2)}% higher than the market price.
+                You could get a better price for your {tokenOut.symbol} doing a
+                direct swap.
+              </p>
+            </div>
+          )}
         </div>
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
