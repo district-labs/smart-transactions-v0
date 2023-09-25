@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { type DefiLlamaToken } from "@/types"
 import { useChainId } from "wagmi"
 
+import { formatPrice } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -18,6 +19,7 @@ import {
 import LimitPriceInput from "@/components/blockchain/limit-price-input"
 import TokenInputAmount from "@/components/blockchain/token-input-amount"
 import { Icons } from "@/components/icons"
+import { useCurrentPriceERC20 } from "@/app/(app)/limit/use-current-price"
 import { usePlaceOrder } from "@/app/(app)/limit/use-place-order"
 
 interface LimitOrderWidgetProps {
@@ -31,7 +33,7 @@ export default function LimitOrderWidget({
 }: LimitOrderWidgetProps) {
   const router = useRouter()
   const chainId = useChainId()
-  const [amountOut, setAmountOut] = useState<number>()
+  const [amountOut, setAmountOut] = useState<number | undefined>(1)
   const [amountIn, setAmountIn] = useState<number | undefined>()
   const [limitPrice, setLimitPrice] = useState<number | undefined>()
   const [expiry, setExpiry] = useState<string>("1d")
@@ -40,6 +42,13 @@ export default function LimitOrderWidget({
 
   const prevAmountOut = useRef<number | undefined>(amountOut)
   const prevAmountIn = useRef<number | undefined>(amountIn)
+
+  const { data: tokenOutUSD } = useCurrentPriceERC20({
+    token: { chainId, address: tokenOut.address },
+  })
+  const { data: tokenInUSD } = useCurrentPriceERC20({
+    token: { chainId, address: tokenIn.address },
+  })
 
   const { mutationResult, isLoadingSign } = usePlaceOrder({
     chainId,
@@ -94,6 +103,12 @@ export default function LimitOrderWidget({
             selectedToken={tokenOut}
             setSelectedToken={setTokenOut}
           />
+          <span className="text-xs text-muted-foreground">
+            {amountOut && tokenOutUSD
+              ? formatPrice(amountOut * tokenOutUSD, { notation: "standard" })
+              : tokenOutUSD &&
+                formatPrice(tokenOutUSD, { notation: "standard" })}
+          </span>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <LimitPriceInput
@@ -134,6 +149,11 @@ export default function LimitOrderWidget({
             selectedToken={tokenIn}
             setSelectedToken={setTokenIn}
           />
+          <span className="text-xs text-muted-foreground">
+            {amountIn && tokenInUSD
+              ? formatPrice(amountIn * tokenInUSD, { notation: "standard" })
+              : tokenInUSD && formatPrice(tokenInUSD, { notation: "standard" })}
+          </span>
         </div>
       </CardContent>
       <CardFooter className="flex flex-col gap-y-3">
