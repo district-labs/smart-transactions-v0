@@ -22,7 +22,7 @@ export default function StrategyOverview() {
           </div>
         </dl>
       </div>
-      <TokenPriceChart />
+      {/* <TokenPriceChart /> */}
       <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
         <Button size="sm" className="h-7 bg-blue-500 px-10">
           ETH

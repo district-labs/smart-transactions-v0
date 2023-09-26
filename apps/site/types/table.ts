@@ -13,4 +13,3 @@ export interface DataTableFilterableColumn<TData>
   extends DataTableSearchableColumn<TData> {
   options: DataTableOption[]
 }
-

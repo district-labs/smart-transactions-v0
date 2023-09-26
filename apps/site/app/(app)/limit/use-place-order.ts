@@ -19,9 +19,9 @@ import { expiryToTimestamp } from "./utils"
 interface IUsePlaceOrder {
   expiry: string
   chainId: number
-  tokenOut: DefiLlamaToken
+  tokenOut: DefiLlamaToken | undefined
   amountOut: number | undefined
-  tokenIn: DefiLlamaToken
+  tokenIn: DefiLlamaToken | undefined
   amountIn: number | undefined
 }
 
@@ -43,6 +43,14 @@ export function usePlaceOrder({
     useGetIntentTokenRouterAddress(chainId)
 
   const mutationFn = async () => {
+    if (!tokenOut) {
+      throw new Error("tokenOut is undefined")
+    }
+
+    if (!tokenIn) {
+      throw new Error("tokenIn is undefined")
+    }
+
     const expiryTimestamp = expiryToTimestamp(expiry)
     const parsedAmountIn = parseUnits(
       (amountIn?.toString() || "0") as `${number}`,

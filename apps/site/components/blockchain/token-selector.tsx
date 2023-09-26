@@ -1,12 +1,6 @@
 "use client"
 
-import {
-  useCallback,
-  useMemo,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react"
+import { useCallback, useMemo, useState } from "react"
 import Image from "next/image"
 import { type DefiLlamaToken } from "@/types"
 import { useNetwork } from "wagmi"
@@ -24,7 +18,7 @@ import { defaultTokenList } from "./default-token-list"
 
 interface TokenSelectorProps {
   selectedToken: DefiLlamaToken
-  setSelectedToken: Dispatch<SetStateAction<DefiLlamaToken>>
+  setSelectedToken: (token: DefiLlamaToken) => void
   className?: string
 }
 

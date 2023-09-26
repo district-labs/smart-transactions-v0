@@ -1,3 +1,5 @@
+"use client"
+
 import { useMemo } from "react"
 import { type ColumnDef } from "@tanstack/react-table"
 

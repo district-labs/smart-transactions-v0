@@ -1,4 +1,7 @@
-import { type DeFiLlamaCoinsInput } from "@/types"
+import {
+  type DeFiLlamaCoinsInput,
+  type GetTokenChartDataResponse,
+} from "@/types"
 
 import { CHAIN_ID_TO_NAME } from "../constants"
 
@@ -53,6 +56,27 @@ export function formatCoinsInput(coinsInputList: DeFiLlamaCoinsInput[]) {
       return `${CHAIN_ID_TO_NAME[coinsInput.chainId]}:${coinsInput.address}`
     })
     .join(",")
+}
+
+export function formatChartData(
+  data: GetTokenChartDataResponse,
+  outToken: string,
+  inToken?: string
+) {
+  const chartData: { time: string; price: number }[] = []
+
+  const tokenOut = data.coins[outToken].prices
+  const tokenIn = inToken
+    ? data.coins[inToken].prices
+    : new Array(tokenOut.length).fill({ price: 1 })
+
+  for (let i = 0; i < tokenOut.length; i++) {
+    const relativePrice = tokenOut[i].price / tokenIn[i].price
+    const timestamp = formatDate(tokenOut[i].timestamp)
+
+    chartData.push({ time: timestamp, price: relativePrice })
+  }
+  return chartData
 }
 
 export function toTitleCase(str: string | undefined) {

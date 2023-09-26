@@ -13,12 +13,12 @@ export type DeFiLlamaPeriod = `${number}${"w" | "d" | "h" | "m"}`
 export type DeFiLlamaCoinsInput =
   | {
       chainId: number
-      type: "native"
+      type: "erc20"
+      address: string
     }
   | {
       chainId: number
-      type: "erc20"
-      address: string
+      type: "native"
     }
 
 export type DeFiLlamaPriceResponse = {
@@ -66,5 +66,19 @@ export interface DefiLlamaTokenList {
     major: number
     minor: number
     patch: number
+  }
+}
+
+export interface GetTokenChartDataResponse {
+  coins: {
+    [key: string]: {
+      symbol: string
+      confidence: number
+      decimals?: number
+      prices: {
+        timestamp: number
+        price: number
+      }[]
+    }
   }
 }
