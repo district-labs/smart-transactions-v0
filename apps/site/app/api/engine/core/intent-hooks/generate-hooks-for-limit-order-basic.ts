@@ -1,8 +1,14 @@
-import { ADDRESS_ZERO, type Hook } from "@district-labs/intentify-utils"
+import {
+  ADDRESS_ZERO,
+  EngineHubAddressList,
+  TokenRouterReleaseIntentAddressList,
+  engineHubABI,
+  tokenRouterReleaseIntentABI,
+  type Hook,
+} from "@district-labs/intentify-utils"
+import { encodeFunctionData } from "viem"
 
 import { routeSwapExactOutput } from "@/lib/uniswap-v3/routing"
-
-const RUNTIME_ENGINE_ADDRESS = "0x0"
 
 interface Token {
   address: `0x${string}`
@@ -13,21 +19,37 @@ interface GenerateHooksForLimitOrderBasicParams {
   chainId: number
   inputToken: Token
   outputToken: Token
+  amountInMax: string
   amountOut: `0x${string}`
   recipient: `0x${string}`
 }
 
 export async function generateHooksForLimitOrderBasic({
   chainId,
+  // Amount in max is the amount of the input token that the user is willing to spend
+  amountInMax,
   inputToken,
   outputToken,
   amountOut,
   recipient,
 }: GenerateHooksForLimitOrderBasicParams): Promise<Hook[]> {
-  // 1. Timestamp Intent == No Hook
-  // 2. Token Release Intent == No Hook
-  // 3. Limit Order Intent == Fill on Uniswap
+  const engineHubAddress = EngineHubAddressList[chainId]
+  const tokenRouterReleaseIntentAddress =
+    TokenRouterReleaseIntentAddressList[chainId]
 
+  // Token Release claim
+  const tokenRouterReleaseClaimData = encodeFunctionData({
+    abi: tokenRouterReleaseIntentABI,
+    functionName: "claim",
+    args: [
+      recipient,
+      engineHubAddress,
+      inputToken.address,
+      BigInt(amountInMax),
+    ],
+  })
+
+  // Uniswap V3 routing
   const route = await routeSwapExactOutput({
     chainId,
     amountOut,
@@ -38,8 +60,22 @@ export async function generateHooksForLimitOrderBasic({
 
   if (!route?.methodParameters) throw new Error("route not found")
 
-  const { to, calldata } = route.methodParameters
+  const { to: uniV3SwapperAddress, calldata: uniV3SwapData } =
+    route.methodParameters
 
+  // Engine Hub multicall
+  const engineHubMulticallData = encodeFunctionData({
+    abi: engineHubABI,
+    functionName: "multiCall",
+    args: [
+      [tokenRouterReleaseIntentAddress, uniV3SwapperAddress as `0x${string}`],
+      [tokenRouterReleaseClaimData, uniV3SwapData as `0x${string}`],
+    ],
+  })
+
+  // 1. Timestamp Intent == No Hook
+  // 2. Token Release Intent == No Hook
+  // 3. Limit Order Intent == Fill on Uniswap
   return [
     {
       target: ADDRESS_ZERO,
@@ -49,10 +85,9 @@ export async function generateHooksForLimitOrderBasic({
       target: ADDRESS_ZERO,
       data: "0x00",
     },
-    // TODO: encode call to engine hub
     {
-      target: to as `0x${string}`,
-      data: calldata as `0x${string}`,
+      target: engineHubAddress,
+      data: engineHubMulticallData,
     },
   ]
 }

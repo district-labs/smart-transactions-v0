@@ -66,7 +66,7 @@ async function generateHooksForIntentBatch(
         chainId: intentBatch.chainId,
         amountOut: intentArgs.amountInMin as `0x${string}`,
         recipient: intentBatch.root as `0x${string}`,
-
+        amountInMax: intentArgs.amountOutMax,
         // TODO: Remove hardcoded decimals
         inputToken: {
           address: intentArgs.tokenIn,
