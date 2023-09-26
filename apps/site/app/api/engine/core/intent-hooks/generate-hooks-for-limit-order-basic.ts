@@ -1,12 +1,13 @@
 import {
   ADDRESS_ZERO,
-  EngineHubAddressList,
-  TokenRouterReleaseIntentAddressList,
   engineHubABI,
+  EngineHubAddressList,
   tokenRouterReleaseIntentABI,
+  TokenRouterReleaseIntentAddressList,
   type Hook,
 } from "@district-labs/intentify-utils"
 import { encodeFunctionData } from "viem"
+import { erc20ABI } from "wagmi"
 
 import { routeSwapExactOutput } from "@/lib/uniswap-v3/routing"
 
@@ -63,13 +64,28 @@ export async function generateHooksForLimitOrderBasic({
   const { to: uniV3SwapperAddress, calldata: uniV3SwapData } =
     route.methodParameters
 
+  // Approve uniV3SwapperAddress to spend inputToken
+  const approveInputTokenData = encodeFunctionData({
+    abi: erc20ABI,
+    functionName: "approve",
+    args: [uniV3SwapperAddress as `0x${string}`, BigInt(amountInMax)],
+  })
+
   // Engine Hub multicall
   const engineHubMulticallData = encodeFunctionData({
     abi: engineHubABI,
     functionName: "multiCall",
     args: [
-      [tokenRouterReleaseIntentAddress, uniV3SwapperAddress as `0x${string}`],
-      [tokenRouterReleaseClaimData, uniV3SwapData as `0x${string}`],
+      [
+        tokenRouterReleaseIntentAddress,
+        inputToken.address,
+        uniV3SwapperAddress as `0x${string}`,
+      ],
+      [
+        tokenRouterReleaseClaimData,
+        approveInputTokenData,
+        uniV3SwapData as `0x${string}`,
+      ],
     ],
   })
 
