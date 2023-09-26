@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { DefiLlamaToken } from "@/types"
+import { type DefiLlamaToken } from "@/types"
 import { useQuery } from "@tanstack/react-query"
 import { LineChart } from "@tremor/react"
 
@@ -12,8 +12,8 @@ import {
 } from "./chart-time-filters"
 
 interface TokenPriceChartProps {
-  outToken: DefiLlamaToken
-  inToken: DefiLlamaToken
+  outToken: DefiLlamaToken | undefined
+  inToken: DefiLlamaToken | undefined
 }
 
 export default function TokenPriceChart({
@@ -24,10 +24,12 @@ export default function TokenPriceChart({
     useState<ChartTimeFiltersOptions["range"]>("30d")
 
   const { data, status, refetch } = useQuery(
-    ["tokenChart", `${outToken.symbol}-${inToken.symbol}`, chartRange],
+    ["tokenChart", outToken?.symbol, inToken?.symbol, chartRange],
     {
-      queryFn: () =>
-        fetch("/api/token/chart-data", {
+      queryFn: () => {
+        if (!inToken || !outToken) return
+
+        return fetch("/api/token/chart-data", {
           method: "POST",
           body: JSON.stringify({
             coins: [
@@ -48,7 +50,9 @@ export default function TokenPriceChart({
           headers: {
             "Content-Type": "application/json",
           },
-        }).then((res) => res.json()),
+        }).then((res) => res.json())
+      },
+      enabled: !!inToken && !!outToken,
     }
   )
 
@@ -73,7 +77,7 @@ export default function TokenPriceChart({
             </div>
           )}
           <h2 className="text-2xl font-medium tracking-tight">
-            {`${inToken.symbol}/${outToken.symbol}`}
+            {`${inToken?.symbol}/${outToken?.symbol}`}
           </h2>
         </div>
         <ChartTimeFilters

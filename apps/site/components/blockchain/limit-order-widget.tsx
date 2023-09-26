@@ -37,18 +37,17 @@ export default function LimitOrderWidget({
   const [amountIn, setAmountIn] = useState<number | undefined>()
   const [limitPrice, setLimitPrice] = useState<number | undefined>()
   const [expiry, setExpiry] = useState<string>("1d")
-  const [tokenOut, setTokenOut] = useState<DefiLlamaToken>(outToken)
-  const [tokenIn, setTokenIn] = useState<DefiLlamaToken>(inToken)
+
   const [delta, setDelta] = useState<number>(0)
 
   const prevAmountOut = useRef<number | undefined>(amountOut)
   const prevAmountIn = useRef<number | undefined>(amountIn)
 
   const { data: tokenOutUSD } = useCurrentPriceERC20({
-    token: { chainId, address: tokenOut.address },
+    token: { chainId, address: outToken.address },
   })
   const { data: tokenInUSD } = useCurrentPriceERC20({
-    token: { chainId, address: tokenIn.address },
+    token: { chainId, address: inToken.address },
   })
 
   const { mutationResult, isLoadingSign } = usePlaceOrder({
@@ -56,18 +55,30 @@ export default function LimitOrderWidget({
     amountIn,
     amountOut,
     expiry,
-    tokenIn,
-    tokenOut,
+    tokenIn: inToken,
+    tokenOut: outToken,
   })
 
   async function handlePlaceOrder() {
     await mutationResult.mutateAsync()
   }
 
+  function handleSwapTokens() {
+    router.push(`/limit/${inToken.symbol}/${outToken.symbol}`)
+  }
+
+  function handleSelectTokenIn(newTokenIn: DefiLlamaToken) {
+    router.push(`/limit/${outToken.symbol}/${newTokenIn.symbol}`)
+  }
+
+  function handleSelectTokenOut(newTokenOut: DefiLlamaToken) {
+    router.push(`/limit/${outToken.symbol}/${newTokenOut.symbol}`)
+  }
+
   // Update URL if tokenOut or tokenIn changes
   useEffect(() => {
-    router.push(`/limit/${tokenOut.symbol}-${tokenIn.symbol}`)
-  }, [tokenOut, tokenIn, router])
+    router.push(`/limit/${outToken.symbol}/${inToken.symbol}`)
+  }, [outToken, inToken, router])
 
   useEffect(() => {
     if (!limitPrice) return
@@ -101,8 +112,10 @@ export default function LimitOrderWidget({
           <TokenInputAmount
             amount={amountOut}
             setAmount={setAmountOut}
-            selectedToken={tokenOut}
-            setSelectedToken={setTokenOut}
+            selectedToken={outToken}
+            setSelectedToken={(newTokenOut) =>
+              handleSelectTokenOut(newTokenOut)
+            }
           />
           <span className="text-xs text-muted-foreground">
             {amountOut && tokenOutUSD
@@ -113,8 +126,8 @@ export default function LimitOrderWidget({
         </div>
         <div className="grid grid-cols-2 items-start gap-4">
           <LimitPriceInput
-            tokenIn={tokenIn}
-            tokenOut={tokenOut}
+            tokenIn={inToken}
+            tokenOut={outToken}
             limitPrice={limitPrice}
             setLimitPrice={setLimitPrice}
             delta={delta}
@@ -137,7 +150,7 @@ export default function LimitOrderWidget({
             <div className="col-span-2 -mt-2 rounded-sm border border-amber-500 bg-amber-500/10 px-3 py-2">
               <p className="text-xs text-amber-600">
                 Limit price is {delta.toFixed(2)}% higher than the market price.
-                You could get a better price for your {tokenOut.symbol} doing a
+                You could get a better price for your {outToken.symbol} doing a
                 direct swap.
               </p>
             </div>
@@ -148,9 +161,13 @@ export default function LimitOrderWidget({
             <span className="w-full border-t" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
+            <Button
+              onClick={handleSwapTokens}
+              variant={"ghost"}
+              className="bg-background  px-2 text-muted-foreground"
+            >
               <Icons.arrowdown />
-            </span>
+            </Button>
           </div>
         </div>
         <div className="grid gap-2">
@@ -158,8 +175,8 @@ export default function LimitOrderWidget({
           <TokenInputAmount
             amount={amountIn}
             setAmount={setAmountIn}
-            selectedToken={tokenIn}
-            setSelectedToken={setTokenIn}
+            selectedToken={inToken}
+            setSelectedToken={(newTokenIn) => handleSelectTokenIn(newTokenIn)}
           />
           <span className="text-xs text-muted-foreground">
             {amountIn && tokenInUSD

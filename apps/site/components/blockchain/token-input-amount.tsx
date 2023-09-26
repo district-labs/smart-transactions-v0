@@ -7,7 +7,7 @@ interface TokenInputAmountProps {
   amount: number | undefined
   setAmount: Dispatch<SetStateAction<number | undefined>>
   selectedToken: DefiLlamaToken
-  setSelectedToken: Dispatch<SetStateAction<DefiLlamaToken>>
+  setSelectedToken: (token: DefiLlamaToken) => void
 }
 
 export default function TokenInputAmount({

@@ -1,3 +1,6 @@
+import { useMemo } from "react"
+import { redirect } from "next/navigation"
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { defaultTokenList } from "@/components/blockchain/default-token-list"
 import LimitOrderWidget from "@/components/blockchain/limit-order-widget"
@@ -35,17 +38,37 @@ const dummyData = [
   },
 ]
 
+const tokenList = defaultTokenList[0]
+
 export default function LimitOrderPage({
-  params: { tokens },
+  params,
 }: {
-  params: { tokens: string }
+  params: { tokens: string[] | undefined }
 }) {
-  const outToken = defaultTokenList[0].tokens.find(
-    (token) => token.symbol === tokens.split("-")[0].toUpperCase()
+  const outTokenSymbol = params?.tokens?.[0]?.toLowerCase()
+  const inTokenSymbol =
+    params?.tokens?.[1]?.toLowerCase() === outTokenSymbol
+      ? undefined
+      : params?.tokens?.[1]?.toLowerCase()
+
+  const outToken = useMemo(
+    () =>
+      tokenList.tokens.find(
+        (token) => token.symbol.toLowerCase() === outTokenSymbol
+      ),
+    [outTokenSymbol]
   )
-  const inToken = defaultTokenList[0].tokens.find(
-    (token) => token.symbol === tokens.split("-")[1].toUpperCase()
+  const inToken = useMemo(
+    () =>
+      tokenList.tokens.find(
+        (token) => token.symbol.toLowerCase() === inTokenSymbol
+      ),
+    [inTokenSymbol]
   )
+
+  if (!outToken || !inToken) {
+    redirect(`/limit/${defaultTokenOut.symbol}/${defaultTokenIn.symbol}`)
+  }
 
   return (
     <>

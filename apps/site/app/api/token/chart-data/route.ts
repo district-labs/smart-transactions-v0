@@ -1,8 +1,13 @@
+import { type GetTokenChartDataResponse } from "@/types"
 import { z } from "zod"
 
-import { calculatePeriod, formatChartData, formatCoinsInput, formatDate } from "@/lib/utils"
+import {
+  calculatePeriod,
+  formatChartData,
+  formatCoinsInput,
+  formatDate,
+} from "@/lib/utils"
 import { getTokenChartDataSchema } from "@/lib/validations/token"
-import { GetTokenChartDataResponse } from "@/types"
 
 export async function POST(req: Request) {
   const input = getTokenChartDataSchema.parse(await req.json())

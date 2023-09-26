@@ -5,7 +5,7 @@ type Token =
   | {
       chainId?: number
       type: "erc20"
-      address: string
+      address: string | undefined
     }
   | {
       chainId?: number
@@ -61,7 +61,7 @@ export function useCurrentPrice({
 type useCurrentPriceERC20Props = QueryOptions & {
   token: {
     chainId?: number
-    address: string
+    address: string | undefined
   }
 }
 
