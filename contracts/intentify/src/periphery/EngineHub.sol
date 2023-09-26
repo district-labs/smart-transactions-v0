@@ -7,29 +7,25 @@ import { Ownable } from "solady/auth/Ownable.sol";
 import { TokenRouterReleaseIntent } from "../intents/TokenRouterReleaseIntent.sol";
 
 contract EngineHub is Ownable {
+    struct Call {
+        address target;
+        bytes callData;
+    }
+
     event MultiCallAction(address indexed target, bytes data, bytes result);
 
     constructor(address _owner) {
         _initializeOwner(_owner);
     }
 
-    function multiCall(
-        address[] calldata targets,
-        bytes[] calldata data
-    )
-        external
-        onlyOwner
-        returns (bytes[] memory results)
-    {
-        require(targets.length == data.length, "EngineHub:invalid-length");
-
-        results = new bytes[](targets.length);
-        for (uint256 i = 0; i < targets.length; i++) {
-            (bool success, bytes memory result) = targets[i].call(data[i]);
+    function multiCall(Call[] calldata calls) external onlyOwner returns (bytes[] memory results) {
+        results = new bytes[](calls.length);
+        for (uint256 i = 0; i < calls.length; i++) {
+            (bool success, bytes memory result) = calls[i].target.call(calls[i].callData);
             require(success, "EngineHub:call-failed");
             results[i] = result;
 
-            emit MultiCallAction(targets[i], data[i], result);
+            emit MultiCallAction(calls[i].target, calls[i].callData, result);
         }
     }
 }

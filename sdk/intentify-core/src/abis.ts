@@ -1145,8 +1145,15 @@ export const engineHubABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
-      { name: 'targets', internalType: 'address[]', type: 'address[]' },
-      { name: 'data', internalType: 'bytes[]', type: 'bytes[]' },
+      {
+        name: 'calls',
+        internalType: 'struct EngineHub.Call[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'target', internalType: 'address', type: 'address' },
+          { name: 'callData', internalType: 'bytes', type: 'bytes' },
+        ],
+      },
     ],
     name: 'multiCall',
     outputs: [{ name: 'results', internalType: 'bytes[]', type: 'bytes[]' }],

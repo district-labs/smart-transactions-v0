@@ -3,7 +3,6 @@ pragma solidity >=0.8.19 <0.9.0;
 
 import { console2 } from "forge-std/console2.sol";
 import { Ownable } from "solady/auth/Ownable.sol";
-
 import { EngineHub } from "../../src/periphery/EngineHub.sol";
 import { ERC20Mintable } from "../../src/periphery/ERC20Mintable.sol";
 import { BaseTest } from "../utils/Base.t.sol";
@@ -24,28 +23,26 @@ contract EngineHubTest is BaseTest {
 
     function test_multiCall_SingleParam_Success() external {
         uint256 amount = 100;
-        bytes[] memory data = new bytes[](1);
-        address[] memory targets = new address[](1);
-        targets[0] = address(_token);
-        data[0] = abi.encodeWithSignature("mint(address,uint256)", address(this), amount);
 
-        _engineHub.multiCall(targets, data);
+        EngineHub.Call[] memory calls = new EngineHub.Call[](1);
+        calls[0] =
+            EngineHub.Call(address(_token), abi.encodeWithSignature("mint(address,uint256)", address(this), amount));
+
+        _engineHub.multiCall(calls);
         assertEq(_token.balanceOf(address(this)), amount);
     }
 
     function test_multiCall_MultipleParams_Success() external {
         uint256 amount1 = 100;
         uint256 amount2 = 200;
-        bytes[] memory data = new bytes[](2);
-        address[] memory targets = new address[](2);
 
-        targets[0] = address(_token);
-        data[0] = abi.encodeWithSignature("mint(address,uint256)", address(this), amount1);
+        EngineHub.Call[] memory calls = new EngineHub.Call[](2);
+        calls[0] =
+            EngineHub.Call(address(_token), abi.encodeWithSignature("mint(address,uint256)", address(this), amount1));
+        calls[1] =
+            EngineHub.Call(address(_token), abi.encodeWithSignature("mint(address,uint256)", address(this), amount2));
 
-        targets[1] = address(_token);
-        data[1] = abi.encodeWithSignature("mint(address,uint256)", address(this), amount2);
-
-        _engineHub.multiCall(targets, data);
+        _engineHub.multiCall(calls);
         assertEq(_token.balanceOf(address(this)), amount1 + amount2);
     }
 
@@ -55,31 +52,29 @@ contract EngineHubTest is BaseTest {
 
     function test_RevertWhen_FailingCall() external {
         uint256 amount = 100;
-        bytes[] memory data = new bytes[](2);
-        address[] memory targets = new address[](2);
 
-        targets[0] = address(_token);
-        data[0] = abi.encodeWithSignature("mint(address,uint256)", address(this), amount);
+        EngineHub.Call[] memory calls = new EngineHub.Call[](2);
+        calls[0] =
+            EngineHub.Call(address(_token), abi.encodeWithSignature("mint(address,uint256)", address(this), amount));
+        calls[1] = EngineHub.Call(
+            address(_token),
+            abi.encodeWithSignature("transfer(address,address,uint256)", address(this), address(_engineHub), amount)
+        );
 
-        targets[1] = address(_token);
-        data[1] =
-            abi.encodeWithSignature("transfer(address,address,uint256)", address(this), address(_engineHub), amount);
-
-        // Revert if the second call fails due to the lack of balance or allowance
         vm.expectRevert("EngineHub:call-failed");
-        _engineHub.multiCall(targets, data);
+        _engineHub.multiCall(calls);
     }
 
     function test_RevertWhen_notOwner() external {
         uint256 amount = 100;
-        bytes[] memory data = new bytes[](1);
-        address[] memory targets = new address[](1);
-        targets[0] = address(_token);
-        data[0] = abi.encodeWithSignature("mint(address,uint256)", address(this), amount);
+
+        EngineHub.Call[] memory calls = new EngineHub.Call[](1);
+        calls[0] =
+            EngineHub.Call(address(_token), abi.encodeWithSignature("mint(address,uint256)", address(this), amount));
 
         vm.startPrank(signer);
         vm.expectRevert(Ownable.Unauthorized.selector);
-        _engineHub.multiCall(targets, data);
+        _engineHub.multiCall(calls);
         vm.stopPrank();
     }
 }
