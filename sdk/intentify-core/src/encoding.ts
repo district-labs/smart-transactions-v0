@@ -22,34 +22,34 @@ const INTENTBATCH_TYPEHASH = keccak256(
 
 
 // Define the TypeScript functions
-export function getEIP712DomainPacketHash(domain: EIP712Domain): string {
+export function getEIP712DomainPacketHash(domain: EIP712Domain): `0x${string}` {
   return keccak256(
     encodeAbiParameters(
-      parseAbiParameters('bytes32', 'string', 'string', 'uint256', 'address'),
+      parseAbiParameters('bytes32 domain, string name, string version, uint256 chainId, address verifyingContract'),
       [EIP712DOMAIN_TYPEHASH, domain.name, domain.version, domain.chainId, domain.verifyingContract]
     )
   );
 }
 
-export function getDimensionalNoncePacketHash(nonce: DimensionalNonce): string {
+export function getDimensionalNoncePacketHash(nonce: DimensionalNonce): `0x${string}` {
   return keccak256(
     encodeAbiParameters(
-      parseAbiParameters('bytes32', 'uint128', 'uint128'),
+      parseAbiParameters('bytes32 hash, uint128 queue, uint128 accumulator'),
       [DIMENSIONALNONCE_TYPEHASH, nonce.queue, nonce.accumulator]
     )
   );
 }
 
-export function getIntentPacketHash(intent: Intent): string {
+export function getIntentPacketHash(intent: Intent): `0x${string}` {
   return keccak256(
     encodeAbiParameters(
-      ['bytes32', 'address', 'address', 'uint256', 'bytes'],
-      [INTENT_TYPEHASH, intent.root, intent.target, intent.value, toBytes(intent.data)]
+      parseAbiParameters('bytes32, address, address, uint256, bytes'),
+      [INTENT_TYPEHASH, intent.root, intent.target, intent.value, intent.data]
     )
   );
 }
 
-export function getIntentArrayPacketHash(intents: Intent[]): string {
+export function getIntentArrayPacketHash(intents: Intent[]): `0x${string}` {
   let encoded = '0x';
   for (const intent of intents) {
     encoded += getIntentPacketHash(intent).slice(2); // Remove the '0x' prefix and concatenate
@@ -57,16 +57,16 @@ export function getIntentArrayPacketHash(intents: Intent[]): string {
   return keccak256(encoded as `0x${string}`);
 }
 
-export function getIntentBatchPacketHash(intentBatch: IntentBatch): string {
+export function getIntentBatchPacketHash(intentBatch: IntentBatch): `0x${string}` {
   return keccak256(
     encodeAbiParameters(
-      ['bytes32', 'address', 'bytes', 'bytes32'],
-      [INTENTBATCH_TYPEHASH, intentBatch.root, toBytes(intentBatch.nonce), getIntentArrayPacketHash(intentBatch.intents)]
+      parseAbiParameters('bytes32, address, bytes, bytes32'),
+      [INTENTBATCH_TYPEHASH, intentBatch.root, intentBatch.nonce, getIntentArrayPacketHash(intentBatch.intents)]
     )
   );
 }
 
-export function getIntentBatchTypedDataHash(intentBatch: IntentBatch, domainSeparator: string): string {
+export function getIntentBatchTypedDataHash(intentBatch: IntentBatch, domainSeparator: `0x${string}`): `0x${string}` {
   const digest = keccak256(
     encodePacked(['string', 'bytes32', 'bytes32'], ['\x19\x01', domainSeparator, getIntentBatchPacketHash(intentBatch)])
   );

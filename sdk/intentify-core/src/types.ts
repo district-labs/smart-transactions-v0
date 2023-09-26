@@ -1,13 +1,13 @@
 export type EIP712Domain = {
   name: string;
   version: string;
-  chainId: number;
-  verifyingContract: string; // Ethereum addresses are usually represented as strings in TypeScript
+  chainId: bigint;
+  verifyingContract: `0x${string}`; // Ethereum addresses are usually represented as strings in TypeScript
 };
 
 export type DimensionalNonce = {
-  queue: number; // uint128 can be represented as a number in TypeScript
-  accumulator: number; // uint128 can be represented as a number in TypeScript
+  queue: bigint; // uint128 can be represented as a bigint in TypeScript
+  accumulator: bigint; // uint128 can be represented as a number in TypeScript
 };
 
 export type Signature = {

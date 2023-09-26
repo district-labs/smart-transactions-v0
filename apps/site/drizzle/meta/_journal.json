@@ -169,6 +169,13 @@
       "when": 1695597686995,
       "tag": "0023_premium_surge",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "5",
+      "when": 1695727336805,
+      "tag": "0024_nappy_whirlwind",
+      "breakpoints": true
     }
   ]
 }
