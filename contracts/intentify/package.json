@@ -27,7 +27,7 @@
     "lint": "pnpm lint:sol && pnpm prettier:check",
     "test": "forge test",
     "lint:sol": "forge fmt --check",
-    "prettier:check": "prettier --check **/*.{json,md,yml} --ignore-path=.prettierignore",
-    "prettier:write": "prettier --write **/*.{json,md,yml} --ignore-path=.prettierignore"
+    "prettier:check": "prettier --check **/*.{json,yml} --ignore-path=.prettierignore",
+    "prettier:write": "prettier --write **/*.{json,yml} --ignore-path=.prettierignore"
   }
 }

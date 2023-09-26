@@ -32,9 +32,9 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
         DOMAIN_SEPARATOR = _getEIP712DomainHash(NAME, VERSION, block.chainid, address(this));
     }
 
-    event IntentBatchExecuted(address executor, address root, bytes32 intentBatchId);
+    event IntentBatchExecuted(address executor, address indexed root, bytes32 indexed intentBatchId);
 
-    event IntentBatchCancelled(address root, bytes32 intentBatchId);
+    event IntentBatchCancelled(address root, bytes32 indexed intentBatchId);
 
     /* ===================================================================================== */
     /* External Functions                                                                    */
@@ -53,7 +53,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
         // The length of the intents and hooks must be the same.
         // This is because the hooks are meant to be executed in tandem with the intents.
         // If no hook has empty address, then the intent is executed without a hook.
-        require(execution.batch.intents.length == execution.hooks.length, "Intent:invalid-intent-length");
+        require(execution.batch.intents.length == execution.hooks.length, "Intent:invalid-hooks-length");
 
         bytes32 digest = getIntentBatchTypedDataHash(execution.batch);
         require(!cancelledIntentBundles[execution.batch.root][digest], "Intent:cancelled");

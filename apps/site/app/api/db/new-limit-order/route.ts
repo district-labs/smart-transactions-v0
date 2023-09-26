@@ -20,8 +20,8 @@ export async function POST(req: Request) {
     // }
 
     const body = newLimitOrderSchema.parse(await req.json())
-    const { intentBatch, intentBatchEIP712 } = body
-    const { chainId, intents, nonce, root, signature } = intentBatch
+    const { intentBatch } = body
+    const { chainId, intents, nonce, root, signature, intentBatchHash } = intentBatch
 
     // const verification = await verifyTypedData({
     //   address: session.address as Address,
@@ -41,6 +41,7 @@ export async function POST(req: Request) {
 
     await db.transaction(async (tx) => {
       const intentBatchResult = await tx.insert(intentBatchDb).values({
+        intentBatchHash,
         nonce,
         chainId,
         root,

@@ -23,8 +23,9 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
     IntentifySafeModule internal _intentifySafeModule;
     Counter internal _counter;
 
-    event IntentBatchExecuted(address executor, address root, bytes32 intentBatchId);
-    event IntentBatchCancelled(address root, bytes32 intentBatchId);
+    event IntentBatchExecuted(address executor, address indexed root, bytes32 indexed intentBatchId);
+
+    event IntentBatchCancelled(address root, bytes32 indexed intentBatchId);
 
     function setUp() public virtual {
         initializeBase();
