@@ -11,7 +11,6 @@ export async function simulateIntentBatchExecution(
 
   const address = IntentifyModuleAddressList[chainId]
   if (!address) throw new Error(`No IntentifyModuleAddress for chainId ${chainId}`)
-  console.log(chainId, 'chainId')
 
   return await publicClient.simulateContract({
     address: address,
