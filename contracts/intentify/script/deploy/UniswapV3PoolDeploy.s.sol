@@ -5,7 +5,7 @@ import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
 import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
 import "forge-std/Script.sol";
 import { console2 } from "forge-std/console2.sol";
-import { ERC20Mintable } from "../src/periphery/ERC20Mintable.sol";
+import { ERC20Mintable } from "../../src/periphery/ERC20Mintable.sol";
 
 contract UniswapV3PoolDeploy is Script {
     address public immutable uniswapV3Factory = address(0x1F98431c8aD98523631AE4a59f267346ea31F984);

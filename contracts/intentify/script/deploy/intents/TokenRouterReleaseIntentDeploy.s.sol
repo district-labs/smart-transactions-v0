@@ -2,14 +2,14 @@
 pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
-import { TimestampAfterIntent } from "../../src/intents/TimestampAfterIntent.sol";
+import { TokenRouterReleaseIntent } from "../../../src/intents/TokenRouterReleaseIntent.sol";
 
-contract TimestampAfterIntentDeploy is Script {
+contract TokenRouterReleaseIntentDeploy is Script {
     function run() external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        TimestampAfterIntent timestampAfterIntent = new TimestampAfterIntent();
+        TokenRouterReleaseIntent tokenRouterReleaseIntent = new TokenRouterReleaseIntent();
 
         vm.stopBroadcast();
     }

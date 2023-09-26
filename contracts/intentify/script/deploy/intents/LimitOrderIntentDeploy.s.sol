@@ -2,14 +2,14 @@
 pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
-import { TokenRouterReleaseIntent } from "../../src/intents/TokenRouterReleaseIntent.sol";
+import { LimitOrderIntent } from "../../../src/intents/LimitOrderIntent.sol";
 
-contract TokenRouterReleaseIntentDeploy is Script {
+contract LimitOrderIntentDeploy is Script {
     function run() external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        TokenRouterReleaseIntent tokenRouterReleaseIntent = new TokenRouterReleaseIntent();
+        LimitOrderIntent limitOrderIntent = new LimitOrderIntent();
 
         vm.stopBroadcast();
     }

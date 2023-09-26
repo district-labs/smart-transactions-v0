@@ -2,14 +2,14 @@
 pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
-import { IntentifySafeModule } from "../src/module/IntentifySafeModule.sol";
+import { TwapIntent } from "../../../src/intents/TwapIntent.sol";
 
-contract IntentifySafeModuleDeploy is Script {
+contract TwapIntentDeploy is Script {
     function run() external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        IntentifySafeModule intentifySafeModule = new IntentifySafeModule();
+        TwapIntent twapIntent = new TwapIntent();
 
         vm.stopBroadcast();
     }

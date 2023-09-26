@@ -3,6 +3,7 @@ import { z } from "zod"
 export const newLimitOrderSchema = z.object({
   intentBatchEIP712: z.any(),
   intentBatch: z.object({
+    intentBatchHash: z.string(),
     nonce: z.string(),
     root: z.string(),
     chainId: z.number(),
