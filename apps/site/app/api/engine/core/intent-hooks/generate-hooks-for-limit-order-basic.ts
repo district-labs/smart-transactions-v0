@@ -1,11 +1,45 @@
-import { ADDRESS_ZERO, type Hook } from "@district-labs/intentify-utils";
+import { ADDRESS_ZERO, type Hook } from "@district-labs/intentify-utils"
 
-export function generateHooksForLimitOrderBasic(chainId: number):Hook[] {
+import { routeSwapExactOutput } from "@/lib/uniswap-v3/routing"
+
+const RUNTIME_ENGINE_ADDRESS = "0x0"
+
+interface Token {
+  address: `0x${string}`
+  decimals: number
+}
+
+interface GenerateHooksForLimitOrderBasicParams {
+  chainId: number
+  inputToken: Token
+  outputToken: Token
+  amountOut: `0x${string}`
+  recipient: `0x${string}`
+}
+
+export async function generateHooksForLimitOrderBasic({
+  chainId,
+  inputToken,
+  outputToken,
+  amountOut,
+  recipient,
+}: GenerateHooksForLimitOrderBasicParams): Promise<Hook[]> {
   // 1. Timestamp Intent == No Hook
   // 2. Token Release Intent == No Hook
   // 3. Limit Order Intent == Fill on Uniswap
 
-  // TODO: Make magic happen with Uniswap V3 swaps
+  const route = await routeSwapExactOutput({
+    chainId,
+    amountOut,
+    inputToken,
+    outputToken,
+    recipient,
+  })
+
+  if (!route?.methodParameters) throw new Error("route not found")
+
+  const { to, calldata } = route.methodParameters
+
   return [
     {
       target: ADDRESS_ZERO,
@@ -15,9 +49,10 @@ export function generateHooksForLimitOrderBasic(chainId: number):Hook[] {
       target: ADDRESS_ZERO,
       data: "0x00",
     },
+    // TODO: encode call to engine hub
     {
-      target: ADDRESS_ZERO,
-      data: "0x00",
+      target: to as `0x${string}`,
+      data: calldata as `0x${string}`,
     },
   ]
 }

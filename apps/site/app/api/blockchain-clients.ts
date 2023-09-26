@@ -14,9 +14,7 @@ const transportGoerli = http(
   `https://eth-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
 )
 
-const localGoerli = http(
-  `http://localhost:8545`
-)
+const localGoerli = http(`http://localhost:8545`)
 
 export const mainnetPublicClient = createPublicClient({
   chain: mainnet,

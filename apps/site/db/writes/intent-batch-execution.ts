@@ -4,7 +4,9 @@ import { db } from ".."
 import { intentBatchExecution } from "../schema"
 import type { IntentBatchExecution } from "../schema"
 
-export function newIntentExecutionBatch(intentBatchExecutionNew: IntentBatchExecution) {
+export function newIntentExecutionBatch(
+  intentBatchExecutionNew: IntentBatchExecution
+) {
   return db.insert(intentBatchExecution).values(intentBatchExecutionNew)
 }
 

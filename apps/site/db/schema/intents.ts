@@ -69,7 +69,6 @@ export const intentBatchRelations = relations(intentBatch, ({ one, many }) => ({
   intentBatchExecution: one(intentBatchExecution, {
     fields: [intentBatch.id],
     references: [intentBatchExecution.intentBatchId],
-    
   }),
 }))
 

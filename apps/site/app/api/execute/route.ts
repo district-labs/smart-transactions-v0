@@ -5,12 +5,12 @@
 import { newIntentExecutionBatch } from "@/db/queries/intent-batch-execution"
 import {
   IntentifyBundlerAddressList,
+  IntentifyModuleAddressList,
   intentifySafeModuleBundlerABI,
 } from "@district-labs/intentify-utils"
 import { getContract } from "viem"
 
 import { localWalletClient, mainnetWalletClient } from "../blockchain-clients"
-import { IntentifyModuleAddressList } from "@district-labs/intentify-utils"
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function POST(req: Request) {
@@ -62,9 +62,12 @@ export async function POST(req: Request) {
         walletClient: localWalletClient,
       })
 
-      localItentModule.write.executeBundle([IntentifyModuleAddressList[31337], executableIntentBatchBundle], {
-        gas: 569420n
-      })
+      localItentModule.write.executeBundle(
+        [IntentifyModuleAddressList[31337], executableIntentBatchBundle],
+        {
+          gas: 569420n,
+        }
+      )
 
       break
     default:
@@ -74,5 +77,5 @@ export async function POST(req: Request) {
   }
 
   console.log("Hello from Execute")
-  return new Response({ok: true})
+  return new Response({ ok: true })
 }
