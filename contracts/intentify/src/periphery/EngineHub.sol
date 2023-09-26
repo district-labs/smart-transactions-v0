@@ -22,10 +22,32 @@ contract EngineHub is Ownable {
         results = new bytes[](calls.length);
         for (uint256 i = 0; i < calls.length; i++) {
             (bool success, bytes memory result) = calls[i].target.call(calls[i].callData);
-            require(success, "EngineHub:call-failed");
+            if (!success) {
+                if (result.length > 0) {
+                    string memory reason = _extractRevertReason(result);
+                    revert(reason);
+                } else {
+                    revert("EngineHub:call-failed");
+                }
+            }
             results[i] = result;
 
             emit MultiCallAction(calls[i].target, calls[i].callData, result);
+        }
+    }
+
+    function _extractRevertReason(bytes memory revertData) internal pure returns (string memory reason) {
+        uint256 length = revertData.length;
+        if (length < 68) return "";
+        uint256 t;
+        assembly {
+            revertData := add(revertData, 4)
+            t := mload(revertData) // Save the content of the length slot
+            mstore(revertData, sub(length, 4)) // Set proper length
+        }
+        reason = abi.decode(revertData, (string));
+        assembly {
+            mstore(revertData, t) // Restore the content of the length slot
         }
     }
 }
