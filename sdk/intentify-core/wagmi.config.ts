@@ -10,9 +10,11 @@ export default defineConfig({
       include: [
         'Intentify.json',
         'IntentifySafeModule.json',
+        'IntentifySafeModuleBundler.json',
         'TimestampBeforeIntent.json',
         'TokenRouterReleaseIntent.json',
         'LimitOrderIntent.json',
+        'EngineHub.json',
       ],
     }),
   ],

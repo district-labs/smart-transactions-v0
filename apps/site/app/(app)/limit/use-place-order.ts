@@ -7,6 +7,7 @@ import {
 } from "@district-labs/intentify-react"
 import {
   generateIntentBatchEIP712,
+  getIntentBatchPacketHash,
   generateIntentModuleId,
 } from "@district-labs/intentify-utils"
 import { useMutation } from "@tanstack/react-query"
@@ -18,9 +19,9 @@ import { expiryToTimestamp } from "./utils"
 interface IUsePlaceOrder {
   expiry: string
   chainId: number
-  tokenOut: DefiLlamaToken
+  tokenOut: DefiLlamaToken | undefined
   amountOut: number | undefined
-  tokenIn: DefiLlamaToken
+  tokenIn: DefiLlamaToken | undefined
   amountIn: number | undefined
 }
 
@@ -34,14 +35,22 @@ export function usePlaceOrder({
 }: IUsePlaceOrder) {
   const { isLoading: isLoadingSign, signTypedDataAsync } = useSignTypedData()
 
-  const intentifyAddress: string = useGetIntentifyModuleAddress(chainId)
-  const timestampBeforeIntentAddress: string =
+  const intentifyAddress = useGetIntentifyModuleAddress(chainId)
+  const timestampBeforeIntentAddress =
     useGetIntentTimestampBeforeAddress(chainId)
-  const limitOrderIntentAddress: string = useGetIntentLimitOrderAddress(chainId)
-  const tokenRouterReleaseIntentAddress: string =
+  const limitOrderIntentAddress = useGetIntentLimitOrderAddress(chainId)
+  const tokenRouterReleaseIntentAddress =
     useGetIntentTokenRouterAddress(chainId)
 
   const mutationFn = async () => {
+    if (!tokenOut) {
+      throw new Error("tokenOut is undefined")
+    }
+
+    if (!tokenIn) {
+      throw new Error("tokenIn is undefined")
+    }
+
     const expiryTimestamp = expiryToTimestamp(expiry)
     const parsedAmountIn = parseUnits(
       (amountIn?.toString() || "0") as `${number}`,
@@ -149,9 +158,50 @@ export function usePlaceOrder({
     // @ts-ignore
     const signature = await signTypedDataAsync(intentBatchEIP712)
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const intentBatchHash = getIntentBatchPacketHash({
+      nonce: encodePacked(["uint256"], [BigInt(0)]),
+      root: intentifyAddress,
+      intents: [
+        {
+          root: intentifyAddress,
+          target: timestampBeforeIntentAddress,
+          data: encodePacked(["uint128"], [BigInt(expiryTimestamp)]),
+          value: BigInt(0),
+        },
+        {
+          root: intentifyAddress,
+          target: tokenRouterReleaseIntentAddress,
+          data: encodeAbiParameters(
+            [
+              { type: "address", name: "token" },
+              { type: "uint256", name: "amount" },
+            ],
+            [tokenOut.address, parsedAmountOut]
+          ),
+          value: BigInt(0),
+        },
+        {
+          root: intentifyAddress,
+          target: limitOrderIntentAddress,
+          data: encodeAbiParameters(
+            [
+              { type: "address", name: "tokenOut" },
+              { type: "address", name: "tokenIn" },
+              { type: "uint256", name: "amountOutMax" },
+              { type: "uint256", name: "amountInMin" },
+            ],
+            [tokenOut.address, tokenIn.address, parsedAmountOut, parsedAmountIn]
+          ),
+          value: BigInt(0),
+        },
+      ],
+    })
+
     const body: NewLimitOrder = {
       intentBatchEIP712,
       intentBatch: {
+        intentBatchHash,
         ...intentBatch,
         signature,
       },

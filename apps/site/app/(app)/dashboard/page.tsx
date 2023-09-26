@@ -36,7 +36,7 @@ export default async function DashboardPage() {
     <>
       <section id="overview" aria-label="overview-heading">
         <DashboardOverview />
-        <TokenPriceChart />
+        {/* <TokenPriceChart /> */}
         <div className="my-2 md:my-4">
           <p className="text-muted-foreground">Compare with:</p>
           <div className="mt-2 flex space-x-2">
