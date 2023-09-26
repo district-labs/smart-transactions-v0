@@ -1,0 +1,15 @@
+# event IntentBatchExecuted(address executor, address indexed root, bytes32 indexed intentBatchId);
+# event IntentBatchCancelled(address root, bytes32 indexed intentBatchId);
+
+type IntentBatch @entity {
+  id: String!
+  chainId: Int!
+  executor: String
+  root: String!
+  state: IntentBatchState!
+}
+
+enum IntentBatchState {
+  EXECUTED
+  CANCELLED
+}
