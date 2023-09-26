@@ -1,11 +1,15 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import { useRouter } from "next/navigation"
 import { type DefiLlamaToken } from "@/types"
+import { useRouter } from "next/navigation"
+import { useEffect, useRef, useState } from "react"
 import { useChainId } from "wagmi"
 
-import { formatPrice } from "@/lib/utils"
+import { useCurrentPriceERC20 } from "@/app/(app)/limit/use-current-price"
+import { usePlaceOrder } from "@/app/(app)/limit/use-place-order"
+import LimitPriceInput from "@/components/blockchain/limit-price-input"
+import TokenInputAmount from "@/components/blockchain/token-input-amount"
+import { Icons } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -16,11 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import LimitPriceInput from "@/components/blockchain/limit-price-input"
-import TokenInputAmount from "@/components/blockchain/token-input-amount"
-import { Icons } from "@/components/icons"
-import { useCurrentPriceERC20 } from "@/app/(app)/limit/use-current-price"
-import { usePlaceOrder } from "@/app/(app)/limit/use-place-order"
+import { formatPrice } from "@/lib/utils"
 
 interface LimitOrderWidgetProps {
   outToken: DefiLlamaToken
@@ -72,7 +72,7 @@ export default function LimitOrderWidget({
   }
 
   function handleSelectTokenOut(newTokenOut: DefiLlamaToken) {
-    router.push(`/limit/${outToken.symbol}/${newTokenOut.symbol}`)
+    router.push(`/limit/${newTokenOut.symbol}/${inToken.symbol}`)
   }
 
   // Update URL if tokenOut or tokenIn changes
