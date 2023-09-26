@@ -20,3 +20,7 @@
 [submodule "contracts/intentify/lib/surl"]
 	path = contracts/intentify/lib/surl
 	url = https://github.com/memester-xyz/surl
+[submodule "contracts/intentify/lib/@uniswap/v3-periphery"]
+	path = contracts/intentify/lib/@uniswap/v3-periphery
+	url = https://github.com/Uniswap/v3-periphery
+	branch = 0.8
