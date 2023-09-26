@@ -1,4 +1,7 @@
-import { type GetTokenChartDataResponse, type DeFiLlamaCoinsInput } from "@/types"
+import {
+  type DeFiLlamaCoinsInput,
+  type GetTokenChartDataResponse,
+} from "@/types"
 
 import { CHAIN_ID_TO_NAME } from "../constants"
 

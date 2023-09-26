@@ -39,6 +39,10 @@ export async function POST(req: Request) {
 
     const data = (await response.json()) as GetTokenCurrentPriceResponse
 
+    if (!data.coins[formattedCoins]?.price) {
+      throw new Error(`Failed to fetch price for ${formattedCoins}`)
+    }
+
     return new Response(
       JSON.stringify(data.coins[formattedCoins].price, null, 2),
       { status: 200 }

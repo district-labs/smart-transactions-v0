@@ -1,5 +1,5 @@
-import { useEffect, type Dispatch, type SetStateAction } from "react"
-import { type DefiLlamaToken } from "@/types"
+import type { ChangeEvent, Dispatch, SetStateAction } from "react"
+import type { DefiLlamaToken } from "@/types"
 
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
@@ -44,13 +44,16 @@ export default function LimitPriceInput({
     setLimitPrice(tokenInPrice / tokenOutPrice)
   }
 
-  useEffect(() => {
-    if (!tokenOutPrice || !tokenInPrice || !limitPrice) return
-    const marketPrice = tokenInPrice / tokenOutPrice
-    const percDiff = (1 - limitPrice / marketPrice) * -100
+  function handleUpdateLimitPrice(e: ChangeEvent<HTMLInputElement>) {
+    const formattedLimitPrice = parseFloat(e.target.value)
+    setLimitPrice(formattedLimitPrice)
 
+    if (!tokenInPrice || !tokenOutPrice) return
+
+    const marketPrice = tokenInPrice / tokenOutPrice
+    const percDiff = (1 - formattedLimitPrice / marketPrice) * -100
     setDelta(percDiff)
-  }, [limitPrice, setDelta, tokenInPrice, tokenOutPrice])
+  }
 
   return (
     <div className="grid gap-2">
@@ -72,7 +75,7 @@ export default function LimitPriceInput({
           className="block w-full bg-transparent px-3 py-1 text-sm font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-transparent"
           placeholder="0.0"
           value={limitPrice}
-          onChange={(e) => setLimitPrice(parseFloat(e.target.value))}
+          onChange={handleUpdateLimitPrice}
         />
         <span className="mr-2 text-sm font-medium">{tokenOut.symbol}</span>
       </div>
