@@ -1,6 +1,7 @@
-import { IntentBatchQuery } from "@/db/queries/intent-batch";
+import type { IntentBatchQuery } from "@/db/queries/intent-batch";
 4
-type LimitOrderIntent = {
+export type LimitOrderIntent = {
+    chainId: number
     sell: {
       asset: string
       amount: number
@@ -18,11 +19,9 @@ export function transformLimitOrderIntentQueryToLimitOrderData(intentBatch: Inte
 
     const { intents } = intentBatch
 
-    // intents[0].intentArgs[0].
-
-    if(intents.length < 2) throw new Error("Invalid Intent Batch")
-
+    // TODO: check if the intent is a limit order intent by using the ID
     return {
+        chainId: Number(intentBatch.chainId),
         sell: {
             asset: String(intents[2]?.intentArgs[0]?.value),
             amount: Number(intents[2].intentArgs[2].value),
