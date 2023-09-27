@@ -1,12 +1,7 @@
 import { type GetTokenChartDataResponse } from "@/types"
 import { z } from "zod"
 
-import {
-  calculatePeriod,
-  formatChartData,
-  formatCoinsInput,
-  formatDate,
-} from "@/lib/utils"
+import { formatChartData, formatCoinsInput } from "@/lib/utils"
 import { getTokenChartDataSchema } from "@/lib/validations/token"
 
 export async function POST(req: Request) {
@@ -27,16 +22,36 @@ export async function POST(req: Request) {
       }
     }
 
-    if (!input.searchWidth) {
-      input.searchWidth = "600"
-    }
-
-    if (!input.spanDataPoints) {
-      input.spanDataPoints = 50
-    }
-
-    if (!input.period) {
-      input.period = "30d"
+    let spanDataPoints: number
+    let period: string
+    switch (input.range) {
+      case "1d":
+        period = "15m"
+        spanDataPoints = 96
+        break
+      case "7d":
+        period = "1h"
+        spanDataPoints = 168
+        break
+      case "30d":
+        period = "4h"
+        spanDataPoints = 182
+        break
+      case "90d":
+        period = "24h"
+        spanDataPoints = 90
+        break
+      case "365d":
+        period = "1d"
+        spanDataPoints = 365
+        break
+      case "1095d":
+        period = "1w"
+        spanDataPoints = 156
+        break
+      default:
+        period = "4h"
+        spanDataPoints = 182
     }
 
     const formattedCoins = formatCoinsInput(
@@ -46,17 +61,10 @@ export async function POST(req: Request) {
     const url = new URL(`https://coins.llama.fi/chart/${formattedCoins}`)
     const params = new URLSearchParams()
 
-    if (input.searchWidth)
-      params.append("searchWidth", input.searchWidth.toString())
     if (input.timestamp)
       params.append(input.timestamp.type, input.timestamp.value.toString())
-    if (input.spanDataPoints)
-      params.append("span", input.spanDataPoints.toString())
-    if (input.period)
-      params.append(
-        "period",
-        calculatePeriod(input.period, input.spanDataPoints).toString()
-      )
+    if (spanDataPoints) params.append("span", spanDataPoints.toString())
+    if (period) params.append("period", period.toString())
 
     url.search = params.toString()
 

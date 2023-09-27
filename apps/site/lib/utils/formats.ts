@@ -39,11 +39,20 @@ export function formatNumber(
   }).format(Number(number))
 }
 
-export function formatDate(date: number) {
+export function formatDate(
+  date: number,
+  options: {
+    month?: Intl.DateTimeFormatOptions["month"]
+    day?: Intl.DateTimeFormatOptions["day"]
+    year?: Intl.DateTimeFormatOptions["year"]
+  } = {}
+) {
+  const { month = "short", day = "numeric", year = undefined } = options
+
   return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
+    month,
+    day,
+    year,
   }).format(new Date(date * 1000))
 }
 
@@ -63,7 +72,7 @@ export function formatChartData(
   outToken: string,
   inToken?: string
 ) {
-  const chartData: { time: string; price: number }[] = []
+  const chartData: { time: number; price: number }[] = []
 
   const tokenOut = data.coins[outToken].prices
   const tokenIn = inToken
@@ -72,7 +81,7 @@ export function formatChartData(
 
   for (let i = 0; i < tokenOut.length; i++) {
     const relativePrice = tokenOut[i].price / tokenIn[i].price
-    const timestamp = formatDate(tokenOut[i].timestamp)
+    const timestamp = tokenOut[i].timestamp
 
     chartData.push({ time: timestamp, price: relativePrice })
   }
