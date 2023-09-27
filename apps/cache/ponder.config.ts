@@ -15,7 +15,7 @@ export const config: Config = {
       network: "goerli",
       address: IntentifyModuleAddressList[5],
       abi: intentifySafeModuleABI,
-      startBlock: 9684295,
+      startBlock: 9764809,
     },
     {
       name: "IntentifySafeModuleTestnet",

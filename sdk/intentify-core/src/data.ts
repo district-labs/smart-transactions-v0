@@ -7,7 +7,7 @@ export const ADDRESS_ZERO =
 export const DEFAULT_SALT = BigInt(0);
 
 export const IntentifyModuleAddressList: KeyList = {
-  5: '0xF783Cc471Cd4ED273056F1DD571b4beafa6A5CDE',
+  5: '0x6d39bb7e7BF4eDE48E0CC62701E751D8deC07D2d',
   31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
 };
 
@@ -17,7 +17,7 @@ export const IntentifyBundlerAddressList: KeyList = {
 };
 
 export const WalletFactoryAddressList: KeyList = {
-  5: '0x99217B2931f90aa5CeFbFfC74816E24aF66A522D',
+  5: '0x7F73D8FE944d69eea972d3d226734C4dA68fE6a9',
   31337: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
 };
 3

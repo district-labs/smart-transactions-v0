@@ -1,4 +1,5 @@
 import { type DefiLlamaToken, type NewLimitOrder } from "@/types"
+import { useGetSafeAddress } from "@district-labs/intentify-react";
 import {
   useGetIntentifyModuleAddress,
   useGetIntentLimitOrderAddress,
@@ -7,14 +8,15 @@ import {
 } from "@district-labs/intentify-react"
 import {
   generateIntentBatchEIP712,
-  getIntentBatchPacketHash,
   generateIntentModuleId,
+  getIntentBatchTypedDataHash,
 } from "@district-labs/intentify-utils"
 import { useMutation } from "@tanstack/react-query"
 import { encodeAbiParameters, encodePacked, parseUnits } from "viem"
 import { useSignTypedData } from "wagmi"
 
 import { expiryToTimestamp } from "./utils"
+import { useIntentifySafeModuleDomainSeparator } from "@district-labs/intentify-react";
 
 interface IUsePlaceOrder {
   expiry: string
@@ -35,12 +37,21 @@ export function usePlaceOrder({
 }: IUsePlaceOrder) {
   const { isLoading: isLoadingSign, signTypedDataAsync } = useSignTypedData()
 
+  const safeAddress = useGetSafeAddress()
   const intentifyAddress = useGetIntentifyModuleAddress(chainId)
   const timestampBeforeIntentAddress =
     useGetIntentTimestampBeforeAddress(chainId)
   const limitOrderIntentAddress = useGetIntentLimitOrderAddress(chainId)
   const tokenRouterReleaseIntentAddress =
     useGetIntentTokenRouterAddress(chainId)
+
+  const intentifyModuleAddress = useGetIntentifyModuleAddress(chainId)
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  const {data: domainSeparator} = useIntentifySafeModuleDomainSeparator({
+    address: intentifyModuleAddress,
+    chainId,
+  })
 
   const mutationFn = async () => {
     if (!tokenOut) {
@@ -49,6 +60,10 @@ export function usePlaceOrder({
 
     if (!tokenIn) {
       throw new Error("tokenIn is undefined")
+    }
+
+    if(!domainSeparator) {
+      throw new Error("domainSeparator is undefined")
     }
 
     const expiryTimestamp = expiryToTimestamp(expiry)
@@ -63,13 +78,12 @@ export function usePlaceOrder({
 
     const intentBatch = {
       nonce: encodePacked(["uint256"], [BigInt(0)]),
-      // Eth address 42 characters of 0x + 0{40}
-      root: intentifyAddress,
+      root: safeAddress as string,
       chainId,
       intents: [
         {
           intentId: generateIntentModuleId("TimestampBeforeIntent", "1"),
-          root: intentifyAddress,
+          root: safeAddress as string,
           target: timestampBeforeIntentAddress,
           data: encodePacked(["uint128"], [BigInt(expiryTimestamp)]),
           value: "0",
@@ -83,7 +97,7 @@ export function usePlaceOrder({
         },
         {
           intentId: generateIntentModuleId("TokenRouterReleaseIntent", "1"),
-          root: intentifyAddress,
+          root: safeAddress as string,
           target: tokenRouterReleaseIntentAddress,
           data: encodeAbiParameters(
             [
@@ -108,7 +122,7 @@ export function usePlaceOrder({
         },
         {
           intentId: generateIntentModuleId("LimitOrderIntent", "1"),
-          root: intentifyAddress,
+          root: safeAddress as string,
           target: limitOrderIntentAddress,
           data: encodeAbiParameters(
             [
@@ -159,18 +173,18 @@ export function usePlaceOrder({
     const signature = await signTypedDataAsync(intentBatchEIP712)
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const intentBatchHash = getIntentBatchPacketHash({
+    const intentBatchHash = getIntentBatchTypedDataHash(domainSeparator, {
       nonce: encodePacked(["uint256"], [BigInt(0)]),
-      root: intentifyAddress,
+      root: safeAddress as `0x${string}`,
       intents: [
         {
-          root: intentifyAddress,
+          root: safeAddress as `0x${string}`,
           target: timestampBeforeIntentAddress,
           data: encodePacked(["uint128"], [BigInt(expiryTimestamp)]),
           value: BigInt(0),
         },
         {
-          root: intentifyAddress,
+          root: safeAddress as `0x${string}`,
           target: tokenRouterReleaseIntentAddress,
           data: encodeAbiParameters(
             [
@@ -182,7 +196,7 @@ export function usePlaceOrder({
           value: BigInt(0),
         },
         {
-          root: intentifyAddress,
+          root: safeAddress as `0x${string}`,
           target: limitOrderIntentAddress,
           data: encodeAbiParameters(
             [
@@ -207,7 +221,7 @@ export function usePlaceOrder({
       },
     }
 
-    const response = await fetch("/api/db/new-limit-order", {
+    const response = await fetch("/api/intent-batch/create", {
       method: "POST",
       body: JSON.stringify(body),
       headers: {

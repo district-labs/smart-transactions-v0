@@ -66,7 +66,7 @@ export function getIntentBatchPacketHash(intentBatch: IntentBatch): `0x${string}
   );
 }
 
-export function getIntentBatchTypedDataHash(intentBatch: IntentBatch, domainSeparator: `0x${string}`): `0x${string}` {
+export function getIntentBatchTypedDataHash(domainSeparator: `0x${string}`, intentBatch: IntentBatch): `0x${string}` {
   const digest = keccak256(
     encodePacked(['string', 'bytes32', 'bytes32'], ['\x19\x01', domainSeparator, getIntentBatchPacketHash(intentBatch)])
   );
