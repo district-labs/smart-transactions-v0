@@ -11,8 +11,6 @@ export function useGetIntentBatchTypedDataHash(intentBatch: IntentBatch) {
         address: IntentifyModuleAddressList[chainId],
         chainId,
     })
-
     const intentBatchHash = isSuccess ? getIntentBatchTypedDataHash(data as `0x${string}`, intentBatch) : undefined;
-
     return isSuccess && intentBatchHash ? intentBatchHash : undefined;
 }

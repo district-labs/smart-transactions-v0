@@ -1,11 +1,9 @@
-// import type { DbIntentBatch } from "@/db/schema";
-import { IntentBatchQuery } from "@/db/queries/intent-batch";
+import type { IntentBatchQuery } from "@/db/queries/intent-batch";
 import { useGetSafeAddress } from "@district-labs/intentify-react";
 import { useQuery } from "@tanstack/react-query";
 
 export function useGetIntentBatchFind() {
     const address = useGetSafeAddress();
-
     return useQuery({
         queryKey: ["intent-batch", "all", address],
         queryFn: async (): Promise<IntentBatchQuery[] | undefined> => {

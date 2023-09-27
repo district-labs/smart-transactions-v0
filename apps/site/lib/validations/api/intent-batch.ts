@@ -25,3 +25,5 @@ export const ApiIntentBatch = z.object({
     ),
   }),
 })
+
+export type ApiIntentBatch = z.infer<typeof ApiIntentBatch>
