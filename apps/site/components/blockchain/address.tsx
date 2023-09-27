@@ -1,6 +1,8 @@
-'use client'
-import { HTMLAttributes } from "react"
+"use client"
+
+import { type HTMLAttributes } from "react"
 import { useNetwork, type Address as AddressType } from "wagmi"
+
 import { LinkComponent } from "../shared/link-component"
 
 interface AddressProps extends Omit<HTMLAttributes<HTMLElement>, "children"> {

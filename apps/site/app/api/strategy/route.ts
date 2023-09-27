@@ -1,7 +1,7 @@
+import { type NextRequest } from "next/server"
 import { db } from "@/db"
 import { strategies } from "@/db/schema"
 import { like } from "drizzle-orm"
-import { type NextRequest } from "next/server"
 
 export async function POST(req: NextRequest) {
   const query = req.nextUrl.searchParams.get("query")

@@ -8,9 +8,7 @@ export function newIntentBatch(intentBatchNew: DbIntentBatch) {
   return db.insert(intentBatch).values(intentBatchNew)
 }
 
-export type IntentBatchNew = Awaited<
-  ReturnType<typeof newIntentBatch>
->
+export type IntentBatchNew = Awaited<ReturnType<typeof newIntentBatch>>
 
 // ----------------------------------------------
 // Update Intent Batch from ID
@@ -34,20 +32,20 @@ export type IntentBatchUpdateFromDbId = Awaited<
 // Intent Batch Executed
 // ----------------------------------------------
 export function updateIntentBatchExecuted(
-    intentBatchHash: string,
-    {
+  intentBatchHash: string,
+  {
     executedAt,
-    executedTxHash
-    }: {
+    executedTxHash,
+  }: {
     executedAt: Date
     executedTxHash: string
-    }
+  }
 ) {
   return db
     .update(intentBatch)
     .set({
-        executedAt,
-        executedTxHash
+      executedAt,
+      executedTxHash,
     })
     .where(eq(intentBatch.intentBatchHash, intentBatchHash))
 }
@@ -60,20 +58,20 @@ export type IntentBatchUpdateExecuted = Awaited<
 // Intent Batch Cancelled
 // ----------------------------------------------
 export function updateIntentBatchCancelled(
-    intentBatchHash: string,
-    {
-        cancelledAt,
-        cancelledTxHash
-    }: {
-        cancelledAt: Date
-        cancelledTxHash: string
-    }
+  intentBatchHash: string,
+  {
+    cancelledAt,
+    cancelledTxHash,
+  }: {
+    cancelledAt: Date
+    cancelledTxHash: string
+  }
 ) {
   return db
     .update(intentBatch)
     .set({
-        cancelledAt,
-        cancelledTxHash
+      cancelledAt,
+      cancelledTxHash,
     })
     .where(eq(intentBatch.intentBatchHash, intentBatchHash))
 }
@@ -86,10 +84,9 @@ export type IntentBatchUpdateCancelled = Awaited<
 // Intent Batch Delete All
 // ----------------------------------------------
 export function dbDeleteAllIntentBatches() {
-  return db
-    .delete(intentBatch)
+  return db.delete(intentBatch)
 }
 
 export type DBDeleteAllIntentBatches = Awaited<
-ReturnType<typeof dbDeleteAllIntentBatches>
+  ReturnType<typeof dbDeleteAllIntentBatches>
 >

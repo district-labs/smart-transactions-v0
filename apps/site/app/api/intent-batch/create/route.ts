@@ -1,5 +1,6 @@
 import { db } from "@/db"
 import { intentBatch as intentBatchDb, intents as intentsDb } from "@/db/schema"
+
 import { ApiIntentBatch } from "@/lib/validations/api/intent-batch"
 
 export async function POST(req: Request) {

@@ -3,9 +3,20 @@
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { type DefiLlamaToken } from "@/types"
+import {
+  useGetIntentifyModuleAddress,
+  useIntentifySafeModuleDomainSeparator,
+} from "@district-labs/intentify-react"
+import {
+  generateIntentBatchEIP712,
+  getIntentBatchTypedDataHash,
+} from "@district-labs/intentify-utils"
 import { useChainId, useSignTypedData } from "wagmi"
 
 import { formatPrice } from "@/lib/utils"
+import { useIntentBatchCreate } from "@/hooks/intent-batch/use-intent-batch-create"
+import { useTransformLimitOrderIntentFormToApiIntentBatch } from "@/hooks/intent-batch/use-transform-limit-order-intent-form-to-api-intent-batch"
+import { useTransformLimitOrderIntentFormToStructIntentBatch } from "@/hooks/intent-batch/use-transform-limit-order-intent-form-to-struct-intent-batch"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -20,11 +31,6 @@ import LimitPriceInput from "@/components/blockchain/limit-price-input"
 import TokenInputAmount from "@/components/blockchain/token-input-amount"
 import { Icons } from "@/components/icons"
 import { useCurrentPriceERC20 } from "@/app/(app)/limit/use-current-price"
-import { useTransformLimitOrderIntentFormToApiIntentBatch } from "@/hooks/intent-batch/use-transform-limit-order-intent-form-to-api-intent-batch"
-import { useTransformLimitOrderIntentFormToStructIntentBatch } from "@/hooks/intent-batch/use-transform-limit-order-intent-form-to-struct-intent-batch"
-import { getIntentBatchTypedDataHash, generateIntentBatchEIP712 } from "@district-labs/intentify-utils"
-import { useGetIntentifyModuleAddress, useIntentifySafeModuleDomainSeparator } from "@district-labs/intentify-react"
-import { useIntentBatchCreate } from "@/hooks/intent-batch/use-intent-batch-create"
 
 interface LimitOrderWidgetProps {
   outToken: DefiLlamaToken
@@ -52,28 +58,37 @@ export default function LimitOrderWidget({
     token: { chainId, address: inToken.address },
   })
 
-  const structIntentBatch = useTransformLimitOrderIntentFormToStructIntentBatch({
-    chainId,
-    amountIn,
-    amountOut,
-    expiry,
-    tokenIn: inToken,
-    tokenOut: outToken,
-  })
+  const structIntentBatch = useTransformLimitOrderIntentFormToStructIntentBatch(
+    {
+      chainId,
+      amountIn,
+      amountOut,
+      expiry,
+      tokenIn: inToken,
+      tokenOut: outToken,
+    }
+  )
   const intentifyModuleAddress = useGetIntentifyModuleAddress(chainId)
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  const {data: domainSeparator} = useIntentifySafeModuleDomainSeparator({
+  const { data: domainSeparator } = useIntentifySafeModuleDomainSeparator({
     address: intentifyModuleAddress,
     chainId,
   })
-  const intentBatchHash = getIntentBatchTypedDataHash(domainSeparator, structIntentBatch)
+  const intentBatchHash = getIntentBatchTypedDataHash(
+    domainSeparator,
+    structIntentBatch
+  )
   const intentifyAddress = useGetIntentifyModuleAddress(chainId)
   const intentBatchEIP712 = generateIntentBatchEIP712({
     chainId: chainId,
     verifyingContract: intentifyAddress,
     intentBatch: structIntentBatch,
   })
-  const { isLoading: isLoadingSign, signTypedData, data:signature } = useSignTypedData(intentBatchEIP712)
+  const {
+    isLoading: isLoadingSign,
+    signTypedData,
+    data: signature,
+  } = useSignTypedData(intentBatchEIP712)
   const apiIntentBatch = useTransformLimitOrderIntentFormToApiIntentBatch({
     chainId,
     amountIn,
@@ -85,13 +100,14 @@ export default function LimitOrderWidget({
     intentBatchHash: intentBatchHash,
     domainSeparator: domainSeparator,
   })
-  const { mutateAsync, isSuccess, isError, isLoading, error } = useIntentBatchCreate()
+  const { mutateAsync, isSuccess, isError, isLoading, error } =
+    useIntentBatchCreate()
 
-  useEffect( () => { 
-      if(!apiIntentBatch) return
-      if(isSuccess) return
-      if(isError) return
-      mutateAsync(apiIntentBatch)
+  useEffect(() => {
+    if (!apiIntentBatch) return
+    if (isSuccess) return
+    if (isError) return
+    mutateAsync(apiIntentBatch)
   }, [apiIntentBatch, signature, isSuccess, isError, mutateAsync])
 
   function handleSwapTokens() {
@@ -219,7 +235,8 @@ export default function LimitOrderWidget({
       <CardFooter className="flex flex-col gap-y-3">
         <Button
           onClick={() => signTypedData()}
-          disabled={ false
+          disabled={
+            false
             // isLoadingSign || mutationResult.isLoading || !amountOut || !amountIn
           }
           className="w-full"

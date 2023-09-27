@@ -1,4 +1,5 @@
 import { formatUnits } from "viem"
+
 import { useErc20Decimals } from "../generated/erc20-wagmi"
 import { ERC20ChainIdProps } from "./erc20-read"
 
@@ -20,7 +21,9 @@ export function ERC20ConvertBalance({
 
   return (
     <span className={className} {...props}>
-      {Number(formatUnits(BigInt(balance) || BigInt(0), decimals || 1)).toLocaleString()}
+      {Number(
+        formatUnits(BigInt(balance) || BigInt(0), decimals || 1)
+      ).toLocaleString()}
     </span>
   )
 }

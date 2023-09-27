@@ -1,5 +1,5 @@
-import { HTMLAttributes } from "react"
-import { Address, useNetwork } from "wagmi"
+import { type HTMLAttributes } from "react"
+import { useNetwork, type Address } from "wagmi"
 
 import { cn } from "@/lib/utils"
 
