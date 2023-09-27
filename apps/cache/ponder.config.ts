@@ -1,9 +1,7 @@
 import { IntentifyModuleAddressList, intentifySafeModuleABI } from "@district-labs/intentify-utils";
 import type { Config } from "@ponder/core";
 
-const ABI = intentifySafeModuleABI
-
-export const config: Config = {
+const localConfig: Config = {
   networks: [
     { name: "mainnet", chainId: 1, rpcUrl: process.env.PONDER_RPC_URL_MAINNET },
     { name: "goerli", chainId: 5, rpcUrl: process.env.PONDER_RPC_URL_GOERLI },
@@ -18,7 +16,7 @@ export const config: Config = {
       startBlock: 9764809,
     },
     {
-      name: "IntentifySafeModuleTestnet",
+      name: "IntentifySafeModuleLocal",
       network: "testnet",
       address: IntentifyModuleAddressList[31337],
       abi: intentifySafeModuleABI,
@@ -26,3 +24,21 @@ export const config: Config = {
     },
   ],
 };
+
+ const prodConfig: Config = {
+  networks: [
+    { name: "mainnet", chainId: 1, rpcUrl: process.env.PONDER_RPC_URL_MAINNET },
+    { name: "goerli", chainId: 5, rpcUrl: process.env.PONDER_RPC_URL_GOERLI },
+  ],
+  contracts: [
+    {
+      name: "IntentifySafeModuleGoerli",
+      network: "goerli",
+      address: IntentifyModuleAddressList[5],
+      abi: intentifySafeModuleABI,
+      startBlock: 9764809,
+    },
+  ],
+};
+
+export const config = process.env.npm_lifecycle_event === "start" ? prodConfig : localConfig;
