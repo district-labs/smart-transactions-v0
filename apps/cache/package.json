@@ -7,7 +7,7 @@
     "codegen": "ponder codegen"
   },
   "dependencies": {
-    "@district-labs/intentify-utils": "workspace:*",
+    "@district-labs/intentify-utils": "0.0.0",
     "@ponder/core": "0.0.88"
   },
   "devDependencies": {
