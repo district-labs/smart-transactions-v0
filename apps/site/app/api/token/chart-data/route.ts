@@ -86,7 +86,7 @@ export async function POST(req: Request) {
       chartData = formatChartData(data, formattedCoins)
     }
 
-    return new Response(JSON.stringify(chartData, null, 2), { status: 200 })
+    return new Response(JSON.stringify(chartData), { status: 200 })
   } catch (err) {
     console.error(err)
 

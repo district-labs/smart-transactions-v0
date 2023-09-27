@@ -15,10 +15,11 @@ export interface ChartTimeFiltersOptions {
     options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined
   ) => Promise<
     QueryObserverResult<
-      {
-        timestamp: number
-        price: number
-      }[],
+      | {
+          time: number
+          price: number
+        }[]
+      | undefined,
       unknown
     >
   >

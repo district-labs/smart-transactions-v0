@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { type DefiLlamaToken } from "@/types"
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, UseQueryResult } from "@tanstack/react-query"
 import {
   Label,
   Line,
@@ -67,7 +67,15 @@ export default function TokenPriceChart({
           headers: {
             "Content-Type": "application/json",
           },
-        }).then((res) => res.json())
+        }).then(
+          (res) =>
+            res.json() as Promise<
+              {
+                time: number
+                price: number
+              }[]
+            >
+        )
       },
       enabled: !!inToken && !!outToken,
     }
@@ -75,7 +83,13 @@ export default function TokenPriceChart({
 
   if (status === "error") return <p>Failed to load chart</p>
 
-  const CustomTooltip = ({ active, payload }) => {
+  const CustomTooltip = ({
+    active,
+    payload,
+  }: {
+    active: boolean
+    payload: { payload: { price: number; time: number } }[]
+  }) => {
     if (active && payload && payload.length) {
       return (
         <div className="w-30 rounded border bg-background px-3 py-2 text-center">
@@ -95,7 +109,7 @@ export default function TokenPriceChart({
 
   let percentage
 
-  if (status === "success") {
+  if (status === "success" && data) {
     percentage = (
       ((data.slice(-1)[0].price - data.slice(0)[0].price) /
         data.slice(0)[0].price) *
@@ -138,17 +152,19 @@ export default function TokenPriceChart({
           {status === "success" && (
             <>
               <h2 className="text-xl font-medium text-foreground">
-                {data.slice(-1)[0].price.toFixed(2)}
+                {data && data.slice(-1)[0].price.toFixed(2)}
               </h2>
-              <p
-                className={cn(
-                  "text-muted-foreground",
-                  parseFloat(percentage) > 0 && "text-green-600",
-                  parseFloat(percentage) < 0 && "text-destructive"
-                )}
-              >
-                {percentage}%
-              </p>
+              {percentage && (
+                <p
+                  className={cn(
+                    "text-muted-foreground",
+                    parseFloat(percentage) > 0 && "text-green-600",
+                    parseFloat(percentage) < 0 && "text-destructive"
+                  )}
+                >
+                  {percentage}%
+                </p>
+              )}
             </>
           )}
         </CardDescription>
@@ -171,7 +187,7 @@ export default function TokenPriceChart({
                 tickLine={false}
                 domain={["auto", "auto"]}
                 interval="preserveStartEnd"
-                tickFormatter={formatDate}
+                tickFormatter={(value) => formatDate(value, {})}
                 minTickGap={24}
               />
               <YAxis domain={["auto", "auto"]} orientation="right" hide />
