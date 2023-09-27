@@ -1,5 +1,10 @@
-import { IntentifyModuleAddressList, intentifySafeModuleABI } from "@district-labs/intentify-utils";
 import type { Config } from "@ponder/core";
+
+export const IntentifyModuleAddressList = {
+  5: '0x6d39bb7e7BF4eDE48E0CC62701E751D8deC07D2d',
+  31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+} as const
+
 
 const localConfig: Config = {
   networks: [
@@ -12,14 +17,14 @@ const localConfig: Config = {
       name: "IntentifySafeModuleGoerli",
       network: "goerli",
       address: IntentifyModuleAddressList[5],
-      abi: intentifySafeModuleABI,
+      abi: './abis/IntentifySafeModule.json',
       startBlock: 9764809,
     },
     {
       name: "IntentifySafeModuleLocal",
       network: "testnet",
       address: IntentifyModuleAddressList[31337],
-      abi: intentifySafeModuleABI,
+      abi: './abis/IntentifySafeModule.json',
       startBlock: 0,
     },
   ],
@@ -35,10 +40,11 @@ const localConfig: Config = {
       name: "IntentifySafeModuleGoerli",
       network: "goerli",
       address: IntentifyModuleAddressList[5],
-      abi: intentifySafeModuleABI,
+      abi: './abis/IntentifySafeModule.json',
       startBlock: 9764809,
     },
   ],
 };
 
 export const config = process.env.npm_lifecycle_event === "start" ? prodConfig : localConfig;
+
