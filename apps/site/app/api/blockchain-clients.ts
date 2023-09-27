@@ -1,5 +1,5 @@
-import { createPublicClient, createWalletClient, http } from "viem"
 import type { PublicClient, WalletClient } from "viem"
+import { createPublicClient, createWalletClient, http } from "viem"
 import { privateKeyToAccount } from "viem/accounts"
 import { foundry, goerli, mainnet } from "viem/chains"
 
@@ -52,11 +52,11 @@ export const localWalletClient = createWalletClient({
 })
 
 type PublicClientList = {
-  [key: number]: PublicClient
+  [key: number]: PublicClient | undefined
 }
 
 type WalletClientList = {
-  [key: number]: WalletClient
+  [key: number]: WalletClient | undefined
 }
 
 export const publicClients: PublicClientList = {

@@ -70,14 +70,14 @@ async function generateHooksForIntentBatch(
         amountInMax: intentArgs.amountOutMax,
         inputToken: {
           address: intentArgs.tokenIn,
-          decimals: getTokenDecimals({
+          decimals: await getTokenDecimals({
             chainId: intentBatch.chainId,
             tokenAddress: intentArgs.tokenIn,
           }),
         },
         outputToken: {
           address: intentArgs.tokenOut,
-          decimals: getTokenDecimals({
+          decimals: await getTokenDecimals({
             chainId: intentBatch.chainId,
             tokenAddress: intentArgs.tokenOut,
           }),
