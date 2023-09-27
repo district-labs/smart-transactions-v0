@@ -6,6 +6,7 @@
     "lint": "eslint .",
     "codegen": "ponder codegen"
   },
+  "packageManager": "pnpm@8.7.1",
   "dependencies": {
     "@district-labs/intentify-utils": "0.0.0",
     "@ponder/core": "0.0.88"
