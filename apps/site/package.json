@@ -49,7 +49,6 @@
     "@t3-oss/env-nextjs": "^0.6.1",
     "@tanstack/react-query": "^4.3.9",
     "@tanstack/react-table": "^8.9.8",
-    "@tremor/react": "^3.7.8",
     "@types/luxon": "^3.2.0",
     "@uniswap/default-token-list": "^11.6.0",
     "@vitejs/plugin-react": "^4.0.4",

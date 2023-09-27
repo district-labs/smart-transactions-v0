@@ -1,13 +1,12 @@
 "use client";
 
-import type { IntentBatch } from "@district-labs/intentify-utils";
+import { intentifySafeModuleABI, type IntentBatch } from "@district-labs/intentify-utils";
 import { constants } from "ethers";
 import * as React from "react";
 import { encodeFunctionData } from "viem";
-import { useContractWrite, useWalletClient } from "wagmi";
-import { useGetSafeAddress } from "..";
+import { useChainId, useContractWrite, useWalletClient } from "wagmi";
+import { useGetIntentifyModuleAddress, useGetSafeAddress } from "..";
 import {
-  intentifySafeModuleABI,
   usePrepareSafeExecTransaction,
   useSafeGetTransactionHash,
   useSafeNonce,
@@ -38,6 +37,8 @@ export const CancelIntentBundle = ({
   onError,
   onLoading,
 }: CancelIntentBundle) => {
+  const chainId = useChainId();
+  const intentifySafeModuleAddress = useGetIntentifyModuleAddress(chainId);
   const classes = cn(className);
   const safeAddress = useGetSafeAddress();
   const [signature, setSignature] = React.useState<{
@@ -64,7 +65,7 @@ export const CancelIntentBundle = ({
     `0x${string}`,
     `0x${string}`,
   ] = [
-    safeAddress || safeAddressOverride || ADDRESS_ZERO, // to
+    intentifySafeModuleAddress,
     BigInt(0), // value
     encodeFunctionData({
       abi: intentifySafeModuleABI,
@@ -80,12 +81,12 @@ export const CancelIntentBundle = ({
   ];
 
   const transactionHash = useSafeGetTransactionHash({
-    address: safeAddress,
+    address: safeAddressOverride || safeAddress,
     args: [...TRANSACTION, nonce.data as bigint],
   });
 
   const { config } = usePrepareSafeExecTransaction({
-    address: safeAddress,
+    address: safeAddressOverride || safeAddress,
     value: BigInt(0),
     args: [...TRANSACTION, signature.signature],
     enabled: signature.signed,

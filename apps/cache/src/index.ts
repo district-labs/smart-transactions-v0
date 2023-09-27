@@ -9,7 +9,7 @@ ponder.on("IntentifySafeModuleTestnet:IntentBatchExecuted",async ({context, even
     const { IntentBatch  } = context.entities;
     // Dispatch a message to the API to notify that the intent batch has been executed 
     console.log(event.params.intentBatchId)
-    await dispatchIntentExecution(5, event.params.intentBatchId, event.transaction.hash)
+    await dispatchIntentExecution(31337, event.params.intentBatchId, event.transaction.hash)
     await IntentBatch.upsert({
       id: event.params.intentBatchId,
       create: {
@@ -48,7 +48,7 @@ ponder.on("IntentifySafeModuleTestnet:IntentBatchCancelled",async ({context, eve
 
 ponder.on("IntentifySafeModuleGoerli:IntentBatchExecuted",async ({context, event}) => {
     const { IntentBatch  } = context.entities;
-
+    await dispatchIntentExecution(5, event.params.intentBatchId, event.transaction.hash)
     await IntentBatch.upsert({
       id: event.params.intentBatchId,
       create: {
@@ -66,7 +66,7 @@ ponder.on("IntentifySafeModuleGoerli:IntentBatchExecuted",async ({context, event
 
 ponder.on("IntentifySafeModuleGoerli:IntentBatchCancelled",async ({context, event}) => {
   const { IntentBatch } = context.entities;
-
+  await dispatchIntentCancelled(5, event.params.intentBatchId, event.transaction.hash)
   await IntentBatch.upsert({
     id: event.params.intentBatchId,
     create: {

@@ -1,4 +1,6 @@
 import type { IntentBatchQuery } from "@/db/queries/intent-batch";
+import { IntentBatch } from "@district-labs/intentify-utils";
+import { transformIntentQueryToIntentBatchStruct } from "./transform-intent-query-to-intent-batch-struct";
 4
 export type LimitOrderIntent = {
     chainId: number
@@ -13,6 +15,7 @@ export type LimitOrderIntent = {
     limitPrice: string
     expiry: string
     status: "open" | "closed" | "canceled"
+    intentBatch: IntentBatch
   }
 
 export function transformLimitOrderIntentQueryToLimitOrderData(intentBatch: IntentBatchQuery): LimitOrderIntent {
@@ -32,7 +35,8 @@ export function transformLimitOrderIntentQueryToLimitOrderData(intentBatch: Inte
         },
         limitPrice: String(intents[1].intentArgs[1].value),
         expiry: String(intents[0].intentArgs[0].value),
-        status: getStatus(intentBatch.executedAt, intentBatch.cancelledAt)
+        status: getStatus(intentBatch.executedAt, intentBatch.cancelledAt),
+        intentBatch: transformIntentQueryToIntentBatchStruct(intentBatch)
     }
 }
 

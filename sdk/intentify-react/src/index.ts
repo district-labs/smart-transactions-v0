@@ -1,7 +1,6 @@
-// Components
+export * from "./blockchain";
 export * from "./components";
-
-// Hooks
 export * from "./hooks";
 export * from "./hooks/intents";
+export * from "./hooks/encoding";
 
