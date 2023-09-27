@@ -4,7 +4,7 @@ export function convertIntentBigIntToNumber(intentBatch: IntentBatchExecution) {
   const convertedIntents = intentBatch.batch.intents.map((intent) => {
     return {
       ...intent,
-      value: Number(intent.value)
+      value: Number(intent.value),
     }
   })
 
@@ -12,8 +12,7 @@ export function convertIntentBigIntToNumber(intentBatch: IntentBatchExecution) {
     ...intentBatch,
     batch: {
       ...intentBatch.batch,
-      intents: convertedIntents
-    }
-      
+      intents: convertedIntents,
+    },
   }
 }

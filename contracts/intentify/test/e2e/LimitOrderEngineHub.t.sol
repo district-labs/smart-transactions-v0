@@ -46,6 +46,8 @@ contract LimitOrderEngineHubTest is BaseTest {
     uint256 immutable _goerliForkBlock = 9_763_755;
     string _goerliRpcUrl = vm.envString("GOERLI_RPC_URL");
 
+    address immutable _engine = address(0x2e234DAe75C793f67A35089C9d99245E1C58470b);
+
     ERC20Mintable immutable _testUSDC = ERC20Mintable(0x18Be8De03fb9c521703DE8DED7Da5031851CbBEB);
     ERC20Mintable immutable _testWETH = ERC20Mintable(0xb3c67821F9DCbB424ca3Ddbe0B349024D5E2A739);
     uint24 public immutable poolFee = 3000;
@@ -68,7 +70,7 @@ contract LimitOrderEngineHubTest is BaseTest {
         _intentify = new Intentify(signer, "Intentify", "V0");
         _limitOrderIntent = new LimitOrderIntentHarness();
         _tokenRouterReleaseIntent = new TokenRouterReleaseIntent();
-        _engineHub = new EngineHub(address(0x2e234DAe75C793f67A35089C9d99245E1C58470b));
+        _engineHub = new EngineHub(_engine);
     }
 
     /* ===================================================================================== */
@@ -176,11 +178,15 @@ contract LimitOrderEngineHubTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
+        console2.log("Initial engine testWETH Balance: %s", _testWETH.balanceOf(address(_engineHub)));
+
         bool _executed = _intentify.execute(batchExecution);
         assertEq(true, _executed);
 
         bool _unlocked = _limitOrderIntent.exposed_unlock(address(_intentify), address(_testWETH), address(_testUSDC));
         assertEq(true, _unlocked);
+
+        console2.log("Final engine testWETH Balance: %s", _testWETH.balanceOf(address(_engineHub)));
     }
 
     /* ===================================================================================== */

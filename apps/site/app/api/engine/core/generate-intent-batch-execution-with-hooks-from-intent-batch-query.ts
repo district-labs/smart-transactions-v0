@@ -1,18 +1,43 @@
 import type { DBIntentBatchActiveItem } from "@/db/queries/intent-batch"
 import type { Hook, IntentBatchExecution } from "@district-labs/intentify-utils"
-import { splitSignature } from "./split-signature"
-import { generateHooksForTimestamp } from "./intent-hooks/generate-hooks-for-timestamp"
 
-export function generateIntentBatchExecutionWithHooksFromIntentBatchQuery(
+import { getTokenDecimals } from "../helpers/token-decimals"
+import { generateHooksForLimitOrderBasic } from "./intent-hooks/generate-hooks-for-limit-order-basic"
+import { splitSignature } from "./split-signature"
+
+interface LimitOrderIntentArgs {
+  tokenOut: `0x${string}`
+  tokenIn: `0x${string}`
+  amountOutMax: string
+  amountInMin: string
+}
+
+// convert the list to an object with name as keys and value as values
+function limitOrderArgsToObj(
+  args: {
+    name: string
+    type: string
+    value: string | number
+  }[]
+) {
+  const obj: Record<string, string | number> = {}
+
+  for (const item of args) {
+    obj[item.name] = item.value
+  }
+
+  return obj as unknown as LimitOrderIntentArgs
+}
+
+export async function generateIntentBatchExecutionWithHooksFromIntentBatchQuery(
   intentBatch: DBIntentBatchActiveItem
-): IntentBatchExecution {
+): Promise<IntentBatchExecution> {
   const signatureSplit = splitSignature(intentBatch.signature)
   const intentBatchExecution: IntentBatchExecution = {
     batch: {
-      intentBatchId: intentBatch.id,
       root: intentBatch.root as `0x${string}`,
       nonce: intentBatch.nonce as `0x${string}`,
-      intents: intentBatch.intents.map(intent => ({
+      intents: intentBatch.intents.map((intent) => ({
         root: intent.root as `0x${string}`,
         target: intent.target as `0x${string}`,
         value: intent.value ? BigInt(intent.value) : BigInt(0),
@@ -24,22 +49,43 @@ export function generateIntentBatchExecutionWithHooksFromIntentBatchQuery(
       s: signatureSplit.s,
       v: signatureSplit.v,
     },
-    hooks: generateHooksForIntentBatch(intentBatch),
+    hooks: await generateHooksForIntentBatch(intentBatch),
   }
 
   return intentBatchExecution
 }
 
-function generateHooksForIntentBatch(
+async function generateHooksForIntentBatch(
   intentBatch: DBIntentBatchActiveItem
-): Hook[] {
+): Promise<Hook[]> {
   switch (intentBatch.strategyId) {
     // case "limit-order-basic
-    case 1:
-      return generateHooksForTimestamp(intentBatch.chainId)
-      // return generateHooksForLimitOrderBasic(intentBatch.chainId)
+    case 1: {
+      const limitOrderIntent = intentBatch.intents[2]
+      const intentArgs = limitOrderArgsToObj(limitOrderIntent.intentArgs)
+      return await generateHooksForLimitOrderBasic({
+        chainId: intentBatch.chainId,
+        amountOut: intentArgs.amountInMin as `0x${string}`,
+        recipient: intentBatch.root as `0x${string}`,
+        amountInMax: intentArgs.amountOutMax,
+        inputToken: {
+          address: intentArgs.tokenIn,
+          decimals: getTokenDecimals({
+            chainId: intentBatch.chainId,
+            tokenAddress: intentArgs.tokenIn,
+          }),
+        },
+        outputToken: {
+          address: intentArgs.tokenOut,
+          decimals: getTokenDecimals({
+            chainId: intentBatch.chainId,
+            tokenAddress: intentArgs.tokenOut,
+          }),
+        },
+      })
+    }
+
     default:
       throw new Error(`No hooks for intentBatch ${intentBatch.id}`)
   }
 }
-
