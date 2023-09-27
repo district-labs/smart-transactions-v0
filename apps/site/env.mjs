@@ -13,6 +13,8 @@ export const env = createEnv({
     RESEND_API_KEY: z.string(),
     EMAIL_FROM_ADDRESS: z.string().email(),
     API_EXECUTE_INTENT_BATCHES: z.string(),
+    OPEN_ZEPPELIN_DEFENDER_API_KEY_GOERLI: z.string(),
+    OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_GOERLI: z.string(),
   },
 
   /**
@@ -38,6 +40,8 @@ export const env = createEnv({
     NEXT_PUBLIC_ALCHEMY_ID: process.env.NEXT_PUBLIC_ALCHEMY_ID,
     NEXT_PUBLIC_WALLET_CONNECT_ID: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID,
     API_EXECUTE_INTENT_BATCHES: process.env.API_EXECUTE_INTENT_BATCHES,
+    OPEN_ZEPPELIN_DEFENDER_API_KEY_GOERLI: process.env.OPEN_ZEPPELIN_DEFENDER_API_KEY_GOERLI,
+    OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_GOERLI: process.env.OPEN_ZEPPELIN_DEFENDER_SECRET_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validaiton

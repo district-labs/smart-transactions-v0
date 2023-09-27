@@ -1,43 +1,47 @@
+import { createIntentExecutionBatchWithHooks } from "@/db/writes/intent-batch-execution"
 import {
   IntentifyBundlerAddressList,
+  IntentifyModuleAddressList,
   intentifySafeModuleBundlerABI,
 } from "@district-labs/intentify-utils"
-import { getContract } from "viem"
+import { encodeFunctionData, getContract } from "viem"
 
-import { localWalletClient, mainnetWalletClient } from "../blockchain-clients"
-import { IntentifyModuleAddressList } from "@district-labs/intentify-utils"
-import { createIntentExecutionBatchWithHooks } from "@/db/writes/intent-batch-execution"
-import { ApiIntentBatchExecution, ApiIntentBatchExecutionBundle } from "@/lib/validations/api/intent-batch-execution-bundle"
+import { getRelayerByChainId } from "@/lib/openzeppelin-defender/relayer"
+import { ApiIntentBatchExecutionBundle } from "@/lib/validations/api/intent-batch-execution-bundle"
+
+import { localWalletClient } from "../blockchain-clients"
+import { createContractArguments } from "./utils"
+
+const supportedChainIds = [5, 31337]
+const GAS_LIMIT = BigInt(500000)
 
 export async function POST(req: Request) {
-  const body = await req.json()
-  const data = ApiIntentBatchExecutionBundle.parse(body)
-  const { chainId, executableIntentBatchBundle } = data
+  try {
+    const body = await req.json()
+    const data = ApiIntentBatchExecutionBundle.parse(body)
+    const { chainId, executableIntentBatchBundle } = data
 
-  switch (chainId) {
-    case 5:
-      const goerliIntentModule = getContract({
-        address: IntentifyBundlerAddressList[5],
-        abi: intentifySafeModuleBundlerABI,
-        walletClient: mainnetWalletClient,
-      })
+    if (!supportedChainIds.includes(chainId)) {
+      throw new Error(`ChainId ${chainId} not supported`)
+    }
 
-      const txdataGoerli = executableIntentBatchBundle.map(createContractArguments)
-      goerliIntentModule.write.executeBundle([IntentifyModuleAddressList[5], txdataGoerli], {
-        gas: BigInt(500000)
-      })
-      break
-    case 31337:
+    // Local chain
+    if (chainId === 31337) {
       const localIntentModule = getContract({
-        address: IntentifyBundlerAddressList[31337],
+        address: IntentifyBundlerAddressList[chainId],
         abi: intentifySafeModuleBundlerABI,
         walletClient: localWalletClient,
       })
 
-      const txdataLocal = executableIntentBatchBundle.map(createContractArguments)
-      localIntentModule.write.executeBundle([IntentifyModuleAddressList[31337], txdataLocal], {
-        gas: BigInt(500000)
-      })
+      const txdataLocal = executableIntentBatchBundle.map(
+        createContractArguments
+      )
+      localIntentModule.write.executeBundle(
+        [IntentifyModuleAddressList[chainId], txdataLocal],
+        {
+          gas: GAS_LIMIT,
+        }
+      )
 
       executableIntentBatchBundle.map((intentBatch) => {
         const { hooks } = intentBatch
@@ -50,64 +54,31 @@ export async function POST(req: Request) {
         )
       })
 
+      return new Response(JSON.stringify({ok: true}))
+      
+    } else {
+      // Execute transaction using OpenZeppelin Defender Relayer
+      const { relayer } = getRelayerByChainId(chainId)
 
-      break
-    default:
-      throw new Error(`No client for chainId ${chainId}`)
-  }
+      const txdata = executableIntentBatchBundle.map(createContractArguments)
 
-  console.log("Hello from Execute")
-  return new Response()
-}
+      const data = encodeFunctionData({
+        abi: intentifySafeModuleBundlerABI,
+        functionName: "executeBundle",
+        args: [IntentifyModuleAddressList[chainId], txdata],
+      })
 
-function createContractArguments(intentBatchExecution: ApiIntentBatchExecution): {
-  batch: {
-    nonce: `0x${string}`
-    root: `0x${string}`
-    intents: {
-      root: `0x${string}`
-      target: `0x${string}`
-      value: bigint
-      data: `0x${string}`
-    }[]
-  },
-  signature: {
-    v: number
-    r: `0x${string}`
-    s: `0x${string}`
-  }
-  hooks: {
-    target:  `0x${string}`
-    data:  `0x${string}`
-  }[]
-} {
+      const tx = await relayer.sendTransaction({
+        to: IntentifyBundlerAddressList[chainId],
+        gasLimit: GAS_LIMIT.toString(),
+        data,
+        speed: "fast",
+      })
 
-  const { batch, signature, hooks } = intentBatchExecution
-  const batchNew = {
-    nonce: batch.nonce as `0x${string}`,
-    root: batch.root as `0x${string}`,
-    intents: batch.intents?.map((intent) => ({
-      root: intent.root as `0x${string}`,
-      target: intent.target as `0x${string}`,
-      value: BigInt(intent.value),
-      data: intent.data as `0x${string}`
-    }))
-  }
-
-  const sig = {
-    v: signature.v,
-    r: signature.r as `0x${string}`,
-    s: signature.s as `0x${string}`
-  }
-
-  const hooksNew = hooks.map((hook) => ({
-    target: hook.target as `0x${string}`,
-    data: hook.data as `0x${string}`
-  }))
-
-  return {
-    batch:batchNew ,
-    signature: sig,
-    hooks: hooksNew
+      return new Response(JSON.stringify(tx))
+    }
+  } catch (e) {
+    console.log(e)
+    return new Response(String(e))
   }
 }
