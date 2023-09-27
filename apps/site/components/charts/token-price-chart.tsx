@@ -1,18 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 "use client"
 
 import { useState } from "react"
 import { type DefiLlamaToken } from "@/types"
-import { useQuery, UseQueryResult } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import {
-  Label,
   Line,
   LineChart,
-  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
+  type TooltipProps,
 } from "recharts"
+import {
+  type NameType,
+  type ValueType,
+} from "recharts/types/component/DefaultTooltipContent"
 
 import { cn, formatDate } from "@/lib/utils"
 
@@ -86,10 +90,7 @@ export default function TokenPriceChart({
   const CustomTooltip = ({
     active,
     payload,
-  }: {
-    active: boolean
-    payload: { payload: { price: number; time: number } }[]
-  }) => {
+  }: TooltipProps<ValueType, NameType>) => {
     if (active && payload && payload.length) {
       return (
         <div className="w-30 rounded border bg-background px-3 py-2 text-center">
@@ -105,6 +106,7 @@ export default function TokenPriceChart({
         </div>
       )
     }
+    return null
   }
 
   let percentage
