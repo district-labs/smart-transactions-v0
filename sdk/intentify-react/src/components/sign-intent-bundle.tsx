@@ -8,7 +8,7 @@ import { useChainId, useSignTypedData } from "wagmi";
 import { cn } from "../utils";
 
 type SignIntentBundle = React.HTMLAttributes<HTMLElement> & {
-  verifyingContract?: string;
+  verifyingContract?: `0x${string}`;
   intentBatch: IntentBatch;
   loadingComponent?: React.ReactNode;
   onSuccess?: (res: any) => void;

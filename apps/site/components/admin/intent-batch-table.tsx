@@ -1,3 +1,4 @@
+
 import { LimitOrderIntent } from "@/components/intents/limit-order-intent"
 import { TimestampBeforeIntent } from "@/components/intents/timestamp-before-intent"
 import { TokenReleaseIntent } from "@/components/intents/token-release-intent"
@@ -24,6 +25,7 @@ import {
 } from "@/components/ui/table"
 
 import type { DBIntentBatchActiveItem } from "@/db/queries/intent-batch"
+import { Address } from "../blockchain/address"
 
 type IntentBatchTable = {
     data: DBIntentBatchActiveItem[]
@@ -35,9 +37,9 @@ export function IntentBatchTable({data}:IntentBatchTable) {
     <Table>
       <TableHeader className="bg-neutral-50">
         <TableRow>
-          <TableHead className="w-[100px]">ID</TableHead>
+          <TableHead>Chain</TableHead>
+          <TableHead>Intent Batch Hash</TableHead>
           <TableHead>Smart Wallet</TableHead>
-          <TableHead>Chain ID</TableHead>
           <TableHead>Created At</TableHead>
           <TableHead>Intent Count</TableHead>
           <TableHead>Executed At</TableHead>
@@ -48,13 +50,13 @@ export function IntentBatchTable({data}:IntentBatchTable) {
       <TableBody>
         {data?.map((intentBatch) => (
           <TableRow key={intentBatch.id}>
-            <TableCell>{intentBatch.id}</TableCell>
-            <TableCell>{intentBatch.root}</TableCell>
             <TableCell>{intentBatch.chainId}</TableCell>
+            <TableCell>{intentBatch.intentBatchHash}</TableCell>
+            <TableCell><Address truncate address={intentBatch.root as `0x${string}`} /></TableCell>
             <TableCell><TimeFromDate length={1} type="DATETIME" date={intentBatch?.createdAt} /></TableCell>
             <TableCell>{intentBatch.intents.length}</TableCell>
-            <TableCell>{intentBatch.executedAt ? <TimeFromDate length={1} type="DATETIME" date={intentBatch.executedAt} /> : 'Not Executed'}</TableCell>
-            <TableCell>{intentBatch.cancelledAt ? intentBatch.cancelledAt?.toDateString() : 'Not Cancelled'}</TableCell>
+            <TableCell>{intentBatch.executedAt ? <TimeFromDate length={1} type="DATETIME" date={intentBatch.executedAt} /> : 'N/A'}</TableCell>
+            <TableCell>{intentBatch.cancelledAt ? <TimeFromDate length={1} type="DATETIME" date={intentBatch.cancelledAt} /> : 'N/A'}</TableCell>
             <TableCell><IntentBatchDetails data={intentBatch} /></TableCell>
           </TableRow>
         ))}

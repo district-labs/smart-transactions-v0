@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { type DefiLlamaToken } from "@/types"
-import { useChainId } from "wagmi"
+import { useChainId, useSignTypedData } from "wagmi"
 
 import { formatPrice } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -20,7 +20,11 @@ import LimitPriceInput from "@/components/blockchain/limit-price-input"
 import TokenInputAmount from "@/components/blockchain/token-input-amount"
 import { Icons } from "@/components/icons"
 import { useCurrentPriceERC20 } from "@/app/(app)/limit/use-current-price"
-import { usePlaceOrder } from "@/app/(app)/limit/use-place-order"
+import { useTransformLimitOrderIntentFormToApiIntentBatch } from "@/hooks/intent-batch/use-transform-limit-order-intent-form-to-api-intent-batch"
+import { useTransformLimitOrderIntentFormToStructIntentBatch } from "@/hooks/intent-batch/use-transform-limit-order-intent-form-to-struct-intent-batch"
+import { getIntentBatchTypedDataHash, generateIntentBatchEIP712 } from "@district-labs/intentify-utils"
+import { useGetIntentifyModuleAddress, useIntentifySafeModuleDomainSeparator } from "@district-labs/intentify-react"
+import { useIntentBatchCreate } from "@/hooks/intent-batch/use-intent-batch-create"
 
 interface LimitOrderWidgetProps {
   outToken: DefiLlamaToken
@@ -37,9 +41,7 @@ export default function LimitOrderWidget({
   const [amountIn, setAmountIn] = useState<number | undefined>()
   const [limitPrice, setLimitPrice] = useState<number | undefined>()
   const [expiry, setExpiry] = useState<string>("1d")
-
   const [delta, setDelta] = useState<number>(0)
-
   const prevAmountOut = useRef<number | undefined>(amountOut)
   const prevAmountIn = useRef<number | undefined>(amountIn)
 
@@ -50,7 +52,7 @@ export default function LimitOrderWidget({
     token: { chainId, address: inToken.address },
   })
 
-  const { mutationResult, isLoadingSign } = usePlaceOrder({
+  const structIntentBatch = useTransformLimitOrderIntentFormToStructIntentBatch({
     chainId,
     amountIn,
     amountOut,
@@ -58,10 +60,39 @@ export default function LimitOrderWidget({
     tokenIn: inToken,
     tokenOut: outToken,
   })
+  const intentifyModuleAddress = useGetIntentifyModuleAddress(chainId)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  const {data: domainSeparator} = useIntentifySafeModuleDomainSeparator({
+    address: intentifyModuleAddress,
+    chainId,
+  })
+  const intentBatchHash = getIntentBatchTypedDataHash(domainSeparator, structIntentBatch)
+  const intentifyAddress = useGetIntentifyModuleAddress(chainId)
+  const intentBatchEIP712 = generateIntentBatchEIP712({
+    chainId: chainId,
+    verifyingContract: intentifyAddress,
+    intentBatch: structIntentBatch,
+  })
+  const { isLoading: isLoadingSign, signTypedData, data:signature } = useSignTypedData(intentBatchEIP712)
+  const apiIntentBatch = useTransformLimitOrderIntentFormToApiIntentBatch({
+    chainId,
+    amountIn,
+    amountOut,
+    expiry,
+    tokenIn: inToken,
+    tokenOut: outToken,
+    signature: signature,
+    intentBatchHash: intentBatchHash,
+    domainSeparator: domainSeparator,
+  })
+  const { mutateAsync, isSuccess, isError, isLoading, error } = useIntentBatchCreate()
 
-  async function handlePlaceOrder() {
-    await mutationResult.mutateAsync()
-  }
+  useEffect( () => { 
+      if(!apiIntentBatch) return
+      if(isSuccess) return
+      if(isError) return
+      mutateAsync(apiIntentBatch)
+  }, [apiIntentBatch, signature, isSuccess, isError, mutateAsync])
 
   function handleSwapTokens() {
     router.push(`/limit/${inToken.symbol}/${outToken.symbol}`)
@@ -187,24 +218,24 @@ export default function LimitOrderWidget({
       </CardContent>
       <CardFooter className="flex flex-col gap-y-3">
         <Button
-          onClick={() => handlePlaceOrder()}
-          disabled={
-            isLoadingSign || mutationResult.isLoading || !amountOut || !amountIn
+          onClick={() => signTypedData()}
+          disabled={ false
+            // isLoadingSign || mutationResult.isLoading || !amountOut || !amountIn
           }
           className="w-full"
         >
           {isLoadingSign
             ? "Sign the message in your wallet"
-            : mutationResult.isLoading
+            : isLoading
             ? "Placing Order..."
-            : mutationResult.isSuccess
-            ? "Order Placed!"
-            : "Place Limit Order"}
+            : isSuccess
+            ? "Intent Saved"
+            : "Save Intent"}
         </Button>
-        {mutationResult.isError && (
+        {isError && (
           <div className="text-sm text-red-500">
-            {mutationResult?.error instanceof Error
-              ? `Error: ${mutationResult?.error?.message}`
+            {error instanceof Error
+              ? `Error: ${error?.message}`
               : "An error occurred while placing your order."}
           </div>
         )}
