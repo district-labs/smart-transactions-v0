@@ -1,3 +1,9 @@
+export enum NonceType {
+  Standard = 0,
+  Dimensional = 1,
+  Time = 2,
+}
+
 export type EIP712Domain = {
   name: string;
   version: string;

@@ -51,7 +51,6 @@ export default function LimitOrderWidget({
   const { data: tokenInUSD } = useCurrentPriceERC20({
     token: { chainId, address: inToken.address },
   })
-
   const structIntentBatch = useTransformLimitOrderIntentFormToStructIntentBatch({
     chainId,
     amountIn,
