@@ -17,12 +17,8 @@ const nextConfig = {
   env: {
     mode: process.env.NODE_ENV,
   },
-  experimental: {
-    appDir: true,
-  },
   webpack: (
     config,
-    { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }
   ) => {
     config.resolve.fallback = { fs: false, net: false, tls: false }
     config.module.rules.push({

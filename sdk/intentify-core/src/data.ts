@@ -6,6 +6,10 @@ export const ADDRESS_ZERO =
   '0x0000000000000000000000000000000000000000' as `0x${string}`;
 export const DEFAULT_SALT = BigInt(0);
 
+export const EngineHubAddressList: KeyList = {
+  5: '0x18A4eA31d487A20E5eb7fE1521256D41e03B485c'
+}
+
 export const IntentifyModuleAddressList: KeyList = {
   5: '0x6d39bb7e7BF4eDE48E0CC62701E751D8deC07D2d',
   31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',

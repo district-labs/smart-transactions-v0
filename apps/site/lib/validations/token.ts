@@ -21,8 +21,7 @@ export const getTokenChartDataSchema = z.object({
       value: z.number(),
     })
     .optional(),
-  spanDataPoints: z.number().optional(),
-  period: z.any(),
+  range: z.enum(["1d", "7d", "30d", "90d", "365d", "1095d"]),
 })
 
 export const getTokenCurrentPriceSchema = z.object({

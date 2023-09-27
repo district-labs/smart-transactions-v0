@@ -14,6 +14,7 @@ export default defineConfig({
         'TimestampBeforeIntent.json',
         'TokenRouterReleaseIntent.json',
         'LimitOrderIntent.json',
+        'EngineHub.json',
       ],
     }),
   ],
