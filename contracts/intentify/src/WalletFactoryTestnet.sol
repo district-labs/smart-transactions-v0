@@ -1,11 +1,27 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
+import { ERC20Mintable } from "./periphery/ERC20Mintable.sol";
 import { Safe } from "safe-contracts/Safe.sol";
 import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
 import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
 
-contract WalletFactory is SafeProxyFactory {
+contract WalletFactoryTestnet is SafeProxyFactory {
+    struct TestTokens {
+        address tokenAddress;
+        uint256 amount;
+    }
+
+    TestTokens[] public testTokens;
+
+    constructor(address[] memory tokenAddressList, uint256[] memory amountList) {
+        require(tokenAddressList.length == amountList.length, "WalletFactoryTestnet:InvalidTestTokens");
+
+        for (uint256 i = 0; i < tokenAddressList.length; i++) {
+            testTokens.push(TestTokens(tokenAddressList[i], amountList[i]));
+        }
+    }
+
     function getDeterministicWalletAddress(
         address _singleton,
         address owner,
@@ -46,6 +62,10 @@ contract WalletFactory is SafeProxyFactory {
         bytes memory initializer = _encodeInitializer(owner);
         bytes32 salt = keccak256(abi.encodePacked(keccak256(initializer), saltNonce));
         proxy = deployProxy(_singleton, initializer, salt);
+
+        for (uint256 i = 0; i < testTokens.length; i++) {
+            ERC20Mintable(testTokens[i].tokenAddress).mint(address(proxy), testTokens[i].amount);
+        }
 
         emit ProxyCreation(proxy, _singleton);
     }
