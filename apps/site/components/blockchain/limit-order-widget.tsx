@@ -25,6 +25,8 @@ import { useTransformLimitOrderIntentFormToStructIntentBatch } from "@/hooks/int
 import { getIntentBatchTypedDataHash, generateIntentBatchEIP712 } from "@district-labs/intentify-utils"
 import { useGetIntentifyModuleAddress, useIntentifySafeModuleDomainSeparator } from "@district-labs/intentify-react"
 import { useIntentBatchCreate } from "@/hooks/intent-batch/use-intent-batch-create"
+import { defaultTokenList } from "./default-token-list"
+import { Token, TokenList } from "@/types/token-list"
 
 interface LimitOrderWidgetProps {
   outToken: DefiLlamaToken
@@ -97,11 +99,11 @@ export default function LimitOrderWidget({
     router.push(`/limit/${inToken.symbol}/${outToken.symbol}`)
   }
 
-  function handleSelectTokenIn(newTokenIn: DefiLlamaToken) {
+  function handleSelectTokenIn(newTokenIn: Token) {
     router.push(`/limit/${outToken.symbol}/${newTokenIn.symbol}`)
   }
 
-  function handleSelectTokenOut(newTokenOut: DefiLlamaToken) {
+  function handleSelectTokenOut(newTokenOut: Token) {
     router.push(`/limit/${newTokenOut.symbol}/${inToken.symbol}`)
   }
 
@@ -140,6 +142,7 @@ export default function LimitOrderWidget({
             You&apos;re selling
           </Label>
           <TokenInputAmount
+            tokenList={defaultTokenList[0] as TokenList}
             amount={amountOut}
             setAmount={setAmountOut}
             selectedToken={outToken}
@@ -203,6 +206,7 @@ export default function LimitOrderWidget({
         <div className="grid gap-2">
           <Label htmlFor="selling">To receive</Label>
           <TokenInputAmount
+            tokenList={defaultTokenList[0] as TokenList}
             amount={amountIn}
             setAmount={setAmountIn}
             selectedToken={inToken}

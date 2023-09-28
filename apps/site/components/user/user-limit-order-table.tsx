@@ -10,6 +10,7 @@ import TimeFromEpoch from "@/components/shared/time-from-epoch"
 import type { LimitOrderIntent } from "@/lib/transformations/transform-limit-order-intent-query-to-limit-order-data"
 import { CancelIntentBundle } from "@district-labs/intentify-react"
 import { Button } from "../ui/button"
+import { SheetIntentBatchDetails } from "../intents/sheet-intent-batch-details"
 
 
 interface UserLimitOrdersTable {
@@ -46,7 +47,7 @@ export function UserLimitOrdersTable({
           <DataTableColumnHeader column={column} title="Sell Amount" />
         ),
         cell: ({ row }) => <div className="flex items-center">
-          <ERC20ConvertBalance address={row.original.sell.asset as `0x${string}`} balance={row.original.sell.amount} chainId={row.original.chainId} />
+          {/* <ERC20ConvertBalance address={row.original.sell.asset as `0x${string}`} balance={row.original.sell.amount} chainId={row.original.chainId} /> */}
         </div>
       },
       {
@@ -66,7 +67,7 @@ export function UserLimitOrdersTable({
           <DataTableColumnHeader column={column} title="Receive Amount" />
         ),
         cell: ({ row }) => <div className="flex items-center">
-          <ERC20ConvertBalance address={row.original.receive.asset as `0x${string}`} balance={row.original.receive.amount} chainId={row.original.chainId} />
+          {/* <ERC20ConvertBalance address={row.original.receive.asset as `0x${string}`} balance={row.original.receive.amount} chainId={row.original.chainId} /> */}
         </div>
       },
       {
@@ -94,10 +95,11 @@ export function UserLimitOrdersTable({
             row.original.status === "open" &&
               <CancelIntentBundle
                 intentBatch={row.original.intentBatch}
-                signMessageComponent={<Button type="button" size="sm">Sign Cancellation</Button>}
+                signMessageComponent={<Button type="button" size="sm">Cancel</Button>}
                 signTransactionComponent={<Button type="button" size="sm">Execute</Button>}
               />
           }
+          {/* <SheetIntentBatchDetails data={row.original.intentBatchDb} /> */}
         </div>
       },
     ],

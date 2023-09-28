@@ -1,189 +1,143 @@
-import Image from "next/image"
-import Link from "next/link"
+'use client'
 import Balancer from "react-wrap-balancer"
 
 import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
-import PotentialChart from "@/components/charts/potential-chart"
-import { Icons } from "@/components/icons"
-import { IntentsAccordion } from "@/components/intents-accordion"
+import { Button } from "@/components/ui/button"
+import FormIntentLimitOrder from "@/components/forms/form-intent-limit-order"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { useGetIntentBatchFind } from "@/hooks/intent-batch/use-get-intent-batch-all"
+import { UserLimitOrdersTable } from "@/components/user/user-limit-order-table"
+import { transformLimitOrderIntentQueryToLimitOrderData } from "@/lib/transformations/transform-limit-order-intent-query-to-limit-order-data"
+import { LinkComponent } from "@/components/shared/link-component"
 
-const simpleSectionFeatures = [
-  { name: "Explore 10+ strategies", icon: Icons.search },
-  { name: "Get started with just $1", icon: Icons.search },
-  { name: "Use AI to generate strategies", icon: Icons.search },
-  { name: "Weight the pros and cons at a glance", icon: Icons.search },
-]
-
-const faqs = [
-  {
-    question: "How does District work?",
-    answer:
-      "District is fully noncustodial. Your keys, your crypto, your money.",
-  },
-  {
-    question: "Is my money safe at District?",
-    answer: "Yes, duh",
-  },
-  {
-    question: "How much does it cost?",
-    answer:
-      "Openning an account with District is free and permissionless. Our platform fee is just 0.25% annually, and each strategy has a variable fee between 0% and 10% of profits.",
-  },
-]
 
 export default function Home() {
+
+  const {data: intentBatchQuery, isSuccess } = useGetIntentBatchFind()
   return (
     <div className="space-y-4 overflow-hidden">
       <section
         id="hero"
         aria-labelledby="hero-heading"
-        className="mx-auto flex w-full max-w-5xl flex-col items-center justify-center gap-4 bg-background px-6 pb-8 pt-6 text-center md:pb-12 md:pt-10 lg:px-8 lg:py-28"
+        className="mx-auto flex w-full max-w-5xl flex-col items-center justify-center gap-4 bg-background px-6 pb-8 pt-6 text-center md:pb-12 md:pt-10 lg:px-8 lg:py-20"
       >
         <h1 className="text-3xl font-bold leading-tight tracking-normal md:text-5xl lg:text-6xl lg:leading-[1.1]">
-          Investment strategies, <br /> simplified
+          Web3 Transactions Simplified
         </h1>
         <Balancer className="max-w-3xl text-lg text-muted-foreground sm:text-xl">
-          District helps you transform your ideas into action with a no-code
-          strategy builder.
+          Interact with blockchains without the hassle. Set it and forget it transactions.
         </Balancer>
-        <Link href="/signup" className={cn(buttonVariants())}>
-          Get started
-          <span className="sr-only">Get Started</span>
-        </Link>
       </section>
-      <section
-        id="intent"
-        aria-labelledby="intent-heading"
-        className="mx-auto max-w-screen-2xl px-6 lg:px-8"
-      >
-        <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-10 sm:gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-          <div className="lg:pr-8 lg:pt-4">
-            <div className="space-y-6 lg:max-w-xl">
-              <h2 className="text-3xl tracking-tight sm:text-4xl">
-                State your intents. <br />
-                We&apos;ll do the rest.
-              </h2>
-              <Balancer className="text-lg leading-7 text-muted-foreground">
-                Use our AI or no-code strategy builder to set your intentions
-                and we&apos;ll handle the trades, staking, and rebalancing of
-                your portfolio for you. we make it easy and safe to customize
-                your investing strategies by helping you see the returns and
-                risks you&apos;re taking.
-              </Balancer>
-              <IntentsAccordion timeout={8000} />
-            </div>
+      <section>
+        <div className="mx-auto max-w-screen-lg">
+          <div className='text-center mb-3'>
+            <h3 className='font-normal text-lg'>Try it out with a <span className='font-bold'>Uniswap V3 Limit Order intent</span> on Goerli Testnet</h3>
           </div>
-          <div className="order-first flex w-[48rem] max-w-none items-center justify-start rounded-xl bg-secondary p-8 shadow-xl ring-1 ring-primary sm:w-[57rem] md:-ml-4 md:px-16 lg:order-last lg:-ml-0 lg:h-[480px]">
-            <Image
-              src="/images/build.png"
-              alt="Strategy components"
-              width={400}
-              height={400}
-              className="p-8 lg:mr-4"
-            />
+          <FormIntentLimitOrder />
+          <div className='text-center mt-3'>
+            <p className='font-normal text-normal mb-4'><span className='italic'>You are not signing a normal transaction.</span> 
+            <br/>The signed message is comprised of intent modules like TimestampBefore and TokenSwap.</p>
+            <LinkComponent href='/how-it-works'>
+              <Button size={'lg'} className='text-sm'>How It Works</Button>
+            </LinkComponent>
           </div>
         </div>
       </section>
-      <section
-        id="simple"
-        aria-labelledby="simple-heading"
-        className="mx-auto max-w-screen-2xl px-6 py-12 lg:px-8"
-      >
-        <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-10 sm:gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-          <div className="lg:ml-auto lg:pl-4 lg:pt-4">
-            <div className="space-y-6 lg:max-w-xl">
-              <h2 className="text-3xl tracking-tight sm:text-4xl">
-                Simple, automated, <br />
-                crypto investing
-              </h2>
-              <Balancer className="text-lg leading-7 text-muted-foreground">
-                Invest like the best, with automated, expert-built strategies.
-                Pick a strategy, test its performance, then execute trades - all
-                in one platform.
-              </Balancer>
-              <dl className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
-                {simpleSectionFeatures.map((feature) => (
-                  <dt
-                    key={feature.name}
-                    className="flex items-center text-base font-semibold leading-7"
-                  >
-                    <feature.icon className="mr-2 h-5 w-5" aria-hidden="true" />
-                    {feature.name}
-                  </dt>
-                ))}
-              </dl>
-            </div>
-          </div>
-          <div className="order-first flex items-start justify-end">
-            <Image
-              src="/images/smarter.png"
-              alt="App screenshot"
-              width={1028}
-              height={686}
-              className="-ml-16 max-h-96 w-[48rem] max-w-none rounded-xl object-cover shadow-xl ring-1 ring-border sm:w-[57rem]"
-            />
-          </div>
+      <section className="py-10">
+        <div className='text-center'>
+          <h3 className='font-bold text-4xl mb-3'>Uniswap V3 Limit Orders</h3>
+          <p className=''>
+            You have {isSuccess && intentBatchQuery ? intentBatchQuery.length : 0} limit orders.
+          </p>
         </div>
+        <Card className="mx-auto max-w-screen-2xl mt-10">
+          <CardContent>
+          {
+            isSuccess && intentBatchQuery && Array.isArray(intentBatchQuery) &&
+            <UserLimitOrdersTable pageCount={1} data={intentBatchQuery?.map(transformLimitOrderIntentQueryToLimitOrderData)} />
+          }
+          </CardContent>
+        </Card>
       </section>
-      <section
-        id="potential"
-        aria-labelledby="potential-heading"
-        className="container py-8 lg:py-12"
-      >
-        <div className="relative isolate space-y-12 overflow-hidden rounded-sm border bg-secondary/20 px-6 py-20 sm:rounded-3xl sm:px-10">
-          <div className="mx-auto max-w-2xl sm:text-center">
-            <span className="text-base font-semibold leading-7 text-primary">
-              Put your money to work
-            </span>
-            <h2 className="mt-2 text-3xl tracking-tight sm:text-4xl">
-              Check out your potential
-            </h2>
-            <Balancer className="mt-4 text-lg leading-8 text-muted-foreground">
-              See how much your money could grow when you put it towards a
-              strategy.
-            </Balancer>
-          </div>
-          <PotentialChart />
+      <section className="py-10 lg:py-20 px-10 lg:px-20">
+        <div className='mb-32'>
+          <h5 className='font-normal text-xl text-center'>Strategies</h5>
+          <h3 className='font-extrabold text-5xl text-center my-3'>Explore What's Coming Next</h3>
+          <p className='text-center'>
+            Strategies are powered by the <span className='font-bold'>District Intent Protocol</span>, a permissionless, 
+            <br/> non-custodial, and composable smart contract framework.
+          </p>
         </div>
-      </section>
-      <section
-        id="faq"
-        aria-labelledby="faq-heading"
-        className="container px-6 py-12 lg:px-8"
-      >
-        <div className="lg:grid lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-5">
-            <h2 className="text-2xl font-bold leading-10 tracking-tight">
-              Still have questions?
-            </h2>
-            <p className="mt-4 text-base leading-7 text-muted-foreground">
-              Reach out to our{" "}
-              <a
-                href="#"
-                className="font-semibold text-primary hover:text-primary/80"
-              >
-                customer support
-              </a>{" "}
-              team.
-            </p>
-          </div>
-          <div className="mt-10 lg:col-span-7 lg:mt-0">
-            <dl className="space-y-10">
-              {faqs.map((faq) => (
-                <div key={faq.question}>
-                  <dt className="text-base font-semibold leading-7">
-                    {faq.question}
-                  </dt>
-                  <dd className="mt-2 text-base leading-7 text-muted-foreground">
-                    {faq.answer}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </div>
+        <div className="mx-auto max-w-screen-3xl grid grid-cols-3 gap-x-10">
+          <StrategyPreview
+            name="Limit Order"
+            description="Set a limit order to buy or sell tokens at a specific price."
+            image="/images/limit-order.png"
+            nonceType="QueueNonce"
+            modules={['TimestampBefore', 'TokenRelease', 'TokenSwap']}
+          />
+
+          <StrategyPreview
+            name="ERC20 Rebalance"
+            description="Rebalance your portfolio to a target allocation."
+            image="/images/dca.png"
+            nonceType="TimeNonce"
+            modules={['TokenRelease', 'TokenSwap']}
+          />
+
+          <StrategyPreview
+            name="PoolTogether Weekly Deposit"
+            description="Deposit into PoolTogether V4 PrizePool weekly."
+            image="/images/leverage.png"
+            nonceType="TimeNonce"
+            modules={['AveragePrizeZK']}
+          />
         </div>
       </section>
     </div>
   )
 }
+
+
+
+type StrategyPreview = React.HTMLAttributes<HTMLElement> & {
+  name: string
+  description: string
+  image: string
+  nonceType?: string
+  modules?: string[]
+}
+
+const StrategyPreview = ({ className, name, description, image, nonceType, modules }: StrategyPreview) => { 
+ const classes = cn(className, 'flex flex-col');
+
+ return(
+  <Card className={classes}>
+    <CardHeader>
+      {/* <img src={image} alt={name} /> */}
+      <h3 className='font-bold text-xl'>{name}</h3>
+      <p>{description}</p>
+      <span className='text-sm'><span className='font-bold'>Nonce Type:</span> {nonceType}</span>
+    </CardHeader>
+    <CardContent className="flex-1">
+    {
+      modules && modules.length > 0 &&
+      <div>
+        <h5 className='font-bold text-sm'>Intent Modules</h5>
+        <ul className='list-disc list-inside pl-3'>
+          {
+            modules.map((module, index) => (
+              <li key={index}>{module}</li>
+            ))
+          }
+        </ul>
+      </div>
+    }
+    </CardContent>
+    <CardFooter className="bg-neutral-100 pt-3 pb-3">
+      <LinkComponent href='/how-it-works'>
+        <Button size={'sm'} className='text-sm'>Learn more</Button>
+      </LinkComponent>
+    </CardFooter>
+  </Card>
+)}

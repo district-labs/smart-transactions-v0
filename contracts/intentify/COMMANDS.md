@@ -10,11 +10,14 @@ forge script script/e2e/ExecuteIntent.s.sol:ExecuteIntent --rpc-url http://local
 forge script script/deploy/WalletFactoryDeploy.s.sol:WalletFactoryDeploy --fork-url http://localhost:8545 --broadcast 
 forge script script/deploy/WalletFactoryDeploy.s.sol:WalletFactoryDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify
 
+forge script script/deploy/UniswapV3PoolDeploy.s.sol:UniswapV3PoolDeploy.s --fork-url http://localhost:8545 --broadcast 
+forge script script/deploy/UniswapV3PoolDeploy.s.sol:UniswapV3PoolDeploy.s --rpc-url $GOERLI_RPC_URL --broadcast -vvv
+
 forge script script/IntentifySafeModuleDeploy.s.sol:IntentifySafeModuleDeploy --fork-url http://localhost:8545 --broadcast 
 forge script script/deploy/IntentifySafeModuleDeploy.s.sol:IntentifySafeModuleDeploy --rpc-url $GOERLI_RPC_URL --broadcast -vvv
 
 forge script script/intents/TwapIntentDeploy.s.sol:TwapIntentDeploy --fork-url http://localhost:8545 --broadcast 
-forge script +script/intents/TwapIntentDeploy.s.sol:TwapIntentDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify
+forge script script/intents/TwapIntentDeploy.s.sol:TwapIntentDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify
 
 forge script script/intents/LimitOrderIntentDeploy.s.sol:LimitOrderIntentDeploy --fork-url http://localhost:8545 --broadcast 
 forge script script/intents/LimitOrderIntentDeploy.s.sol:LimitOrderIntentDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify

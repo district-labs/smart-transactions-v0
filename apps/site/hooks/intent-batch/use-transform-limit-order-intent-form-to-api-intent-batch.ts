@@ -1,17 +1,17 @@
 import { useGetIntentLimitOrderAddress, useGetIntentTimestampBeforeAddress, useGetIntentTokenRouterAddress, useGetSafeAddress } from "@district-labs/intentify-react";
-import type { DefiLlamaToken } from "@/types";
 import { useEffect, useState } from "react";
 import { expiryToTimestamp } from "@/app/(app)/limit/utils";
 import { encodeAbiParameters, encodePacked, parseUnits } from "viem";
 import { generateIntentModuleId } from "@district-labs/intentify-utils";
 import type { ApiIntentBatch } from "@/lib/validations/api/intent-batch";
+import type { Token } from "@/types/token-list";
 
 type Input = {
     expiry: string
     chainId: number
-    tokenOut: DefiLlamaToken | undefined
+    tokenOut: Token | undefined
     amountOut: number | undefined
-    tokenIn: DefiLlamaToken | undefined
+    tokenIn: Token | undefined
     amountIn: number | undefined
     domainSeparator: string | undefined
     intentBatchHash: string | undefined
@@ -68,6 +68,7 @@ export function useTransformLimitOrderIntentFormToApiIntentBatch({
       
           const intentBatch = {
             nonce: encodePacked(["uint256"], [BigInt(0)]) as string,
+            userId: safeAddress as string,
             root: safeAddress as string,
             intentBatchHash: intentBatchHash,
             signature: signature,
