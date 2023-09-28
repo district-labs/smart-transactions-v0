@@ -1,5 +1,4 @@
 ALTER TABLE `intent_batch` DROP PRIMARY KEY;--> statement-breakpoint
-ALTER TABLE `intent_batch` DROP CONSTRAINT `intent_batch_intent_batch_hash_unique`;--> statement-breakpoint
 ALTER TABLE `email_preferences` MODIFY COLUMN `user_id` char(42) NOT NULL;--> statement-breakpoint
 ALTER TABLE `intent_batch` MODIFY COLUMN `intent_batch_hash` char(42) NOT NULL;--> statement-breakpoint
 ALTER TABLE `intent_batch_execution` MODIFY COLUMN `intent_batch_id` char(42) NOT NULL;--> statement-breakpoint

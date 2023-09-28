@@ -44,7 +44,7 @@ export type DbNewIntent = typeof intents.$inferInsert
 // ------------------ INTENT BATCH ------------------ //
 
 export const intentBatch = mysqlTable("intent_batch", {
-  intentBatchHash: charAddress("intent_batch_hash").primaryKey(),
+  intentBatchHash: charHash("intent_batch_hash").primaryKey(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").onUpdateNow(),
   root: charAddress("root").notNull(),

@@ -183,6 +183,13 @@
       "when": 1695911535169,
       "tag": "0025_hot_invaders",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "5",
+      "when": 1695916810674,
+      "tag": "0026_abandoned_killer_shrike",
+      "breakpoints": true
     }
   ]
 }
