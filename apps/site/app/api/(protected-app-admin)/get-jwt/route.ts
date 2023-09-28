@@ -17,8 +17,8 @@ export async function GET(req: Request): Promise<Response> {
 
   // Create payload and sign it
   const payload = {
-    id: "engine-runner",
-    url: "https://engine.llama.fi",
+    id: "intentify",
+    url: "https://intentify-district.vercel.app/",
     roles: [role],
   }
   const jwt = await signJwt(payload)
