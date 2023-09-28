@@ -1,6 +1,21 @@
+import { env } from "@/env.mjs";
 import { roles, signJwt, verifyJwt } from "@/lib/jwt";
+import { ironOptions } from "@/lib/session";
+import { getIronSession } from "iron-session";
+
+const admins = env.APP_ADMINS?.split(",") || []
 
 export async function GET(req: Request): Promise<Response> {
+    // Only app admins can access this endpoint
+    const res = new Response();
+	const session = await getIronSession(req, res, ironOptions);
+
+    if(!session?.user?.address || !admins.includes(session.user.address)) {
+        return new Response(JSON.stringify({
+            error: "Unauthorized",
+        }), { status: 401 });
+    }
+
     // Extract role from URL
     const url = new URL(req.url);
     const role = url.searchParams.get("role");

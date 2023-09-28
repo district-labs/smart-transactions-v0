@@ -19,15 +19,15 @@ const JWT_PROTECTED_ROUTES = [
 	"/api/engine",
 	"/api/events",
 	"/api/execute",
-]
+];
 
 const USER_SESSION_PROTECTED_ROUTES = [
-"/api/admin",
-"/api/intent-batch",
-"/api/intent-batch/execution",
-"/api/strategy",
-"/api/token"
-]
+	"/api/admin",
+	"/api/intent-batch",
+	"/api/intent-batch/execution",
+	"/api/strategy",
+	"/api/token",
+];
 
 // Helper function to generate unauthorized response
 function unauthorizedResponse(
@@ -39,36 +39,30 @@ function unauthorizedResponse(
 export async function middleware(request: NextRequest) {
 	const pathname = request.nextUrl.pathname;
 
-	const isJwtProtectedRoute = JWT_PROTECTED_ROUTES.some((route) => pathname.startsWith(route))
-
-	if (isJwtProtectedRoute) {
-		return await handleJwtProtection(request);
+	if (JWT_PROTECTED_ROUTES.some(route => pathname.startsWith(route))) {
+		return await handleJwtProtection(request, pathname);
 	}
 
-	const isUserSessionProtectedRoute = USER_SESSION_PROTECTED_ROUTES.some((route) => pathname.startsWith(route))
-
-	
-	if (isUserSessionProtectedRoute) {
+	if (USER_SESSION_PROTECTED_ROUTES.some(route => pathname.startsWith(route))) {
 		return await handleUserSessionProtection(request);
 	}
 
+	// Continue to the next middleware or request handler
+	return NextResponse.next();
 }
 
 async function handleUserSessionProtection(request: NextRequest) {
-	  const res = new Response()
-  const session = await getIronSession(request, res, ironOptions)
-	if(!session?.user?.address){
-		return unauthorizedResponse("No user session")
+	const res = new Response();
+	const session = await getIronSession(request, res, ironOptions);
+	if (!session?.user?.address) {
+		return unauthorizedResponse("No user session");
 	}
 
 	return NextResponse.next();
 }
 
-
-async function handleJwtProtection(request: NextRequest){
-		const pathname = request.nextUrl.pathname;
-
-  const headersInstance = headers();
+async function handleJwtProtection(request: NextRequest, pathname: string) {
+	const headersInstance = headers();
 	const authorization = headersInstance.get("authorization");
 
 	if (!authorization) {
@@ -80,26 +74,19 @@ async function handleJwtProtection(request: NextRequest){
 		return unauthorizedResponse("Invalid token");
 	}
 
-	// Check authorization for ENGINE and ADMIN roles
-	if (ENDPOINTS.ENGINE.some((endpoint) => pathname.startsWith(endpoint))) {
-		if (
-			payload.roles.includes(ROLES.ENGINE) ||
-			payload.roles.includes(ROLES.ADMIN)
-		) {
-			return NextResponse.next();
-		}
-		return unauthorizedResponse();
+	// Authorization checks
+	if (isAuthorized(pathname, payload.roles, ENDPOINTS.ENGINE, [ROLES.ENGINE, ROLES.ADMIN])) {
+		return NextResponse.next();
 	}
 
-	// Check authorization for CACHE and ADMIN roles
-	if (ENDPOINTS.EVENTS.some((endpoint) => pathname.startsWith(endpoint))) {
-		if (
-			payload.roles.includes(ROLES.CACHE) ||
-			payload.roles.includes(ROLES.ADMIN)
-		) {
-			return NextResponse.next();
-		}
-		return unauthorizedResponse();
+	if (isAuthorized(pathname, payload.roles, ENDPOINTS.EVENTS, [ROLES.CACHE, ROLES.ADMIN])) {
+		return NextResponse.next();
 	}
+
+	return unauthorizedResponse();
 }
 
+function isAuthorized(pathname: string, roles: string[], endpoints: string[], requiredRoles: string[]): boolean {
+	return endpoints.some(endpoint => pathname.startsWith(endpoint)) && 
+		roles.some(role => requiredRoles.includes(role));
+}
