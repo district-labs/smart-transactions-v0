@@ -1,5 +1,6 @@
 import { db } from "@/db"
 import { intentBatch as intentBatchDb, intents as intentsDb } from "@/db/schema"
+
 import { ApiIntentBatch } from "@/lib/validations/api/intent-batch"
 
 export async function POST(req: Request) {
@@ -19,8 +20,6 @@ export async function POST(req: Request) {
         strategyId: 1,
         userId,
       })
-
-      const intentBatchId = Number(intentBatchResult.insertId)
 
       await tx.insert(intentsDb).values(
         intents.map((intent) => ({

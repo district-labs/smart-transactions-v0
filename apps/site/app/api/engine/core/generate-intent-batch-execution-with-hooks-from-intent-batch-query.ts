@@ -12,7 +12,7 @@ export function generateIntentBatchExecutionWithHooksFromIntentBatchQuery(
       intentBatchHash: intentBatch.intentBatchHash as `0x${string}`,
       root: intentBatch.root as `0x${string}`,
       nonce: intentBatch.nonce as `0x${string}`,
-      intents: intentBatch.intents.map(intent => ({
+      intents: intentBatch.intents.map((intent) => ({
         root: intent.root as `0x${string}`,
         target: intent.target as `0x${string}`,
         value: intent.value ? BigInt(intent.value) : BigInt(0),
@@ -37,9 +37,8 @@ function generateHooksForIntentBatch(
     // case "limit-order-basic
     case 1:
       return generateHooksForTimestamp(intentBatch.chainId)
-      // return generateHooksForLimitOrderBasic(intentBatch.chainId)
+    // return generateHooksForLimitOrderBasic(intentBatch.chainId)
     default:
       throw new Error(`No hooks for intentBatch ${intentBatch.intentBatchHash}`)
   }
 }
-
