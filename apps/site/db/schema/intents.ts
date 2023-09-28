@@ -15,7 +15,7 @@ import { charAddress, charHash } from "../utils/schema"
 export const intents = mysqlTable("intents", {
   id: serial("id").primaryKey(),
   intentId: charHash("intent_id").notNull(), // keccack256 name and version of intent module
-  intentBatchId: int("intent_batch_id").notNull(),
+  intentBatchId: charHash("intent_batch_id").notNull(),
   intentArgs: json("intent_args")
     .$type<
       {

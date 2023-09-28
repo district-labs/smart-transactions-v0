@@ -1,9 +1,9 @@
+import { type NextRequest } from "next/server"
 import { db } from "@/db"
 import { strategies } from "@/db/schema"
 import { like } from "drizzle-orm"
-import { type NextRequest } from "next/server"
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
   const query = req.nextUrl.searchParams.get("query")
   if (!query || query.length === 0) {
     return new Response("Missing required 'query' parameter", { status: 422 })
