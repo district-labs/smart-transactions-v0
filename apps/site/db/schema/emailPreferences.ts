@@ -3,8 +3,9 @@ import {
   mysqlTable,
   serial,
   timestamp,
-  varchar,
 } from "drizzle-orm/mysql-core"
+
+import { charAddress } from "../utils/schema"
 
 export const emailPreferences = mysqlTable("email_preferences", {
   id: serial("id").primaryKey(),
@@ -12,7 +13,7 @@ export const emailPreferences = mysqlTable("email_preferences", {
   marketing: boolean("marketing"),
   transactional: boolean("transactional"),
   createdAt: timestamp("created_at").defaultNow(),
-  userId: varchar("user_id", { length: 255 }),
+  userId: charAddress("user_id").notNull(),
 })
 
 export type EmailPreference = typeof emailPreferences.$inferSelect

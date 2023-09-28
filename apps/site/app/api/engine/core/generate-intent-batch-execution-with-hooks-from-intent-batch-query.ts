@@ -1,7 +1,7 @@
 import type { DBIntentBatchActiveItem } from "@/db/queries/intent-batch"
 import type { Hook, IntentBatchExecution } from "@district-labs/intentify-utils"
-import { splitSignature } from "./split-signature"
 import { generateHooksForTimestamp } from "./intent-hooks/generate-hooks-for-timestamp"
+import { splitSignature } from "./split-signature"
 
 export function generateIntentBatchExecutionWithHooksFromIntentBatchQuery(
   intentBatch: DBIntentBatchActiveItem
@@ -9,7 +9,7 @@ export function generateIntentBatchExecutionWithHooksFromIntentBatchQuery(
   const signatureSplit = splitSignature(intentBatch.signature)
   const intentBatchExecution: IntentBatchExecution = {
     batch: {
-      intentBatchId: intentBatch.id,
+      inntentBatchHash: intentBatch.intentBatchHash as `0x${string}`,
       root: intentBatch.root as `0x${string}`,
       nonce: intentBatch.nonce as `0x${string}`,
       intents: intentBatch.intents.map(intent => ({
@@ -39,7 +39,7 @@ function generateHooksForIntentBatch(
       return generateHooksForTimestamp(intentBatch.chainId)
       // return generateHooksForLimitOrderBasic(intentBatch.chainId)
     default:
-      throw new Error(`No hooks for intentBatch ${intentBatch.id}`)
+      throw new Error(`No hooks for intentBatch ${intentBatch.intentBatchHash}`)
   }
 }
 

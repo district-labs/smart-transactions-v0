@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   try {
     const body = ApiIntentBatch.parse(await req.json())
     const { intentBatch } = body
-    const { chainId, intents, nonce, root, signature } = intentBatch
+    const { chainId, intents, nonce, root, signature, userId } = intentBatch
 
     await db.transaction(async (tx) => {
       const intentBatchResult = await tx.insert(intentBatchDb).values({
@@ -17,6 +17,7 @@ export async function POST(req: Request) {
         signature,
         // TODO: Make this dynamic
         strategyId: 1,
+        userId,
       })
 
       const intentBatchId = Number(intentBatchResult.insertId)

@@ -7,12 +7,12 @@ import { TimeFromDate } from "@/components/shared/time-from-date"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 } from "@/components/ui/sheet"
 
 import {
@@ -49,7 +49,7 @@ export function IntentBatchTable({data}:IntentBatchTable) {
       </TableHeader>
       <TableBody>
         {data?.map((intentBatch) => (
-          <TableRow key={intentBatch.id}>
+          <TableRow key={intentBatch.intentBatchHash}>
             <TableCell>{intentBatch.chainId}</TableCell>
             <TableCell>{intentBatch.intentBatchHash}</TableCell>
             <TableCell><Address truncate address={intentBatch.root as `0x${string}`} /></TableCell>
