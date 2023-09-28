@@ -29,7 +29,7 @@ export async function POST(req: Request) {
           root: intent.root,
           target: intent.target,
           data: intent.data,
-          intentBatchId,
+          intentBatchId: intentBatch.intentBatchHash
         }))
       )
     })

@@ -22,6 +22,8 @@ type SheetIntentBatchDetails = {
 }
 
 export const SheetIntentBatchDetails = ({data}: SheetIntentBatchDetails) => { 
+
+  console.log(data, 'datadatadata')
  return(
     <Sheet>
     <SheetTrigger asChild>
@@ -44,7 +46,7 @@ export const SheetIntentBatchDetails = ({data}: SheetIntentBatchDetails) => {
                 <Row classNameValue="font-bold" label='Chain ID' value={data?.chainId} />
                 <Row classNameValue="font-bold" label='Executed' value={data.executedAt ? <TimeFromDate length={1} type="DATETIME" date={data.executedAt} /> : 'Not Executed'} />
                 <Row classNameValue="font-bold" label='Cancelled' value={data.cancelledAt ? <TimeFromDate length={1} type="DATETIME" date={data.cancelledAt} /> : 'Not Cancelled'} />
-                <Row classNameValue="font-bold" label='Created' value={data.createdAt?.toDateString()} />
+                {/* <Row classNameValue="font-bold" label='Created' value={data?.createdAt?.toDateString()} /> */}
                 <Row classNameValue="font-bold" label='Total Intents' value={data.intents.length} />
             </div>
         </div>

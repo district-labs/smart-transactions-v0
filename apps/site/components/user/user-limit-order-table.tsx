@@ -67,7 +67,7 @@ export function UserLimitOrdersTable({
           <DataTableColumnHeader column={column} title="Receive Amount" />
         ),
         cell: ({ row }) => <div className="flex items-center">
-          {/* <ERC20ConvertBalance address={row.original.receive.asset as `0x${string}`} balance={row.original.receive.amount} chainId={row.original.chainId} /> */}
+          <ERC20ConvertBalance address={row.original.receive.asset as `0x${string}`} balance={row.original.receive.amount} chainId={row.original.chainId} />
         </div>
       },
       {
@@ -91,15 +91,17 @@ export function UserLimitOrdersTable({
           <DataTableColumnHeader column={column} title="Actions" />
         ),
         cell: ({ row }) => <div className="flex items-center">
-          {
-            row.original.status === "open" &&
-              <CancelIntentBundle
-                intentBatch={row.original.intentBatch}
-                signMessageComponent={<Button type="button" size="sm">Cancel</Button>}
-                signTransactionComponent={<Button type="button" size="sm">Execute</Button>}
-              />
-          }
-          {/* <SheetIntentBatchDetails data={row.original.intentBatchDb} /> */}
+          <div className='flex gap-x-2'>
+            {
+              row.original.status === "open" &&
+                <CancelIntentBundle
+                  intentBatch={row.original.intentBatch}
+                  signMessageComponent={<Button variant={"destructive"} type="button" size="sm">Cancel</Button>}
+                  signTransactionComponent={<Button variant={"default"} type="button" size="sm">Execute</Button>}
+                />
+            }
+            <SheetIntentBatchDetails data={row.original.intentBatchDb} />
+          </div>
         </div>
       },
     ],

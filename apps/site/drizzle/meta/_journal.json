@@ -190,6 +190,13 @@
       "when": 1695916810674,
       "tag": "0026_abandoned_killer_shrike",
       "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "5",
+      "when": 1695925382847,
+      "tag": "0027_lovely_vapor",
+      "breakpoints": true
     }
   ]
 }

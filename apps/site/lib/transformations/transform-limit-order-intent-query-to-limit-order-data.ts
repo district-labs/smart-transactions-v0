@@ -23,20 +23,19 @@ export function transformLimitOrderIntentQueryToLimitOrderData(intentBatch: Inte
 
     const { intents } = intentBatch
 
-    console.log(intents, 'intents[2]intents[2]')
 
     // TODO: check if the intent is a limit order intent by using the ID
     return {
         chainId: Number(intentBatch.chainId),
         sell: {
             asset: String(intents[2]?.intentArgs[0]?.value),
-            amount: Number(intents[2].intentArgs[2]?.value),
+            amount: Number(intents[2]?.intentArgs[2]?.value),
         },
         receive: {
-            asset: String(intents[2].intentArgs[1]?.value),
-            amount: Number(intents[2].intentArgs[3]?.value),
+            asset: String(intents[2]?.intentArgs[1]?.value),
+            amount: Number(intents[2]?.intentArgs[3]?.value),
         },
-        limitPrice: String(intents[1].intentArgs[1]?.value),
+        limitPrice: String(intents[1]?.intentArgs[1]?.value),
         expiry: String(intents[0]?.intentArgs[0]?.value),
         status: getStatus(intentBatch.executedAt, intentBatch?.cancelledAt),
         intentBatch: transformIntentQueryToIntentBatchStruct(intentBatch),
