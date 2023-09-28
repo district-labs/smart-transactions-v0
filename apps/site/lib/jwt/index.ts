@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { env } from "@/env.mjs"
 import { SignJWT, jwtVerify, type JWTPayload } from "jose"
 
@@ -34,5 +35,6 @@ export async function signJwt(payload: any) {
     .setIssuer("urn:intentify:issuer")
     .sign(secret)
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return jwt
 }

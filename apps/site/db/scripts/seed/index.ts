@@ -75,7 +75,7 @@ async function main() {
         root: intent.root,
         target: intent.target,
         data: intent.data,
-        intentBatchId,
+        intentBatchId: intentBatchHash,
       }))
     )
   })

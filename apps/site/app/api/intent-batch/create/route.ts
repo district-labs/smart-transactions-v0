@@ -21,8 +21,6 @@ export async function POST(req: Request) {
         userId,
       })
 
-      const intentBatchId = Number(intentBatchResult.insertId)
-
       await tx.insert(intentsDb).values(
         intents.map((intent) => ({
           intentId: intent.intentId,
@@ -30,7 +28,7 @@ export async function POST(req: Request) {
           root: intent.root,
           target: intent.target,
           data: intent.data,
-          intentBatchId,
+          intentBatchId: intentBatch.intentBatchHash
         }))
       )
     })
