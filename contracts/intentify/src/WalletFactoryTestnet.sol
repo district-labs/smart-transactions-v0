@@ -9,18 +9,16 @@ import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
 contract WalletFactoryTestnet is SafeProxyFactory {
     struct TestTokens {
         address tokenAddress;
-        uint8 decimals;
         uint256 amount;
     }
 
     TestTokens[] public testTokens;
 
-    constructor(address[] memory tokenAddressList, uint8[] memory decimalsList, uint256[] memory amountList) {
-        require(tokenAddressList.length == decimalsList.length, "WalletFactoryTestnet:InvalidTestTokens");
+    constructor(address[] memory tokenAddressList, uint256[] memory amountList) {
         require(tokenAddressList.length == amountList.length, "WalletFactoryTestnet:InvalidTestTokens");
 
         for (uint256 i = 0; i < tokenAddressList.length; i++) {
-            testTokens.push(TestTokens(tokenAddressList[i], decimalsList[i], amountList[i]));
+            testTokens.push(TestTokens(tokenAddressList[i], amountList[i]));
         }
     }
 

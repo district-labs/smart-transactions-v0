@@ -30,16 +30,12 @@ contract WalletFactoryTestnetTest is BaseTest {
         address[] memory addressList = new address[](2);
         addressList[0] = address(_testUSDC);
         addressList[1] = address(_testWETH);
-        uint8[] memory decimalsList = new uint8[](2);
-        decimalsList[0] = 6;
-        decimalsList[1] = 18;
         uint256[] memory amountList = new uint256[](2);
         amountList[0] = 150_000e6;
         amountList[1] = 100e18;
 
         _walletFactoryTestnet = new WalletFactoryTestnet(
             addressList,
-            decimalsList,
             amountList
         );
     }
