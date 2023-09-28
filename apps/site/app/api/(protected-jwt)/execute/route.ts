@@ -14,7 +14,7 @@ import {
 import {
   localWalletClient,
   mainnetWalletClient,
-} from "../../../blockchain-clients"
+} from "../../blockchain-clients"
 
 export async function POST(req: Request) {
   const body = await req.json()

@@ -1,7 +1,8 @@
+import { verifyJwt } from "@/lib/jwt";
+import { ironOptions } from "@/lib/session";
+import { getIronSession } from "iron-session/edge";
 import { headers } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
-
-import { verifyJwt } from "@/lib/jwt";
 
 // Constants
 const ROLES = {
@@ -14,6 +15,20 @@ const ENDPOINTS = {
 	EVENTS: ["/api/events"],
 };
 
+const JWT_PROTECTED_ROUTES = [
+	"/api/engine",
+	"/api/events",
+	"/api/execute",
+]
+
+const USER_SESSION_PROTECTED_ROUTES = [
+"/api/admin",
+"/api/intent-batch",
+"/api/intent-batch/execution",
+"/api/strategy",
+"/api/token"
+]
+
 // Helper function to generate unauthorized response
 function unauthorizedResponse(
 	message = "You are not authorized to access this resource",
@@ -23,7 +38,37 @@ function unauthorizedResponse(
 
 export async function middleware(request: NextRequest) {
 	const pathname = request.nextUrl.pathname;
-	const headersInstance = headers();
+
+	const isJwtProtectedRoute = JWT_PROTECTED_ROUTES.some((route) => pathname.startsWith(route))
+
+	if (isJwtProtectedRoute) {
+		return await handleJwtProtection(request);
+	}
+
+	const isUserSessionProtectedRoute = USER_SESSION_PROTECTED_ROUTES.some((route) => pathname.startsWith(route))
+
+	
+	if (isUserSessionProtectedRoute) {
+		return await handleUserSessionProtection(request);
+	}
+
+}
+
+async function handleUserSessionProtection(request: NextRequest) {
+	  const res = new Response()
+  const session = await getIronSession(request, res, ironOptions)
+	if(!session?.user?.address){
+		return unauthorizedResponse("No user session")
+	}
+
+	return NextResponse.next();
+}
+
+
+async function handleJwtProtection(request: NextRequest){
+		const pathname = request.nextUrl.pathname;
+
+  const headersInstance = headers();
 	const authorization = headersInstance.get("authorization");
 
 	if (!authorization) {
@@ -58,6 +103,3 @@ export async function middleware(request: NextRequest) {
 	}
 }
 
-export const config = {
-	matcher: ["/api/engine/:path*", "/api/events/:path*", "/api/execute/:path*"],
-};

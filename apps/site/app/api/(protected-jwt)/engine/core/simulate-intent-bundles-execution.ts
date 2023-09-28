@@ -4,7 +4,7 @@ import {
   intentifySafeModuleABI,
 } from "@district-labs/intentify-utils"
 
-import { accountShared, publicClients } from "../../../../blockchain-clients"
+import { accountShared, publicClients } from "../../../blockchain-clients"
 
 export async function simulateIntentBatchExecution(
   chainId: number,
