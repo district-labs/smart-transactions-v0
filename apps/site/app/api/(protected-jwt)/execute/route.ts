@@ -1,4 +1,3 @@
-import { createIntentExecutionBatchWithHooks } from "@/db/writes/intent-batch-execution"
 import {
   IntentifyBundlerAddressList,
   IntentifyModuleAddressList,
@@ -6,15 +5,13 @@ import {
 } from "@district-labs/intentify-utils"
 import { getContract } from "viem"
 
-import {
-  ApiIntentBatchExecutionBundle,
-  type ApiIntentBatchExecution,
-} from "@/lib/validations/api/intent-batch-execution-bundle"
 
-import {
-  localWalletClient,
-  mainnetWalletClient,
-} from "../../blockchain-clients"
+import { createIntentExecutionBatchWithHooks } from "@/db/writes/intent-batch-execution"
+import { ApiIntentBatchExecutionBundle, type ApiIntentBatchExecution } from "@/lib/validations/api/intent-batch-execution-bundle"
+import { localWalletClient, mainnetWalletClient } from "../../blockchain-clients"
+
+// TODO: Replace with actual executor address
+const EXECUTOR_ADDRESS = "0x0000000000000000000000000000000000000000"  
 
 export async function POST(req: Request) {
   const body = await req.json()
@@ -59,11 +56,14 @@ export async function POST(req: Request) {
       executableIntentBatchBundle.map((intentBatch) => {
         const { hooks } = intentBatch
         createIntentExecutionBatchWithHooks(
-          intentBatch.batch.intentBatchId,
-          hooks.map((hook) => ({
-            target: hook.target,
-            data: hook.data,
-          }))
+          {
+            intentBatchHash: intentBatch.batch.intentBatchHash,
+            executor: EXECUTOR_ADDRESS,
+            hooksNew: hooks.map((hook) => ({
+                        target: hook.target,
+                        data: hook.data,
+                      }))
+          }
         )
       })
 

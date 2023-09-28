@@ -1,21 +1,20 @@
 import { relations } from "drizzle-orm"
 import {
-  char,
   int,
   json,
   mysqlTable,
   serial,
   text,
-  timestamp,
+  timestamp
 } from "drizzle-orm/mysql-core"
-
-import { strategies } from "."
+import { strategies, users } from "."
+import { charAddress, charHash } from "../utils/schema"
 
 // ------------------ INTENT ------------------ //
 
 export const intents = mysqlTable("intents", {
   id: serial("id").primaryKey(),
-  intentId: char("intent_id", { length: 66 }).notNull(), // keccack256 name and version of intent module
+  intentId: charHash("intent_id").notNull(), // keccack256 name and version of intent module
   intentBatchId: int("intent_batch_id").notNull(),
   intentArgs: json("intent_args")
     .$type<
@@ -26,8 +25,8 @@ export const intents = mysqlTable("intents", {
       }[]
     >()
     .notNull(),
-  root: char("root", { length: 42 }).notNull(),
-  target: char("target", { length: 42 }).notNull(),
+  root: charAddress("root").notNull(),
+  target: charAddress("target").notNull(),
   data: text("data"),
   value: int("value").default(0),
 })
@@ -35,7 +34,7 @@ export const intents = mysqlTable("intents", {
 export const intentsRelations = relations(intents, ({ one }) => ({
   intentBatch: one(intentBatch, {
     fields: [intents.intentBatchId],
-    references: [intentBatch.id],
+    references: [intentBatch.intentBatchHash],
   }),
 }))
 
@@ -45,29 +44,33 @@ export type DbNewIntent = typeof intents.$inferInsert
 // ------------------ INTENT BATCH ------------------ //
 
 export const intentBatch = mysqlTable("intent_batch", {
-  id: serial("id").primaryKey(),
-  intentBatchHash: char("intent_batch_hash", { length: 66 }).unique(),
+  intentBatchHash: charHash("intent_batch_hash").primaryKey(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").onUpdateNow(),
-  root: char("root", { length: 42 }).notNull(),
-  nonce: char("nonce", { length: 66 }).notNull(),
+  root: charAddress("root").notNull(),
+  nonce: charHash("nonce").notNull(),
   chainId: int("chain_id").notNull(),
   signature: text("signature").notNull(),
-  executedTxHash: char("executed_tx_hash", { length: 66 }).unique(),
+  executedTxHash: charHash("executed_tx_hash").unique(),
   executedAt: timestamp("executed_at"),
-  cancelledTxHash: char("cancelled_tx_hash", { length: 66 }).unique(),
+  cancelledTxHash: charHash("cancelled_tx_hash").unique(),
   cancelledAt: timestamp("cancelled_at"),
   strategyId: int("strategy_id").notNull(),
+  userId: charAddress("user_id").notNull(),
 })
 
 export const intentBatchRelations = relations(intentBatch, ({ one, many }) => ({
   intents: many(intents),
+  user: one(users, {
+    fields: [intentBatch.userId],
+    references: [users.address],
+  }),
   strategy: one(strategies, {
     fields: [intentBatch.strategyId],
     references: [strategies.id],
   }),
   intentBatchExecution: one(intentBatchExecution, {
-    fields: [intentBatch.id],
+    fields: [intentBatch.intentBatchHash],
     references: [intentBatchExecution.intentBatchId],
     
   }),
@@ -80,7 +83,7 @@ export type DbNewIntentBatch = typeof intentBatch.$inferInsert
 
 export const hooks = mysqlTable("hooks", {
   id: serial("id").primaryKey(),
-  target: char("target", { length: 42 }).notNull(),
+  target: charAddress("target").notNull(),
   data: text("data"),
   intentBatchExecutionId: int("intent_batch_execution_id").notNull(),
 })
@@ -99,9 +102,10 @@ export type DbNewHook = typeof hooks.$inferInsert
 
 export const intentBatchExecution = mysqlTable("intent_batch_execution", {
   id: serial("id").primaryKey(),
-  intentBatchId: int("intent_batch_id"),
+  executor: charAddress("executor").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").onUpdateNow(),
+  intentBatchId: charAddress("intent_batch_id").notNull(),
 })
 
 export const intentBatchExecutionRelations = relations(
@@ -110,7 +114,7 @@ export const intentBatchExecutionRelations = relations(
     hooks: many(hooks),
     intentBatch: one(intentBatch, {
       fields: [intentBatchExecution.intentBatchId],
-      references: [intentBatch.id],
+      references: [intentBatch.intentBatchHash],
     }),
   })
 )

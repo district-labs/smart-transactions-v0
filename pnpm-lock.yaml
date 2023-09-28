@@ -26,9 +26,6 @@ importers:
 
   apps/cache:
     dependencies:
-      '@district-labs/intentify-utils':
-        specifier: workspace:*
-        version: link:../../sdk/intentify-core
       '@ponder/core':
         specifier: 0.0.88
         version: 0.0.88(typescript@5.2.2)
@@ -376,6 +373,9 @@ importers:
       '@district-labs/intentify-utils':
         specifier: workspace:*
         version: link:../../sdk/intentify-core
+      '@ethersproject/bignumber':
+        specifier: ^5.7.0
+        version: 5.7.0
       '@headlessui/tailwindcss':
         specifier: ^0.2.0
         version: 0.2.0(tailwindcss@3.3.3)

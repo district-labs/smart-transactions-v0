@@ -1,0 +1,1 @@
+ALTER TABLE `intent_batch` MODIFY COLUMN `intent_batch_hash` char(66) NOT NULL;

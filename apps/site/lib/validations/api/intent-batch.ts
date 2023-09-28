@@ -7,6 +7,7 @@ export const ApiIntentBatch = z.object({
     root: z.string(),
     chainId: z.union([z.string(), z.number()]),
     signature: z.string(),
+    userId: z.string(),
     intents: z.array(
       z.object({
         intentId: z.string(),
