@@ -62,7 +62,7 @@ export default function Home() {
       <section className="py-10 lg:py-20 px-10 lg:px-20">
         <div className='mb-32'>
           <h5 className='font-normal text-xl text-center'>Strategies</h5>
-          <h3 className='font-extrabold text-5xl text-center my-3'>Explore What's Coming Next</h3>
+          <h3 className='font-extrabold text-5xl text-center my-3'>Explore What&apos;s Coming Next</h3>
           <p className='text-center'>
             Strategies are powered by the <span className='font-bold'>District Intent Protocol</span>, a permissionless, 
             <br/> non-custodial, and composable smart contract framework.

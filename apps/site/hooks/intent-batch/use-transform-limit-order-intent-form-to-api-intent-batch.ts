@@ -1,6 +1,4 @@
 import { expiryToTimestamp } from "@/app/(app)/limit/utils";
-import type { ApiIntentBatch } from "@/lib/validations/api/intent-batch";
-import type { DefiLlamaToken } from "@/types";
 import { useGetIntentLimitOrderAddress, useGetIntentTimestampBeforeAddress, useGetIntentTokenRouterAddress, useGetSafeAddress } from "@district-labs/intentify-react";
 import { generateIntentModuleId } from "@district-labs/intentify-utils";
 import { useEffect, useState } from "react";
@@ -12,7 +10,7 @@ type Input = {
     expiry: string
     chainId: number
     userId: string | undefined
-    tokenOut: DefiLlamaToken | undefined
+    tokenOut: Token | undefined
     amountOut: number | undefined
     tokenIn: Token | undefined
     amountIn: number | undefined
@@ -76,7 +74,6 @@ export function useTransformLimitOrderIntentFormToApiIntentBatch({
       
           const intentBatch = {
             nonce: encodePacked(["uint256"], [BigInt(0)]) as string,
-            userId: safeAddress as string,
             root: safeAddress as string,
             intentBatchHash: intentBatchHash,
             signature: signature,
@@ -106,7 +103,7 @@ export function useTransformLimitOrderIntentFormToApiIntentBatch({
                     { type: "address", name: "token" },
                     { type: "uint256", name: "amount" },
                   ],
-                  [tokenOut.address, parsedAmountOut]
+                  [tokenOut.address as `0x${string}`, parsedAmountOut]
                 ) as string,
                 value: "0",
                 intentArgs: [
@@ -133,7 +130,7 @@ export function useTransformLimitOrderIntentFormToApiIntentBatch({
                     { type: "uint256", name: "amountOutMax" },
                     { type: "uint256", name: "amountInMin" },
                   ],
-                  [tokenOut.address, tokenIn.address, parsedAmountOut, parsedAmountIn]
+                  [tokenOut.address as `0x${string}`, tokenIn.address as `0x${string}`, parsedAmountOut, parsedAmountIn]
                 ) as string,
                 value: "0",
                 intentArgs: [

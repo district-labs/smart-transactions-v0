@@ -70,7 +70,7 @@ export function useTransformLimitOrderIntentFormToStructIntentBatch({
                     { type: "address", name: "token" },
                     { type: "uint256", name: "amount" },
                   ],
-                  [tokenOut.address, parsedAmountOut]
+                  [tokenOut.address as `0x${string}`, parsedAmountOut]
                 ),
                 value: BigInt(0),
               },
@@ -84,7 +84,7 @@ export function useTransformLimitOrderIntentFormToStructIntentBatch({
                     { type: "uint256", name: "amountOutMax" },
                     { type: "uint256", name: "amountInMin" },
                   ],
-                  [tokenOut.address, tokenIn.address, parsedAmountOut, parsedAmountIn]
+                  [tokenOut.address as `0x${string}`, tokenIn.address as `0x${string}`, parsedAmountOut, parsedAmountIn]
                 ),
                 value: BigInt(0),
               },

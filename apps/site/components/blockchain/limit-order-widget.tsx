@@ -24,9 +24,8 @@ import { useTransformLimitOrderIntentFormToApiIntentBatch } from "@/hooks/intent
 import { useTransformLimitOrderIntentFormToStructIntentBatch } from "@/hooks/intent-batch/use-transform-limit-order-intent-form-to-struct-intent-batch"
 import { formatPrice } from "@/lib/utils"
 import { useGetIntentifyModuleAddress, useIntentifySafeModuleDomainSeparator } from "@district-labs/intentify-react"
-import { useIntentBatchCreate } from "@/hooks/intent-batch/use-intent-batch-create"
 import { defaultTokenList } from "./default-token-list"
-import { Token, TokenList } from "@/types/token-list"
+import type { Token, TokenList } from "@/types/token-list"
 import { generateIntentBatchEIP712, getIntentBatchTypedDataHash } from "@district-labs/intentify-utils"
 
 interface LimitOrderWidgetProps {

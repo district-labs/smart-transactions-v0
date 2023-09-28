@@ -30,7 +30,7 @@ export type Intent = {
 };
 
 export type IntentBatch = {
-  inntentBatchHash?: `0x${string}`; // Used for the intent batch hash in the database. This is not part of the EIP712 signature.
+  intentBatchHash?: `0x${string}`; // Used for the intent batch hash in the database. This is not part of the EIP712 signature.
   readonly root: `0x${string}`;
   readonly nonce: `0x${string}`;
   readonly intents: Intent[];

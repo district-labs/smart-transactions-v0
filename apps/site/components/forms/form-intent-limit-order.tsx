@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useChainId, useSignTypedData } from "wagmi"
+import { useAccount, useChainId, useSignTypedData } from "wagmi"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
@@ -25,6 +25,7 @@ import tokenListGoerli from '@/data/token-list-district-goerli.json'
 const tokenListDistrictGoerli: TokenList = tokenListGoerli
 
 export default function FormIntentLimitOrder() {
+  const account = useAccount()
   const chainId = useChainId()
   const [amountOut, setAmountOut] = useState<number | undefined>(1)
   const [amountIn, setAmountIn] = useState<number | undefined>()
@@ -73,6 +74,7 @@ export default function FormIntentLimitOrder() {
   })
   const { isLoading: isLoadingSign, signTypedData, data:signature } = useSignTypedData(intentBatchEIP712)
   const apiIntentBatch = useTransformLimitOrderIntentFormToApiIntentBatch({
+    userId: account.address ,
     chainId,
     amountIn,
     amountOut,
