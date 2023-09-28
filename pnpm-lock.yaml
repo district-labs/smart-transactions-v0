@@ -493,6 +493,9 @@ importers:
       iron-session:
         specifier: ^6.3.1
         version: 6.3.1(next@13.5.2)
+      jose:
+        specifier: ^4.14.6
+        version: 4.14.6
       luxon:
         specifier: ^3.2.1
         version: 3.4.3
@@ -18787,7 +18790,6 @@ packages:
 
   /jose@4.14.6:
     resolution: {integrity: sha512-EqJPEUlZD0/CSUMubKtMaYUOtWe91tZXTWMJZoKSbLk+KtdhNdcvppH8lA9XwVu2V4Ailvsj0GBZJ2ZwDjfesQ==}
-    dev: true
 
   /jotai@1.13.1(@babel/core@7.18.5)(react@18.2.0):
     resolution: {integrity: sha512-RUmH1S4vLsG3V6fbGlKzGJnLrDcC/HNb5gH2AeA9DzuJknoVxSGvvg8OBB7lke+gDc4oXmdVsaKn/xDUhWZ0vw==}
