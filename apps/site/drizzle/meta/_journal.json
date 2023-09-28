@@ -176,6 +176,13 @@
       "when": 1695727336805,
       "tag": "0024_nappy_whirlwind",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1695911535169,
+      "tag": "0025_hot_invaders",
+      "breakpoints": true
     }
   ]
 }
