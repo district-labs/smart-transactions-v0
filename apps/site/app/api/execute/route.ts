@@ -15,6 +15,9 @@ import { createContractArguments } from "./utils"
 const supportedChainIds = [5, 31337]
 const GAS_LIMIT = BigInt(500000)
 
+// TODO: Replace with actual executor address
+const EXECUTOR_ADDRESS = "0x0000000000000000000000000000000000000000"  
+
 export async function POST(req: Request) {
   try {
     const body = await req.json()
@@ -46,11 +49,14 @@ export async function POST(req: Request) {
       executableIntentBatchBundle.map((intentBatch) => {
         const { hooks } = intentBatch
         createIntentExecutionBatchWithHooks(
-          intentBatch.batch.intentBatchId,
-          hooks.map((hook) => ({
-            target: hook.target,
-            data: hook.data,
-          }))
+          {
+            intentBatchHash: intentBatch.batch.intentBatchHash,
+            executor: EXECUTOR_ADDRESS,
+            hooksNew: hooks.map((hook) => ({
+                        target: hook.target,
+                        data: hook.data,
+                      }))
+          }
         )
       })
 

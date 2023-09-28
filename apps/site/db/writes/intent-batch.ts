@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm"
 
 import { db } from ".."
-import { intentBatch } from "../schema"
 import type { DbIntentBatch } from "../schema"
+import { intentBatch } from "../schema"
 
 export function newIntentBatch(intentBatchNew: DbIntentBatch) {
   return db.insert(intentBatch).values(intentBatchNew)
@@ -17,13 +17,13 @@ export type IntentBatchNew = Awaited<
 // ----------------------------------------------
 
 export function updateIntentBatchFromDbId(
-  id: number,
+  intentBatchHash: string,
   intentBatchNew: DbIntentBatch
 ) {
   return db
     .update(intentBatch)
     .set(intentBatchNew)
-    .where(eq(intentBatch.id, id))
+    .where(eq(intentBatch.intentBatchHash, intentBatchHash))
 }
 
 export type IntentBatchUpdateFromDbId = Awaited<

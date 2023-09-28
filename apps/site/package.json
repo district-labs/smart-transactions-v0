@@ -22,6 +22,7 @@
   "dependencies": {
     "@district-labs/intentify-react": "workspace:*",
     "@district-labs/intentify-utils": "workspace:*",
+    "@ethersproject/bignumber": "^5.7.0",
     "@headlessui/tailwindcss": "^0.2.0",
     "@hookform/resolvers": "^3.3.1",
     "@openzeppelin/defender-relay-client": "^1.48.0",

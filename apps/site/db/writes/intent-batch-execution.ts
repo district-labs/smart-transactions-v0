@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm"
 
 import { db } from ".."
-import { hooks, intentBatchExecution } from "../schema"
 import type { DbIntentBatchExecution, } from "../schema"
+import { hooks, intentBatchExecution } from "../schema"
 
 export function newIntentExecutionBatch(intentBatchExecutionNew: DbIntentBatchExecution) {
   return db.insert(intentBatchExecution).values(intentBatchExecutionNew)
@@ -26,14 +26,24 @@ export type IntentExecutionBatchUpdate = Awaited<
   ReturnType<typeof updateIntentExecutionBatch>
 >
 
-export async function createIntentExecutionBatchWithHooks(intentBatchId: number, hooksNew: {
-  target: string
-  data: string
-}[]) {
+interface CreateIntentExecutionBatchWithHooksParams {
+  intentBatchHash: string
+  executor: string
+  hooksNew: {
+    target: string
+    data: string
+  }[]
+}
 
+export async function createIntentExecutionBatchWithHooks({
+  intentBatchHash,
+  executor,
+  hooksNew
+}:CreateIntentExecutionBatchWithHooksParams) {
   await db.transaction(async (tx) => {
     const intentBatchResult = await tx.insert(intentBatchExecution).values({
-      intentBatchId: intentBatchId
+      intentBatchId: intentBatchHash,
+      executor
     })
 
     await tx.insert(hooks).values(

@@ -3,7 +3,7 @@
 import { type DefiLlamaToken } from "@/types"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
-import { useChainId, useSignTypedData } from "wagmi"
+import { useAccount, useChainId, useSignTypedData } from "wagmi"
 
 import { useCurrentPriceERC20 } from "@/app/(app)/limit/use-current-price"
 import LimitPriceInput from "@/components/blockchain/limit-price-input"
@@ -37,6 +37,7 @@ export default function LimitOrderWidget({
 }: LimitOrderWidgetProps) {
   const router = useRouter()
   const chainId = useChainId()
+  const {address} = useAccount()
   const [amountOut, setAmountOut] = useState<number | undefined>(1)
   const [amountIn, setAmountIn] = useState<number | undefined>()
   const [limitPrice, setLimitPrice] = useState<number | undefined>()
@@ -51,7 +52,6 @@ export default function LimitOrderWidget({
   const { data: tokenInUSD } = useCurrentPriceERC20({
     token: { chainId, address: inToken.address },
   })
-
   const structIntentBatch = useTransformLimitOrderIntentFormToStructIntentBatch({
     chainId,
     amountIn,
@@ -78,6 +78,7 @@ export default function LimitOrderWidget({
   const { isLoading: isLoadingSign, signTypedData, data:signature } = useSignTypedData(intentBatchEIP712)
   const apiIntentBatch = useTransformLimitOrderIntentFormToApiIntentBatch({
     chainId,
+    userId: address,
     amountIn,
     amountOut,
     expiry,
