@@ -8,7 +8,7 @@ import { getContract } from "viem"
 
 import { createIntentExecutionBatchWithHooks } from "@/db/writes/intent-batch-execution"
 import { ApiIntentBatchExecutionBundle, type ApiIntentBatchExecution } from "@/lib/validations/api/intent-batch-execution-bundle"
-import { localWalletClient, mainnetWalletClient } from "../../blockchain-clients"
+import { localWalletClient, mainnetWalletClient } from "../blockchain-clients"
 
 // TODO: Replace with actual executor address
 const EXECUTOR_ADDRESS = "0x0000000000000000000000000000000000000000"  
