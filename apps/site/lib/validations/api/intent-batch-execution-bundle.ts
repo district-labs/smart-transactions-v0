@@ -1,9 +1,9 @@
-import { z } from "zod"
+import { z } from "zod";
 
 const hexStringPattern = /^0x[a-fA-F0-9]+$/;
 
 const ApiIntentBatch = z.object({
-    intentBatchId: z.number(),
+    intentBatchHash: z.string(),
     nonce: z.string().refine(value => hexStringPattern.test(value), {
         message: "root must be a hex string prefixed with '0x'",
     }),

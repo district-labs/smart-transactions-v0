@@ -35,7 +35,7 @@ export function IntentBatchTable({data}:IntentBatchTable) {
       </TableHeader>
       <TableBody>
         {data?.map((intentBatch) => (
-          <TableRow key={intentBatch.id}>
+          <TableRow key={intentBatch.intentBatchHash}>
             <TableCell>{intentBatch.chainId}</TableCell>
             <TableCell>{intentBatch.intentBatchHash}</TableCell>
             <TableCell><Address truncate address={intentBatch.root as `0x${string}`} /></TableCell>

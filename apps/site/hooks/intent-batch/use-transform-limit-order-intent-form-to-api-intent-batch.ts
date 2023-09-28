@@ -1,15 +1,18 @@
-import { useGetIntentLimitOrderAddress, useGetIntentTimestampBeforeAddress, useGetIntentTokenRouterAddress, useGetSafeAddress } from "@district-labs/intentify-react";
-import { useEffect, useState } from "react";
 import { expiryToTimestamp } from "@/app/(app)/limit/utils";
-import { encodeAbiParameters, encodePacked, parseUnits } from "viem";
+import type { ApiIntentBatch } from "@/lib/validations/api/intent-batch";
+import type { DefiLlamaToken } from "@/types";
+import { useGetIntentLimitOrderAddress, useGetIntentTimestampBeforeAddress, useGetIntentTokenRouterAddress, useGetSafeAddress } from "@district-labs/intentify-react";
 import { generateIntentModuleId } from "@district-labs/intentify-utils";
+import { useEffect, useState } from "react";
+import { encodeAbiParameters, encodePacked, parseUnits } from "viem";
 import type { ApiIntentBatch } from "@/lib/validations/api/intent-batch";
 import type { Token } from "@/types/token-list";
 
 type Input = {
     expiry: string
     chainId: number
-    tokenOut: Token | undefined
+    userId: string | undefined
+    tokenOut: DefiLlamaToken | undefined
     amountOut: number | undefined
     tokenIn: Token | undefined
     amountIn: number | undefined
@@ -21,6 +24,7 @@ type Input = {
 export function useTransformLimitOrderIntentFormToApiIntentBatch({
     expiry,
     chainId,
+    userId,
     tokenOut,
     amountOut,
     tokenIn,
@@ -55,6 +59,10 @@ export function useTransformLimitOrderIntentFormToApiIntentBatch({
           if(!signature) {
             return undefined
           }
+
+          if(!userId) {
+            return undefined
+          }
       
           const expiryTimestamp = expiryToTimestamp(expiry)
           const parsedAmountIn = parseUnits(
@@ -73,6 +81,7 @@ export function useTransformLimitOrderIntentFormToApiIntentBatch({
             intentBatchHash: intentBatchHash,
             signature: signature,
             chainId,
+            userId,
             intents: [
               {
                 intentId: generateIntentModuleId("TimestampBeforeIntent", "1") as string,
@@ -153,7 +162,7 @@ export function useTransformLimitOrderIntentFormToApiIntentBatch({
             ],
           }
           setApiIntentBatch({intentBatch})
-    }, [expiry, chainId, tokenOut, amountOut, tokenIn, amountIn, domainSeparator, intentBatchHash, signature, safeAddress, timestampBeforeIntentAddress, limitOrderIntentAddress, tokenRouterReleaseIntentAddress])
+    }, [expiry, chainId, userId, tokenOut, amountOut, tokenIn, amountIn, domainSeparator, intentBatchHash, signature, safeAddress, timestampBeforeIntentAddress, limitOrderIntentAddress, tokenRouterReleaseIntentAddress])
 
     return apiIntentBatch
 }

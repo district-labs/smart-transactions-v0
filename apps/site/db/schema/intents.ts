@@ -10,7 +10,6 @@ import {
 import { strategies, users } from "."
 import { charAddress, charHash } from "../utils/schema"
 
-
 // ------------------ INTENT ------------------ //
 
 export const intents = mysqlTable("intents", {
