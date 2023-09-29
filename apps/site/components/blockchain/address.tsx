@@ -1,6 +1,6 @@
 "use client"
 
-import { HTMLAttributes } from "react"
+import { type HTMLAttributes } from "react"
 import { useNetwork, type Address as AddressType } from "wagmi"
 
 import { LinkComponent } from "../shared/link-component"

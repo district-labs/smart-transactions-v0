@@ -6,7 +6,7 @@ import {
   useGetIntentTokenRouterAddress,
   useGetSafeAddress,
 } from "@district-labs/intentify-react"
-import { IntentBatch } from "@district-labs/intentify-utils"
+import { type IntentBatch } from "@district-labs/intentify-utils"
 import { encodeAbiParameters, encodePacked, keccak256, parseUnits } from "viem"
 
 import { expiryToTimestamp } from "@/app/(app)/limit/utils"

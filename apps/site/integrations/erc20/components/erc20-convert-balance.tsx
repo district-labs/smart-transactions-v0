@@ -1,7 +1,7 @@
 import { formatUnits } from "viem"
 
 import { useErc20Decimals } from "../generated/erc20-wagmi"
-import { ERC20ChainIdProps } from "./erc20-read"
+import { type ERC20ChainIdProps } from "./erc20-read"
 
 interface ERC20ConvertBalance extends ERC20ChainIdProps {
   balance: bigint | number | string
