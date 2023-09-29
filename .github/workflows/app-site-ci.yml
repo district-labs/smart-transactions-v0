@@ -63,4 +63,4 @@ jobs:
       - name: Commit & Push changes
         uses: EndBug/add-and-commit@v9
         with:
-          message: 'chore: formatting'
+          message: 'chore: auto-formatting'
