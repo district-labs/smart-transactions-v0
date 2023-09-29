@@ -10,6 +10,7 @@ import { fontMono, fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import { Toaster } from "@/components/ui/toaster"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
+import HandleWalletEvents from "@/components/blockchain/handle-wallet-events"
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
@@ -71,7 +72,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontMono.variable
         )}
       >
-        <RootProvider>{children}</RootProvider>
+        <RootProvider>
+          <HandleWalletEvents>
+            {children}
+          </HandleWalletEvents>
+        </RootProvider>
         <TailwindIndicator />
         <Toaster />
       </body>

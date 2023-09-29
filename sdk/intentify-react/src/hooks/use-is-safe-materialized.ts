@@ -16,6 +16,8 @@ export function useIsSafeMaterialized(watch = true) {
     enabled: !!walletFactory && !!safeProxyAddress && !!account?.address,
     watch: watch,
   });
+  
+  console.log(data, 'data')
 
   return data;
 }

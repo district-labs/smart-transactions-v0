@@ -63,7 +63,7 @@ export async function middleware(request: NextRequest) {
 async function handleUserSessionProtection(request: NextRequest) {
   const res = new Response()
   const session = await getIronSession(request, res, ironOptions)
-  if (!session?.user?.address) {
+  if (!session?.address) {
     return unauthorizedResponse("No user session")
   }
 

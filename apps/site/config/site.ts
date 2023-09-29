@@ -6,9 +6,10 @@ export const siteConfig = {
   name: "District",
   url: "https://districtlabs.com",
   description:
-    "Transform your ideas into action with a no-code strategy builder.",
+    "Interact with blockchains without the hassle. Smart transactions for smart contracts.",
   links: {
     twitter: "https://twitter.com/district_labs",
+    discord: "https://discord.gg/k3yuxqahtJ",
   },
   marketingNav: [
     {

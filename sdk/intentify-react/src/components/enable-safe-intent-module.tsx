@@ -14,7 +14,7 @@ import { useGetIntentifyModuleAddress } from "../hooks/use-get-intentify-module-
 import { cn } from "../utils";
 
 type EnableSafeIntentModule = React.HTMLAttributes<HTMLElement> & {
-  safeAddressOverride: `0x${string}`;
+  safeAddressOverride?: `0x${string}`;
   signMessageComponent?: React.ReactNode;
   signTransactionComponent?: React.ReactNode;
   onSuccess?: (res: any) => void;

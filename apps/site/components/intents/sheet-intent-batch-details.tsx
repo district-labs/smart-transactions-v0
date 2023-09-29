@@ -15,15 +15,13 @@ import { TimeFromDate } from "../shared/time-from-date";
 import { TimestampBeforeIntent } from "./timestamp-before-intent";
 import { TokenReleaseIntent } from "./token-release-intent";
 import { LimitOrderIntent } from "./limit-order-intent";
-import { IntentBatchQuery } from "@/db/queries/intent-batch";
+import type { IntentBatchQuery } from "@/db/queries/intent-batch";
 
 type SheetIntentBatchDetails = {
     data: IntentBatchQuery
 }
 
-export const SheetIntentBatchDetails = ({data}: SheetIntentBatchDetails) => { 
-
-  console.log(data, 'datadatadata')
+export const SheetIntentBatchDetails = ({data}: SheetIntentBatchDetails) => {
  return(
     <Sheet>
     <SheetTrigger asChild>

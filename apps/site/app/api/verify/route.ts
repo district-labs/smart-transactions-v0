@@ -52,6 +52,8 @@ export async function POST(req: Request) {
       }
     }
 
+    console.log('saving session')
+
     await session.save()
     return res
   } catch (e) {

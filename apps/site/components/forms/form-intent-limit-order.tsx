@@ -27,6 +27,7 @@ const tokenListDistrictGoerli: TokenList = tokenListGoerli
 export default function FormIntentLimitOrder() {
   const account = useAccount()
   const chainId = useChainId()
+
   const [amountOut, setAmountOut] = useState<number | undefined>(1)
   const [amountIn, setAmountIn] = useState<number | undefined>()
   const [expiry, setExpiry] = useState<string>("1d")
@@ -59,13 +60,16 @@ export default function FormIntentLimitOrder() {
     tokenIn: inToken,
     tokenOut: outToken,
   })
+
+  console.log(structIntentBatch, 'structIntentBatchstructIntentBatch')
+
   const intentifyModuleAddress = useGetIntentifyModuleAddress(chainId)
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   const {data: domainSeparator} = useIntentifySafeModuleDomainSeparator({
     address: intentifyModuleAddress,
     chainId,
   })
-  const intentBatchHash = getIntentBatchTypedDataHash(domainSeparator, structIntentBatch)
+  // const intentBatchHash = getIntentBatchTypedDataHash(domainSeparator, structIntentBatch)
   const intentifyAddress = useGetIntentifyModuleAddress(chainId)
   const intentBatchEIP712 = generateIntentBatchEIP712({
     chainId: chainId,
@@ -82,7 +86,7 @@ export default function FormIntentLimitOrder() {
     tokenIn: inToken,
     tokenOut: outToken,
     signature: signature,
-    intentBatchHash: intentBatchHash,
+    intentBatchHash:  getIntentBatchTypedDataHash(domainSeparator, structIntentBatch),
     domainSeparator: domainSeparator,
   })
   const { mutateAsync, isSuccess, isError, isLoading, error } = useIntentBatchCreate()

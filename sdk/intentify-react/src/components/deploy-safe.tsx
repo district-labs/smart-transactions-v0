@@ -11,7 +11,7 @@ import { useGetWalletFactoryAddress } from "../hooks/use-get-wallet-factory-addr
 import { cn } from "../utils";
 
 type DeploySafe = React.HTMLAttributes<HTMLElement> & {
-  salt: bigint;
+  salt?: bigint;
   displaySafeAddress?: boolean;
   onSuccess?: (res: any) => void;
   onError?: (res: any) => void;

@@ -12,12 +12,12 @@ export const EngineHubAddressList: KeyList = {
 
 export const IntentifyModuleAddressList: KeyList = {
   5: '0x6d39bb7e7BF4eDE48E0CC62701E751D8deC07D2d',
-  31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+  31337: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
 };
 
 export const IntentifyBundlerAddressList: KeyList = {
   5: '0x00000',
-  31337: '0xa513E6E4b8f2a923D98304ec87F64353C4D5C853',
+  31337: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
 };
 
 export const WalletFactoryAddressList: KeyList = {
@@ -31,27 +31,27 @@ export const WalletFactoryAddressList: KeyList = {
 
 export const TimestampAfterIntentAddressList: KeyList = {
   5: "0x1d25d7F82720c9D865796D7F202D5A541eC77f69",
-  31337: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
+  31337: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
 };
 
 export const TimestampBeforeIntentAddressList: KeyList = {
   5: "0x009aCa9aF72b6BA2287Aae905585e16553BF0D35",
-  31337: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
+  31337: '0x0165878A594ca255338adfa4d48449f69242Eb8F',
 };
 
 export const TokenRouterReleaseIntentAddressList: KeyList = {
   5: "0x973F7Fc1324Be7371946F8307949e0cF471057Fd",
-  31337: '0x00000',
+  31337: '0xa513E6E4b8f2a923D98304ec87F64353C4D5C853',
 };
 
 export const LimitOrderIntentAddressList: KeyList = {
   5: "0xDF738aBeC406781cD4553A9430E3A09695C814B8",
-  31337: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+  31337: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
 };
 
 export const TwapIntentAddressList: KeyList = {
   5: "0xc636F354ab2e623f49919ADA145e00b83c68f56E",
-  31337: '0x0165878A594ca255338adfa4d48449f69242Eb8F',
+  31337: '0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6',
 };
 
 // ----------------------------------------------
@@ -64,6 +64,7 @@ export const SafeMultiCallAddressList: KeyList = {
 
 export const SafeProxyAddressList: KeyList = {
   5: '0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552',
+  31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
 };
 
 export const SafeProxyFactoryAddressList: KeyList = {
