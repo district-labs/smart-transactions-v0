@@ -54,8 +54,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Fix formatting and linting
-        run: pnpm run-ci:fix
+      - name: Fix formatting
+        run: pnpm format:write
 
       - name: Commit & Push changes
         uses: EndBug/add-and-commit@v9
