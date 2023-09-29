@@ -1,5 +1,6 @@
 import type { DBIntentBatchActiveItem } from "@/db/queries/intent-batch"
 import type { Hook, IntentBatchExecution } from "@district-labs/intentify-utils"
+
 import { generateHooksForTimestamp } from "./intent-hooks/generate-hooks-for-timestamp"
 import { splitSignature } from "./split-signature"
 

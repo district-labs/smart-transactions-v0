@@ -1,7 +1,7 @@
-import { env } from "@/env.mjs"
-import { getIronSession } from "iron-session/edge"
 import { headers } from "next/headers"
 import { NextResponse, type NextRequest } from "next/server"
+import { env } from "@/env.mjs"
+import { getIronSession } from "iron-session/edge"
 
 import { verifyJwt } from "@/lib/jwt"
 import { ironOptions } from "@/lib/session"
