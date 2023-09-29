@@ -37,7 +37,7 @@ export const SheetSafeSetup = ({}) => {
             <p className='mt-3'>
                 Safe is an open-source, non-custodial smart wallet that is audited and battle-tested. Responsible for <span className='font-bold'>holding over $45B in assets.</span> Yes... <span className='font-bold italic'>billion</span>. That&apos;s a whooole lot of zeros.
             </p>
-            <DeploySafe displaySafeAddress className="my-4 block">
+            <DeploySafe className="my-4 block">
                 <Button size="lg">Create Smart Wallet</Button>
             </DeploySafe>
             <p className='mt-3 text-sm'>
