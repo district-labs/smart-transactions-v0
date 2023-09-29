@@ -10,6 +10,8 @@ import { MobileMarketingNav } from "@/components/layouts/mobile-marketing-nav"
 import Image from "next/image"
 import { IsSignedIn } from "@/integrations/siwe/components/is-signed-in"
 import { ButtonSIWELogout } from "@/integrations/siwe/components/button-siwe-logout"
+import { IsWalletConnected } from "../shared/is-wallet-connected"
+import { WalletConnect } from "../blockchain/wallet-connect"
 
 export default function MarketingHeader() {
   const scrolled = useScroll(0)
@@ -30,6 +32,9 @@ export default function MarketingHeader() {
           <Image src="/images/auth-layout.webp" alt="District Labs Logo" width={45} height={45} />
         </Link>
         <div className="hidden flex-1 justify-end space-x-2 sm:flex">
+          <IsWalletConnected>
+            <WalletConnect />
+          </IsWalletConnected>
           <IsSignedIn>
             <ButtonSIWELogout />
           </IsSignedIn>

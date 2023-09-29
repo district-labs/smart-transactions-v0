@@ -2,17 +2,11 @@
 // Networks
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 import { env } from "@/env.mjs"
-import { Chain, ChainProviderFn, configureChains } from "wagmi"
+import type { Chain, ChainProviderFn } from "wagmi"
+import { configureChains } from "wagmi"
 import {
-  arbitrum,
-  arbitrumGoerli as arbitrumGoerliNoIcon,
-  baseGoerli as baseGoerliNoIcon,
   goerli as goerliNoIcon,
   hardhat,
-  mainnet,
-  optimism,
-  optimismGoerli,
-  sepolia as sepoliaNoIcon,
 } from "wagmi/chains"
 import { alchemyProvider } from "wagmi/providers/alchemy"
 import { infuraProvider } from "wagmi/providers/infura"
@@ -22,31 +16,15 @@ const goerli = {
   ...goerliNoIcon,
   iconUrl: "/icons/NetworkEthereumTest.svg",
 }
-const sepolia = {
-  ...sepoliaNoIcon,
-  iconUrl: "/icons/NetworkEthereumTest.svg",
-}
-const arbitrumGoerli = {
-  ...arbitrumGoerliNoIcon,
-  iconUrl: "/icons/NetworkArbitrumTest.svg",
-}
-
-const baseGoerli = {
-  ...baseGoerliNoIcon,
-  iconUrl: "/icons/NetworkBaseTest.svg",
-}
 
 export const ETH_CHAINS_TEST = [
-  mainnet,
-  sepolia,
+  goerli,
   hardhat,
 ]
-export const ETH_CHAINS_L2_TEST = [baseGoerli, optimismGoerli, arbitrumGoerli]
+export const ETH_CHAINS_L2_TEST = []
 export const ETH_CHAINS_PROD = [
-  mainnet,
-  optimism,
-  arbitrum,
   goerli,
+  hardhat,
 ]
 export const ETH_CHAINS_DEV =
   env.NEXT_PUBLIC_PROD_NETWORKS_DEV === "true"
