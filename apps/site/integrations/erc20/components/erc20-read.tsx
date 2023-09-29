@@ -3,7 +3,7 @@
 import { type HTMLAttributes } from "react"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { formatUnits } from "viem"
-import { type Address, useAccount } from "wagmi"
+import { useAccount, type Address } from "wagmi"
 
 import { cn } from "@/lib/utils"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
