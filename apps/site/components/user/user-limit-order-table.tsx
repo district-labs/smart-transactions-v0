@@ -47,7 +47,7 @@ export function UserLimitOrdersTable({
           <DataTableColumnHeader column={column} title="Sell Amount" />
         ),
         cell: ({ row }) => <div className="flex items-center">
-          {/* <ERC20ConvertBalance address={row.original.sell.asset as `0x${string}`} balance={row.original.sell.amount} chainId={row.original.chainId} /> */}
+          <ERC20ConvertBalance address={row.original.sell.asset as `0x${string}`} balance={row.original.sell.amount} chainId={row.original.chainId} />
         </div>
       },
       {
