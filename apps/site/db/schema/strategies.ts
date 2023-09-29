@@ -1,13 +1,13 @@
 import { relations } from "drizzle-orm"
 import {
-  char,
   mysqlEnum,
   mysqlTable,
   serial,
   text,
   timestamp,
-  varchar,
+  varchar
 } from "drizzle-orm/mysql-core"
+import { charAddress } from "../utils/schema"
 
 import { intentBatch, users } from "."
 
@@ -19,7 +19,7 @@ export const strategies = mysqlTable("strategies", {
     .notNull()
     .default("strategy"),
   createdAt: timestamp("created_at").defaultNow(),
-  managerId: char("manager_id", { length: 42 }).notNull(),
+  managerId: charAddress("manager_id").notNull(),
 })
 
 export type Strategy = typeof strategies.$inferSelect

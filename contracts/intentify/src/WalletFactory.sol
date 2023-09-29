@@ -47,7 +47,6 @@ contract WalletFactory is SafeProxyFactory {
         bytes32 salt = keccak256(abi.encodePacked(keccak256(initializer), saltNonce));
         proxy = deployProxy(_singleton, initializer, salt);
 
-        // TODO: For testnets connect to a mock token faucet and automatically fund the wallet with some tokens
         emit ProxyCreation(proxy, _singleton);
     }
 

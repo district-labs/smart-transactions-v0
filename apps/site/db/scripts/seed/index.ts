@@ -50,17 +50,20 @@ async function main() {
 
     const {
       nonce,
+      intentBatchHash,
       chainId,
       intents: intentsData,
       root,
       signature,
     } = INTENT_BATCH_DATA
     const intentBatchResult = await tx.insert(intentBatch).values({
+      intentBatchHash,
       nonce,
       chainId,
       root,
       signature,
       strategyId: STRATEGY_ID,
+      userId: SEED_USER_ADDRESS,
     })
 
     const intentBatchId = Number(intentBatchResult.insertId)
@@ -72,7 +75,7 @@ async function main() {
         root: intent.root,
         target: intent.target,
         data: intent.data,
-        intentBatchId,
+        intentBatchId: intentBatchHash,
       }))
     )
   })

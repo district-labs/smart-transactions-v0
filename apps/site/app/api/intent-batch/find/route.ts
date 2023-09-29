@@ -1,8 +1,15 @@
+import { type NextRequest } from "next/server"
 import { db } from "@/db"
+import { isAddress } from "viem"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const results = await db.query.intentBatch.findFirst({
+    const root = request.nextUrl.searchParams.get("root")
+    if (!root || !isAddress(root)) {
+      throw new Error("Smart Wallet Address (root) is required")
+    }
+    const results = await db.query.intentBatch.findMany({
+      where: (intentBatch, { eq }) => eq(intentBatch.root, root),
       with: {
         intents: true,
         intentBatchExecution: {
@@ -17,7 +24,6 @@ export async function GET() {
         },
       },
     })
-
     return new Response(JSON.stringify(results, null, 2))
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : String(e)

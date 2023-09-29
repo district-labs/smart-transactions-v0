@@ -1,15 +1,16 @@
 import { ponder } from "@/generated";
-import { dispatchIntentExecution } from "./dispatch-intent-execution";
 import { dispatchIntentCancelled } from "./dispatch-intent-cancelled";
+import { dispatchIntentExecution } from "./dispatch-intent-execution";
 
 // ----------------------------
-// Testnet
+// Local
 // ----------------------------
-ponder.on("IntentifySafeModuleTestnet:IntentBatchExecuted",async ({context, event}) => {
+if(process.env.npm_lifecycle_event === "dev"){
+ponder.on("IntentifySafeModuleLocal:IntentBatchExecuted",async ({context, event}) => {
     const { IntentBatch  } = context.entities;
     // Dispatch a message to the API to notify that the intent batch has been executed 
     console.log(event.params.intentBatchId)
-    await dispatchIntentExecution(5, event.params.intentBatchId, event.transaction.hash)
+    await dispatchIntentExecution(31337, event.params.intentBatchId, event.transaction.hash)
     await IntentBatch.upsert({
       id: event.params.intentBatchId,
       create: {
@@ -25,7 +26,7 @@ ponder.on("IntentifySafeModuleTestnet:IntentBatchExecuted",async ({context, even
     })
 })
 
-ponder.on("IntentifySafeModuleTestnet:IntentBatchCancelled",async ({context, event}) => {
+ponder.on("IntentifySafeModuleLocal:IntentBatchCancelled",async ({context, event}) => {
   const { IntentBatch } = context.entities;
   // Dispatch a message to the API to notify that the intent batch has been cancelled
   await dispatchIntentCancelled(31337, event.params.intentBatchId, event.transaction.hash)
@@ -41,6 +42,8 @@ ponder.on("IntentifySafeModuleTestnet:IntentBatchCancelled",async ({context, eve
     }
   })
 })
+}
+
 
 // ----------------------------
 // Goerli
@@ -48,7 +51,7 @@ ponder.on("IntentifySafeModuleTestnet:IntentBatchCancelled",async ({context, eve
 
 ponder.on("IntentifySafeModuleGoerli:IntentBatchExecuted",async ({context, event}) => {
     const { IntentBatch  } = context.entities;
-
+    await dispatchIntentExecution(5, event.params.intentBatchId, event.transaction.hash)
     await IntentBatch.upsert({
       id: event.params.intentBatchId,
       create: {
@@ -66,7 +69,7 @@ ponder.on("IntentifySafeModuleGoerli:IntentBatchExecuted",async ({context, event
 
 ponder.on("IntentifySafeModuleGoerli:IntentBatchCancelled",async ({context, event}) => {
   const { IntentBatch } = context.entities;
-
+  await dispatchIntentCancelled(5, event.params.intentBatchId, event.transaction.hash)
   await IntentBatch.upsert({
     id: event.params.intentBatchId,
     create: {

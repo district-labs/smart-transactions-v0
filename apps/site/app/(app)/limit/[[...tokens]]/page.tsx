@@ -1,43 +1,13 @@
+'use client'
 import { useMemo } from "react"
 import { redirect } from "next/navigation"
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { defaultTokenList } from "@/components/blockchain/default-token-list"
 import LimitOrderWidget from "@/components/blockchain/limit-order-widget"
 import TokenPriceChart from "@/components/charts/token-price-chart"
-import { OpenOrdersTableShell } from "@/components/strategies/limit-order-table-shell"
-
 import { defaultTokenIn, defaultTokenOut } from "../utils"
-
-const dummyData = [
-  {
-    sell: {
-      asset: "Ether",
-      amount: 2,
-    },
-    recieve: {
-      asset: "USDC",
-      amount: 4000,
-    },
-    limitPrice: "1000",
-    expiry: "October 21, 2023",
-    status: "open" as const,
-  },
-  {
-    sell: {
-      asset: "Ether",
-      amount: 2,
-    },
-    recieve: {
-      asset: "USDC",
-      amount: 4000,
-    },
-    limitPrice: "1000",
-    expiry: "October 21, 2023",
-    status: "open" as const,
-  },
-]
-
+import { UserLimitOrdersTable } from "@/components/user/user-limit-order-table"
+import { useGetIntentBatchFind } from "@/hooks/intent-batch/use-get-intent-batch-all"
+import { transformLimitOrderIntentQueryToLimitOrderData } from "@/lib/transformations/transform-limit-order-intent-query-to-limit-order-data"
 const tokenList = defaultTokenList[0]
 
 export default function LimitOrderPage({
@@ -70,6 +40,7 @@ export default function LimitOrderPage({
     redirect(`/limit/${defaultTokenOut.symbol}/${defaultTokenIn.symbol}`)
   }
 
+  const {data: intentBatchQuery, isSuccess } = useGetIntentBatchFind()
   return (
     <>
       <section className="mt-8 grid gap-8 md:grid-cols-3">
@@ -85,15 +56,10 @@ export default function LimitOrderPage({
         />
       </section>
       <section className="mt-10">
-        <Tabs defaultValue="open">
-          <TabsList>
-            <TabsTrigger value="open">Open Orders</TabsTrigger>
-            <TabsTrigger value="history">Order History</TabsTrigger>
-          </TabsList>
-          <TabsContent value="open">
-            <OpenOrdersTableShell pageCount={1} data={dummyData} />
-          </TabsContent>
-        </Tabs>
+        {
+          isSuccess && intentBatchQuery && intentBatchQuery.length > 0 &&
+          <UserLimitOrdersTable pageCount={1} data={intentBatchQuery.map(transformLimitOrderIntentQueryToLimitOrderData)} />
+        }
       </section>
     </>
   )

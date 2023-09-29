@@ -1,9 +1,9 @@
 import type { DBIntentBatchActiveItem } from "@/db/queries/intent-batch"
 import type { Hook, IntentBatchExecution } from "@district-labs/intentify-utils"
+import { splitSignature } from "./split-signature"
 
 import { getTokenDecimals } from "../helpers/token-decimals"
 import { generateHooksForLimitOrderBasic } from "./intent-hooks/generate-hooks-for-limit-order-basic"
-import { splitSignature } from "./split-signature"
 
 interface LimitOrderIntentArgs {
   tokenOut: `0x${string}`
@@ -35,6 +35,7 @@ export async function generateIntentBatchExecutionWithHooksFromIntentBatchQuery(
   const signatureSplit = splitSignature(intentBatch.signature)
   const intentBatchExecution: IntentBatchExecution = {
     batch: {
+      intentBatchHash: intentBatch.intentBatchHash as `0x${string}`,
       root: intentBatch.root as `0x${string}`,
       nonce: intentBatch.nonce as `0x${string}`,
       intents: intentBatch.intents.map((intent) => ({
@@ -84,8 +85,7 @@ async function generateHooksForIntentBatch(
         },
       })
     }
-
     default:
-      throw new Error(`No hooks for intentBatch ${intentBatch.id}`)
+      throw new Error(`No hooks for intentBatch ${intentBatch.intentBatchHash}`)
   }
 }

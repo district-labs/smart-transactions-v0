@@ -1,9 +1,12 @@
-import { IntentifyModuleAddressList, intentifySafeModuleABI } from "@district-labs/intentify-utils";
 import type { Config } from "@ponder/core";
 
-const ABI = intentifySafeModuleABI
+export const IntentifyModuleAddressList = {
+  5: '0x6d39bb7e7BF4eDE48E0CC62701E751D8deC07D2d',
+  31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+} as const
 
-export const config: Config = {
+
+const localConfig: Config = {
   networks: [
     { name: "mainnet", chainId: 1, rpcUrl: process.env.PONDER_RPC_URL_MAINNET },
     { name: "goerli", chainId: 5, rpcUrl: process.env.PONDER_RPC_URL_GOERLI },
@@ -14,15 +17,34 @@ export const config: Config = {
       name: "IntentifySafeModuleGoerli",
       network: "goerli",
       address: IntentifyModuleAddressList[5],
-      abi: intentifySafeModuleABI,
-      startBlock: 9684295,
+      abi: './abis/IntentifySafeModule.json',
+      startBlock: 9764809,
     },
     {
-      name: "IntentifySafeModuleTestnet",
+      name: "IntentifySafeModuleLocal",
       network: "testnet",
       address: IntentifyModuleAddressList[31337],
-      abi: intentifySafeModuleABI,
+      abi: './abis/IntentifySafeModule.json',
       startBlock: 0,
     },
   ],
 };
+
+ const prodConfig: Config = {
+  networks: [
+    { name: "mainnet", chainId: 1, rpcUrl: process.env.PONDER_RPC_URL_MAINNET },
+    { name: "goerli", chainId: 5, rpcUrl: process.env.PONDER_RPC_URL_GOERLI },
+  ],
+  contracts: [
+    {
+      name: "IntentifySafeModuleGoerli",
+      network: "goerli",
+      address: IntentifyModuleAddressList[5],
+      abi: './abis/IntentifySafeModule.json',
+      startBlock: 9764809,
+    },
+  ],
+};
+
+export const config = process.env.npm_lifecycle_event === "start" ? prodConfig : localConfig;
+

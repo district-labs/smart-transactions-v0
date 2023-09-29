@@ -1,12 +1,13 @@
 import { db } from "@/db"
 import { intentBatch as intentBatchDb, intents as intentsDb } from "@/db/schema"
+
 import { ApiIntentBatch } from "@/lib/validations/api/intent-batch"
 
 export async function POST(req: Request) {
   try {
     const body = ApiIntentBatch.parse(await req.json())
     const { intentBatch } = body
-    const { chainId, intents, nonce, root, signature } = intentBatch
+    const { chainId, intents, nonce, root, signature, userId } = intentBatch
 
     await db.transaction(async (tx) => {
       const intentBatchResult = await tx.insert(intentBatchDb).values({
@@ -17,9 +18,8 @@ export async function POST(req: Request) {
         signature,
         // TODO: Make this dynamic
         strategyId: 1,
+        userId,
       })
-
-      const intentBatchId = Number(intentBatchResult.insertId)
 
       await tx.insert(intentsDb).values(
         intents.map((intent) => ({
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
           root: intent.root,
           target: intent.target,
           data: intent.data,
-          intentBatchId,
+          intentBatchId: intentBatch.intentBatchHash
         }))
       )
     })
