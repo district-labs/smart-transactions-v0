@@ -3,13 +3,13 @@ import {
   IntentifyBundlerAddressList,
   IntentifyModuleAddressList,
   intentifySafeModuleBundlerABI,
-} from "@district-labs/intentify-utils"
+} from "@district-labs/intentify-core"
 import { encodeFunctionData, getContract } from "viem"
 
 import { getRelayerByChainId } from "@/lib/openzeppelin-defender/relayer"
 
 import { ApiIntentBatchExecutionBundle } from "@/lib/validations/api/intent-batch-execution-bundle"
-import { localWalletClient } from "../blockchain-clients"
+import { localWalletClient } from "../../blockchain-clients"
 import { createContractArguments } from "./utils"
 
 const supportedChainIds = [5, 31337]

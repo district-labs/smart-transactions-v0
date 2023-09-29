@@ -3,7 +3,7 @@ import type { ChangeEvent, Dispatch, SetStateAction } from "react"
 
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
-import { useCurrentPriceERC20 } from "@/app/(app)/limit/use-current-price"
+import { useCurrentPriceERC20 } from "@/hooks/intent-batch/use-current-price"
 import { Token } from "@/types/token-list"
 
 interface LimitPriceInputProps {

@@ -1,4 +1,4 @@
-import { WalletFactoryAddressList } from "@district-labs/intentify-utils";
+import { WalletFactoryAddressList } from "@district-labs/intentify-core";
 
 
 export function useGetWalletFactoryAddress(chainId: number) {

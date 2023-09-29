@@ -17,7 +17,7 @@
     "typescript": "5.0.4"
   },
   "dependencies": {
-    "@district-labs/intentify-utils": "workspace:*",
+    "@district-labs/intentify-core": "workspace:*",
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
     "@wagmi/cli": "^1.5.1",

@@ -16,7 +16,7 @@ import {
 import TokenInputAmount from "@/components/blockchain/token-input-amount"
 import { useTransformLimitOrderIntentFormToApiIntentBatch } from "@/hooks/intent-batch/use-transform-limit-order-intent-form-to-api-intent-batch"
 import { useTransformLimitOrderIntentFormToStructIntentBatch } from "@/hooks/intent-batch/use-transform-limit-order-intent-form-to-struct-intent-batch"
-import { getIntentBatchTypedDataHash, generateIntentBatchEIP712 } from "@district-labs/intentify-utils"
+import { getIntentBatchTypedDataHash, generateIntentBatchEIP712 } from "@district-labs/intentify-core"
 import { useGetIntentifyModuleAddress, useIntentifySafeModuleDomainSeparator } from "@district-labs/intentify-react"
 import { useIntentBatchCreate } from "@/hooks/intent-batch/use-intent-batch-create"
 import type { Token, TokenList } from "@/types/token-list"

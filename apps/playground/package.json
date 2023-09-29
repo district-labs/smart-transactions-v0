@@ -38,7 +38,7 @@
   "packageManager": "pnpm@7.1.8",
   "dependencies": {
     "@district-labs/intentify-react": "workspace:*",
-    "@district-labs/intentify-utils": "workspace:*",
+    "@district-labs/intentify-core": "workspace:*",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@hookform/resolvers": "^3.1.1",
     "@prisma/client": "^4.8.1",

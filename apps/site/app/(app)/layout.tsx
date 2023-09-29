@@ -1,16 +1,18 @@
-import type { ReactNode } from "react"
+import React from "react"
 
-import AppHeader from "@/components/layouts/app-header"
+import MarketingFooter from "@/components/layouts/marketing-footer"
+import MarketingHeader from "@/components/layouts/marketing-header"
 
-interface AppLayoutProps {
-  children: ReactNode
+interface MarketingLayoutProps {
+  children: React.ReactNode
 }
 
-export default function AppLayout({ children }: AppLayoutProps) {
+export default function MarketingLayout({ children }: MarketingLayoutProps) {
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
-      <AppHeader />
-      <main className="flex-1 px-4 md:px-6 lg:px-8 xl:px-10">{children}</main>
+      <MarketingHeader />
+      <main className="flex-1">{children}</main>
+      <MarketingFooter />
     </div>
   )
 }

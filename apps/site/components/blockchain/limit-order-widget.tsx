@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { useAccount, useChainId, useSignTypedData } from "wagmi"
 
-import { useCurrentPriceERC20 } from "@/app/(app)/limit/use-current-price"
+import { useCurrentPriceERC20 } from "@/hooks/intent-batch/use-current-price"
 import LimitPriceInput from "@/components/blockchain/limit-price-input"
 import TokenInputAmount from "@/components/blockchain/token-input-amount"
 import { Icons } from "@/components/icons"
@@ -26,7 +26,7 @@ import { formatPrice } from "@/lib/utils"
 import { useGetIntentifyModuleAddress, useIntentifySafeModuleDomainSeparator } from "@district-labs/intentify-react"
 import { defaultTokenList } from "./default-token-list"
 import type { Token, TokenList } from "@/types/token-list"
-import { generateIntentBatchEIP712, getIntentBatchTypedDataHash } from "@district-labs/intentify-utils"
+import { generateIntentBatchEIP712, getIntentBatchTypedDataHash } from "@district-labs/intentify-core"
 
 interface LimitOrderWidgetProps {
   outToken: DefiLlamaToken
