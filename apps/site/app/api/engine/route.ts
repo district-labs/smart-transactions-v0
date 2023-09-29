@@ -31,7 +31,7 @@ async function calculateAndDispatch(chainId: number) {
   const executableIntentBatchBundle: IntentBatchExecution[] = []
 
   for (let index = 0; index < intentBatchExecutionObjects.length; index++) {
-    const eib = intentBatchExecutionObjects[index]
+    const eib = await intentBatchExecutionObjects[index]
     try {
       if (eib) {
         await simulateIntentBatchExecution(chainId, eib)
