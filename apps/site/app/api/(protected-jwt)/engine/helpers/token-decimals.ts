@@ -1,6 +1,6 @@
 import { erc20ABI, type Address } from "wagmi"
 
-import { publicClients } from "../../blockchain-clients"
+import { publicClients } from "../../../blockchain-clients"
 
 const tokenDecimalsByChainId: Record<number, Record<string, number>> = {
   5: {
