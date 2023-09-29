@@ -17,7 +17,7 @@ contract CoreDeploy is Script {
         vm.startBroadcast(deployerPrivateKey);
         // Periphery Contracts
         new WalletFactory();
-        
+
         // Core Contracts
         new IntentifySafeModule();
         new IntentifySafeModuleBundler();
