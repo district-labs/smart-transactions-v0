@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { useAccount, useChainId, useSignTypedData } from "wagmi"
 
-import { useCurrentPriceERC20 } from "@/app/(app)/limit/use-current-price"
+import { useCurrentPriceERC20 } from "@/hooks/intent-batch/use-current-price"
 import LimitPriceInput from "@/components/blockchain/limit-price-input"
 import TokenInputAmount from "@/components/blockchain/token-input-amount"
 import { Icons } from "@/components/icons"

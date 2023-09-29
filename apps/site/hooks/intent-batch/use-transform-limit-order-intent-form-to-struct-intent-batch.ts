@@ -1,7 +1,7 @@
 
 import { useGetIntentLimitOrderAddress, useGetIntentTimestampBeforeAddress, useGetIntentTokenRouterAddress, useGetSafeAddress } from "@district-labs/intentify-react";
 import { useEffect, useState } from "react";
-import { expiryToTimestamp } from "@/app/(app)/limit/utils";
+import { expiryToTimestamp } from "@/lib/utils/limit";
 import { encodeAbiParameters, encodePacked, keccak256, parseUnits } from "viem";
 import { IntentBatch } from "@district-labs/intentify-core";
 import { useGenerateNonBlockingNonce } from "../intent/use-generate-non-blocking-nonce";

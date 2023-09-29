@@ -1,4 +1,4 @@
-import { expiryToTimestamp } from "@/app/(app)/limit/utils";
+import { expiryToTimestamp } from "@/lib/utils/limit";
 import { useGetIntentLimitOrderAddress, useGetIntentTimestampBeforeAddress, useGetIntentTokenRouterAddress, useGetSafeAddress } from "@district-labs/intentify-react";
 import { generateIntentModuleId } from "@district-labs/intentify-core";
 import { useEffect, useState } from "react";
