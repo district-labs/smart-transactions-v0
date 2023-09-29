@@ -1,9 +1,4 @@
-import {
-  boolean,
-  mysqlTable,
-  serial,
-  timestamp,
-} from "drizzle-orm/mysql-core"
+import { boolean, mysqlTable, serial, timestamp } from "drizzle-orm/mysql-core"
 
 import { charAddress } from "../utils/schema"
 

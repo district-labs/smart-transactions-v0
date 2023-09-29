@@ -5,11 +5,11 @@ import {
   serial,
   text,
   timestamp,
-  varchar
+  varchar,
 } from "drizzle-orm/mysql-core"
-import { charAddress } from "../utils/schema"
 
 import { intentBatch, users } from "."
+import { charAddress } from "../utils/schema"
 
 export const strategies = mysqlTable("strategies", {
   id: serial("id").primaryKey(),
