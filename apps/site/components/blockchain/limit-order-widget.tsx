@@ -75,6 +75,8 @@ export default function LimitOrderWidget({
     verifyingContract: intentifyAddress,
     intentBatch: structIntentBatch,
   })
+  // eslint-disable-next-line
+  // @ts-ignore 
   const { isLoading: isLoadingSign, signTypedData, data:signature } = useSignTypedData(intentBatchEIP712)
   const apiIntentBatch = useTransformLimitOrderIntentFormToApiIntentBatch({
     chainId,
