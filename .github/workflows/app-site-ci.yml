@@ -57,7 +57,10 @@ jobs:
       - name: Fix formatting
         run: pnpm format:write
 
+      - name: Fix linting
+        run: pnpm lint:fix  
+
       - name: Commit & Push changes
         uses: EndBug/add-and-commit@v9
         with:
-          message: 'Build openapi schema'
+          message: 'chore: formatting'
