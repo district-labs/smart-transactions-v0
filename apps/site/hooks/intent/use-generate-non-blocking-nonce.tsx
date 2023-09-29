@@ -1,4 +1,4 @@
-import { encodeDimensionalNonce } from "@district-labs/intentify-utils";
+import { encodeDimensionalNonce } from "@district-labs/intentify-core";
 import type { Hex } from "viem";
 
 // (BigInt(2) ** BigInt(120)) - BigInt(1);

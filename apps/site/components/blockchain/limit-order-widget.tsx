@@ -26,7 +26,7 @@ import { formatPrice } from "@/lib/utils"
 import { useGetIntentifyModuleAddress, useIntentifySafeModuleDomainSeparator } from "@district-labs/intentify-react"
 import { defaultTokenList } from "./default-token-list"
 import type { Token, TokenList } from "@/types/token-list"
-import { generateIntentBatchEIP712, getIntentBatchTypedDataHash } from "@district-labs/intentify-utils"
+import { generateIntentBatchEIP712, getIntentBatchTypedDataHash } from "@district-labs/intentify-core"
 
 interface LimitOrderWidgetProps {
   outToken: DefiLlamaToken

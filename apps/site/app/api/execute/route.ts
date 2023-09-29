@@ -3,7 +3,7 @@ import {
   IntentifyBundlerAddressList,
   IntentifyModuleAddressList,
   intentifySafeModuleBundlerABI,
-} from "@district-labs/intentify-utils"
+} from "@district-labs/intentify-core"
 import { encodeFunctionData, getContract } from "viem"
 
 import { getRelayerByChainId } from "@/lib/openzeppelin-defender/relayer"

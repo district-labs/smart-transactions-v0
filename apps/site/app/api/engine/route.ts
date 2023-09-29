@@ -4,7 +4,7 @@
 import type { DBIntentBatchActiveItem } from "@/db/queries/intent-batch"
 import { selectIntentBatchActiveQuery } from "@/db/queries/intent-batch"
 import { env } from "@/env.mjs"
-import type { IntentBatchExecution } from "@district-labs/intentify-utils"
+import type { IntentBatchExecution } from "@district-labs/intentify-core"
 import { BaseError, ContractFunctionRevertedError } from "viem"
 
 import { convertIntentBigIntToNumber } from "./core/convert-intent-bigint-to-number"

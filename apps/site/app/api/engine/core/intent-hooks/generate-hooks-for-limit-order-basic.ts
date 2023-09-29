@@ -5,7 +5,7 @@ import {
   engineHubABI,
   tokenRouterReleaseIntentABI,
   type Hook,
-} from "@district-labs/intentify-utils"
+} from "@district-labs/intentify-core"
 import { encodeFunctionData } from "viem"
 import { erc20ABI } from "wagmi"
 

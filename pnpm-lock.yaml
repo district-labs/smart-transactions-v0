@@ -54,7 +54,7 @@ importers:
       '@district-labs/intentify-react':
         specifier: workspace:*
         version: link:../../sdk/intentify-react
-      '@district-labs/intentify-utils':
+      '@district-labs/intentify-core':
         specifier: workspace:*
         version: link:../../sdk/intentify-core
       '@graphql-typed-document-node/core':
@@ -370,7 +370,7 @@ importers:
       '@district-labs/intentify-react':
         specifier: workspace:*
         version: link:../../sdk/intentify-react
-      '@district-labs/intentify-utils':
+      '@district-labs/intentify-core':
         specifier: workspace:*
         version: link:../../sdk/intentify-core
       '@ethersproject/bignumber':
@@ -767,7 +767,7 @@ importers:
 
   sdk/intentify-react:
     dependencies:
-      '@district-labs/intentify-utils':
+      '@district-labs/intentify-core':
         specifier: workspace:*
         version: link:../intentify-core
       '@ethersproject/abstract-signer':

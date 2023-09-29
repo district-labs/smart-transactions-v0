@@ -1,7 +1,7 @@
 "use client";
 
-import type { IntentBatch } from "@district-labs/intentify-utils";
-import { generateIntentBatchEIP712 } from "@district-labs/intentify-utils";
+import type { IntentBatch } from "@district-labs/intentify-core";
+import { generateIntentBatchEIP712 } from "@district-labs/intentify-core";
 import { constants } from "ethers";
 import * as React from "react";
 import { useChainId, useSignTypedData } from "wagmi";

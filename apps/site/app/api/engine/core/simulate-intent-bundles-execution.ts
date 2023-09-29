@@ -1,9 +1,9 @@
 
-import type { IntentBatchExecution } from "@district-labs/intentify-utils"
+import type { IntentBatchExecution } from "@district-labs/intentify-core"
 import {
   IntentifyModuleAddressList,
   intentifySafeModuleABI,
-} from "@district-labs/intentify-utils"
+} from "@district-labs/intentify-core"
 import { accountShared, publicClients } from "../../blockchain-clients"
 
 

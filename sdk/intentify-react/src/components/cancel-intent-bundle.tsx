@@ -1,6 +1,6 @@
 "use client";
 
-import { intentifySafeModuleABI, type IntentBatch } from "@district-labs/intentify-utils";
+import { intentifySafeModuleABI, type IntentBatch } from "@district-labs/intentify-core";
 import { constants } from "ethers";
 import * as React from "react";
 import { encodeFunctionData } from "viem";
