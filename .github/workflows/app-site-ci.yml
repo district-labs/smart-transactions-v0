@@ -55,10 +55,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Fix formatting
-        run: pnpm format:write || true
+        run: pnpm format:write
 
       - name: Fix linting
-        run: pnpm lint:fix || true
+        run: pnpm lint:fix
 
       - name: Commit & Push changes
         uses: EndBug/add-and-commit@v9
