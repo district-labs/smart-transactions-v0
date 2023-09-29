@@ -4,11 +4,11 @@ pragma solidity >=0.8.19;
 import "forge-std/Script.sol";
 import { WalletFactoryTestnet } from "../../src/WalletFactoryTestnet.sol";
 
-contract WalletFactoryDeploy is Script {
+contract WalletFactoryTestnetDeploy is Script {
     function run() external {
         address[] memory addressList = new address[](2);
-        addressList[0] = address(0x18Be8De03fb9c521703DE8DED7Da5031851CbBEB);
-        addressList[1] = address(0xb3c67821F9DCbB424ca3Ddbe0B349024D5E2A739);
+        addressList[0] = address(0x7F06149c1A1e9125d1d284EBb39E7B0d149962F0);
+        addressList[1] = address(0x719669ed43B1Cb2F96b068236D9d7B1545f098f2);
         uint256[] memory amountList = new uint256[](2);
         amountList[0] = 150_000e6;
         amountList[1] = 100e18;

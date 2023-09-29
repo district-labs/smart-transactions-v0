@@ -15,7 +15,7 @@
   "tokens": [
     {
       "chainId": 5,
-      "address": "0xB992440B880F2BEa8B1656EF305B0f7cC607A625",
+      "address": "0x7F06149c1A1e9125d1d284EBb39E7B0d149962F0",
       "name": "Test USDC",
       "symbol": "testUSDC",
       "decimals": 6,
@@ -23,7 +23,7 @@
     },
     {
       "chainId": 5,
-      "address": "0x27326DeB3c3dc9EEf9C5769e7C2960C465B50156",
+      "address": "0x719669ed43B1Cb2F96b068236D9d7B1545f098f2",
       "name": "Test Wrapped ETH",
       "symbol": "testWETH",
       "decimals": 18,

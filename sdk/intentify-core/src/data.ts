@@ -11,17 +11,17 @@ export const EngineHubAddressList: KeyList = {
 }
 
 export const IntentifyModuleAddressList: KeyList = {
-  5: '0x6d39bb7e7BF4eDE48E0CC62701E751D8deC07D2d',
+  5: '0xf2Af39A674FCfc8dE94B00f15d4d9D72F62A6F2B',
   31337: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
 };
 
 export const IntentifyBundlerAddressList: KeyList = {
-  5: '0x00000',
+  5: '0x56bC990F732f8DFd8939f9BcC9a747be883f12Ba',
   31337: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
 };
 
 export const WalletFactoryAddressList: KeyList = {
-  5: '0x7F73D8FE944d69eea972d3d226734C4dA68fE6a9',
+  5: '0xaBc92F5894ed3b78B1888B2009F907B24A344842',
   31337: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
 };
 3
@@ -30,17 +30,17 @@ export const WalletFactoryAddressList: KeyList = {
 // ----------------------------------------------
 
 export const TimestampAfterIntentAddressList: KeyList = {
-  5: "0x1d25d7F82720c9D865796D7F202D5A541eC77f69",
+  5: "0x7D9F8faFDD50205a637Ca1536C4f03FEF729c03e",
   31337: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
 };
 
 export const TimestampBeforeIntentAddressList: KeyList = {
-  5: "0x009aCa9aF72b6BA2287Aae905585e16553BF0D35",
+  5: "0xE822EaF8218731d2e67d469a9209c6Ef1e4eD8bC",
   31337: '0x0165878A594ca255338adfa4d48449f69242Eb8F',
 };
 
 export const TokenRouterReleaseIntentAddressList: KeyList = {
-  5: "0x973F7Fc1324Be7371946F8307949e0cF471057Fd",
+  5: "0x428B483473aF298e940cb37165bfC7D4b012706b",
   31337: '0xa513E6E4b8f2a923D98304ec87F64353C4D5C853',
 };
 
@@ -50,7 +50,7 @@ export const LimitOrderIntentAddressList: KeyList = {
 };
 
 export const TwapIntentAddressList: KeyList = {
-  5: "0xc636F354ab2e623f49919ADA145e00b83c68f56E",
+  5: "0x3fd447aB2f82d4af3f246ea056358942F2DF339d",
   31337: '0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6',
 };
 

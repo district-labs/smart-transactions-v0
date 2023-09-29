@@ -1,6 +1,10 @@
 # Setup Local Environment
-forge script script/deploy/SafeDeploy.s.sol:SafeDeploy --fork-url http://localhost:8545 --broadcast
+forge script script/deploy/SafeDeploy.s.sol:SafeDeploy --rpc-url http://localhost:8545 --broadcast
 forge script script/deploy/CoreDeploy.s.sol:CoreDeploy --rpc-url http://localhost:8545 --broadcast
+
+forge script script/deploy/CoreDeploy.s.sol:CoreDeploy --rpc-url $GOERLI_RPC_URL  --broadcast
+forge script script/periphery/ERC20MintableDeploy.s.sol:ERC20MintableDeploy --rpc-url $GOERLI_RPC_URL  --broadcast
+forge script script/deploy/WalletFactoryTestnetDeploy.s.sol:WalletFactoryTestnetDeploy --rpc-url $GOERLI_RPC_URL  --broadcast
 
 # E2E Testing
 forge script script/e2e/TestnetDeploy.s.sol:TestnetDeploy --rpc-url http://localhost:8545 --broadcast
