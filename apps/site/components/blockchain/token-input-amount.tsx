@@ -1,13 +1,14 @@
 import { type Dispatch, type SetStateAction } from "react"
-import { type DefiLlamaToken } from "@/types"
 
 import TokenSelector from "./token-selector"
+import type { Token, TokenList } from "@/types/token-list"
 
 interface TokenInputAmountProps {
   amount: number | undefined
   setAmount: Dispatch<SetStateAction<number | undefined>>
-  selectedToken: DefiLlamaToken
-  setSelectedToken: (token: DefiLlamaToken) => void
+  selectedToken: Token
+  setSelectedToken: (token: Token) => void
+  tokenList: TokenList
 }
 
 export default function TokenInputAmount({
@@ -15,6 +16,7 @@ export default function TokenInputAmount({
   setAmount,
   selectedToken,
   setSelectedToken,
+  tokenList,
 }: TokenInputAmountProps) {
   return (
     <div className="group relative flex items-center justify-between gap-2 rounded-md border py-1">
@@ -28,6 +30,7 @@ export default function TokenInputAmount({
       />
       <span className="text-sm font-medium">{selectedToken.symbol}</span>
       <TokenSelector
+        tokenList={tokenList}
         selectedToken={selectedToken}
         setSelectedToken={setSelectedToken}
         className="mr-2"

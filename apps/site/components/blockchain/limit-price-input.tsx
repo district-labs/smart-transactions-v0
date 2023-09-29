@@ -1,13 +1,14 @@
 import type { ChangeEvent, Dispatch, SetStateAction } from "react"
-import type { DefiLlamaToken } from "@/types"
+
 
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 import { useCurrentPriceERC20 } from "@/app/(app)/limit/use-current-price"
+import { Token } from "@/types/token-list"
 
 interface LimitPriceInputProps {
-  tokenIn: DefiLlamaToken
-  tokenOut: DefiLlamaToken
+  tokenIn: Token
+  tokenOut: Token
   limitPrice: number | undefined
   setLimitPrice: Dispatch<SetStateAction<number | undefined>>
   delta: number

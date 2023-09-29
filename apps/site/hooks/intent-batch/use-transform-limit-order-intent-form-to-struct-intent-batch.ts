@@ -1,18 +1,18 @@
 
 import { useGetIntentLimitOrderAddress, useGetIntentTimestampBeforeAddress, useGetIntentTokenRouterAddress, useGetSafeAddress } from "@district-labs/intentify-react";
-import type { DefiLlamaToken } from "@/types";
 import { useEffect, useState } from "react";
 import { expiryToTimestamp } from "@/app/(app)/limit/utils";
 import { encodeAbiParameters, encodePacked, keccak256, parseUnits } from "viem";
 import { IntentBatch } from "@district-labs/intentify-utils";
 import { useGenerateNonBlockingNonce } from "../intent/use-generate-non-blocking-nonce";
+import type { Token } from "@/types/token-list";
 
 type Input = {
     expiry: string
     chainId: number
-    tokenOut: DefiLlamaToken | undefined
+    tokenOut: Token | undefined
     amountOut: number | undefined
-    tokenIn: DefiLlamaToken | undefined
+    tokenIn: Token | undefined
     amountIn: number | undefined
 }   
 
@@ -70,7 +70,7 @@ export function useTransformLimitOrderIntentFormToStructIntentBatch({
                     { type: "address", name: "token" },
                     { type: "uint256", name: "amount" },
                   ],
-                  [tokenOut.address, parsedAmountOut]
+                  [tokenOut.address as `0x${string}`, parsedAmountOut]
                 ),
                 value: BigInt(0),
               },
@@ -84,7 +84,7 @@ export function useTransformLimitOrderIntentFormToStructIntentBatch({
                     { type: "uint256", name: "amountOutMax" },
                     { type: "uint256", name: "amountInMin" },
                   ],
-                  [tokenOut.address, tokenIn.address, parsedAmountOut, parsedAmountIn]
+                  [tokenOut.address as `0x${string}`, tokenIn.address as `0x${string}`, parsedAmountOut, parsedAmountIn]
                 ),
                 value: BigInt(0),
               },

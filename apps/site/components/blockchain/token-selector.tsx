@@ -2,9 +2,6 @@
 
 import { useCallback, useMemo, useState } from "react"
 import Image from "next/image"
-import { type DefiLlamaToken } from "@/types"
-import { useNetwork } from "wagmi"
-
 import { cn } from "@/lib/utils"
 
 import {
@@ -14,51 +11,46 @@ import {
   CommandItem,
   CommandList,
 } from "../ui/command"
-import { defaultTokenList } from "./default-token-list"
+import type { Token, TokenList } from "@/types/token-list"
 
 interface TokenSelectorProps {
-  selectedToken: DefiLlamaToken
-  setSelectedToken: (token: DefiLlamaToken) => void
+  selectedToken: Token
+  setSelectedToken: (token: Token) => void
   className?: string
+  tokenList: TokenList
 }
 
 export default function TokenSelector({
   selectedToken,
   setSelectedToken,
   className,
+  tokenList
 }: TokenSelectorProps) {
-  const { chain } = useNetwork()
   const [open, setOpen] = useState(false)
   const [searchValue, setSearchValue] = useState("")
-  const [tokenListIndex, _setTokenListIndex] = useState(0)
-
-  const tokenList = useMemo(
-    () =>
-      defaultTokenList.length === 1
-        ? defaultTokenList[0]
-        : defaultTokenList[tokenListIndex],
-    [defaultTokenList, tokenListIndex]
-  )
 
   const filteredTokenList = useMemo(
-    () =>
-      tokenList.tokens.filter((token) => {
-        const tokenName = token.name.toLowerCase()
-        const tokenSymbol = token.symbol.toLowerCase()
-        const tokenAddress = token.address.toLowerCase()
-        const isTokenMatch =
+    () => {
+      if(tokenList?.tokens && tokenList.tokens.length > 0) {
+        return tokenList.tokens.filter((token) => {
+          const tokenName = token.name.toLowerCase()
+          const tokenSymbol = token.symbol.toLowerCase()
+          const tokenAddress = token.address.toLowerCase()
+          const isTokenMatch =
           tokenName.includes(searchValue.toLowerCase()) ||
           tokenSymbol.includes(searchValue.toLowerCase()) ||
           tokenAddress.includes(searchValue.toLowerCase())
-        const IsCorrectChain = token.chainId === 1
-
-        return isTokenMatch && IsCorrectChain
-      }),
-    [tokenList, searchValue, chain]
+          
+          return isTokenMatch
+        })
+      } else {
+        return [] as Token[]
+      }
+    }, [tokenList?.tokens, searchValue]
   )
 
   const handleSelect = useCallback(
-    (token: DefiLlamaToken) => {
+    (token: Token) => {
       setSelectedToken(token)
       setOpen(false)
       setSearchValue("")

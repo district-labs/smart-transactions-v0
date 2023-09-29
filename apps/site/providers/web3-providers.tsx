@@ -1,20 +1,20 @@
 "use client"
-
-import { env } from "@/env.mjs"
-
 import "@rainbow-me/rainbowkit/styles.css"
-
 import {
+  connectorsForWallets,
   darkTheme,
-  getDefaultWallets,
   lightTheme,
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit"
 import { useTheme } from "next-themes"
-import { configureChains, createConfig, mainnet, WagmiConfig } from "wagmi"
-import { goerli, optimism } from "wagmi/chains"
-import { alchemyProvider } from "wagmi/providers/alchemy"
-import { publicProvider } from "wagmi/providers/public"
+import { createConfig, WagmiConfig } from "wagmi"
+import {
+  coinbaseWallet,
+  injectedWallet,
+  metaMaskWallet,
+  rainbowWallet,
+  walletConnectWallet
+} from "@rainbow-me/rainbowkit/wallets"
 
 import { siteConfig } from "@/config/site"
 
@@ -22,16 +22,30 @@ interface Web3ProviderProps {
   children: React.ReactNode
 }
 
-const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, optimism, goerli],
-  [alchemyProvider({ apiKey: env.NEXT_PUBLIC_ALCHEMY_ID }), publicProvider()]
-)
+import { chains, publicClient, webSocketPublicClient } from "@/config/networks"
+import HandleWalletEvents from "@/components/blockchain/handle-wallet-events"
+import { env } from "@/env.mjs"
 
-const { connectors } = getDefaultWallets({
-  appName: siteConfig.name,
-  projectId: env.NEXT_PUBLIC_WALLET_CONNECT_ID,
-  chains,
-})
+const connectors = connectorsForWallets([
+  {
+    groupName: "Recommended",
+    wallets: [
+      injectedWallet({ chains }),
+      metaMaskWallet({ 
+        projectId: env.NEXT_PUBLIC_WALLET_CONNECT_ID,
+        chains 
+      }),
+      rainbowWallet({ 
+        projectId: env.NEXT_PUBLIC_WALLET_CONNECT_ID,
+        chains,
+       }),
+      coinbaseWallet({ chains, appName: siteConfig.name }),
+      walletConnectWallet({ 
+        projectId: env.NEXT_PUBLIC_WALLET_CONNECT_ID,
+        chains }),
+    ],
+  },
+])
 
 const wagmiConfig = createConfig({
   autoConnect: true,
@@ -58,7 +72,10 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
               })
         }
       >
+        <HandleWalletEvents>
+
         {children}
+        </HandleWalletEvents>
       </RainbowKitProvider>
     </WagmiConfig>
   )

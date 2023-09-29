@@ -66,8 +66,6 @@ async function main() {
       userId: SEED_USER_ADDRESS,
     })
 
-    const intentBatchId = Number(intentBatchResult.insertId)
-
     await tx.insert(intents).values(
       intentsData.map((intent) => ({
         intentId: intent.intentId,
@@ -75,7 +73,7 @@ async function main() {
         root: intent.root,
         target: intent.target,
         data: intent.data,
-        intentBatchId: intentBatchHash,
+        intentBatchId: intentBatchHash
       }))
     )
   })

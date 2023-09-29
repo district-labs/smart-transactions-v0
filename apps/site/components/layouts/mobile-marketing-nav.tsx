@@ -2,28 +2,17 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { useSelectedLayoutSegment } from "next/navigation"
 import { type MainNavItem } from "@/types"
 
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Icons } from "@/components/icons"
+import { ButtonSIWELogout } from "@/integrations/siwe/components/button-siwe-logout"
+import { IsSignedIn } from "@/integrations/siwe/components/is-signed-in"
 
-interface MobileMarketingNavProps {
-  items?: MainNavItem[]
-}
-
-export function MobileMarketingNav({ items }: MobileMarketingNavProps) {
-  const segment = useSelectedLayoutSegment()
+export function MobileMarketingNav() {
   const [open, setOpen] = useState(false)
 
   return (
@@ -51,50 +40,18 @@ export function MobileMarketingNav({ items }: MobileMarketingNavProps) {
             <span className="sr-only">Home</span>
           </Link>
         </div>
-        <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
           <div className="flex flex-col pl-1 pr-7">
-            <Accordion type="single" collapsible className="w-full">
-              {items?.map((item, index) => (
-                <AccordionItem value={item.title} key={index}>
-                  <AccordionTrigger className="text-sm capitalize">
-                    {item.title}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="flex flex-col space-y-2">
-                      {item.items?.map((subItem, index) =>
-                        subItem.href ? (
-                          <MobileLink
-                            key={index}
-                            href={String(subItem.href)}
-                            segment={String(segment)}
-                            setIsOpen={setOpen}
-                            disabled={subItem.disabled}
-                          >
-                            {subItem.title}
-                          </MobileLink>
-                        ) : (
-                          <div
-                            key={index}
-                            className="text-foreground/70 transition-colors"
-                          >
-                            {item.title}
-                          </div>
-                        )
-                      )}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
             <Link
-              href="/community"
+              href={siteConfig.links.discord}
               className="w-full border-b py-4 text-sm font-medium"
               onClick={() => setOpen(false)}
             >
               Community
             </Link>
           </div>
-        </ScrollArea>
+          <IsSignedIn>
+            <ButtonSIWELogout className="mt-4" />
+          </IsSignedIn>
       </SheetContent>
     </Sheet>
   )

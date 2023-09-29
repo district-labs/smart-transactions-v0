@@ -9,8 +9,7 @@ import { ironOptions } from "@/lib/session"
 export async function GET(req: NextRequest) {
   const res = new Response()
   const session = await getIronSession(req, res, ironOptions)
-
-  return new Response(JSON.stringify({ user: session.user }))
+  return new Response(JSON.stringify({ address: session.address, isLoggedIn: !!session.address }))
 }
 
 export async function POST(req: Request) {
@@ -28,7 +27,7 @@ export async function POST(req: Request) {
       await db.insert(users).values(data)
     }
 
-    return new Response(JSON.stringify({ ok: true }))
+    return new Response(JSON.stringify({ ok: true, user: 'hello' }))
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : String(err)
     console.error(errorMessage)
