@@ -469,6 +469,9 @@ importers:
       '@uniswap/smart-order-router':
         specifier: ^3.16.29
         version: 3.16.32(hardhat@2.17.3)(jsbi@3.2.5)
+      '@uniswap/v3-periphery':
+        specifier: ^1.4.4
+        version: 1.4.4
       '@uniswap/v3-sdk':
         specifier: ^3.10.0
         version: 3.10.0(hardhat@2.17.3)
