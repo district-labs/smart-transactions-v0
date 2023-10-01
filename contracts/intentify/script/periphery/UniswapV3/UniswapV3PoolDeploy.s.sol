@@ -21,37 +21,32 @@ contract UniswapV3PoolDeploy is Script {
     function run() external {
         vm.startBroadcast(deployerPrivateKey);
 
+        ERC20Mintable disUSDC = new ERC20Mintable("Test USDC", "testUSDC", 6);
+        ERC20Mintable disWETH = new ERC20Mintable("Test WETH", "testWETH", 18);
+
         uint24 poolFee = 3000;
         uint24 tickWidth = 2;
         int24 tickSpacing;
 
-        uint256 amount0Desired = 15_000e6;
-        uint256 amount1Desired = 10e18;
+        uint256 amount0Desired = 1500e6;
+        uint256 amount1Desired = 1e18;
 
         uint160 sqrtPriceX96 = encodePriceSqrt(amount1Desired, amount0Desired);
 
-        // address uniswapV3PoolAddress =
-        //     IUniswapV3Factory(UniswapV3Address.UNIV3_FACTORY).createPool(address(disUSDC), address(disWETH),
-        // poolFee);
-        IUniswapV3Pool uniswapV3Pool = IUniswapV3Pool(address(0x5c33044BdBbE55dAb3d526CE70F908aAF6990373));
-        // uniswapV3Pool.initialize(sqrtPriceX96);
+        address uniswapV3PoolAddress =
+            IUniswapV3Factory(UniswapV3Address.UNIV3_FACTORY).createPool(address(disUSDC), address(disWETH), poolFee);
+        IUniswapV3Pool uniswapV3Pool = IUniswapV3Pool(uniswapV3PoolAddress);
+        uniswapV3Pool.initialize(sqrtPriceX96);
 
         tickSpacing = uniswapV3Pool.tickSpacing();
 
-        mintTokensAndApprove(
-            ERC20Mintable(0x18Be8De03fb9c521703DE8DED7Da5031851CbBEB),
-            ERC20Mintable(0xb3c67821F9DCbB424ca3Ddbe0B349024D5E2A739),
-            amount0Desired,
-            amount1Desired
-        );
+        mintTokensAndApprove(disUSDC, disWETH, amount0Desired, amount1Desired);
 
         (, int24 curTick,,,,,) = uniswapV3Pool.slot0();
         curTick = curTick - (curTick % tickSpacing);
 
-        int24 lowerTick = -887_220;
-        //  curTick - (tickSpacing * int24(tickWidth));
-        int24 upperTick = 887_220;
-        //  curTick + (tickSpacing * int24(tickWidth));
+        int24 lowerTick = curTick - (tickSpacing * int24(tickWidth));
+        int24 upperTick = curTick + (tickSpacing * int24(tickWidth));
 
         INonfungiblePositionManager.MintParams memory params = INonfungiblePositionManager.MintParams({
             token0: uniswapV3Pool.token0(),
