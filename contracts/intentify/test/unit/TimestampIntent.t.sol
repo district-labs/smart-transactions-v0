@@ -131,7 +131,7 @@ contract TimestampIntentTest is BaseTest {
     /* Failing                                                                               */
     /* ===================================================================================== */
 
-    function test_RevertWhen_timestampAfterIntent_IsExpired(uint128 pastSeconds) external {
+    function test_RevertWhen_timestampAfterIntent_IsEarly(uint128 pastSeconds) external {
         vm.assume(pastSeconds > 0);
         vm.assume(pastSeconds + block.timestamp < type(uint128).max);
 
@@ -155,7 +155,7 @@ contract TimestampIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert(bytes("TimestampIntent:expired"));
+        vm.expectRevert(bytes("TimestampIntent:early"));
         _intentify.execute(batchExecution);
     }
 

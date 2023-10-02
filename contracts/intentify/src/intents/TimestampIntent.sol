@@ -14,7 +14,7 @@ contract TimestampIntent is IHook {
         if (block.timestamp > maxTimestamp) {
             revert("TimestampIntent:expired");
         } else if (block.timestamp < minTimestamp) {
-            revert("TimestampIntent:expired");
+            revert("TimestampIntent:early");
         }
 
         return true;
