@@ -29,14 +29,9 @@ export const WalletFactoryAddressList: KeyList = {
 // Intent Modules
 // ----------------------------------------------
 
-export const TimestampAfterIntentAddressList: KeyList = {
-  5: "0x1d25d7F82720c9D865796D7F202D5A541eC77f69",
+export const TimestampIntentAddressList: KeyList = {
+  5: "0x4d60482Bb5D1fC0f537F2CDD3eaa701Ba260F043",
   31337: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
-};
-
-export const TimestampBeforeIntentAddressList: KeyList = {
-  5: "0x009aCa9aF72b6BA2287Aae905585e16553BF0D35",
-  31337: '0x0165878A594ca255338adfa4d48449f69242Eb8F',
 };
 
 export const TokenRouterReleaseIntentAddressList: KeyList = {

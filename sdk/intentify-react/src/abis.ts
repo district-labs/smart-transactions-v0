@@ -1,17 +1,17 @@
 import {
-  useContractRead,
+  UseContractEventConfig,
   UseContractReadConfig,
-  useContractWrite,
   UseContractWriteConfig,
-  usePrepareContractWrite,
   UsePrepareContractWriteConfig,
   useContractEvent,
-  UseContractEventConfig,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
 } from 'wagmi'
 import {
+  PrepareWriteContractResult,
   ReadContractResult,
   WriteContractMode,
-  PrepareWriteContractResult,
 } from 'wagmi/actions'
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -950,14 +950,17 @@ export const limitOrderIntentABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// TimestampBeforeIntent
+// TimestampIntent
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const timestampBeforeIntentABI = [
+export const timestampIntentABI = [
   {
     stateMutability: 'pure',
     type: 'function',
-    inputs: [{ name: 'timestamp', internalType: 'uint128', type: 'uint128' }],
+    inputs: [
+      { name: 'minTimestamp', internalType: 'uint128', type: 'uint128' },
+      { name: 'maxTimestamp', internalType: 'uint128', type: 'uint128' },
+    ],
     name: 'encode',
     outputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
   },
@@ -2581,18 +2584,15 @@ export function usePrepareLimitOrderIntentExecute(
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link timestampBeforeIntentABI}__.
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link timestampIntentABI}__.
  */
-export function useTimestampBeforeIntentRead<
+export function useTimestampIntentRead<
   TFunctionName extends string,
-  TSelectData = ReadContractResult<
-    typeof timestampBeforeIntentABI,
-    TFunctionName
-  >,
+  TSelectData = ReadContractResult<typeof timestampIntentABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<
-      typeof timestampBeforeIntentABI,
+      typeof timestampIntentABI,
       TFunctionName,
       TSelectData
     >,
@@ -2600,28 +2600,25 @@ export function useTimestampBeforeIntentRead<
   > = {} as any,
 ) {
   return useContractRead({
-    abi: timestampBeforeIntentABI,
+    abi: timestampIntentABI,
     ...config,
   } as UseContractReadConfig<
-    typeof timestampBeforeIntentABI,
+    typeof timestampIntentABI,
     TFunctionName,
     TSelectData
   >)
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link timestampBeforeIntentABI}__ and `functionName` set to `"encode"`.
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link timestampIntentABI}__ and `functionName` set to `"encode"`.
  */
-export function useTimestampBeforeIntentEncode<
+export function useTimestampIntentEncode<
   TFunctionName extends 'encode',
-  TSelectData = ReadContractResult<
-    typeof timestampBeforeIntentABI,
-    TFunctionName
-  >,
+  TSelectData = ReadContractResult<typeof timestampIntentABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<
-      typeof timestampBeforeIntentABI,
+      typeof timestampIntentABI,
       TFunctionName,
       TSelectData
     >,
@@ -2629,29 +2626,26 @@ export function useTimestampBeforeIntentEncode<
   > = {} as any,
 ) {
   return useContractRead({
-    abi: timestampBeforeIntentABI,
+    abi: timestampIntentABI,
     functionName: 'encode',
     ...config,
   } as UseContractReadConfig<
-    typeof timestampBeforeIntentABI,
+    typeof timestampIntentABI,
     TFunctionName,
     TSelectData
   >)
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link timestampBeforeIntentABI}__ and `functionName` set to `"execute"`.
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link timestampIntentABI}__ and `functionName` set to `"execute"`.
  */
-export function useTimestampBeforeIntentExecute<
+export function useTimestampIntentExecute<
   TFunctionName extends 'execute',
-  TSelectData = ReadContractResult<
-    typeof timestampBeforeIntentABI,
-    TFunctionName
-  >,
+  TSelectData = ReadContractResult<typeof timestampIntentABI, TFunctionName>,
 >(
   config: Omit<
     UseContractReadConfig<
-      typeof timestampBeforeIntentABI,
+      typeof timestampIntentABI,
       TFunctionName,
       TSelectData
     >,
@@ -2659,11 +2653,11 @@ export function useTimestampBeforeIntentExecute<
   > = {} as any,
 ) {
   return useContractRead({
-    abi: timestampBeforeIntentABI,
+    abi: timestampIntentABI,
     functionName: 'execute',
     ...config,
   } as UseContractReadConfig<
-    typeof timestampBeforeIntentABI,
+    typeof timestampIntentABI,
     TFunctionName,
     TSelectData
   >)
