@@ -10,12 +10,8 @@ const TemplateAddressList: KeyList = {
 //   5: '0x18A4eA31d487A20E5eb7fE1521256D41e03B485c'
 // }
 
-// export const TimestampAfterIntentAddressList: KeyList = {
+// export const TimestampIntentAddressList: KeyList = {
 //   5: "0x1d25d7F82720c9D865796D7F202D5A541eC77f69",
-// };
-
-// export const TimestampBeforeIntentAddressList: KeyList = {
-//   5: "0x009aCa9aF72b6BA2287Aae905585e16553BF0D35",
 // };
 
 // export const TokenRouterReleaseIntentAddressList: KeyList = {

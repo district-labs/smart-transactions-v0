@@ -1,6 +1,6 @@
 import { useAccount, useChainId } from "wagmi";
 import {
-    useWalletFactoryGetDeterministicWalletAddress
+  useWalletFactoryGetDeterministicWalletAddress
 } from "../blockchain";
 import { ADDRESS_ZERO, DEFAULT_SALT } from "../data";
 import { useGetSafeProxyAddress } from "./use-get-safe-proxy-address";
