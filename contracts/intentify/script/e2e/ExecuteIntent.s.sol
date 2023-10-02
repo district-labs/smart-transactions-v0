@@ -16,12 +16,12 @@ import {
 } from "../../src/TypesAndDecoders.sol";
 
 // Protocol Contracts
-import { TimestampBeforeIntent } from "../../src/intents/TimestampBeforeIntent.sol";
+import { TimestampIntent } from "../../src/intents/TimestampIntent.sol";
 import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
 import { WalletFactory } from "../../src/WalletFactory.sol";
 
 contract ExecuteIntent is Script, StdCheats {
-    TimestampBeforeIntent _timestampBeforeIntent = new TimestampBeforeIntent();
+    TimestampIntent _timestampIntent = new TimestampIntent();
     Hook EMPTY_HOOK = Hook({ target: address(0), data: bytes("") });
 
     // Deterministicaly deploted in TestnetDeploy.s.sol
@@ -43,8 +43,8 @@ contract ExecuteIntent is Script, StdCheats {
         intents[0] = Intent({
             root: address(_safe),
             value: 0,
-            target: address(_timestampBeforeIntent),
-            data: _timestampBeforeIntent.encode(uint128(block.timestamp - 100))
+            target: address(_timestampIntent),
+            data: _timestampIntent.encode(type(uint128).min, uint128(block.timestamp + 100))
         });
 
         IntentBatch memory intentBatch = IntentBatch({ root: address(_safe), nonce: nonceStandard, intents: intents });

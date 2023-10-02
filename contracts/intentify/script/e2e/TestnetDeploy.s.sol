@@ -6,8 +6,7 @@ import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
 import { IntentifySafeModuleBundler } from "../../src/module/IntentifySafeModuleBundler.sol";
 import { WalletFactory } from "../../src/WalletFactory.sol";
 import { LimitOrderIntent } from "../../src/intents/LimitOrderIntent.sol";
-import { TimestampAfterIntent } from "../../src/intents/TimestampAfterIntent.sol";
-import { TimestampBeforeIntent } from "../../src/intents/TimestampBeforeIntent.sol";
+import { TimestampIntent } from "../../src/intents/TimestampIntent.sol";
 import { TokenRouterReleaseIntent } from "../../src/intents/TokenRouterReleaseIntent.sol";
 import { TwapIntent } from "../../src/intents/TwapIntent.sol";
 
@@ -22,8 +21,7 @@ contract TestnetDeploy is Script {
 
         // Intent Modules Contracts
         new LimitOrderIntent();
-        new TimestampAfterIntent();
-        new TimestampBeforeIntent();
+        new TimestampIntent();
         new TokenRouterReleaseIntent();
         new TwapIntent();
         new IntentifySafeModuleBundler();
