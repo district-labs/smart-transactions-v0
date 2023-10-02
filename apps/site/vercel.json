@@ -4,5 +4,10 @@
             "path": "/api/engine",
             "schedule": "1 * * * *"
         }
-    ]
+    ],
+    "functions": {
+        "app/api/uniswap/adjust-price/route.ts": {
+            "maxDuration": 300
+        }
+    }
 }

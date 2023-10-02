@@ -13,8 +13,6 @@ import { factoryABI, poolABI, quoterV2ABI } from "./abis"
 import { sqrtPriceX96ToPrice } from "./utils"
 import { Univ3AdjustPriceSchema } from "./validation"
 
-export const maxDuration = 5 * 60 // 5 minutes
-
 const UNIV3_QUOTER_V2_ADDRESS = "0x61fFE014bA17989E743c5F6cB21bF9697530B21e"
 const UNIV3_FACTORY_ADDRESS = "0x1F98431c8aD98523631AE4a59f267346ea31F984"
 const TX_STEP_USDC = BigInt(500) * BigInt(10) ** BigInt(6)
