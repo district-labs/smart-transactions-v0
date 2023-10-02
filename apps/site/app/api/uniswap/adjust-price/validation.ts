@@ -6,5 +6,4 @@ export const Univ3AdjustPriceSchema = z.object({
   token1: z.string(),
   targetPrice: z.number(),
   poolFee: z.number(),
-  expectedsqrtPriceX96: z.string(),
 })
