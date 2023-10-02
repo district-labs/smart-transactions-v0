@@ -91,6 +91,35 @@ contract TimestampIntentTest is BaseTest {
         assertEq(true, _executed);
     }
 
+    function test_timestampInRangeIntent_Success(uint128 pastSeconds) external {
+        vm.assume(pastSeconds > 0);
+        vm.assume(pastSeconds < block.timestamp);
+        vm.assume(pastSeconds + block.timestamp < type(uint128).max);
+
+        Intent[] memory intents = new Intent[](1);
+        intents[0] = Intent({
+            root: address(_intentify),
+            value: 0,
+            target: address(_timestampIntent),
+            data: _timestampIntent.encode(uint128(block.timestamp - pastSeconds), uint128(block.timestamp + pastSeconds))
+        });
+
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+
+        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
+
+        Hook[] memory hooks = new Hook[](1);
+        hooks[0] = EMPTY_HOOK;
+
+        IntentBatchExecution memory batchExecution =
+            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+
+        bool _executed = _intentify.execute(batchExecution);
+        assertEq(true, _executed);
+    }
+
     function test_encode_Success() external {
         uint128 minTimestamp = uint128(block.timestamp - 1);
         uint128 maxTimestamp = uint128(block.timestamp + 1);
