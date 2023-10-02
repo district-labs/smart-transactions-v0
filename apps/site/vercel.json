@@ -3,6 +3,10 @@
         {
             "path": "/api/engine",
             "schedule": "1 * * * *"
+        },
+        {
+            "path": "/api/uniswap/adjust-price/cron-job",
+            "schedule": "1 * * * *"   
         }
     ],
     "functions": {

@@ -1,7 +1,7 @@
 import { erc20MintableABI } from "@/integrations/erc20/abis/erc20-mintable-abi"
 import type {
-    Relayer,
-    RelayerTransaction,
+  Relayer,
+  RelayerTransaction,
 } from "@openzeppelin/defender-relay-client"
 import { encodeFunctionData, type Address } from "viem"
 
@@ -17,6 +17,7 @@ const UNIV3_QUOTER_V2_ADDRESS = "0x61fFE014bA17989E743c5F6cB21bF9697530B21e"
 const UNIV3_FACTORY_ADDRESS = "0x1F98431c8aD98523631AE4a59f267346ea31F984"
 const TX_STEP_USDC = BigInt(500) * BigInt(10) ** BigInt(6)
 const TX_STEP_ETH = BigInt(3) * BigInt(10) ** BigInt(17)
+const randomPriceRange = 0.2
 
 async function getTokenDetails(
   address: string
@@ -61,10 +62,29 @@ export async function POST(req: Request) {
       chainId,
       token0: token0Address,
       token1: token1Address,
-      targetPrice: targetInversePrice,
+      randomTargetPrice,
+      targetPrice,
     } = Univ3AdjustPriceSchema.parse(await req.json())
 
-    if (targetInversePrice <= 0) {
+    if (!randomTargetPrice && !targetPrice) {
+      return new Response(
+        "Must specify either randomTargetPrice or targetPrice",
+        {
+          status: 400,
+        }
+      )
+    }
+
+    if (randomTargetPrice && targetPrice) {
+      return new Response(
+        "Cannot specify both randomTargetPrice and targetPrice",
+        {
+          status: 400,
+        }
+      )
+    }
+
+    if (!randomTargetPrice && targetPrice && targetPrice <= 0) {
       return new Response("Target price must be greater than 0", {
         status: 400,
       })
@@ -89,6 +109,16 @@ export async function POST(req: Request) {
 
     const currentInversePrice =
       BigInt(1e12) / sqrtPriceX96ToPrice(currentSqrtPriceX96.toString())
+
+    const targetInversePrice = randomTargetPrice
+      ? currentInversePrice +
+        BigInt(
+          Math.floor(
+            (Math.random() * 2 * randomPriceRange - randomPriceRange) *
+              Number(currentInversePrice)
+          )
+        )
+      : BigInt(targetPrice || 1500)
 
     if (currentInversePrice === BigInt(targetInversePrice)) {
       return new Response(
