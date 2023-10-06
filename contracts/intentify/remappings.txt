@@ -5,3 +5,5 @@ solady/=lib/solady/src/
 @openzeppelin/=lib/openzeppelin-contracts/
 safe-contracts/=lib/safe-contracts/contracts
 surl/=lib/surl/src
+@aave/v3-core/=lib/aave-v3-core/contracts
+@aave/v3-periphery/=lib/aave-v3-periphery/contracts
