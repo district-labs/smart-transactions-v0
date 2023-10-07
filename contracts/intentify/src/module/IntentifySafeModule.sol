@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import { ReentrancyGuard } from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import { console2 } from "forge-std/console2.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 
 import {
@@ -17,7 +17,7 @@ import {
 import { SafeMinimal } from "../interfaces/SafeMinimal.sol";
 import { NonceManagerMultiTenant } from "../nonce/NonceManagerMultiTenant.sol";
 
-contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, ReentrancyGuard {
+contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant {
     // EIP712 Domain Separator
     string public constant NAME = "Intentify Safe Module";
     string public constant VERSION = "0";
@@ -25,10 +25,12 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
     /// @notice The hash of the domain separator used in the EIP712 domain hash.
     bytes32 public immutable DOMAIN_SEPARATOR;
 
+    address private _root;
+
     /// @notice Multi nonce to handle replay protection for multiple queues
     mapping(address => mapping(bytes32 => bool)) internal cancelledIntentBundles;
 
-    constructor() ReentrancyGuard() {
+    constructor() {
         DOMAIN_SEPARATOR = _getEIP712DomainHash(NAME, VERSION, block.chainid, address(this));
     }
 
@@ -37,17 +39,43 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
     event IntentBatchCancelled(address root, bytes32 indexed intentBatchId);
 
     /* ===================================================================================== */
+    /* Modifiers                                                                              */
+    /* ===================================================================================== */
+
+     modifier nonReentrant(address root) {
+        _nonReentrantBefore(root);
+        _;
+        _nonReentrantAfter();
+    }
+
+    function _nonReentrantBefore(address root) private {
+        require(_root == address(0), "ReentrancyGuard: reentrant call");
+        _root = root;
+    }
+
+    function _nonReentrantAfter() private {
+        // By storing the original value once again, a refund is triggered (see
+        // https://eips.ethereum.org/EIPS/eip-2200)
+        _root = address(0);
+    }
+
+    /* ===================================================================================== */
     /* External Functions                                                                    */
     /* ===================================================================================== */
 
-    function cancelIntentBatch(IntentBatch memory intentBatch) external nonReentrant {
+    function getIntentBatchTypedDataHash(IntentBatch memory intent) public view returns (bytes32) {
+        bytes32 digest = keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, GET_INTENTBATCH_PACKETHASH(intent)));
+        return digest;
+    }
+
+    function cancelIntentBatch(IntentBatch memory intentBatch) external nonReentrant(intentBatch.root) {
         bytes32 digest = getIntentBatchTypedDataHash(intentBatch);
         require(!cancelledIntentBundles[msg.sender][digest], "Intent:already-cancelled");
         cancelledIntentBundles[msg.sender][digest] = true;
         emit IntentBatchCancelled(intentBatch.root, digest);
     }
 
-    function execute(IntentBatchExecution memory execution) external nonReentrant {
+    function execute(IntentBatchExecution memory execution) external nonReentrant(execution.batch.root) {
         _nonceEnforcer(execution.batch.root, execution.batch.nonce);
 
         // The length of the intents and hooks must be the same.
@@ -57,12 +85,12 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
 
         bytes32 digest = getIntentBatchTypedDataHash(execution.batch);
         require(!cancelledIntentBundles[execution.batch.root][digest], "Intent:cancelled");
-        address signer = _recover(digest, execution.signature.v, execution.signature.r, execution.signature.s);
 
         // The signer must be the owner of the Safe
         // We only require a single owner to sign the Intent Bundle.
         // That's because in the alpha version we're expecting Safes to be 1-of-1 multisigs.
         // In the future, we'll add support for multi-owner Safes. And more complex access controls.
+        address signer = _recover(digest, execution.signature.v, execution.signature.r, execution.signature.s);
         require(SafeMinimal(execution.batch.root).isOwner(signer), "Intent:invalid-signer");
 
         for (uint256 index = 0; index < execution.batch.intents.length; index++) {
@@ -88,9 +116,23 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Reent
         emit IntentBatchExecuted(msg.sender, execution.batch.root, digest);
     }
 
-    function getIntentBatchTypedDataHash(IntentBatch memory intent) public view returns (bytes32) {
-        bytes32 digest = keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, GET_INTENTBATCH_PACKETHASH(intent)));
-        return digest;
+    function executeTransactionFromIntentModule(
+        address target,
+        uint256 value,
+        bytes calldata data
+    )
+        external
+        returns (bool success)
+    {
+        bytes memory errorMessage;
+        SafeMinimal _safe = SafeMinimal(_root);
+        (success, errorMessage) = _safe.execTransactionFromModuleReturnData(
+            target, // to
+            value, // value
+            data, // calldata
+            Enum.Operation.Call // operation
+        );
+        _handleTransactionCallback(success, errorMessage);
     }
 
     /* ===================================================================================== */
