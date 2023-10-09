@@ -42,7 +42,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant {
     /* Modifiers                                                                              */
     /* ===================================================================================== */
 
-     modifier nonReentrant(address root) {
+    modifier nonReentrant(address root) {
         _nonReentrantBefore(root);
         _;
         _nonReentrantAfter();
