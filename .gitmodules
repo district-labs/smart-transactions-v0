@@ -34,3 +34,6 @@
 [submodule "contracts/intentify/lib/aave-v3-periphery"]
 	path = contracts/intentify/lib/aave-v3-periphery
 	url = https://github.com/aave/aave-v3-periphery
+[submodule "contracts/intentify/lib/chainlink"]
+	path = contracts/intentify/lib/chainlink
+	url = https://github.com/smartcontractkit/chainlink
