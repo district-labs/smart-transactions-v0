@@ -5,5 +5,12 @@
 
 type UniswapV3Pool @entity {
   id: String!
-  blocks: [Int!]!
+  blocks(block: BlockInfo) : [BlockInfo!]! @derivedFrom(field: "pool")
+}
+
+type BlockInfo @entity {
+  id: Int!
+  blockNumber: Int!
+  timestamp: Int!
+  pool: UniswapV3Pool!
 }

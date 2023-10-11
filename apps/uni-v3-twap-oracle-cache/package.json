@@ -10,11 +10,11 @@
     "@ponder/core": "0.0.91"
   },
   "devDependencies": {
-    "eslint-config-ponder": "0.0.91",
-    "eslint": "^8.43.0",
     "@types/node": "^18.11.18",
     "abitype": "^0.8.11",
+    "eslint": "^8.43.0",
+    "eslint-config-ponder": "0.0.91",
     "typescript": "^5.1.3",
-    "viem": "^1.2.6"
+    "viem": "^1.12.2"
   }
 }
