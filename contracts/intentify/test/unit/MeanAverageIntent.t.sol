@@ -48,7 +48,9 @@ contract MeanAverageIntentTest is BaseTest {
             root: address(_intentify),
             value: 0,
             target: address(_meanAverageIntent),
-            data: _meanAverageIntent.encode(uniswapV3Pool, 89_220, 40, 49_950, 40, 105_000, 110_000)
+            data: _meanAverageIntent.encode(
+                uniswapV3Pool, block.number, 89_220, 40, block.number, 49_950, 40, 105_000, 110_000
+                )
         });
 
         IntentBatch memory intentBatch =
