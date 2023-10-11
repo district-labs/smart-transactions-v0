@@ -58,7 +58,8 @@ contract MeanAverageIntentTest is BaseTest {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
         Hook[] memory hooks = new Hook[](1);
-        hooks[0] = EMPTY_HOOK;
+        hooks[0] =
+            Hook({ target: address(_meanAverageIntent), data: abi.encode(9_759_424, 9_848_630, 9_798_709, 9_848_630) });
 
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });

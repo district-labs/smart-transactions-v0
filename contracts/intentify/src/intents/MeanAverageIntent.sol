@@ -6,7 +6,8 @@ import { TickMath } from "@uniswap/v3-core/contracts/libraries/TickMath.sol";
 import { FixedPoint96 } from "@uniswap/v3-core/contracts/libraries/FixedPoint96.sol";
 import { FullMath } from "@uniswap/v3-core/contracts/libraries/FullMath.sol";
 import { UniswapV3TwapOracle } from "../periphery/Axiom/UniswapV3TwapOracle.sol";
-import { Intent } from "../TypesAndDecoders.sol";
+import { console2 } from "forge-std/console2.sol";
+import { Intent, Hook } from "../TypesAndDecoders.sol";
 
 contract MeanAverageIntent {
     UniswapV3TwapOracle internal _uniswapV3TwapOracle;
@@ -99,21 +100,16 @@ contract MeanAverageIntent {
         }
     }
 
-    function execute(Intent calldata intent) external view returns (bool) {
+    function execute(Intent calldata intent, Hook calldata hook) external view returns (bool) {
         require(intent.root == msg.sender, "MeanAverageIntent:invalid-root");
         require(intent.target == address(this), "MeanAverageIntent:invalid-target");
 
-        // Hardcoded for testing
-        // This data should be input by the intent hook
-        // 16 days ago
-        uint256 numeratorStartBlock = 9_759_424;
-        // Today
-        uint256 numeratorEndBlock = 9_848_630;
-
-        // 9 days ago
-        uint256 denominatorStartBlock = 9_798_709;
-        // Today
-        uint256 denominatorEndBlock = 9_848_630;
+        (
+            uint256 numeratorStartBlock,
+            uint256 numeratorEndBlock,
+            uint256 denominatorStartBlock,
+            uint256 denominatorEndBlock
+        ) = abi.decode(hook.data, (uint256, uint256, uint256, uint256));
 
         _checkBlocksRange(intent, numeratorStartBlock, numeratorEndBlock, denominatorStartBlock, denominatorEndBlock);
 
