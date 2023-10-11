@@ -1,62 +1,149 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
-import "@uniswap/v3-core/contracts/libraries/TickMath.sol";
-import "@uniswap/v3-core/contracts/libraries/FixedPoint96.sol";
-import "@uniswap/v3-core/contracts/libraries/FullMath.sol";
-
-import { IHook } from "../interfaces/IHook.sol";
-import { Intent } from "../TypesAndDecoders.sol";
-import { BytesLib } from "../libraries/BytesLib.sol";
-import { Oracle } from "@uniswap/v3-core/contracts/libraries/Oracle.sol";
+import { IUniswapV3Pool } from "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
+import { TickMath } from "@uniswap/v3-core/contracts/libraries/TickMath.sol";
+import { FixedPoint96 } from "@uniswap/v3-core/contracts/libraries/FixedPoint96.sol";
+import { FullMath } from "@uniswap/v3-core/contracts/libraries/FullMath.sol";
 import { UniswapV3TwapOracle } from "../periphery/Axiom/UniswapV3TwapOracle.sol";
+import { Intent } from "../TypesAndDecoders.sol";
 
-contract MeanAverageIntent is IHook {
+contract MeanAverageIntent {
     UniswapV3TwapOracle internal _uniswapV3TwapOracle;
 
     constructor(address _uniswapV3TwapOracleAddress) {
         _uniswapV3TwapOracle = UniswapV3TwapOracle(_uniswapV3TwapOracleAddress);
     }
 
+    function _checkBlocksRange(
+        Intent calldata intent,
+        uint256 numeratorStartBlock,
+        uint256 numeratorEndBlock,
+        uint256 denominatorStartBlock,
+        uint256 denominatorEndBlock
+    )
+        internal
+        view
+    {
+        (
+            ,
+            uint256 numeratorBlockWindow,
+            uint256 numeratorBlockWindowTolerance,
+            uint256 denominatorBlockWindow,
+            uint256 denominatorBlockWindowTolerance,
+            ,
+        ) = abi.decode(intent.data, (address, uint256, uint256, uint256, uint256, uint256, uint256));
+
+        // Check if the block window is within tolerance
+        if (block.number < numeratorEndBlock || block.number - numeratorBlockWindowTolerance > numeratorEndBlock) {
+            revert("MeanAverageIntent:invalid-numerator-end-block");
+        }
+        if (block.number < denominatorEndBlock || block.number - denominatorBlockWindowTolerance > denominatorEndBlock)
+        {
+            revert("MeanAverageIntent:invalid-denominator-end-block");
+        }
+
+        uint256 numeratorTargetBlock = block.number - numeratorBlockWindow;
+        uint256 denominatorTargetBlock = block.number - denominatorBlockWindow;
+
+        if (
+            numeratorTargetBlock - numeratorBlockWindowTolerance > numeratorStartBlock
+                || numeratorTargetBlock + numeratorBlockWindowTolerance < numeratorStartBlock
+        ) {
+            revert("MeanAverageIntent:invalid-numerator-block-window");
+        }
+
+        if (
+            denominatorTargetBlock - denominatorBlockWindowTolerance > denominatorStartBlock
+                || denominatorTargetBlock + denominatorBlockWindowTolerance < denominatorStartBlock
+        ) {
+            revert("MeanAverageIntent:invalid-denominator-block-window");
+        }
+    }
+
+    function _checkPercentageDifference(
+        Intent calldata intent,
+        uint256 numeratorStartBlock,
+        uint256 numeratorEndBlock,
+        uint256 denominatorStartBlock,
+        uint256 denominatorEndBlock
+    )
+        internal
+        view
+    {
+        (address uniswapV3Pool,,,,, uint256 minPercentageDifference, uint256 maxPercentageDifference) =
+            abi.decode(intent.data, (address, uint256, uint256, uint256, uint256, uint256, uint256));
+
+        (int24 numeratorTwaTick,,,) =
+            _uniswapV3TwapOracle.getUniswapV3TWAP(uniswapV3Pool, numeratorStartBlock, numeratorEndBlock);
+
+        (int24 denominatorTwaTick,,,) =
+            _uniswapV3TwapOracle.getUniswapV3TWAP(uniswapV3Pool, denominatorStartBlock, denominatorEndBlock);
+
+        uint160 numeratorSqrtPriceX96 = TickMath.getSqrtRatioAtTick(numeratorTwaTick);
+        uint160 denominatorSqrtPriceX96 = TickMath.getSqrtRatioAtTick(denominatorTwaTick);
+
+        uint256 numeratorPriceX96 = FullMath.mulDiv(numeratorSqrtPriceX96, numeratorSqrtPriceX96, FixedPoint96.Q96);
+        uint256 denominatorPriceX96 =
+            FullMath.mulDiv(denominatorSqrtPriceX96, denominatorSqrtPriceX96, FixedPoint96.Q96);
+
+        // Check Percentage difference 3 decimals
+        uint256 percentageDifference = (numeratorPriceX96 * 100_000) / denominatorPriceX96;
+
+        if (percentageDifference < minPercentageDifference) {
+            revert("MeanAverageIntent:low-difference");
+        }
+
+        if (percentageDifference > maxPercentageDifference) {
+            revert("MeanAverageIntent:high-difference");
+        }
+    }
+
     function execute(Intent calldata intent) external view returns (bool) {
         require(intent.root == msg.sender, "MeanAverageIntent:invalid-root");
         require(intent.target == address(this), "MeanAverageIntent:invalid-target");
 
-        (
-            address uniswapV3Pool,
-            uint256 startBlockNumber,
-            uint256 endBlockNumber,
-            uint256 minPriceX96,
-            uint256 maxPriceX96
-        ) = abi.decode(intent.data, (address, uint256, uint256, uint256, uint256));
+        // Hardcoded for testing
+        // This data should be input by the intent hook
+        // 16 days ago
+        uint256 numeratorStartBlock = 9_759_424;
+        // Today
+        uint256 numeratorEndBlock = 9_848_630;
 
-        (int24 twaTick,,,) = _uniswapV3TwapOracle.getUniswapV3TWAP(uniswapV3Pool, startBlockNumber, endBlockNumber);
+        // 9 days ago
+        uint256 denominatorStartBlock = 9_798_709;
+        // Today
+        uint256 denominatorEndBlock = 9_848_630;
 
-        uint256 twaPriceX96 = TickMath.getSqrtRatioAtTick(twaTick);
+        _checkBlocksRange(intent, numeratorStartBlock, numeratorEndBlock, denominatorStartBlock, denominatorEndBlock);
 
-        if (twaPriceX96 < minPriceX96) {
-            revert("TwapIntent:low-price");
-        }
-
-        if (twaPriceX96 > maxPriceX96) {
-            revert("TwapIntent:high-price");
-        }
-
+        _checkPercentageDifference(
+            intent, numeratorStartBlock, numeratorEndBlock, denominatorStartBlock, denominatorEndBlock
+        );
         return true;
     }
 
     function encode(
         address uniswapV3Pool,
-        uint256 startBlockNumber,
-        uint256 endBlockNumber,
-        uint256 minPriceX96,
-        uint256 maxPriceX96
+        uint256 numeratorBlockWindow,
+        uint256 numeratorBlockWindowTolerance,
+        uint256 denominatorBlockWindow,
+        uint256 denominatorBlockWindowTolerance,
+        uint256 minPercentageDifference,
+        uint256 maxPercentageDifference
     )
         external
         pure
         returns (bytes memory data)
     {
-        data = abi.encode(uniswapV3Pool, startBlockNumber, endBlockNumber, minPriceX96, maxPriceX96);
+        data = abi.encode(
+            uniswapV3Pool,
+            numeratorBlockWindow,
+            numeratorBlockWindowTolerance,
+            denominatorBlockWindow,
+            denominatorBlockWindowTolerance,
+            minPercentageDifference,
+            maxPercentageDifference
+        );
     }
 }
