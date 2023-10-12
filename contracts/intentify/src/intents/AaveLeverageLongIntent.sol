@@ -4,6 +4,7 @@ pragma solidity >=0.8.19;
 import { console2 } from "forge-std/console2.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
+import { ChainlinkOracleHelper } from "../oracles/ChainlinkOracleHelper.sol";
 import { IPool } from "@aave/v3-core/interfaces/IPool.sol";
 import { AggregatorV3Interface } from "chainlink/interfaces/AggregatorV3Interface.sol";
 import { ISwapRouter } from "uniswap-v3-periphery/interfaces/ISwapRouter.sol";
@@ -16,7 +17,7 @@ interface IERC20 {
     function decimals() external view returns (uint256);
 }
 
-contract AaveLeverageLongIntent is ExecuteRootTransaction {
+contract AaveLeverageLongIntent is ExecuteRootTransaction, ChainlinkOracleHelper {
     address internal immutable pool;
     address internal immutable swapRouter;
 
@@ -58,7 +59,7 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction {
     }
 
     function encodeHook(
-        uint256 depositAmount,
+        uint256 supplyAmount,
         uint256 borrowAmount,
         bytes calldata hookData
     )
@@ -66,7 +67,7 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction {
         pure
         returns (bytes memory data)
     {
-        return abi.encode(depositAmount, borrowAmount, hookData);
+        return abi.encode(supplyAmount, borrowAmount, hookData);
     }
 
     /**
@@ -83,7 +84,6 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction {
     function execute(Intent calldata intent, Hook calldata hook) external returns (bool) {
         require(intent.root == msg.sender, "TimestampIntent:invalid-root");
         require(intent.target == address(this), "TimestampIntent:invalid-target");
-
         (
             address priceFeed,
             address supplyAsset,
@@ -99,18 +99,16 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction {
         // ENFORCE: read root's current balance of the lending asset.
         uint256 balanceStart = IERC20(supplyAsset).balanceOf(intent.root);
 
-        // HOOK: Release to the hook.
-        // The expectation is that the hook will add funds to the root account.
-        // Likely via a flash loan. But it could be any other mechanism.
+        // Expectation is that the hook will add funds to the root account.
         _hook(hook);
+
+        // Supply the lending asset and borrow the borrowing asset.
         _leverage(intent, hook);
 
-        // Calculate how much of the borrowed asset must be returned.
-        // Read the current price of the borrowed and suppled asset.
-        // And send enough borrowed asset to repay the flash loan.
-        // Keep the remaining borrowed asset as profit/leverage
-        (uint256 depositAmount,,) = abi.decode(hook.data, (uint256, uint256, bytes));
-        _repay(priceFeed, borrowAsset, supplyAsset, depositAmount);
+        // Validate it's safe to repay the flash loan via price feed and repay the flash loan. 
+        (uint256 supplyAmount, uint256 borrowAmount,) = abi.decode(hook.data, (uint256, uint256, bytes));
+        uinty256 repayAmount =_validateSupplyAndBorrowAmounts(priceFeed, supplyAsset, borrowAsset, supplyAmount, borrowAmount);
+        _repay(borrowAsset, hook.target, repayAmount);
 
         // After execution the health factor should be greater than the minimum health factor.
         _checkHealthFactor(intent.root, minHealthFactor);
@@ -123,63 +121,30 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction {
         return true;
     }
 
-    function _repay(address _priceFeed, address tokenIn, address tokenOut, uint256 exactAmountIn) internal {
-        AggregatorV3Interface feed = AggregatorV3Interface(_priceFeed);
-        uint256 priceFeedDecimals = feed.decimals();
-        (, int256 price,,,) = feed.latestRoundData();
-        uint256 usdcAmountOut = _calculateAmountOfToken2(
-            uint256(price), exactAmountIn, IERC20(tokenIn).decimals(), IERC20(tokenOut).decimals(), priceFeedDecimals
-        );
-
-        uint256 derivedPrice = calculateSwapAmount(price, exactAmountIn, IERC20(tokenOut).decimals());
-
-        console2.log("derivedPrice: %s", derivedPrice);
-        console2.log("Price: %s", price);
-        console2.log("Amount Out: %s", usdcAmountOut);
+    function _checkHealthFactor(address root, uint256 minHealthFactor) internal view {
+        (,,,,, uint256 healthFactor) = IPool(pool).getUserAccountData(root);
+        require(healthFactor >= minHealthFactor, "AaveLeverageLongIntent:insufficient-health-factor");
     }
 
-    function calculateSwapAmount(int256 price, uint256 ethAmount, uint256 outDecimals) public view returns (uint256) {
-        console2.log("Out Decimals: %s", outDecimals);
-        console2.log("Price: %s", price);
-        console2.log("ETH Amount: %s", ethAmount);
-        return (ethAmount * (uint256(price)) / (10 ** (18 - outDecimals)));
+    /**
+        * @dev Calculates the amount of the denominator asset that will be received for the given amount of the numerator asset.
+        * @param priceFeed The price feed of the numerator asset.
+        * @param supplyAsset The address of the numerator asset.
+        * @param borrowAsset The address of the denominator asset.
+        * @param borrowAmount The amount of the numerator asset.
+        * @param supplyAmount The amount of the denominator asset.
+     */
+    function _validateSupplyAndBorrowAmounts(address priceFeed, address supplyAsset, address borrowAsset, uint256 supplyAmount, uint256 borrowAmount) internal returns (uint256 amountRepay) {
+        amountRepay = _calculateDenominatorAsset(priceFeed, IERC20(borrowAsset).decimals(), borrowAmount);
+        console2.log("Amount Repay: %s", amountRepay);
+        require(supplyAmount >= amountRepay, "AaveLeverageLongIntent:insufficient-supply-amount");
     }
 
-
-    function _calculateAmountOfToken2(
-        uint256 price,
-        uint256 amountOfToken1,
-        uint256 decimalsToken1,
-        uint256 decimalsToken2,
-        uint256 decimalsPrice
-    )
-        public
-        pure
-        returns (uint256)
-    {
-        // Convert price to its smallest unit
-        uint256 priceInSmallestUnit = price * (10 ** decimalsPrice);
-
-        // Convert amountOfToken1 to its smallest unit
-        uint256 amountOfToken1InSmallestUnit = amountOfToken1 * (10 ** decimalsToken1);
-
-        // Multiply to get the raw amount in the smallest unit of token2
-        uint256 rawAmountToken2 = (amountOfToken1InSmallestUnit * priceInSmallestUnit) / (10 ** decimalsToken1);
-
-        // Convert the raw amount to the 6-decimal representation for USDC
-        uint256 amountToken2 = rawAmountToken2 / (10 ** (decimalsToken1 + decimalsPrice - decimalsToken2));
-
-        return amountToken2;
+    function _repay(address token, address to, uint256 amount) internal {
+        bytes memory approveData = abi.encodeWithSignature("transfer(address,uint256)", to, amount);
+        executeFromRoot(token, 0, approveData);
     }
 
-    function _repay(address _priceFeed) internal {
-        AggregatorV3Interface feed = AggregatorV3Interface(_priceFeed);
-        uint256 priceFeedDecimals = feed.decimals();
-        (, int256 price,,,) = feed.latestRoundData();
-        console2.log("Price: %s", price);
-        int256 normalizationFactor = int256(10 ** (18 - priceFeedDecimals)); // Assuming we want 2 decimal places
-        console2.log("Normalized Price: %s", price * normalizationFactor);
-    }
 
     // @TODO: Turn into a Safe Multicall
     function _leverage(Intent calldata intent, Hook calldata hook) internal {
@@ -208,11 +173,6 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction {
             intent.root
         );
         executeFromRoot(pool, 0, borrowData);
-    }
-
-    function _checkHealthFactor(address root, uint256 minHealthFactor) internal view {
-        (,,,,, uint256 healthFactor) = IPool(pool).getUserAccountData(root);
-        require(healthFactor >= minHealthFactor, "AaveLeverageLongIntent:insufficient-health-factor");
     }
 
     function _hook(Hook calldata hook) internal returns (bool success) {
