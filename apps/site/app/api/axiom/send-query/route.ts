@@ -1,6 +1,7 @@
-import { utils } from "ethers"
-
-import { ax, axiomV1Query, UNI_V3_POOL_ADDR } from ".."
+import { getRelayerByChainId } from "@/lib/openzeppelin-defender/relayer"
+import { encodeFunctionData, type Address } from "viem"
+import { UNI_V3_POOL_ADDR, ax, chainId } from ".."
+import { axiomV1QueryABI } from "../abis"
 
 export async function GET() {
   try {
@@ -13,21 +14,34 @@ export async function GET() {
 
     const { keccakQueryResponse, queryHash, query } = await qb.build()
 
-    const txResult = await axiomV1Query.sendQuery(
-      keccakQueryResponse,
-      "0x4596039A69602b115752006Ef8425f43d6E80a6f",
-      query,
-      {
-        value: utils.parseEther("0.01"), // Goerli payment value
-      }
-    )
+    const {relayer } = getRelayerByChainId(chainId)
+    const relayerAddress = (await relayer.getRelayer()).address as Address
+    const axiomV1QueryAddress = ax.getAxiomQueryAddress() as Address
+
+    const data = encodeFunctionData({
+      abi: axiomV1QueryABI,
+      functionName: "sendQuery",
+      args: [
+        keccakQueryResponse as `0x${string}`,
+        relayerAddress,
+        query as `0x${string}`,
+      ],
+    })
+
+    const txReceipt = await relayer.sendTransaction({
+      gasLimit: 500000,
+      speed: "fast",
+      to: axiomV1QueryAddress,
+      // 0.01 ETH
+      value: "10000000000000000",
+      data,
+    })
 
     return new Response(
       JSON.stringify({
-        success: true,
         keccakQueryResponse,
         queryHash,
-        txResult,
+        txReceipt,
       }),
       { status: 200 }
     )

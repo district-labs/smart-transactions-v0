@@ -8,10 +8,8 @@ import { goerli } from "viem/chains"
 
 import { getRelayerByChainId } from "@/lib/openzeppelin-defender/relayer"
 
-import { ax, UNI_V3_POOL_ADDR } from ".."
+import { ax, chainId, UNI_V3_POOL_ADDR } from ".."
 import { axiomV1QueryABI } from "../abis"
-
-const chainId = 5
 
 export async function GET() {
   try {
