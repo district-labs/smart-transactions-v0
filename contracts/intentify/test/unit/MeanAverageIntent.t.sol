@@ -15,9 +15,32 @@ import { MeanAverageIntent } from "../../src/intents/MeanAverageIntent.sol";
 
 import { BaseTest } from "../utils/Base.t.sol";
 
+contract MeanAverageIntentHarness is MeanAverageIntent {
+    constructor(address uniswapV3TwapOracle) MeanAverageIntent(uniswapV3TwapOracle) { }
+
+    function exposed_checkBlockWindow(
+        MeanAverageIntent.BlockData memory blockData,
+        string memory errorMessageStart,
+        string memory errorMessageEnd
+    )
+        external
+        view
+    {
+        _checkBlockWindow(blockData, errorMessageStart, errorMessageEnd);
+    }
+
+    function exposed_checkBlocksRange(BlockData memory numerator, BlockData memory denominator) external view {
+        _checkBlocksRange(numerator, denominator);
+    }
+
+    function exposed_checkPercentageDifference(bytes memory intentData, bytes memory hookData) external view {
+        _checkPercentageDifference(intentData, hookData);
+    }
+}
+
 contract MeanAverageIntentTest is BaseTest {
     Intentify internal _intentify;
-    MeanAverageIntent internal _meanAverageIntent;
+    MeanAverageIntentHarness internal _meanAverageIntent;
 
     uint256 goerliFork;
     uint256 GOERLI_FORK_BLOCK = 9_848_670;
@@ -34,7 +57,7 @@ contract MeanAverageIntentTest is BaseTest {
 
         initializeBase();
         _intentify = new Intentify(signer, "Intentify", "V0");
-        _meanAverageIntent = new MeanAverageIntent(UNISWAP_V3_TWAP_ORACLE);
+        _meanAverageIntent = new MeanAverageIntentHarness(UNISWAP_V3_TWAP_ORACLE);
     }
 
     /* ===================================================================================== */
@@ -70,7 +93,132 @@ contract MeanAverageIntentTest is BaseTest {
         assertEq(true, _executed);
     }
 
+    function test_CheckBlockWindow_Success() external view {
+        MeanAverageIntent.BlockData memory blockData = MeanAverageIntent.BlockData({
+            referenceBlock: block.number,
+            blockWindow: 89_220,
+            blockWindowTolerance: 40,
+            startBlock: 9_759_424,
+            endBlock: 9_848_630
+        });
+
+        _meanAverageIntent.exposed_checkBlockWindow(
+            blockData, "MeanAverageIntent:out-of-tolerance-start-block", "MeanAverageIntent:out-of-tolerance-end-block"
+        );
+    }
+
+    function test_CheckBlocksRange_Success() external view {
+        MeanAverageIntent.BlockData memory numerator = MeanAverageIntent.BlockData({
+            referenceBlock: block.number,
+            blockWindow: 89_220,
+            blockWindowTolerance: 40,
+            startBlock: 9_759_424,
+            endBlock: 9_848_630
+        });
+
+        MeanAverageIntent.BlockData memory denominator = MeanAverageIntent.BlockData({
+            referenceBlock: block.number,
+            blockWindow: 49_950,
+            blockWindowTolerance: 40,
+            startBlock: 9_798_709,
+            endBlock: 9_848_630
+        });
+
+        _meanAverageIntent.exposed_checkBlocksRange(numerator, denominator);
+    }
+
+    function test_CheckPercentageDifference_Success() external view {
+        address uniswapV3Pool = 0x5c33044BdBbE55dAb3d526CE70F908aAF6990373;
+        bytes memory intentData = _meanAverageIntent.encode(
+            uniswapV3Pool, block.number, 89_220, 40, block.number, 49_950, 40, 105_000, 110_000
+        );
+        bytes memory hookData = abi.encode(9_759_424, 9_848_630, 9_798_709, 9_848_630);
+
+        _meanAverageIntent.exposed_checkPercentageDifference(intentData, hookData);
+    }
+
     /* ===================================================================================== */
     /* Failing                                                                               */
     /* ===================================================================================== */
+
+    // @TODO: Add failling tests for the whole intent
+
+    function test_CheckBlockWindow_RevertWhen_OutOfTolerance() external {
+        MeanAverageIntent.BlockData memory blockData = MeanAverageIntent.BlockData({
+            referenceBlock: block.number,
+            blockWindow: 89_220,
+            blockWindowTolerance: 40,
+            startBlock: 9_759_500,
+            endBlock: 9_848_630
+        });
+
+        vm.expectRevert("MeanAverageIntent:out-of-tolerance-start-block");
+        _meanAverageIntent.exposed_checkBlockWindow(
+            blockData, "MeanAverageIntent:out-of-tolerance-start-block", "MeanAverageIntent:out-of-tolerance-end-block"
+        );
+
+        blockData.startBlock = 9_759_424;
+        blockData.endBlock = 9_848_500;
+
+        vm.expectRevert("MeanAverageIntent:out-of-tolerance-end-block");
+        _meanAverageIntent.exposed_checkBlockWindow(
+            blockData, "MeanAverageIntent:out-of-tolerance-start-block", "MeanAverageIntent:out-of-tolerance-end-block"
+        );
+    }
+
+    function test_CheckBlocksRange_RevertWhen_InvalidWindow() external {
+        MeanAverageIntent.BlockData memory numerator = MeanAverageIntent.BlockData({
+            referenceBlock: block.number,
+            blockWindow: 89_220,
+            blockWindowTolerance: 40,
+            startBlock: 9_759_400,
+            endBlock: 9_848_630
+        });
+
+        MeanAverageIntent.BlockData memory denominator = MeanAverageIntent.BlockData({
+            referenceBlock: block.number,
+            blockWindow: 49_950,
+            blockWindowTolerance: 40,
+            startBlock: 9_798_709,
+            endBlock: 9_848_630
+        });
+
+        vm.expectRevert("MeanAverageIntent:invalid-numerator-block-window-start");
+        _meanAverageIntent.exposed_checkBlocksRange(numerator, denominator);
+
+        numerator.startBlock = 9_759_424;
+        numerator.endBlock = 9_848_500;
+
+        vm.expectRevert("MeanAverageIntent:invalid-numerator-block-window-end");
+        _meanAverageIntent.exposed_checkBlocksRange(numerator, denominator);
+
+        numerator.endBlock = 9_848_630;
+        denominator.startBlock = 9_798_609;
+
+        vm.expectRevert("MeanAverageIntent:invalid-denominator-block-window-start");
+        _meanAverageIntent.exposed_checkBlocksRange(numerator, denominator);
+
+        denominator.startBlock = 9_798_709;
+        denominator.endBlock = 9_848_500;
+
+        vm.expectRevert("MeanAverageIntent:invalid-denominator-block-window-end");
+        _meanAverageIntent.exposed_checkBlocksRange(numerator, denominator);
+    }
+
+    function test_CheckPercentageDifference_RevertWhen_OutOfRange() external {
+        address uniswapV3Pool = 0x5c33044BdBbE55dAb3d526CE70F908aAF6990373;
+        bytes memory intentDataHigh = _meanAverageIntent.encode(
+            uniswapV3Pool, block.number, 89_220, 40, block.number, 49_950, 40, 105_000, 108_000
+        );
+        bytes memory intentDataLow = _meanAverageIntent.encode(
+            uniswapV3Pool, block.number, 89_220, 40, block.number, 49_950, 40, 110_000, 115_000
+        );
+        bytes memory hookData = abi.encode(9_759_424, 9_848_630, 9_798_709, 9_848_630);
+
+        vm.expectRevert("MeanAverageIntent:high-difference");
+        _meanAverageIntent.exposed_checkPercentageDifference(intentDataHigh, hookData);
+        
+        vm.expectRevert("MeanAverageIntent:low-difference");
+        _meanAverageIntent.exposed_checkPercentageDifference(intentDataLow, hookData);
+    }
 }

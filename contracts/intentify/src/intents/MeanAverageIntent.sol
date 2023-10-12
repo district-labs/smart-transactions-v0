@@ -65,6 +65,14 @@ contract MeanAverageIntent {
         }
     }
 
+    /**
+     * @dev Verifies that the block range for both the numerator and denominator is valid.
+     * This function ensures that the start and end blocks for the numerator and denominator
+     * are within the acceptable tolerance range of their respective target blocks.
+     *
+     * @param numerator Data for the numerator's block range.
+     * @param denominator Data for the denominator's block range.
+     */
     function _checkBlocksRange(BlockData memory numerator, BlockData memory denominator) internal view {
         _checkBlockWindow(
             numerator,
@@ -78,6 +86,15 @@ contract MeanAverageIntent {
         );
     }
 
+    /**
+     * @dev Checks if the percentage difference between the numerator and denominator
+     * is within the allowed range. This function determines the TWAP (Time Weighted Average Price)
+     * for the numerator and denominator using the Uniswap V3 TWAP Oracle. It then computes the
+     * percentage difference between them and ensures it's within the given min and max limits.
+     *
+     * @param intentData Encoded intent data.
+     * @param hookData Encoded hook data.
+     */
     function _checkPercentageDifference(bytes memory intentData, bytes memory hookData) internal view {
         (address uniswapV3Pool,,,,,,, uint256 minPercentageDifference, uint256 maxPercentageDifference) =
             abi.decode(intentData, (address, uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256));
