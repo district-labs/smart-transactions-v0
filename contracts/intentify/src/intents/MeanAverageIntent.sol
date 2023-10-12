@@ -145,6 +145,14 @@ contract MeanAverageIntent {
             ,
         ) = abi.decode(intent.data, (address, uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256));
 
+        // Set the reference block for the numerator if it's not already set.
+        if(numeratorReferenceBlock == 0) {
+            numeratorReferenceBlock = block.number;
+        }
+        if(denominatorReferenceBlock == 0) {
+            denominatorReferenceBlock = block.number;
+        }
+
         (
             uint256 numeratorStartBlock,
             uint256 numeratorEndBlock,
