@@ -161,3 +161,22 @@ function _calculateAmountOut(
     return rawAmount;
 }
 ```
+
+
+
+```
+/**
+  * How It Works
+  * 1. ENFORCE: read root's current balance of the lending asset.
+  * 2. ENFORCE: root current health factor from the Aave pool.
+  * 3. HOOK: Add funds to root account via a flash loan i.e. ETH
+  * 4. EXECUTE: Supply the lending asset to the Aave pool i.e. ETH
+  * 5. EXECUTE: Borrow the borrowing asset from the Aave pool i.e. USDC
+  * 6. EXECUTE: Repay the flash loan i.e. ETH by selling the borrowed asset i.e. USDC
+  * 7. ENFORCE: root current health factor from the Aave pool.
+*/
+// console2.log("Supply Amount With Fee: %s", supplyAmountWithFee);
+// console2.log("Supply Amount: %s", supplyAmount);
+// console2.log("Borrow Amount: %s", borrowAmount);
+// console2.log("Amount Repay: %s", amountRepay);
+```

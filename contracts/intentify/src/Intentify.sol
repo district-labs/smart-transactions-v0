@@ -16,7 +16,6 @@ import {
 } from "./TypesAndDecoders.sol";
 
 contract Intentify is TypesAndDecoders {
-
     address public immutable owner;
 
     /// @notice The hash of the domain separator used in the EIP712 domain hash.

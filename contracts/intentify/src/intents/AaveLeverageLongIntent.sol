@@ -2,14 +2,12 @@
 pragma solidity >=0.8.19;
 
 import { console2 } from "forge-std/console2.sol";
-import { Intent, Hook } from "../TypesAndDecoders.sol";
-import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
-import { ChainlinkOracleHelper } from "../oracles/ChainlinkOracleHelper.sol";
 import { IPool } from "@aave/v3-core/interfaces/IPool.sol";
 import { AggregatorV3Interface } from "chainlink/interfaces/AggregatorV3Interface.sol";
-import { ISwapRouter } from "uniswap-v3-periphery/interfaces/ISwapRouter.sol";
-import { IUniswapV3Pool } from "uniswap-v3-core/interfaces/IUniswapV3Pool.sol";
-import { IUniswapV3Factory } from "uniswap-v3-core/interfaces/IUniswapV3Factory.sol";
+import { Intent, Hook } from "../TypesAndDecoders.sol";
+import { ChainlinkOracleHelper } from "../oracles/ChainlinkOracleHelper.sol";
+import { HookTransaction } from "./utils/HookTransaction.sol";
+import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
 interface IERC20 {
     function approve(address spender, uint256 amount) external returns (bool);
@@ -17,47 +15,61 @@ interface IERC20 {
     function decimals() external view returns (uint256);
 }
 
-contract AaveLeverageLongIntent is ExecuteRootTransaction, ChainlinkOracleHelper {
-    address internal immutable pool;
-    address internal immutable swapRouter;
+contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, ChainlinkOracleHelper {
+    /*//////////////////////////////////////////////////////////////////////////
+                                   PUBLIC STORAGE
+    //////////////////////////////////////////////////////////////////////////*/
+    address internal immutable _pool;
 
-    constructor(
-        address _intentifySafeModule,
-        address _pool,
-        address _swapRouter
-    )
-        ExecuteRootTransaction(_intentifySafeModule)
-    {
-        pool = _pool;
-        swapRouter = _swapRouter;
+    /*//////////////////////////////////////////////////////////////////////////
+                                    CONSTRUCTOR
+    //////////////////////////////////////////////////////////////////////////*/
+    /**
+      * @notice Initialize the smart contract
+      * @param intentifySafeModule Canonical Intentify Safe Module
+      * @param __pool Canonical Aave Pool
+     */
+    constructor(address intentifySafeModule, address __pool) ExecuteRootTransaction(intentifySafeModule) {
+        _pool = __pool;
     }
 
-    enum InterestRateMode {
-        NONE,
-        STABLE,
-        VARIABLE
-    }
+    /*//////////////////////////////////////////////////////////////////////////
+                                    READ FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
 
-    // 1. Lending Asset i.e. ETH/WETH
-    // 2. Borrow Asset i.e. USDC or USDT
-    // 3. Health Factor Minimum i.e. 1.2
-    // 4. Health Factor Delta i.e. 0.2
-
+    /**
+      * @notice Encode hook instructions.
+      * @dev The executor/searcher should calculate these values before encoding.
+      * @param swapType uint8 - Base or Quote asset used to calculate payout  
+      * @param priceFeed address - Chainlink price feed for supply and borrow asset
+      * @param supplyAsset address - ERC20 supplied to Aave
+      * @param borrowAsset address - ERC20 borrowed from Aave
+      * @param interestRateMode uint256 - Interest rate mode for Aave
+      * @param minHealthFactor uint256 Minimum health factor after intent execution
+      * @param fee uint32 - Fee paid to executor i.e. 3000 = 3%
+     */
     function encode(
+        uint8 swapType,
         address priceFeed,
         address supplyAsset,
         address borrowAsset,
         uint256 interestRateMode,
         uint256 minHealthFactor,
-        uint256 delta
+        uint32 fee
     )
         external
         pure
         returns (bytes memory data)
     {
-        return abi.encode(priceFeed, supplyAsset, borrowAsset, interestRateMode, minHealthFactor, delta);
+        return abi.encode(swapType, priceFeed, supplyAsset, borrowAsset, interestRateMode, minHealthFactor, fee);
     }
 
+    /**
+      * @notice Encode hook instructions.
+      * @dev The executor/searcher should calculate these values before encoding.
+      * @param supplyAmount Amount being supplied to Aave
+      * @param borrowAmount Amount being borrowed from Aave
+     */
     function encodeHook(
         uint256 supplyAmount,
         uint256 borrowAmount,
@@ -70,100 +82,153 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, ChainlinkOracleHelper
         return abi.encode(supplyAmount, borrowAmount, hookData);
     }
 
-    /**
-     * How It Works
-     * 1. ENFORCE: read root's current balance of the lending asset.
-     * 2. ENFORCE: root current health factor from the Aave pool.
-     * 3. HOOK: Add funds to root account via a flash loan i.e. ETH
-     * 4. EXECUTE: Supply the lending asset to the Aave pool i.e. ETH
-     * 5. EXECUTE: Borrow the borrowing asset from the Aave pool i.e. USDC
-     * 6. EXECUTE: Repay the flash loan i.e. ETH by selling the borrowed asset i.e. USDC
-     * 7. ENFORCE: root current health factor from the Aave pool.
-     */
+    /*//////////////////////////////////////////////////////////////////////////
+                                   WRITE FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
 
+    /**
+     * @notice Executes an leverage long intent using the Aave protocol.
+     * @dev Expects the root account to have asset supplied to Aave and health factor to be greater than the minimum
+     * health factor.
+     * @param intent The intent created by the root account.
+     * @param hook The hook created by the executor.
+     * @return success Whether or not the intent was executed successfully.
+     */
     function execute(Intent calldata intent, Hook calldata hook) external returns (bool) {
         require(intent.root == msg.sender, "TimestampIntent:invalid-root");
         require(intent.target == address(this), "TimestampIntent:invalid-target");
+        _hook(hook); // Expectation is that the hook will add funds to the root account i.e. flash loan
+        _leverage(intent, hook);
         (
+            uint8 swapType,
             address priceFeed,
             address supplyAsset,
             address borrowAsset,
-            uint256 interestRateMode,
+            , // interestRateMode
             uint256 minHealthFactor,
-            uint256 delta
-        ) = abi.decode(intent.data, (address, address, address, uint256, uint256, uint256));
-
-        // Before execution the health factor should be greater than the minimum health factor + delta.
-        _checkHealthFactor(intent.root, minHealthFactor + delta);
-
-        // ENFORCE: read root's current balance of the lending asset.
+            uint32 fee
+        ) = abi.decode(intent.data, (uint8, address, address, address, uint256, uint256, uint32));
         uint256 balanceStart = IERC20(supplyAsset).balanceOf(intent.root);
-
-        // Expectation is that the hook will add funds to the root account.
-        _hook(hook);
-
-        // Supply the lending asset and borrow the borrowing asset.
-        _leverage(intent, hook);
-
-        // Validate it's safe to repay the flash loan via price feed and repay the flash loan. 
-        (uint256 supplyAmount, uint256 borrowAmount,) = abi.decode(hook.data, (uint256, uint256, bytes));
-        uinty256 repayAmount =_validateSupplyAndBorrowAmounts(priceFeed, supplyAsset, borrowAsset, supplyAmount, borrowAmount);
-        _repay(borrowAsset, hook.target, repayAmount);
-
-        // After execution the health factor should be greater than the minimum health factor.
+        uint256 repayAmount =
+            _checkHookInstructions(swapType, priceFeed, supplyAsset, borrowAsset, fee, hook.data);
+        _transferFromRoot(borrowAsset, hook.target, repayAmount);
         _checkHealthFactor(intent.root, minHealthFactor);
-        uint256 balanceEnd = IERC20(supplyAsset).balanceOf(intent.root);
-
-        // ENFORCE: root's balance of the lending asset should be greater than the balance at the start of the
-        // execution.
-        require(balanceEnd >= balanceStart, "AaveLeverageLongIntent:insufficient-ending-balance");
+        _checkFinalBalance(intent.root, supplyAsset, balanceStart);
 
         return true;
     }
 
-    function _checkHealthFactor(address root, uint256 minHealthFactor) internal view {
-        (,,,,, uint256 healthFactor) = IPool(pool).getUserAccountData(root);
+    /*//////////////////////////////////////////////////////////////////////////
+                                  INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /**
+     * @notice Checks account health factor is above minimum threshold 
+     * @param account address - Account to get Aave user data about
+     * @param token address - ERC20 token
+     * @param balanceStart uint256 - Balance at the start of intent execution
+     */
+    function _checkFinalBalance(address account, address token, uint256 balanceStart) internal view {
+        uint256 balanceEnd = IERC20(token).balanceOf(account);
+        require(balanceEnd >= balanceStart, "AaveLeverageLongIntent:insufficient-ending-balance");
+    }
+
+     /**
+     * @notice Checks account health factor is above minimum threshold 
+     * @param account address - Account to get Aave user data about
+     * @param minHealthFactor uint256 - Minimum health factor
+     */
+    function _checkHealthFactor(address account, uint256 minHealthFactor) internal view {
+        (,,,,, uint256 healthFactor) = IPool(_pool).getUserAccountData(account);
         require(healthFactor >= minHealthFactor, "AaveLeverageLongIntent:insufficient-health-factor");
     }
 
     /**
-        * @dev Calculates the amount of the denominator asset that will be received for the given amount of the numerator asset.
-        * @param priceFeed The price feed of the numerator asset.
-        * @param supplyAsset The address of the numerator asset.
-        * @param borrowAsset The address of the denominator asset.
-        * @param borrowAmount The amount of the numerator asset.
-        * @param supplyAmount The amount of the denominator asset.
+     * @notice Fetches external data required to constrain hook instructions 
+     * @param priceFeed The price feed of the numerator asset.
+     * @param supplyAsset The address of the numerator asset.
+     * @param borrowAsset The address of the denominator asset.
+     * @param fee The fee that will be charged by the execution of the transaction.
+     * @return amountRepay The amount of the borrowed asset that will be repaid to the executor
      */
-    function _validateSupplyAndBorrowAmounts(address priceFeed, address supplyAsset, address borrowAsset, uint256 supplyAmount, uint256 borrowAmount) internal returns (uint256 amountRepay) {
-        amountRepay = _calculateDenominatorAsset(priceFeed, IERC20(borrowAsset).decimals(), borrowAmount);
-        console2.log("Amount Repay: %s", amountRepay);
-        require(supplyAmount >= amountRepay, "AaveLeverageLongIntent:insufficient-supply-amount");
+    function _checkHookInstructions(
+        uint8 swapType,
+        address priceFeed,
+        address supplyAsset,
+        address borrowAsset,
+        uint32 fee,
+        bytes memory hookData
+    )
+        internal
+        returns (uint256 amountRepay)
+    {
+        AggregatorV3Interface feed = AggregatorV3Interface(priceFeed);
+        (, int256 price,,,) = feed.latestRoundData();
+        (uint256 supplyAmount, uint256 borrowAmount,) = abi.decode(hookData, (uint256, uint256, bytes));
+        uint256 supplyAssetDecimals = IERC20(supplyAsset).decimals();
+        uint256 borrowAssetDecimals = IERC20(borrowAsset).decimals();
+
+        return
+            _calculatePayout(swapType, price, supplyAssetDecimals, borrowAssetDecimals, supplyAmount, borrowAmount, fee);
     }
 
-    function _repay(address token, address to, uint256 amount) internal {
-        bytes memory approveData = abi.encodeWithSignature("transfer(address,uint256)", to, amount);
-        executeFromRoot(token, 0, approveData);
+    /**
+     * @notice Calculates the amount to be repaid to the executor of the transaction.
+     * @param price int256 - Token pair price from Chainlink oracle
+     * @param supplyAssetDecimals Decimal amount in supply asset
+     * @param borrowAssetDecimals Decimal amount in borrow asset
+     * @param supplyAmount uin256 - ERC20 token amount
+     * @param borrowAmount uin256 - ERC20 token amount
+     * @param fee uint32 - Fee paid to executor i.e. 3000 = 3%
+     * @return amountRepay The amount of the borrowed asset that will be repaid to the executor
+     */
+    function _calculatePayout(
+        uint8 swapType,
+        int256 price,
+        uint256 supplyAssetDecimals,
+        uint256 borrowAssetDecimals,
+        uint256 supplyAmount,
+        uint256 borrowAmount,
+        uint32 fee
+    )
+        internal
+        view
+        returns (uint256 amountRepay)
+    {
+        uint256 supplyAmountWithFee = supplyAmount + (supplyAmount * fee / 100_000);
+        if (swapType == 0) {
+            amountRepay = _calculateQuoteAsset(price, borrowAssetDecimals, supplyAmountWithFee);
+            require(borrowAmount >= amountRepay, "AaveLeverageLongIntent:insufficient-supply-amount");
+        } else if (swapType == 1) {
+            amountRepay = _calculateBaseAsset(price, supplyAssetDecimals, supplyAmountWithFee);
+            require(borrowAmount >= amountRepay, "AaveLeverageLongIntent:insufficient-supply-amount");
+        } else {
+            revert("AaveLeverageLongIntent:invalid-swap-type");
+        }
     }
 
-
-    // @TODO: Turn into a Safe Multicall
+    /**
+      * @notice Supply assets to Aave and borrow against the collateral.
+      * @param intent Intent - User signed intent
+      * @param hook Hook - Executor supplied hook
+     */
     function _leverage(Intent calldata intent, Hook calldata hook) internal {
-        (, address supplyAsset, address borrowAsset, uint256 interestRateMode, uint256 minHealthFactor, uint256 delta) =
-            abi.decode(intent.data, (address, address, address, uint256, uint256, uint256));
+        // Intent Instructions
+        (,, address supplyAsset, address borrowAsset, uint256 interestRateMode, uint256 minHealthFactor, uint256 delta)
+        = abi.decode(intent.data, (uint8, address, address, address, uint256, uint256, uint256));
+
+        // Hook Instructions
         (uint256 depositAmount, uint256 borrowAmount,) = abi.decode(hook.data, (uint256, uint256, bytes));
 
-        bytes memory approveData = abi.encodeWithSignature("approve(address,uint256)", pool, depositAmount);
+        // Deposit the supply asset to the Aave pool i.e. ETH
+        bytes memory approveData = abi.encodeWithSignature("approve(address,uint256)", _pool, depositAmount);
         executeFromRoot(supplyAsset, 0, approveData);
-
-        // EXECUTE: Supply the lending asset to the Aave pool i.e. ETH
-        // pool.deposit(supplyAsset, depositAmount, intent.root, 0);
         bytes memory depositData = abi.encodeWithSignature(
             "deposit(address,uint256,address,uint16)", supplyAsset, depositAmount, intent.root, 0
         );
-        executeFromRoot(pool, 0, depositData);
+        executeFromRoot(_pool, 0, depositData);
 
-        // EXECUTE: Borrow the borrowing asset from the Aave pool i.e. USDC
-        // pool.borrow(borrowAsset, borrowAmount, interestRateMode, 0, intent.root);
+        // Withdraw the borrowing asset from the Aave pool i.e. USDC
         bytes memory borrowData = abi.encodeWithSignature(
             "borrow(address,uint256,uint256,uint16,address)",
             borrowAsset,
@@ -172,9 +237,25 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, ChainlinkOracleHelper
             0,
             intent.root
         );
-        executeFromRoot(pool, 0, borrowData);
+        executeFromRoot(_pool, 0, borrowData);
     }
 
+    /**
+      * @notice Transfer tokens from the root account. 
+      * @param token address - ERC20 token
+      * @param to address - Account receiving tokens
+      * @param amount uint256 - Amount being sent
+     */
+    function _transferFromRoot(address token, address to, uint256 amount) internal {
+        bytes memory approveData = abi.encodeWithSignature("transfer(address,uint256)", to, amount);
+        executeFromRoot(token, 0, approveData);
+    }
+
+    /**
+      * @notice Generic smart contract call passed by executor 
+      * @param hook Hook - Executor supplied hook
+      * @return success boolean - Transaction execution status
+     */
     function _hook(Hook calldata hook) internal returns (bool success) {
         bytes memory errorMessage;
         (,, bytes memory hookData) = abi.decode(hook.data, (uint256, uint256, bytes));
@@ -187,21 +268,6 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, ChainlinkOracleHelper
             } else {
                 revert("AaveLeverageLongIntent::hook-execution-failed");
             }
-        }
-    }
-
-    function _extractRevertReason(bytes memory revertData) internal pure returns (string memory reason) {
-        uint256 length = revertData.length;
-        if (length < 68) return "";
-        uint256 t;
-        assembly {
-            revertData := add(revertData, 4)
-            t := mload(revertData) // Save the content of the length slot
-            mstore(revertData, sub(length, 4)) // Set proper length
-        }
-        reason = abi.decode(revertData, (string));
-        assembly {
-            mstore(revertData, t) // Restore the content of the length slot
         }
     }
 }

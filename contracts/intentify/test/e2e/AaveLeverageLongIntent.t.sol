@@ -64,7 +64,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         initializeBase();
         _simulateFlashloan = new SimulateFlashLoan();
         _intentifySafeModule = new IntentifySafeModule();
-        _aaveLeverageLongIntent = new AaveLeverageLongIntent(address(_intentifySafeModule), AAVE_POOL, SWAP_ROUTER);
+        _aaveLeverageLongIntent = new AaveLeverageLongIntent(address(_intentifySafeModule), AAVE_POOL);
         _safe = new Safe();
         _safeProxyFactory = new SafeProxyFactory();
         _safeCreated = _setupSafe(signer);
@@ -72,6 +72,168 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
 
         vm.prank(vm.envOr("WHALE_USDC", 0x28C6c06298d514Db089934071355E5743bf21d60));
     }
+
+    /* ===================================================================================== */
+    /* Success Tests                                                                         */
+    /* ===================================================================================== */
+
+    /**
+     * @notice This test is to simulate a flashloan of 1 ETH and then use that ETH to borrow USDC
+     */
+    function test_AaveLeverageLongIntent_USDC_ETH_Success() external {
+        uint256 INITIAL_DEPOSIT = 1e18;
+        _simulateFlashloan.fundWETH(address(_safeCreated), INITIAL_DEPOSIT);
+        initialAaveSupplyTransaction(WETH, INITIAL_DEPOSIT, AAVE_POOL);
+
+        // Create Hook
+        Intent[] memory intents = new Intent[](1);
+        intents[0] = Intent({
+            root: address(_safeCreated),
+            value: 0,
+            target: address(_aaveLeverageLongIntent),
+            data: _aaveLeverageLongIntent.encode(0, USDC_ETH_PRICE_FEED, WETH, USDC, 2, 1.2e18, 3000)
+        });
+
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
+        Hook[] memory hooks = new Hook[](1);
+
+        bytes memory flashloanTx =
+            abi.encodeWithSelector(SimulateFlashLoan.simulateFlashLoanETH.selector, address(_safeCreated), 1e18);
+        bytes memory leverageHookData = _aaveLeverageLongIntent.encodeHook(1e18, 1_652_000_000, flashloanTx);
+
+        hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
+
+        IntentBatchExecution memory batchExecution =
+            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+        _intentifySafeModule.execute(batchExecution);
+
+        (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
+        console2.log("Health Factor: %s", healthFactor);
+        // assert(healthFactor < 1.5e18);
+        assert(healthFactor > 1.1e18);
+    }
+
+    /**
+     * @notice This test is to simulate a flashloan of 1000 USDC and then use that USDC to borrow ETH
+     */
+    function test_AaveLeverageLongIntent_ETH_USDC_Success() external {
+        uint256 INITIAL_DEPOSIT = 1000e6;
+        _simulateFlashloan.fundUSDC(address(_safeCreated), INITIAL_DEPOSIT);
+        initialAaveSupplyTransaction(USDC, INITIAL_DEPOSIT, AAVE_POOL);
+
+        // Create Hook
+        Intent[] memory intents = new Intent[](1);
+        intents[0] = Intent({
+            root: address(_safeCreated),
+            value: 0,
+            target: address(_aaveLeverageLongIntent),
+            data: _aaveLeverageLongIntent.encode(1, USDC_ETH_PRICE_FEED, USDC, WETH, 2, 1.2e18, 3000)
+        });
+
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
+        Hook[] memory hooks = new Hook[](1);
+
+        bytes memory flashloanTx = abi.encodeWithSelector(
+            SimulateFlashLoan.simulateFlashLoanUSDC.selector, address(_safeCreated), 1_604_000_000
+        );
+        bytes memory leverageHookData =
+            _aaveLeverageLongIntent.encodeHook(1_604_000_000, 1_029_839_463_407_237_934, flashloanTx);
+
+        hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
+
+        IntentBatchExecution memory batchExecution =
+            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+        _intentifySafeModule.execute(batchExecution);
+
+        (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
+        console2.log("Health Factor: %s", healthFactor);
+        // assert(healthFactor < 1.5e18);
+        assert(healthFactor > 1.1e18);
+    }
+
+    /**
+     * @notice This test is to simulate a flashloan of 1 ETH and then use that ETH to borrow DAI
+     */
+    function test_AaveLeverageLongIntent_DAI_ETH_Success() external {
+        uint256 INITIAL_DEPOSIT = 1e18;
+        _simulateFlashloan.fundWETH(address(_safeCreated), INITIAL_DEPOSIT);
+        initialAaveSupplyTransaction(WETH, INITIAL_DEPOSIT, AAVE_POOL);
+
+        // Create Hook
+        Intent[] memory intents = new Intent[](1);
+        intents[0] = Intent({
+            root: address(_safeCreated),
+            value: 0,
+            target: address(_aaveLeverageLongIntent),
+            data: _aaveLeverageLongIntent.encode(0, DAI_ETH_PRICE_FEED, WETH, DAI, 2, 1.2e18, 3000)
+        });
+
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
+        Hook[] memory hooks = new Hook[](1);
+
+        bytes memory flashloanTx =
+            abi.encodeWithSelector(SimulateFlashLoan.simulateFlashLoanETH.selector, address(_safeCreated), 1e18);
+        bytes memory leverageHookData =
+            _aaveLeverageLongIntent.encodeHook(1e18, 1_638_000_000_000_000_000_000, flashloanTx);
+
+        hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
+
+        IntentBatchExecution memory batchExecution =
+            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+        _intentifySafeModule.execute(batchExecution);
+
+        (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
+        console2.log("Health Factor: %s", healthFactor);
+        // assert(healthFactor < 1.5e18);
+        assert(healthFactor > 1.1e18);
+    }
+
+    function test_AaveLeverageLongIntent_ETH_DAI_Success() external {
+        uint256 INITIAL_DEPOSIT = 1000e18;
+        _simulateFlashloan.fundDAI(address(_safeCreated), INITIAL_DEPOSIT);
+        initialAaveSupplyTransaction(DAI, INITIAL_DEPOSIT, AAVE_POOL);
+
+        // Create Hook
+        Intent[] memory intents = new Intent[](1);
+        intents[0] = Intent({
+            root: address(_safeCreated),
+            value: 0,
+            target: address(_aaveLeverageLongIntent),
+            data: _aaveLeverageLongIntent.encode(1, DAI_ETH_PRICE_FEED, DAI, WETH, 2, 1.2e18, 3000)
+        });
+
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
+        Hook[] memory hooks = new Hook[](1);
+
+        bytes memory flashloanTx = abi.encodeWithSelector(
+            SimulateFlashLoan.simulateFlashLoanDAI.selector, address(_safeCreated), 1_590_000_000_000_000_000_000
+        );
+        bytes memory leverageHookData =
+            _aaveLeverageLongIntent.encodeHook(1_590_000_000_000_000_000_000, 1_029_516_630_395_914_811, flashloanTx);
+
+        hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
+
+        IntentBatchExecution memory batchExecution =
+            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+        _intentifySafeModule.execute(batchExecution);
+
+        (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
+        console2.log("Health Factor: %s", healthFactor);
+        // assert(healthFactor < 1.5e18);
+        assert(healthFactor > 1.1e18);
+    }
+
+    /* ===================================================================================== */
+    /* Helpers                                                                               */
+    /* ===================================================================================== */
 
     function initialAaveSupplyTransaction(address asset, uint256 amount, address pool) internal {
         {
@@ -122,75 +284,4 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             );
         }
     }
-
-    /* ===================================================================================== */
-    /* Success Tests                                                                         */
-    /* ===================================================================================== */
-    function test_AaveLeverageLongIntent_USDC_ETH_Success() external {
-        uint256 INITIAL_DEPOSIT = 3e18;
-        _simulateFlashloan.fundWETH(address(_safeCreated), INITIAL_DEPOSIT);
-        initialAaveSupplyTransaction(WETH, INITIAL_DEPOSIT, AAVE_POOL);
-
-
-        // Create Hook
-        Intent[] memory intents = new Intent[](1);
-        intents[0] = Intent({
-            root: address(_safeCreated),
-            value: 0,
-            target: address(_aaveLeverageLongIntent),
-            data: _aaveLeverageLongIntent.encode(USDC_ETH_PRICE_FEED, WETH, USDC, 2, 1.2e18, 0.2e18)
-        });
-
-        IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
-        Hook[] memory hooks = new Hook[](1);
-
-        bytes memory flashloanTx =
-            abi.encodeWithSelector(SimulateFlashLoan.simulateFlashLoanETH.selector, address(_safeCreated), 1e18);
-        bytes memory leverageHookData = _aaveLeverageLongIntent.encodeHook(1e18, 1_604e6, flashloanTx);
-
-        hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
-
-        IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
-        _intentifySafeModule.execute(batchExecution);
-
-        (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
-        console2.log("Health Factor: %s", healthFactor);
-        // assert(healthFactor < 1.5e18);
-        assert(healthFactor > 1.1e18);
-    }
-
-    // function test_AaveLeverageLongIntent_DAI_ETH_Success() external {
-    //     // Create Hook
-    //     Intent[] memory intents = new Intent[](1);
-    //     intents[0] = Intent({
-    //         root: address(_safeCreated),
-    //         value: 0,
-    //         target: address(_aaveLeverageLongIntent),
-    //         data: _aaveLeverageLongIntent.encode(DAI_ETH_PRICE_FEED, DAI, ETH, 2, 1.2e18, 0.2e18)
-    //     });
-
-    //     IntentBatch memory intentBatch =
-    //         IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
-    //     (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
-    //     Hook[] memory hooks = new Hook[](1);
-
-    //     bytes memory flashloanTx =
-    //         abi.encodeWithSelector(SimulateFlashLoan.simulateFlashLoanDAI.selector, address(_safeCreated), 100_000e18);
-    //     bytes memory leverageHookData = _aaveLeverageLongIntent.encodeHook(100_000e18, 10e18, flashloanTx);
-
-    //     hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
-
-    //     IntentBatchExecution memory batchExecution =
-    //         IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
-    //     vm.deal(address(_safeCreated), 1e18);
-    //     _intentifySafeModule.execute(batchExecution);
-
-    //     (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
-    //     console2.log("Health Factor: %s", healthFactor);
-    //     // assert(healthFactor < 1.5e18);
-    //     assert(healthFactor > 1.1e18);
-    // }
 }
