@@ -1,0 +1,100 @@
+# What Is District Finance
+
+District Finance is a protocol for generalized [Smart Transactions](/terms/smart-transactions) with embedded rules for execution.
+
+**And accessing historical blockchain state during execution runtime.**
+
+<br/>
+
+import SlidesIntroduction from '../components/slides/slides-introduction'
+
+<SlidesIntroduction />
+
+# Problem
+
+Today users have to manually execute transactions. They can't add constraints or conditions to a when a transaction can be executed.
+
+For example you can't add timestamp and/or blocknumber constraint to an EVM transaction. You sign it, and if the nonce is valid it can be broadcast and be executed by anyone. It's an *effective* but **simplistic** way to program compute requests for a global and open finance system.
+
+**But perhaps more important is the problem users can't sign transactions that "react" to shift in market changes of assets on an EVM blockchain.**
+
+Imagine the possibilities if we can embed specific rules and conditions for a when a transaction can be executed?
+
+**It changes the world of Open Finance on global and neutral data settlement layer.**
+
+# Solution
+
+District Finance brings together multiple cutting edges Web3 technologies and concepts to upgrade transactions.
+
+[Smart Transactions](/terms/smart-transactions) uses zero-knowledge proofs, composable transaction modules and decentralized identity.
+
+- Historical Blockchain Data in Transactions
+- Composable Constraints in Transactions
+- Sharability in Transactions
+
+Together they enable a **programable smart transactions protocol** and a **social open finance ecosystem**.
+
+![District Finance Graph](/district-finance-graph.png)
+
+Instead of transactions that have to be signed in real-time users can express an [Intent](/terms/intent) and craft an [Intent Batch](/terms/intent-batch) to that will be properly executed by [Searchers](/terms/searchers) if the constraints are met.
+
+## Transaction Modules
+
+At the core of the District Finance protocol is [Transaction Modules](/terms/transaction-module) which embed rule and conditions into smart transaction i.e. intent batch.
+
+An intent module can be **read** and/or **write**.
+
+**Read**: Observes current or historical state.
+
+**Write**: Mutates state during the execution.
+
+- [BlockNumberRangeIntent](/intent-modules/block-number-range)
+- [TimestampRangeIntent](/intent-modules/timestamp-range)
+- [ETH Tip](/intent-modules/eth-tip)
+- [ERC20 Tip](/intent-modules/erc20-tip)
+- [ERC20 Swap Spot Price](/intent-modules/erc20-swap-spot-price)
+- [ERC20 Mean Reversion](/intent-modules/erc20-mean-reversion)
+
+The intent modules are referenced during the smart transaction signing process. In other words you don't need to install a module, like with the Safe smart wallet, to utilize a module. The intent module is utilized when the transaction is being processed onchain.
+
+
+## Zero-Knowledge Data Hub
+
+The Zero-Knowledge Data Hub provides "trustless" access to historical onchain data. In other words don't let the "zero-knowledge" part of the name fool you. The data hub is a rich source of historical onchain data.
+
+The data hub unlocks the ability for transaction modules to observe high-value information about the past.
+
+- Token Prices
+- Protocol APY
+- Consistent Voting
+
+With this information it's possible to efficiently measure if the average price of a token stayed within a specific boundary for the last 30 days. And passing a validation so an [Intent Batch](/terms/intent-batch)
+
+
+## Decentralized identity
+
+Smart transactions fundamentally change the relationship a user has with a blockchain.
+
+Instead of submitting transactions in real-time they're crafted to execute a future date.
+
+Because of this **sharing transactions** is now possible. 
+
+And with sharing comes identity and several important questions.
+
+- Who do you share smart transactions with?
+- Can you verify the source of the smart transaction?
+- How do you curate trusted smart transactions?
+
+# How It Works
+
+Let's start with the [Mean Reversion Intent Module](/intent-modules/mean-reversion).
+
+This intent modules allows users to can sign a transaction **that can only be executed** when a specific asset has behaved in X pattern across Y amount of time.
+
+> A mean reversion trading strategy is a trading approach that capitalizes on the expectation that asset prices will tend to revert or return to their historical or long-term average levels after experiencing temporary deviations or fluctuations.
+
+Paired with the [Swap Tokens Spot Price](/intent-modules/swap-token-spot-price) that buys an ERC20 token at the current market spot price.
+
+A user is now able to now craft and sign an [Intent Batch](/terms/intent-batch) that references the Mean Reversion and Token Swap Spot Price modules and will enforce an [Intent](/terms/intent) like "Buy X token if the token price has dropped 25% in the last 2 hours relative to the last 30 day average."
+
+![Architecture Basic](/architecture-basic.png)
