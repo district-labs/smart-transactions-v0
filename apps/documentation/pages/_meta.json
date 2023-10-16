@@ -1,0 +1,23 @@
+{
+  "index": "👋 Introduction",
+  "contribute": "✍️ Contribute",
+  "how-it-works": "📚 How It Works",
+  "core": "🧱 Core",
+  "intent-modules": "🧮 Modules",
+  "terms": "📖 Dictionary",
+  "about": {
+    "title": "About",
+    "type": "page"
+  },
+  "deployments": {
+    "title": "Deployments",
+    "type": "page"
+  },
+  "contact": {
+    "title": "Contact ↗",
+    "type": "page",
+    "href": "https://twitter.com/shuding_",
+    "newWindow": true
+  },
+  "demo": "Demo"
+}
