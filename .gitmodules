@@ -31,3 +31,6 @@
 [submodule "contracts/intentify/lib/axiom-v1"]
 	path = contracts/intentify/lib/axiom-v1
 	url = https://github.com/axiom-crypto/axiom-v1-contracts
+[submodule "contracts/intentify/lib/chainlink"]
+	path = contracts/intentify/lib/chainlink
+	url = https://github.com/smartcontractkit/chainlink

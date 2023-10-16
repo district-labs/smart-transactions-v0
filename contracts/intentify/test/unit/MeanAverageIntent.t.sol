@@ -93,7 +93,7 @@ contract MeanAverageIntentTest is BaseTest {
         assertEq(true, _executed);
     }
 
-     function test_MeanAverageIntent_CurrentBlockAsReference_Success() external {
+    function test_MeanAverageIntent_CurrentBlockAsReference_Success() external {
         address uniswapV3Pool = 0x5c33044BdBbE55dAb3d526CE70F908aAF6990373;
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
@@ -103,7 +103,15 @@ contract MeanAverageIntentTest is BaseTest {
             data: _meanAverageIntent.encode(
                 // Set the reference block to 0, so the current block at the
                 // intent execution time will be used as the reference block.
-                uniswapV3Pool, 0, 89_220, 40, 0, 49_950, 40, 105_000, 110_000
+                uniswapV3Pool,
+                0,
+                89_220,
+                40,
+                0,
+                49_950,
+                40,
+                105_000,
+                110_000
                 )
         });
 
@@ -248,7 +256,7 @@ contract MeanAverageIntentTest is BaseTest {
 
         vm.expectRevert("MeanAverageIntent:high-difference");
         _meanAverageIntent.exposed_checkPercentageDifference(intentDataHigh, hookData);
-        
+
         vm.expectRevert("MeanAverageIntent:low-difference");
         _meanAverageIntent.exposed_checkPercentageDifference(intentDataLow, hookData);
     }
