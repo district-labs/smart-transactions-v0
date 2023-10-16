@@ -1,6 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
+import { ERC20 } from "solady/tokens/ERC20.sol";
+import { Safe } from "safe-contracts/Safe.sol";
+import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
+import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
+import { Enum } from "safe-contracts/common/Enum.sol";
+
 import "@uniswap/v3-core/contracts/libraries/FullMath.sol";
 import {
     Intent,
@@ -12,12 +18,18 @@ import {
 } from "../../src/TypesAndDecoders.sol";
 import { Intentify } from "../../src/Intentify.sol";
 import { MarketOrderIntent } from "../../src/intents/MarketOrderIntent.sol";
-
+import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
+import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 import { BaseTest } from "../utils/Base.t.sol";
 
-contract TwapIntentTest is BaseTest {
-    Intentify internal _intentify;
+contract MarketOrderIntentTest is SafeTestingUtils {
+    Safe internal _safeCreated;
+    IntentifySafeModule internal _intentifySafeModule;
     MarketOrderIntent internal _marketOrderIntent;
+
+    address internal _whaleUSDC;
+    address internal _whaleWETH;
+    address internal _searcher;
 
     uint256 mainnetFork;
     uint256 MAINNET_FORK_BLOCK = 18_341_359;
@@ -32,8 +44,15 @@ contract TwapIntentTest is BaseTest {
         vm.rollFork(MAINNET_FORK_BLOCK);
 
         initializeBase();
-        _intentify = new Intentify(signer, "Intentify", "V0");
-        _marketOrderIntent = new MarketOrderIntent();
+        _searcher = address(0x1234);
+        _whaleUSDC = 0x51eDF02152EBfb338e03E30d65C15fBf06cc9ECC;
+        _whaleWETH = 0xF04a5cC80B1E94C69B48f5ee68a08CD2F09A7c3E;
+        _intentifySafeModule = new IntentifySafeModule();
+        _marketOrderIntent = new MarketOrderIntent(address(_intentifySafeModule));
+        _safe = new Safe();
+        _safeProxyFactory = new SafeProxyFactory();
+        _safeCreated = _setupSafe(signer);
+        _enableIntentifyModule(SIGNER, _safeCreated, address(_intentifySafeModule));
     }
 
     /* ===================================================================================== */
@@ -57,9 +76,15 @@ contract TwapIntentTest is BaseTest {
         address WETHAddress = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
         address USDCAddress = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
 
+        // Safe starts with 1500 USDC
+        vm.prank(_whaleUSDC);
+        ERC20(USDCAddress).transfer(address(_safeCreated), 1500e6);
+
         Intent[] memory intents = new Intent[](1);
+
+        // It intents to buy 0.8 ETH with USDC at the market rate at the time of execution
         intents[0] = Intent({
-            root: address(_intentify),
+            root: address(_safeCreated),
             value: 0,
             target: address(_marketOrderIntent),
             data: _marketOrderIntent.encode(
@@ -68,26 +93,43 @@ contract TwapIntentTest is BaseTest {
                 priceFeedUSDCUSD,
                 priceFeedETHUSD,
                 0.8 ether,
-                0,
                 36_000, // 10 hours of tolerance for stale data,
                 true // isBuy
             )
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
+        bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
-        Hook[] memory hooks = new Hook[](1);
-        hooks[0] = EMPTY_HOOK;
+        // Approve 0.8 ETH to the Market Order Intent, this is a helper to execute the hook trading
+        vm.prank(_whaleWETH);
+        ERC20(WETHAddress).approve(address(_marketOrderIntent), 0.8 ether);
 
+        bytes memory hookTxData = abi.encodeWithSignature(
+            "transferFrom(address,address,uint256)", _whaleWETH, address(_safeCreated), 0.8 ether
+        );
+
+        uint256 initialSafeWETHBalance = ERC20(WETHAddress).balanceOf(address(_safeCreated));
+        uint256 initialSearcherUSDCBalance = ERC20(USDCAddress).balanceOf(_searcher);
+
+        bytes memory hookData = abi.encode(_searcher, hookTxData);
+
+        Hook[] memory hooks = new Hook[](1);
+        hooks[0] = Hook({ target: WETHAddress, data: hookData });
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        bool _executed = _intentify.execute(batchExecution);
-        assertEq(true, _executed);
+        _intentifySafeModule.execute(batchExecution);
+
+        // Asserts the safe received 0.8 ETH (purchase amount)
+        assertEq(ERC20(WETHAddress).balanceOf(address(_safeCreated)) - initialSafeWETHBalance, 0.8 ether);
+
+        // Asserts the searcher received 1236.38 USDC in exchange for the 0.8 ETH
+        // at the current market rate (sell amount)
+        assertEq(ERC20(USDCAddress).balanceOf(_searcher) - initialSearcherUSDCBalance, 1_236_380_549);
     }
 
     /**
@@ -107,37 +149,59 @@ contract TwapIntentTest is BaseTest {
         address WETHAddress = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
         address USDCAddress = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
 
+        // Safe starts with 1 ETH
+        vm.prank(_whaleWETH);
+        ERC20(WETHAddress).transfer(address(_safeCreated), 1 ether);
+
         Intent[] memory intents = new Intent[](1);
+
+        // It intents to sell 0.8 ETH for USDC at the market rate at the time of execution
         intents[0] = Intent({
-            root: address(_intentify),
+            root: address(_safeCreated),
             value: 0,
             target: address(_marketOrderIntent),
             data: _marketOrderIntent.encode(
-                USDCAddress,
                 WETHAddress,
-                priceFeedUSDCUSD,
+                USDCAddress,
                 priceFeedETHUSD,
+                priceFeedUSDCUSD,
                 0.8 ether,
-                0,
                 36_000, // 10 hours of tolerance for stale data,
                 false // isBuy
             )
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
+        bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
-        Hook[] memory hooks = new Hook[](1);
-        hooks[0] = EMPTY_HOOK;
+        // Approve 1300 USDC to the Market Order Intent, this is a helper to execute the hook trading
+        vm.prank(_whaleUSDC);
+        ERC20(USDCAddress).approve(address(_marketOrderIntent), 1300e6);
 
+        bytes memory hookTxData =
+            abi.encodeWithSignature("transferFrom(address,address,uint256)", _whaleUSDC, address(_safeCreated), 1300e6);
+
+        uint256 initialSafeUSDCBalance = ERC20(USDCAddress).balanceOf(address(_safeCreated));
+        uint256 initialSearcherWETHBalance = ERC20(WETHAddress).balanceOf(_searcher);
+
+        bytes memory hookData = abi.encode(_searcher, hookTxData);
+
+        Hook[] memory hooks = new Hook[](1);
+        hooks[0] = Hook({ target: USDCAddress, data: hookData });
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        bool _executed = _intentify.execute(batchExecution);
-        assertEq(true, _executed);
+        _intentifySafeModule.execute(batchExecution);
+
+        // Asserts the safe received 1236.38 USDC in exchange for the 0.8 ETH at
+        // the current market rate (purchase amount)
+        assert(ERC20(USDCAddress).balanceOf(address(_safeCreated)) - initialSafeUSDCBalance >= 1_236_380_549);
+
+        // Asserts the searcher received 0.8 ETH (sell amount)
+        assertEq(ERC20(WETHAddress).balanceOf(_searcher) - initialSearcherWETHBalance, 0.8 ether);
     }
 
     /* ===================================================================================== */
