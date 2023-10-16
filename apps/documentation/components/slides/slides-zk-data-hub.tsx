@@ -7,8 +7,8 @@ const slides = [
         original:'/slides/zk-data-hub/cover.png'
     },
     {
-        name: 'Problem',
-        original:'/slides/zk-data-hub/onchain-data.png'
+        name: 'Smart Transactions',
+        original:'/slides/zk-data-hub/smart-transactions.png'
     },
     {
       name: 'Powering Intents',
@@ -29,6 +29,10 @@ const slides = [
     {
         name: 'Data Marketplace',
         original:'/slides/zk-data-hub/data-marketplace.png'
+    },
+    {
+        name: 'Public Good',
+        original:'/slides/zk-data-hub/public-good.png'
     },
 ]
 
