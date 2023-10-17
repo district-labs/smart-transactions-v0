@@ -17,7 +17,7 @@ contract MeanAverageIntent {
     UniswapV3TwapOracle internal _uniswapV3TwapOracle;
 
     struct BlockData {
-        uint256 referenceBlock;
+        uint256 referenceBlockOffset;
         uint256 blockWindow;
         uint256 blockWindowTolerance;
         uint256 startBlock;
@@ -46,16 +46,18 @@ contract MeanAverageIntent {
         internal
         view
     {
-        require(blockData.referenceBlock <= block.number, "MeanAverageIntent:invalid-reference-block");
+        require(blockData.referenceBlockOffset < block.number, "MeanAverageIntent:invalid-reference-block");
+
+        uint256 referenceBlock = block.number - blockData.referenceBlockOffset;
 
         if (
-            blockData.referenceBlock - blockData.blockWindowTolerance > blockData.endBlock
-                || blockData.referenceBlock + blockData.blockWindowTolerance < blockData.endBlock
+            referenceBlock - blockData.blockWindowTolerance > blockData.endBlock
+                || referenceBlock + blockData.blockWindowTolerance < blockData.endBlock
         ) {
             revert(errorMessageEnd);
         }
 
-        uint256 targetBlock = blockData.referenceBlock - blockData.blockWindow;
+        uint256 targetBlock = referenceBlock - blockData.blockWindow;
 
         if (
             targetBlock - blockData.blockWindowTolerance > blockData.startBlock
@@ -136,22 +138,14 @@ contract MeanAverageIntent {
 
         (
             ,
-            uint256 numeratorReferenceBlock,
+            uint256 numeratorReferenceBlockOffset,
             uint256 numeratorBlockWindow,
             uint256 numeratorBlockWindowTolerance,
-            uint256 denominatorReferenceBlock,
+            uint256 denominatorReferenceBlockOffset,
             uint256 denominatorBlockWindow,
             uint256 denominatorBlockWindowTolerance,
             ,
         ) = abi.decode(intent.data, (address, uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256));
-
-        // Set the reference block for the numerator if it's not already set.
-        if (numeratorReferenceBlock == 0) {
-            numeratorReferenceBlock = block.number;
-        }
-        if (denominatorReferenceBlock == 0) {
-            denominatorReferenceBlock = block.number;
-        }
 
         (
             uint256 numeratorStartBlock,
@@ -161,7 +155,7 @@ contract MeanAverageIntent {
         ) = abi.decode(hook.data, (uint256, uint256, uint256, uint256));
 
         BlockData memory numerator = BlockData({
-            referenceBlock: numeratorReferenceBlock,
+            referenceBlockOffset: numeratorReferenceBlockOffset,
             blockWindow: numeratorBlockWindow,
             blockWindowTolerance: numeratorBlockWindowTolerance,
             startBlock: numeratorStartBlock,
@@ -169,7 +163,7 @@ contract MeanAverageIntent {
         });
 
         BlockData memory denominator = BlockData({
-            referenceBlock: denominatorReferenceBlock,
+            referenceBlockOffset: denominatorReferenceBlockOffset,
             blockWindow: denominatorBlockWindow,
             blockWindowTolerance: denominatorBlockWindowTolerance,
             startBlock: denominatorStartBlock,
@@ -185,10 +179,10 @@ contract MeanAverageIntent {
     /**
      * @dev Helper function to encode provided parameters into a byte array.
      * @param uniswapV3Pool Address of the UniswapV3Pool.
-     * @param numeratorReferenceBlock Reference block number for numerator.
+     * @param numeratorReferenceBlockOffset Number of blocks previous to the current block
      * @param numeratorBlockWindow Block window for numerator.
      * @param numeratorBlockWindowTolerance Tolerance window for numerator.
-     * @param denominatorReferenceBlock Reference block number for denominator.
+     * @param denominatorReferenceBlockOffset Number of blocks previous to the current block
      * @param denominatorBlockWindow Block window for denominator.
      * @param denominatorBlockWindowTolerance Tolerance window for denominator.
      * @param minPercentageDifference Minimum allowed percentage difference.
@@ -196,10 +190,10 @@ contract MeanAverageIntent {
      */
     function encode(
         address uniswapV3Pool,
-        uint256 numeratorReferenceBlock,
+        uint256 numeratorReferenceBlockOffset,
         uint256 numeratorBlockWindow,
         uint256 numeratorBlockWindowTolerance,
-        uint256 denominatorReferenceBlock,
+        uint256 denominatorReferenceBlockOffset,
         uint256 denominatorBlockWindow,
         uint256 denominatorBlockWindowTolerance,
         uint256 minPercentageDifference,
@@ -211,10 +205,10 @@ contract MeanAverageIntent {
     {
         data = abi.encode(
             uniswapV3Pool,
-            numeratorReferenceBlock,
+            numeratorReferenceBlockOffset,
             numeratorBlockWindow,
             numeratorBlockWindowTolerance,
-            denominatorReferenceBlock,
+            denominatorReferenceBlockOffset,
             denominatorBlockWindow,
             denominatorBlockWindowTolerance,
             minPercentageDifference,

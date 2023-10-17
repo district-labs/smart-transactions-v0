@@ -71,48 +71,7 @@ contract MeanAverageIntentTest is BaseTest {
             root: address(_intentify),
             value: 0,
             target: address(_meanAverageIntent),
-            data: _meanAverageIntent.encode(
-                uniswapV3Pool, block.number, 89_220, 40, block.number, 49_950, 40, 105_000, 110_000
-                )
-        });
-
-        IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
-
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
-
-        Hook[] memory hooks = new Hook[](1);
-        hooks[0] =
-            Hook({ target: address(_meanAverageIntent), data: abi.encode(9_759_424, 9_848_630, 9_798_709, 9_848_630) });
-
-        IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
-
-        bool _executed = _intentify.execute(batchExecution);
-        assertEq(true, _executed);
-    }
-
-    function test_MeanAverageIntent_CurrentBlockAsReference_Success() external {
-        address uniswapV3Pool = 0x5c33044BdBbE55dAb3d526CE70F908aAF6990373;
-        Intent[] memory intents = new Intent[](1);
-        intents[0] = Intent({
-            root: address(_intentify),
-            value: 0,
-            target: address(_meanAverageIntent),
-            data: _meanAverageIntent.encode(
-                // Set the reference block to 0, so the current block at the
-                // intent execution time will be used as the reference block.
-                uniswapV3Pool,
-                0,
-                89_220,
-                40,
-                0,
-                49_950,
-                40,
-                105_000,
-                110_000
-                )
+            data: _meanAverageIntent.encode(uniswapV3Pool, 0, 89_220, 40, 0, 49_950, 40, 105_000, 110_000)
         });
 
         IntentBatch memory intentBatch =
@@ -134,7 +93,7 @@ contract MeanAverageIntentTest is BaseTest {
 
     function test_CheckBlockWindow_Success() external view {
         MeanAverageIntent.BlockData memory blockData = MeanAverageIntent.BlockData({
-            referenceBlock: block.number,
+            referenceBlockOffset: 0,
             blockWindow: 89_220,
             blockWindowTolerance: 40,
             startBlock: 9_759_424,
@@ -148,7 +107,7 @@ contract MeanAverageIntentTest is BaseTest {
 
     function test_CheckBlocksRange_Success() external view {
         MeanAverageIntent.BlockData memory numerator = MeanAverageIntent.BlockData({
-            referenceBlock: block.number,
+            referenceBlockOffset: 0,
             blockWindow: 89_220,
             blockWindowTolerance: 40,
             startBlock: 9_759_424,
@@ -156,7 +115,7 @@ contract MeanAverageIntentTest is BaseTest {
         });
 
         MeanAverageIntent.BlockData memory denominator = MeanAverageIntent.BlockData({
-            referenceBlock: block.number,
+            referenceBlockOffset: 0,
             blockWindow: 49_950,
             blockWindowTolerance: 40,
             startBlock: 9_798_709,
@@ -169,7 +128,7 @@ contract MeanAverageIntentTest is BaseTest {
     function test_CheckPercentageDifference_Success() external view {
         address uniswapV3Pool = 0x5c33044BdBbE55dAb3d526CE70F908aAF6990373;
         bytes memory intentData = _meanAverageIntent.encode(
-            uniswapV3Pool, block.number, 89_220, 40, block.number, 49_950, 40, 105_000, 110_000
+            uniswapV3Pool, 0, 89_220, 40, 0, 49_950, 40, 105_000, 110_000
         );
         bytes memory hookData = abi.encode(9_759_424, 9_848_630, 9_798_709, 9_848_630);
 
@@ -184,7 +143,7 @@ contract MeanAverageIntentTest is BaseTest {
 
     function test_CheckBlockWindow_RevertWhen_OutOfTolerance() external {
         MeanAverageIntent.BlockData memory blockData = MeanAverageIntent.BlockData({
-            referenceBlock: block.number,
+            referenceBlockOffset: 0,
             blockWindow: 89_220,
             blockWindowTolerance: 40,
             startBlock: 9_759_500,
@@ -207,7 +166,7 @@ contract MeanAverageIntentTest is BaseTest {
 
     function test_CheckBlocksRange_RevertWhen_InvalidWindow() external {
         MeanAverageIntent.BlockData memory numerator = MeanAverageIntent.BlockData({
-            referenceBlock: block.number,
+            referenceBlockOffset: 0,
             blockWindow: 89_220,
             blockWindowTolerance: 40,
             startBlock: 9_759_400,
@@ -215,7 +174,7 @@ contract MeanAverageIntentTest is BaseTest {
         });
 
         MeanAverageIntent.BlockData memory denominator = MeanAverageIntent.BlockData({
-            referenceBlock: block.number,
+            referenceBlockOffset: 0,
             blockWindow: 49_950,
             blockWindowTolerance: 40,
             startBlock: 9_798_709,
@@ -247,10 +206,10 @@ contract MeanAverageIntentTest is BaseTest {
     function test_CheckPercentageDifference_RevertWhen_OutOfRange() external {
         address uniswapV3Pool = 0x5c33044BdBbE55dAb3d526CE70F908aAF6990373;
         bytes memory intentDataHigh = _meanAverageIntent.encode(
-            uniswapV3Pool, block.number, 89_220, 40, block.number, 49_950, 40, 105_000, 108_000
+            uniswapV3Pool, 0, 89_220, 40, 0, 49_950, 40, 105_000, 108_000
         );
         bytes memory intentDataLow = _meanAverageIntent.encode(
-            uniswapV3Pool, block.number, 89_220, 40, block.number, 49_950, 40, 110_000, 115_000
+            uniswapV3Pool, 0, 89_220, 40, 0, 49_950, 40, 110_000, 115_000
         );
         bytes memory hookData = abi.encode(9_759_424, 9_848_630, 9_798_709, 9_848_630);
 
