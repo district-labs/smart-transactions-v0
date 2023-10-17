@@ -12,5 +12,12 @@ export const config: Config = {
       abi: "./abis/UniswapV3TwapOracle.json",
       startBlock: 9844774,
     },
+    {
+      name: "AxiomV1Query",
+      network: "goerli",
+      address: "0x4Fb202140c5319106F15706b1A69E441c9536306",
+      abi: "./abis/AxiomV1Query.json",
+      startBlock: 9844774,
+    },
   ],
 };

@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const qb = ax.newQueryBuilder()
     await qb.append({
-      blockNumber: 9848630,
+      blockNumber: 9848632,
       address: UNI_V3_POOL_ADDR,
       slot: 8,
     })

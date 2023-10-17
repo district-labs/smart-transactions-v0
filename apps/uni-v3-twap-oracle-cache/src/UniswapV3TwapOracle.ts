@@ -1,11 +1,5 @@
 import { ponder } from "@/generated";
-import { createPublicClient, http } from 'viem';
-import { goerli } from 'viem/chains';
-
-const client = createPublicClient({ 
-  chain: goerli,
-  transport: http()
-})
+import { client } from "./client";
 
 ponder.on("UniswapV3TwapOracle:ObservationStored", async ({event,context}) => {
   const {UniswapV3Pool,BlockInfo } = context.entities
