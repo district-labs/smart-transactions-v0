@@ -25,9 +25,9 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
                                     CONSTRUCTOR
     //////////////////////////////////////////////////////////////////////////*/
     /**
-      * @notice Initialize the smart contract
-      * @param intentifySafeModule Canonical Intentify Safe Module
-      * @param __pool Canonical Aave Pool
+     * @notice Initialize the smart contract
+     * @param intentifySafeModule Canonical Intentify Safe Module
+     * @param __pool Canonical Aave Pool
      */
     constructor(address intentifySafeModule, address __pool) ExecuteRootTransaction(intentifySafeModule) {
         _pool = __pool;
@@ -37,15 +37,15 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
                                     READ FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
     /**
-      * @notice Encode hook instructions.
-      * @dev The executor/searcher should calculate these values before encoding.
-      * @param swapType uint8 - Base or Quote asset used to calculate payout  
-      * @param priceFeed address - Chainlink price feed for supply and borrow asset
-      * @param supplyAsset address - ERC20 supplied to Aave
-      * @param borrowAsset address - ERC20 borrowed from Aave
-      * @param interestRateMode uint256 - Interest rate mode for Aave
-      * @param minHealthFactor uint256 Minimum health factor after intent execution
-      * @param fee uint32 - Fee paid to executor i.e. 3000 = 3%
+     * @notice Encode hook instructions.
+     * @dev The executor/searcher should calculate these values before encoding.
+     * @param swapType uint8 - Base or Quote asset used to calculate payout
+     * @param priceFeed address - Chainlink price feed for supply and borrow asset
+     * @param supplyAsset address - ERC20 supplied to Aave
+     * @param borrowAsset address - ERC20 borrowed from Aave
+     * @param interestRateMode uint256 - Interest rate mode for Aave
+     * @param minHealthFactor uint256 Minimum health factor after intent execution
+     * @param fee uint32 - Fee paid to executor i.e. 3000 = 3%
      */
     function encode(
         uint8 swapType,
@@ -64,10 +64,10 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     }
 
     /**
-      * @notice Encode hook instructions.
-      * @dev The executor/searcher should calculate these values before encoding.
-      * @param supplyAmount Amount being supplied to Aave
-      * @param borrowAmount Amount being borrowed from Aave
+     * @notice Encode hook instructions.
+     * @dev The executor/searcher should calculate these values before encoding.
+     * @param supplyAmount Amount being supplied to Aave
+     * @param borrowAmount Amount being borrowed from Aave
      */
     function encodeHook(
         uint256 supplyAmount,
@@ -108,8 +108,7 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
         uint256 balanceStart = IERC20(supplyAsset).balanceOf(intent.root);
         _hook(hook); // Expectation is that the hook will add funds to the root account i.e. flash loan
         _leverage(intent, hook);
-        uint256 repayAmount =
-            _checkHookInstructions(swapType, priceFeed, supplyAsset, borrowAsset, fee, hook.data);
+        uint256 repayAmount = _checkHookInstructions(swapType, priceFeed, supplyAsset, borrowAsset, fee, hook.data);
         _transferFromRoot(borrowAsset, hook.target, repayAmount);
         _checkHealthFactor(intent.root, minHealthFactor);
         _checkFinalBalance(intent.root, supplyAsset, balanceStart);
@@ -157,7 +156,7 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     }
 
     /**
-     * @notice Checks account health factor is above minimum threshold 
+     * @notice Checks account health factor is above minimum threshold
      * @param account address - Account to get Aave user data about
      * @param token address - ERC20 token
      * @param balanceStart uint256 - Balance at the start of intent execution
@@ -167,8 +166,8 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
         require(balanceEnd >= balanceStart, "AaveLeverageLongIntent:insufficient-ending-balance");
     }
 
-     /**
-     * @notice Checks account health factor is above minimum threshold 
+    /**
+     * @notice Checks account health factor is above minimum threshold
      * @param account address - Account to get Aave user data about
      * @param minHealthFactor uint256 - Minimum health factor
      */
@@ -178,7 +177,7 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     }
 
     /**
-     * @notice Fetches external data required to constrain hook instructions 
+     * @notice Fetches external data required to constrain hook instructions
      * @param priceFeed The price feed of the numerator asset.
      * @param supplyAsset The address of the numerator asset.
      * @param borrowAsset The address of the denominator asset.
@@ -207,9 +206,9 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     }
 
     /**
-      * @notice Supply assets to Aave and borrow against the collateral.
-      * @param intent Intent - User signed intent
-      * @param hook Hook - Executor supplied hook
+     * @notice Supply assets to Aave and borrow against the collateral.
+     * @param intent Intent - User signed intent
+     * @param hook Hook - Executor supplied hook
      */
     function _leverage(Intent calldata intent, Hook calldata hook) internal {
         // Intent Instructions
@@ -224,49 +223,43 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     }
 
     /**
-      * @notice Supply assets to Aave lending pool.
-      * @dev The AaveLeverageLongIntent is expected to be supplied with a "flash loan" before execution.
-      * @param supplyAsset address - ERC20 token
-      * @param supplyAmount uint256 - ERC20 amount
-      * @param root address - Account managing the position
+     * @notice Supply assets to Aave lending pool.
+     * @dev The AaveLeverageLongIntent is expected to be supplied with a "flash loan" before execution.
+     * @param supplyAsset address - ERC20 token
+     * @param supplyAmount uint256 - ERC20 amount
+     * @param root address - Account managing the position
      */
     function _supply(address supplyAsset, uint256 supplyAmount, address root) internal {
         bytes memory approveData = abi.encodeWithSignature("approve(address,uint256)", _pool, supplyAmount);
         (bool successApprove,) = address(supplyAsset).call(approveData);
         require(successApprove);
 
-        bytes memory depositData = abi.encodeWithSignature(
-            "deposit(address,uint256,address,uint16)", supplyAsset, supplyAmount, root, 0
-        );
+        bytes memory depositData =
+            abi.encodeWithSignature("deposit(address,uint256,address,uint16)", supplyAsset, supplyAmount, root, 0);
 
         (bool depositApprove,) = address(_pool).call(depositData);
         require(depositApprove);
     }
-    
+
     /**
-      * @notice Borrow assets from Aave lending pool.
-      * @param borrowAsset address - ERC20 token
-      * @param borrowAmount uint256 - ERC20 amount
-      * @param interestRateMode uint256 - Aave interest rate mode i.e. stable or variable
-      * @param root address - Account managing the position
+     * @notice Borrow assets from Aave lending pool.
+     * @param borrowAsset address - ERC20 token
+     * @param borrowAmount uint256 - ERC20 amount
+     * @param interestRateMode uint256 - Aave interest rate mode i.e. stable or variable
+     * @param root address - Account managing the position
      */
     function _borrow(address borrowAsset, uint256 borrowAmount, uint256 interestRateMode, address root) internal {
-        bytes memory borrowData = abi.encodeWithSignature( 
-            "borrow(address,uint256,uint256,uint16,address)",
-            borrowAsset,
-            borrowAmount,
-            interestRateMode,
-            0,
-            root
+        bytes memory borrowData = abi.encodeWithSignature(
+            "borrow(address,uint256,uint256,uint16,address)", borrowAsset, borrowAmount, interestRateMode, 0, root
         );
         executeFromRoot(_pool, 0, borrowData);
     }
 
     /**
-      * @notice Transfer tokens from the root account. 
-      * @param token address - ERC20 token
-      * @param to address - Account receiving tokens
-      * @param amount uint256 - Amount being sent
+     * @notice Transfer tokens from the root account.
+     * @param token address - ERC20 token
+     * @param to address - Account receiving tokens
+     * @param amount uint256 - Amount being sent
      */
     function _transferFromRoot(address token, address to, uint256 amount) internal {
         bytes memory approveData = abi.encodeWithSignature("transfer(address,uint256)", to, amount);
@@ -274,9 +267,9 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     }
 
     /**
-      * @notice Generic smart contract call passed by executor 
-      * @param hook Hook - Executor supplied hook
-      * @return success boolean - Transaction execution status
+     * @notice Generic smart contract call passed by executor
+     * @param hook Hook - Executor supplied hook
+     * @return success boolean - Transaction execution status
      */
     function _hook(Hook calldata hook) internal returns (bool success) {
         bytes memory errorMessage;

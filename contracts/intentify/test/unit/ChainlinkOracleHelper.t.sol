@@ -19,7 +19,6 @@ contract ChainlinkOracleHelperTest is SafeTestingUtils {
     MockChainlinkOracleHelper public chainlinkOracleHelper;
 
     function setUp() public virtual {
-
         initializeBase();
         chainlinkOracleHelper = new MockChainlinkOracleHelper();
     }
@@ -28,28 +27,28 @@ contract ChainlinkOracleHelperTest is SafeTestingUtils {
     /* Success Tests                                                                         */
     /* ===================================================================================== */
     function test_ChainLink_USDC_ETH_ConvertToETH_Amount_Success() external {
-        int256 price = 623344226452823; // USDC_ETH_PRICE at block 18_124_343
+        int256 price = 623_344_226_452_823; // USDC_ETH_PRICE at block 18_124_343
         uint256 usdcAmount = 10_000e6;
         uint256 swap = chainlinkOracleHelper.calculateBaseAsset(price, 6, usdcAmount);
         assertEq(swap, 6_233_442_264_528_230_000);
     }
 
     function test_ChainLink_USDC_ETH_ConvertToUSDC_Amount_Success() external {
-        int256 price = 623344226452823; // USDC_ETH_PRICE at block 18_124_343
+        int256 price = 623_344_226_452_823; // USDC_ETH_PRICE at block 18_124_343
         uint256 ethAmount = 1e18;
         uint256 swap = chainlinkOracleHelper.calculateQuoteAsset(price, 6, ethAmount);
         assertEq(swap, 1_604_000_000);
     }
 
     function test_ChainLink_DAI_ETH_ConvertToETH_Success() external {
-        int256 price = 628635666114621; // DAI_ETH_PRICE at block 18_124_343
+        int256 price = 628_635_666_114_621; // DAI_ETH_PRICE at block 18_124_343
         uint256 amount = 10_000e18;
         uint256 swap = chainlinkOracleHelper.calculateBaseAsset(price, 18, amount);
         assertEq(swap, 6_286_356_661_146_210_000);
     }
 
     function test_ChainLink_DAI_ETH_ConvertToDAI_Success() external {
-        int256 price = 628635666114621; // DAI_ETH_PRICE at block 18_124_343
+        int256 price = 628_635_666_114_621; // DAI_ETH_PRICE at block 18_124_343
         uint256 ethAmount = 1e18;
         uint256 swap = chainlinkOracleHelper.calculateQuoteAsset(price, 18, ethAmount);
         assertEq(swap, 1_590_000_000_000_000_000_000);

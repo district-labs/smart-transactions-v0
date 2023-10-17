@@ -99,8 +99,9 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
         Hook[] memory hooks = new Hook[](1);
 
-        bytes memory flashloanTx =
-            abi.encodeWithSelector(SimulateFlashLoan.simulateFlashLoanETH.selector, address(_aaveLeverageLongIntent), 1e18);
+        bytes memory flashloanTx = abi.encodeWithSelector(
+            SimulateFlashLoan.simulateFlashLoanETH.selector, address(_aaveLeverageLongIntent), 1e18
+        );
         bytes memory leverageHookData = _aaveLeverageLongIntent.encodeHook(1e18, 1_652_000_000, flashloanTx);
 
         hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
@@ -110,7 +111,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         _intentifySafeModule.execute(batchExecution);
 
         (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
-        assert(healthFactor == 1606015562015790245);
+        assert(healthFactor == 1_606_015_562_015_790_245);
     }
 
     /**
@@ -148,7 +149,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         _intentifySafeModule.execute(batchExecution);
 
         (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
-        assert(healthFactor == 1265638661563111203);
+        assert(healthFactor == 1_265_638_661_563_111_203);
     }
 
     /**
@@ -173,8 +174,9 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
         Hook[] memory hooks = new Hook[](1);
 
-        bytes memory flashloanTx =
-            abi.encodeWithSelector(SimulateFlashLoan.simulateFlashLoanETH.selector, address(_aaveLeverageLongIntent), 1e18);
+        bytes memory flashloanTx = abi.encodeWithSelector(
+            SimulateFlashLoan.simulateFlashLoanETH.selector, address(_aaveLeverageLongIntent), 1e18
+        );
         bytes memory leverageHookData =
             _aaveLeverageLongIntent.encodeHook(1e18, 1_638_000_000_000_000_000_000, flashloanTx);
 
@@ -185,7 +187,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         _intentifySafeModule.execute(batchExecution);
 
         (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
-        assert(healthFactor == 1620105567656887789);
+        assert(healthFactor == 1_620_105_567_656_887_789);
     }
 
     function test_AaveLeverageLongIntent_ETH_DAI_Success() external {
@@ -208,7 +210,9 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         Hook[] memory hooks = new Hook[](1);
 
         bytes memory flashloanTx = abi.encodeWithSelector(
-            SimulateFlashLoan.simulateFlashLoanDAI.selector, address(_aaveLeverageLongIntent), 1_590_000_000_000_000_000_000
+            SimulateFlashLoan.simulateFlashLoanDAI.selector,
+            address(_aaveLeverageLongIntent),
+            1_590_000_000_000_000_000_000
         );
         bytes memory leverageHookData =
             _aaveLeverageLongIntent.encodeHook(1_590_000_000_000_000_000_000, 1_029_516_630_395_914_811, flashloanTx);
@@ -221,7 +225,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
 
         (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
         console2.log("Health Factor: %s", healthFactor);
-        assert(healthFactor == 1258946459298217358);
+        assert(healthFactor == 1_258_946_459_298_217_358);
     }
 
     /* ===================================================================================== */
