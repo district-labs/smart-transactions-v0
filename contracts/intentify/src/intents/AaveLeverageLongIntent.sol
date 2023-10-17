@@ -36,7 +36,6 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     /*//////////////////////////////////////////////////////////////////////////
                                     READ FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
-
     /**
       * @notice Encode hook instructions.
       * @dev The executor/searcher should calculate these values before encoding.
@@ -97,8 +96,6 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     function execute(Intent calldata intent, Hook calldata hook) external returns (bool) {
         require(intent.root == msg.sender, "TimestampIntent:invalid-root");
         require(intent.target == address(this), "TimestampIntent:invalid-target");
-        _hook(hook); // Expectation is that the hook will add funds to the root account i.e. flash loan
-        _leverage(intent, hook);
         (
             uint8 swapType,
             address priceFeed,
@@ -109,6 +106,8 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
             uint32 fee
         ) = abi.decode(intent.data, (uint8, address, address, address, uint256, uint256, uint32));
         uint256 balanceStart = IERC20(supplyAsset).balanceOf(intent.root);
+        _hook(hook); // Expectation is that the hook will add funds to the root account i.e. flash loan
+        _leverage(intent, hook);
         uint256 repayAmount =
             _checkHookInstructions(swapType, priceFeed, supplyAsset, borrowAsset, fee, hook.data);
         _transferFromRoot(borrowAsset, hook.target, repayAmount);
@@ -121,6 +120,41 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     /*//////////////////////////////////////////////////////////////////////////
                                   INTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
+
+    /**
+     * @notice Calculates the amount to be repaid to the executor of the transaction.
+     * @param price int256 - Token pair price from Chainlink oracle
+     * @param supplyAssetDecimals Decimal amount in supply asset
+     * @param borrowAssetDecimals Decimal amount in borrow asset
+     * @param supplyAmount uin256 - ERC20 token amount
+     * @param borrowAmount uin256 - ERC20 token amount
+     * @param fee uint32 - Fee paid to executor i.e. 3000 = 3%
+     * @return amountRepay The amount of the borrowed asset that will be repaid to the executor
+     */
+    function _calculatePayout(
+        uint8 swapType,
+        int256 price,
+        uint256 supplyAssetDecimals,
+        uint256 borrowAssetDecimals,
+        uint256 supplyAmount,
+        uint256 borrowAmount,
+        uint32 fee
+    )
+        internal
+        view
+        returns (uint256 amountRepay)
+    {
+        uint256 supplyAmountWithFee = supplyAmount + (supplyAmount * fee / 100_000);
+        if (swapType == 0) {
+            amountRepay = _calculateQuoteAsset(price, borrowAssetDecimals, supplyAmountWithFee);
+            require(borrowAmount >= amountRepay, "AaveLeverageLongIntent:insufficient-supply-amount");
+        } else if (swapType == 1) {
+            amountRepay = _calculateBaseAsset(price, supplyAssetDecimals, supplyAmountWithFee);
+            require(borrowAmount >= amountRepay, "AaveLeverageLongIntent:insufficient-supply-amount");
+        } else {
+            revert("AaveLeverageLongIntent:invalid-swap-type");
+        }
+    }
 
     /**
      * @notice Checks account health factor is above minimum threshold 
@@ -173,41 +207,6 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     }
 
     /**
-     * @notice Calculates the amount to be repaid to the executor of the transaction.
-     * @param price int256 - Token pair price from Chainlink oracle
-     * @param supplyAssetDecimals Decimal amount in supply asset
-     * @param borrowAssetDecimals Decimal amount in borrow asset
-     * @param supplyAmount uin256 - ERC20 token amount
-     * @param borrowAmount uin256 - ERC20 token amount
-     * @param fee uint32 - Fee paid to executor i.e. 3000 = 3%
-     * @return amountRepay The amount of the borrowed asset that will be repaid to the executor
-     */
-    function _calculatePayout(
-        uint8 swapType,
-        int256 price,
-        uint256 supplyAssetDecimals,
-        uint256 borrowAssetDecimals,
-        uint256 supplyAmount,
-        uint256 borrowAmount,
-        uint32 fee
-    )
-        internal
-        view
-        returns (uint256 amountRepay)
-    {
-        uint256 supplyAmountWithFee = supplyAmount + (supplyAmount * fee / 100_000);
-        if (swapType == 0) {
-            amountRepay = _calculateQuoteAsset(price, borrowAssetDecimals, supplyAmountWithFee);
-            require(borrowAmount >= amountRepay, "AaveLeverageLongIntent:insufficient-supply-amount");
-        } else if (swapType == 1) {
-            amountRepay = _calculateBaseAsset(price, supplyAssetDecimals, supplyAmountWithFee);
-            require(borrowAmount >= amountRepay, "AaveLeverageLongIntent:insufficient-supply-amount");
-        } else {
-            revert("AaveLeverageLongIntent:invalid-swap-type");
-        }
-    }
-
-    /**
       * @notice Supply assets to Aave and borrow against the collateral.
       * @param intent Intent - User signed intent
       * @param hook Hook - Executor supplied hook
@@ -218,24 +217,47 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
         = abi.decode(intent.data, (uint8, address, address, address, uint256, uint256, uint256));
 
         // Hook Instructions
-        (uint256 depositAmount, uint256 borrowAmount,) = abi.decode(hook.data, (uint256, uint256, bytes));
+        (uint256 supplyAmount, uint256 borrowAmount,) = abi.decode(hook.data, (uint256, uint256, bytes));
 
-        // Deposit the supply asset to the Aave pool i.e. ETH
-        bytes memory approveData = abi.encodeWithSignature("approve(address,uint256)", _pool, depositAmount);
-        executeFromRoot(supplyAsset, 0, approveData);
+        _supply(supplyAsset, supplyAmount, intent.root);
+        _borrow(borrowAsset, borrowAmount, interestRateMode, intent.root);
+    }
+
+    /**
+      * @notice Supply assets to Aave lending pool.
+      * @dev The AaveLeverageLongIntent is expected to be supplied with a "flash loan" before execution.
+      * @param supplyAsset address - ERC20 token
+      * @param supplyAmount uint256 - ERC20 amount
+      * @param root address - Account managing the position
+     */
+    function _supply(address supplyAsset, uint256 supplyAmount, address root) internal {
+        bytes memory approveData = abi.encodeWithSignature("approve(address,uint256)", _pool, supplyAmount);
+        (bool successApprove,) = address(supplyAsset).call(approveData);
+        require(successApprove);
+
         bytes memory depositData = abi.encodeWithSignature(
-            "deposit(address,uint256,address,uint16)", supplyAsset, depositAmount, intent.root, 0
+            "deposit(address,uint256,address,uint16)", supplyAsset, supplyAmount, root, 0
         );
-        executeFromRoot(_pool, 0, depositData);
 
-        // Withdraw the borrowing asset from the Aave pool i.e. USDC
-        bytes memory borrowData = abi.encodeWithSignature(
+        (bool depositApprove,) = address(_pool).call(depositData);
+        require(depositApprove);
+    }
+    
+    /**
+      * @notice Borrow assets from Aave lending pool.
+      * @param borrowAsset address - ERC20 token
+      * @param borrowAmount uint256 - ERC20 amount
+      * @param interestRateMode uint256 - Aave interest rate mode i.e. stable or variable
+      * @param root address - Account managing the position
+     */
+    function _borrow(address borrowAsset, uint256 borrowAmount, uint256 interestRateMode, address root) internal {
+        bytes memory borrowData = abi.encodeWithSignature( 
             "borrow(address,uint256,uint256,uint16,address)",
             borrowAsset,
             borrowAmount,
             interestRateMode,
             0,
-            intent.root
+            root
         );
         executeFromRoot(_pool, 0, borrowData);
     }
@@ -259,8 +281,7 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     function _hook(Hook calldata hook) internal returns (bool success) {
         bytes memory errorMessage;
         (,, bytes memory hookData) = abi.decode(hook.data, (uint256, uint256, bytes));
-        (success, errorMessage) = address(hook.target).call{ value: 0 }(hookData);
-
+        (success, errorMessage) = address(hook.target).call(hookData);
         if (!success) {
             if (errorMessage.length > 0) {
                 string memory reason = _extractRevertReason(errorMessage);

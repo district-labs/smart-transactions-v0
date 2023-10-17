@@ -83,7 +83,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
     function test_AaveLeverageLongIntent_USDC_ETH_Success() external {
         uint256 INITIAL_DEPOSIT = 1e18;
         _simulateFlashloan.fundWETH(address(_safeCreated), INITIAL_DEPOSIT);
-        initialAaveSupplyTransaction(WETH, INITIAL_DEPOSIT, AAVE_POOL);
+        _initialAaveSupplyTransaction(WETH, INITIAL_DEPOSIT, AAVE_POOL);
 
         // Create Hook
         Intent[] memory intents = new Intent[](1);
@@ -100,7 +100,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         Hook[] memory hooks = new Hook[](1);
 
         bytes memory flashloanTx =
-            abi.encodeWithSelector(SimulateFlashLoan.simulateFlashLoanETH.selector, address(_safeCreated), 1e18);
+            abi.encodeWithSelector(SimulateFlashLoan.simulateFlashLoanETH.selector, address(_aaveLeverageLongIntent), 1e18);
         bytes memory leverageHookData = _aaveLeverageLongIntent.encodeHook(1e18, 1_652_000_000, flashloanTx);
 
         hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
@@ -110,9 +110,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         _intentifySafeModule.execute(batchExecution);
 
         (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
-        console2.log("Health Factor: %s", healthFactor);
-        // assert(healthFactor < 1.5e18);
-        assert(healthFactor > 1.1e18);
+        assert(healthFactor == 1606015562015790245);
     }
 
     /**
@@ -121,7 +119,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
     function test_AaveLeverageLongIntent_ETH_USDC_Success() external {
         uint256 INITIAL_DEPOSIT = 1000e6;
         _simulateFlashloan.fundUSDC(address(_safeCreated), INITIAL_DEPOSIT);
-        initialAaveSupplyTransaction(USDC, INITIAL_DEPOSIT, AAVE_POOL);
+        _initialAaveSupplyTransaction(USDC, INITIAL_DEPOSIT, AAVE_POOL);
 
         // Create Hook
         Intent[] memory intents = new Intent[](1);
@@ -138,7 +136,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         Hook[] memory hooks = new Hook[](1);
 
         bytes memory flashloanTx = abi.encodeWithSelector(
-            SimulateFlashLoan.simulateFlashLoanUSDC.selector, address(_safeCreated), 1_604_000_000
+            SimulateFlashLoan.simulateFlashLoanUSDC.selector, address(_aaveLeverageLongIntent), 1_604_000_000
         );
         bytes memory leverageHookData =
             _aaveLeverageLongIntent.encodeHook(1_604_000_000, 1_029_839_463_407_237_934, flashloanTx);
@@ -150,9 +148,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         _intentifySafeModule.execute(batchExecution);
 
         (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
-        console2.log("Health Factor: %s", healthFactor);
-        // assert(healthFactor < 1.5e18);
-        assert(healthFactor > 1.1e18);
+        assert(healthFactor == 1265638661563111203);
     }
 
     /**
@@ -161,7 +157,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
     function test_AaveLeverageLongIntent_DAI_ETH_Success() external {
         uint256 INITIAL_DEPOSIT = 1e18;
         _simulateFlashloan.fundWETH(address(_safeCreated), INITIAL_DEPOSIT);
-        initialAaveSupplyTransaction(WETH, INITIAL_DEPOSIT, AAVE_POOL);
+        _initialAaveSupplyTransaction(WETH, INITIAL_DEPOSIT, AAVE_POOL);
 
         // Create Hook
         Intent[] memory intents = new Intent[](1);
@@ -178,7 +174,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         Hook[] memory hooks = new Hook[](1);
 
         bytes memory flashloanTx =
-            abi.encodeWithSelector(SimulateFlashLoan.simulateFlashLoanETH.selector, address(_safeCreated), 1e18);
+            abi.encodeWithSelector(SimulateFlashLoan.simulateFlashLoanETH.selector, address(_aaveLeverageLongIntent), 1e18);
         bytes memory leverageHookData =
             _aaveLeverageLongIntent.encodeHook(1e18, 1_638_000_000_000_000_000_000, flashloanTx);
 
@@ -189,15 +185,13 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         _intentifySafeModule.execute(batchExecution);
 
         (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
-        console2.log("Health Factor: %s", healthFactor);
-        // assert(healthFactor < 1.5e18);
-        assert(healthFactor > 1.1e18);
+        assert(healthFactor == 1620105567656887789);
     }
 
     function test_AaveLeverageLongIntent_ETH_DAI_Success() external {
         uint256 INITIAL_DEPOSIT = 1000e18;
         _simulateFlashloan.fundDAI(address(_safeCreated), INITIAL_DEPOSIT);
-        initialAaveSupplyTransaction(DAI, INITIAL_DEPOSIT, AAVE_POOL);
+        _initialAaveSupplyTransaction(DAI, INITIAL_DEPOSIT, AAVE_POOL);
 
         // Create Hook
         Intent[] memory intents = new Intent[](1);
@@ -214,7 +208,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         Hook[] memory hooks = new Hook[](1);
 
         bytes memory flashloanTx = abi.encodeWithSelector(
-            SimulateFlashLoan.simulateFlashLoanDAI.selector, address(_safeCreated), 1_590_000_000_000_000_000_000
+            SimulateFlashLoan.simulateFlashLoanDAI.selector, address(_aaveLeverageLongIntent), 1_590_000_000_000_000_000_000
         );
         bytes memory leverageHookData =
             _aaveLeverageLongIntent.encodeHook(1_590_000_000_000_000_000_000, 1_029_516_630_395_914_811, flashloanTx);
@@ -227,15 +221,14 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
 
         (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
         console2.log("Health Factor: %s", healthFactor);
-        // assert(healthFactor < 1.5e18);
-        assert(healthFactor > 1.1e18);
+        assert(healthFactor == 1258946459298217358);
     }
 
     /* ===================================================================================== */
     /* Helpers                                                                               */
     /* ===================================================================================== */
 
-    function initialAaveSupplyTransaction(address asset, uint256 amount, address pool) internal {
+    function _initialAaveSupplyTransaction(address asset, uint256 amount, address pool) internal {
         {
             bytes memory txdata = abi.encodeWithSignature("approve(address,uint256)", pool, amount);
             uint256 nonce = _safeCreated.nonce();
