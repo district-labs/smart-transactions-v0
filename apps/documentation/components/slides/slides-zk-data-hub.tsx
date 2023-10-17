@@ -34,6 +34,10 @@ const slides = [
         name: 'Public Good',
         original:'/slides/zk-data-hub/public-good.png'
     },
+    {
+        name: 'ZK Indexer API',
+        original:'/slides/zk-data-hub/zk-indexer.png'
+    },
 ]
 
 export default function SlidesZkDataHub() {
