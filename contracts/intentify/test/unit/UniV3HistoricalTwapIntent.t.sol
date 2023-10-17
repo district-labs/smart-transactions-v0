@@ -11,15 +11,15 @@ import {
     TypesAndDecoders
 } from "../../src/TypesAndDecoders.sol";
 import { Intentify } from "../../src/Intentify.sol";
-import { MeanAverageIntent } from "../../src/intents/MeanAverageIntent.sol";
+import { UniV3HistoricalTwapIntent } from "../../src/intents/UniV3HistoricalTwapIntent.sol";
 
 import { BaseTest } from "../utils/Base.t.sol";
 
-contract MeanAverageIntentHarness is MeanAverageIntent {
-    constructor(address uniswapV3TwapOracle) MeanAverageIntent(uniswapV3TwapOracle) { }
+contract UniV3HistoricalTwapIntentHarness is UniV3HistoricalTwapIntent {
+    constructor(address uniswapV3TwapOracle) UniV3HistoricalTwapIntent(uniswapV3TwapOracle) { }
 
     function exposed_checkBlockWindow(
-        MeanAverageIntent.BlockData memory blockData,
+        UniV3HistoricalTwapIntent.BlockData memory blockData,
         string memory errorMessageStart,
         string memory errorMessageEnd
     )
@@ -38,9 +38,9 @@ contract MeanAverageIntentHarness is MeanAverageIntent {
     }
 }
 
-contract MeanAverageIntentTest is BaseTest {
+contract UniV3HistoricalTwapIntentTest is BaseTest {
     Intentify internal _intentify;
-    MeanAverageIntentHarness internal _meanAverageIntent;
+    UniV3HistoricalTwapIntentHarness internal _meanAverageIntent;
 
     uint256 goerliFork;
     uint256 GOERLI_FORK_BLOCK = 9_848_670;
@@ -57,14 +57,14 @@ contract MeanAverageIntentTest is BaseTest {
 
         initializeBase();
         _intentify = new Intentify(signer, "Intentify", "V0");
-        _meanAverageIntent = new MeanAverageIntentHarness(UNISWAP_V3_TWAP_ORACLE);
+        _meanAverageIntent = new UniV3HistoricalTwapIntentHarness(UNISWAP_V3_TWAP_ORACLE);
     }
 
     /* ===================================================================================== */
     /* Success                                                                               */
     /* ===================================================================================== */
 
-    function test_MeanAverageIntent_Success() external {
+    function test_UniV3HistoricalTwapIntent_Success() external {
         address uniswapV3Pool = 0x5c33044BdBbE55dAb3d526CE70F908aAF6990373;
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
@@ -92,7 +92,7 @@ contract MeanAverageIntentTest is BaseTest {
     }
 
     function test_CheckBlockWindow_Success() external view {
-        MeanAverageIntent.BlockData memory blockData = MeanAverageIntent.BlockData({
+        UniV3HistoricalTwapIntent.BlockData memory blockData = UniV3HistoricalTwapIntent.BlockData({
             referenceBlockOffset: 0,
             blockWindow: 89_220,
             blockWindowTolerance: 40,
@@ -101,12 +101,14 @@ contract MeanAverageIntentTest is BaseTest {
         });
 
         _meanAverageIntent.exposed_checkBlockWindow(
-            blockData, "MeanAverageIntent:out-of-tolerance-start-block", "MeanAverageIntent:out-of-tolerance-end-block"
+            blockData,
+            "UniV3HistoricalTwapIntent:out-of-tolerance-start-block",
+            "UniV3HistoricalTwapIntent:out-of-tolerance-end-block"
         );
     }
 
     function test_CheckBlocksRange_Success() external view {
-        MeanAverageIntent.BlockData memory numerator = MeanAverageIntent.BlockData({
+        UniV3HistoricalTwapIntent.BlockData memory numerator = UniV3HistoricalTwapIntent.BlockData({
             referenceBlockOffset: 0,
             blockWindow: 89_220,
             blockWindowTolerance: 40,
@@ -114,7 +116,7 @@ contract MeanAverageIntentTest is BaseTest {
             endBlock: 9_848_630
         });
 
-        MeanAverageIntent.BlockData memory denominator = MeanAverageIntent.BlockData({
+        UniV3HistoricalTwapIntent.BlockData memory denominator = UniV3HistoricalTwapIntent.BlockData({
             referenceBlockOffset: 0,
             blockWindow: 49_950,
             blockWindowTolerance: 40,
@@ -127,9 +129,8 @@ contract MeanAverageIntentTest is BaseTest {
 
     function test_CheckPercentageDifference_Success() external view {
         address uniswapV3Pool = 0x5c33044BdBbE55dAb3d526CE70F908aAF6990373;
-        bytes memory intentData = _meanAverageIntent.encode(
-            uniswapV3Pool, 0, 89_220, 40, 0, 49_950, 40, 105_000, 110_000
-        );
+        bytes memory intentData =
+            _meanAverageIntent.encode(uniswapV3Pool, 0, 89_220, 40, 0, 49_950, 40, 105_000, 110_000);
         bytes memory hookData = abi.encode(9_759_424, 9_848_630, 9_798_709, 9_848_630);
 
         _meanAverageIntent.exposed_checkPercentageDifference(intentData, hookData);
@@ -142,7 +143,7 @@ contract MeanAverageIntentTest is BaseTest {
     // @TODO: Add failling tests for the whole intent
 
     function test_CheckBlockWindow_RevertWhen_OutOfTolerance() external {
-        MeanAverageIntent.BlockData memory blockData = MeanAverageIntent.BlockData({
+        UniV3HistoricalTwapIntent.BlockData memory blockData = UniV3HistoricalTwapIntent.BlockData({
             referenceBlockOffset: 0,
             blockWindow: 89_220,
             blockWindowTolerance: 40,
@@ -150,22 +151,26 @@ contract MeanAverageIntentTest is BaseTest {
             endBlock: 9_848_630
         });
 
-        vm.expectRevert("MeanAverageIntent:out-of-tolerance-start-block");
+        vm.expectRevert("UniV3HistoricalTwapIntent:out-of-tolerance-start-block");
         _meanAverageIntent.exposed_checkBlockWindow(
-            blockData, "MeanAverageIntent:out-of-tolerance-start-block", "MeanAverageIntent:out-of-tolerance-end-block"
+            blockData,
+            "UniV3HistoricalTwapIntent:out-of-tolerance-start-block",
+            "UniV3HistoricalTwapIntent:out-of-tolerance-end-block"
         );
 
         blockData.startBlock = 9_759_424;
         blockData.endBlock = 9_848_500;
 
-        vm.expectRevert("MeanAverageIntent:out-of-tolerance-end-block");
+        vm.expectRevert("UniV3HistoricalTwapIntent:out-of-tolerance-end-block");
         _meanAverageIntent.exposed_checkBlockWindow(
-            blockData, "MeanAverageIntent:out-of-tolerance-start-block", "MeanAverageIntent:out-of-tolerance-end-block"
+            blockData,
+            "UniV3HistoricalTwapIntent:out-of-tolerance-start-block",
+            "UniV3HistoricalTwapIntent:out-of-tolerance-end-block"
         );
     }
 
     function test_CheckBlocksRange_RevertWhen_InvalidWindow() external {
-        MeanAverageIntent.BlockData memory numerator = MeanAverageIntent.BlockData({
+        UniV3HistoricalTwapIntent.BlockData memory numerator = UniV3HistoricalTwapIntent.BlockData({
             referenceBlockOffset: 0,
             blockWindow: 89_220,
             blockWindowTolerance: 40,
@@ -173,7 +178,7 @@ contract MeanAverageIntentTest is BaseTest {
             endBlock: 9_848_630
         });
 
-        MeanAverageIntent.BlockData memory denominator = MeanAverageIntent.BlockData({
+        UniV3HistoricalTwapIntent.BlockData memory denominator = UniV3HistoricalTwapIntent.BlockData({
             referenceBlockOffset: 0,
             blockWindow: 49_950,
             blockWindowTolerance: 40,
@@ -181,42 +186,40 @@ contract MeanAverageIntentTest is BaseTest {
             endBlock: 9_848_630
         });
 
-        vm.expectRevert("MeanAverageIntent:invalid-numerator-block-window-start");
+        vm.expectRevert("UniV3HistoricalTwapIntent:invalid-numerator-block-window-start");
         _meanAverageIntent.exposed_checkBlocksRange(numerator, denominator);
 
         numerator.startBlock = 9_759_424;
         numerator.endBlock = 9_848_500;
 
-        vm.expectRevert("MeanAverageIntent:invalid-numerator-block-window-end");
+        vm.expectRevert("UniV3HistoricalTwapIntent:invalid-numerator-block-window-end");
         _meanAverageIntent.exposed_checkBlocksRange(numerator, denominator);
 
         numerator.endBlock = 9_848_630;
         denominator.startBlock = 9_798_609;
 
-        vm.expectRevert("MeanAverageIntent:invalid-denominator-block-window-start");
+        vm.expectRevert("UniV3HistoricalTwapIntent:invalid-denominator-block-window-start");
         _meanAverageIntent.exposed_checkBlocksRange(numerator, denominator);
 
         denominator.startBlock = 9_798_709;
         denominator.endBlock = 9_848_500;
 
-        vm.expectRevert("MeanAverageIntent:invalid-denominator-block-window-end");
+        vm.expectRevert("UniV3HistoricalTwapIntent:invalid-denominator-block-window-end");
         _meanAverageIntent.exposed_checkBlocksRange(numerator, denominator);
     }
 
     function test_CheckPercentageDifference_RevertWhen_OutOfRange() external {
         address uniswapV3Pool = 0x5c33044BdBbE55dAb3d526CE70F908aAF6990373;
-        bytes memory intentDataHigh = _meanAverageIntent.encode(
-            uniswapV3Pool, 0, 89_220, 40, 0, 49_950, 40, 105_000, 108_000
-        );
-        bytes memory intentDataLow = _meanAverageIntent.encode(
-            uniswapV3Pool, 0, 89_220, 40, 0, 49_950, 40, 110_000, 115_000
-        );
+        bytes memory intentDataHigh =
+            _meanAverageIntent.encode(uniswapV3Pool, 0, 89_220, 40, 0, 49_950, 40, 105_000, 108_000);
+        bytes memory intentDataLow =
+            _meanAverageIntent.encode(uniswapV3Pool, 0, 89_220, 40, 0, 49_950, 40, 110_000, 115_000);
         bytes memory hookData = abi.encode(9_759_424, 9_848_630, 9_798_709, 9_848_630);
 
-        vm.expectRevert("MeanAverageIntent:high-difference");
+        vm.expectRevert("UniV3HistoricalTwapIntent:high-difference");
         _meanAverageIntent.exposed_checkPercentageDifference(intentDataHigh, hookData);
 
-        vm.expectRevert("MeanAverageIntent:low-difference");
+        vm.expectRevert("UniV3HistoricalTwapIntent:low-difference");
         _meanAverageIntent.exposed_checkPercentageDifference(intentDataLow, hookData);
     }
 }

@@ -9,11 +9,11 @@ import { UniswapV3TwapOracle } from "../periphery/Axiom/UniswapV3TwapOracle.sol"
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 
 /**
- * @title MeanAverageIntent
+ * @title UniV3HistoricalTwapIntent
  * @dev A contract that checks block windows and percentage differences based on Uniswap v3 TWAP data.
  * @notice This contract is intended to be used in combination with another system that provides intent and hook data.
  */
-contract MeanAverageIntent {
+contract UniV3HistoricalTwapIntent {
     UniswapV3TwapOracle internal _uniswapV3TwapOracle;
 
     struct BlockData {
@@ -46,7 +46,7 @@ contract MeanAverageIntent {
         internal
         view
     {
-        require(blockData.referenceBlockOffset < block.number, "MeanAverageIntent:invalid-reference-block");
+        require(blockData.referenceBlockOffset < block.number, "UniV3HistoricalTwapIntent:invalid-reference-block");
 
         uint256 referenceBlock = block.number - blockData.referenceBlockOffset;
 
@@ -78,13 +78,13 @@ contract MeanAverageIntent {
     function _checkBlocksRange(BlockData memory numerator, BlockData memory denominator) internal view {
         _checkBlockWindow(
             numerator,
-            "MeanAverageIntent:invalid-numerator-block-window-start",
-            "MeanAverageIntent:invalid-numerator-block-window-end"
+            "UniV3HistoricalTwapIntent:invalid-numerator-block-window-start",
+            "UniV3HistoricalTwapIntent:invalid-numerator-block-window-end"
         );
         _checkBlockWindow(
             denominator,
-            "MeanAverageIntent:invalid-denominator-block-window-start",
-            "MeanAverageIntent:invalid-denominator-block-window-end"
+            "UniV3HistoricalTwapIntent:invalid-denominator-block-window-start",
+            "UniV3HistoricalTwapIntent:invalid-denominator-block-window-end"
         );
     }
 
@@ -123,8 +123,8 @@ contract MeanAverageIntent {
 
         uint256 percentageDifference = (numeratorPriceX96 * 100_000) / denominatorPriceX96;
 
-        require(percentageDifference >= minPercentageDifference, "MeanAverageIntent:low-difference");
-        require(percentageDifference <= maxPercentageDifference, "MeanAverageIntent:high-difference");
+        require(percentageDifference >= minPercentageDifference, "UniV3HistoricalTwapIntent:low-difference");
+        require(percentageDifference <= maxPercentageDifference, "UniV3HistoricalTwapIntent:high-difference");
     }
 
     /**
@@ -133,8 +133,8 @@ contract MeanAverageIntent {
      * @param hook Contains data related to hook.
      */
     function execute(Intent calldata intent, Hook calldata hook) external view returns (bool) {
-        require(intent.root == msg.sender, "MeanAverageIntent:invalid-root");
-        require(intent.target == address(this), "MeanAverageIntent:invalid-target");
+        require(intent.root == msg.sender, "UniV3HistoricalTwapIntent:invalid-root");
+        require(intent.target == address(this), "UniV3HistoricalTwapIntent:invalid-target");
 
         (
             ,
