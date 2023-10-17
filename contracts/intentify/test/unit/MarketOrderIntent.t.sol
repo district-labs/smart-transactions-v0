@@ -3,11 +3,8 @@ pragma solidity >=0.8.19 <0.9.0;
 
 import { ERC20 } from "solady/tokens/ERC20.sol";
 import { Safe } from "safe-contracts/Safe.sol";
-import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
 import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
-import { Enum } from "safe-contracts/common/Enum.sol";
 
-import "@uniswap/v3-core/contracts/libraries/FullMath.sol";
 import {
     Intent,
     IntentBatch,
@@ -16,11 +13,9 @@ import {
     Hook,
     TypesAndDecoders
 } from "../../src/TypesAndDecoders.sol";
-import { Intentify } from "../../src/Intentify.sol";
 import { MarketOrderIntent } from "../../src/intents/MarketOrderIntent.sol";
 import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
-import { BaseTest } from "../utils/Base.t.sol";
 
 contract MarketOrderIntentTest is SafeTestingUtils {
     Safe internal _safeCreated;
