@@ -17,6 +17,7 @@ export const env = createEnv({
     OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_MAINNET: z.string(),
     OPEN_ZEPPELIN_DEFENDER_API_KEY_GOERLI: z.string(),
     OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_GOERLI: z.string(),
+    PRIVATE_KEY: z.string(),
     JWT_SECRET: z.string(),
     // Comma separated list of Ethereum addresses, accepts optinal whitespace after comma
     APP_ADMINS: z
@@ -62,6 +63,7 @@ export const env = createEnv({
     OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_MAINNET: process.env.OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_MAINNET,
     JWT_SECRET: process.env.JWT_SECRET,
     APP_ADMINS: process.env.APP_ADMINS,
+    PRIVATE_KEY: process.env.PRIVATE_KEY,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validaiton
