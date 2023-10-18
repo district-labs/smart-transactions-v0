@@ -20,8 +20,9 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@district-labs/intentify-react": "workspace:*",
+    "@axiom-crypto/core": "^0.3.6",
     "@district-labs/intentify-core": "workspace:*",
+    "@district-labs/intentify-react": "workspace:*",
     "@ethersproject/bignumber": "^5.7.0",
     "@headlessui/tailwindcss": "^0.2.0",
     "@hookform/resolvers": "^3.3.1",
