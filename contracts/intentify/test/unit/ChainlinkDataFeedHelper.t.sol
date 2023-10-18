@@ -103,9 +103,9 @@ contract ChainlinkDataFeedHelperTest is SafeTestingUtils {
         uint256 swap = chainlinkOracleHelper.calculateTokenInAmountEstimated(
             TOKEN_OUT_DECIMALS, TOKEN_IN_DECIMALS, usdcAmount, PRICE_DECIMALS, PRICE, false
         );
-        assertEq(swap, 1581262183);
+        assertEq(swap, 1_581_262_183);
     }
-    
+
     // FAILING
     function test_ChainLink_USDC_ETH_ConvertToUSDC_Amount_Success() external {
         uint8 TOKEN_OUT_DECIMALS = 6;
@@ -130,7 +130,7 @@ contract ChainlinkDataFeedHelperTest is SafeTestingUtils {
         );
         assertEq(swap, 6_324_061_945_098_270_000);
     }
-    
+
     function test_ChainLink_ETH_USDC_ConvertToETH_Amount_Success() external {
         uint8 TOKEN_OUT_DECIMALS = 18;
         uint8 TOKEN_IN_DECIMALS = 6;
