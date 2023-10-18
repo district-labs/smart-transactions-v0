@@ -3,11 +3,13 @@ pragma solidity >=0.8.19;
 
 import { ERC20 } from "solady/tokens/ERC20.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
+import {IIntentWithHook} from "../interfaces/IIntentWithHook.sol";
 import { BytesLib } from "../libraries/BytesLib.sol";
 
-contract LimitOrderIntent {
+contract LimitOrderIntent is IIntentWithHook {
     mapping(address => mapping(address => uint256)) public till;
 
+    /// @inheritdoc IIntentWithHook
     function execute(Intent calldata intent, Hook calldata hook) external returns (bool) {
         require(intent.root == msg.sender, "LimitOrderIntent:invalid-root");
         require(intent.target == address(this), "LimitOrderIntent:invalid-target");

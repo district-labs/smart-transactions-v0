@@ -2,11 +2,12 @@
 pragma solidity >=0.8.19;
 
 import { AggregatorV3Interface } from "@chainlink/v0.8/interfaces/AggregatorV3Interface.sol";
-import { IHook } from "../interfaces/IHook.sol";
+import { IIntent } from "../interfaces/IIntent.sol";
 import { Intent } from "../TypesAndDecoders.sol";
 import { BytesLib } from "../libraries/BytesLib.sol";
 
-contract DataFeedIntent is IHook {
+contract DataFeedIntent is IIntent {
+    /// @inheritdoc IIntent
     function execute(Intent calldata intent) external view returns (bool) {
         require(intent.root == msg.sender, "DataFeedIntent:invalid-root");
         require(intent.target == address(this), "DataFeedIntent:invalid-target");

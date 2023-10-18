@@ -7,11 +7,12 @@ import { FixedPoint96 } from "@uniswap/v3-core/contracts/libraries/FixedPoint96.
 import { FullMath } from "@uniswap/v3-core/contracts/libraries/FullMath.sol";
 import { UniswapV3TwapOracle } from "../periphery/Axiom/UniswapV3TwapOracle.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
+import {IIntentWithHook} from "../interfaces/IIntentWithHook.sol";
 
 /// @title Uniswap V3 Historical Time Weighted Average Price Intent
 /// @notice An intent that checks block windows and percentage differences based on Uniswap v3 TWAP data. If the price
 /// difference percentage is not within the given range or the provided data is invalid, the intent will revert.
-contract UniswapV3HistoricalTwapIntent {
+contract UniswapV3HistoricalTwapIntent is IIntentWithHook  {
     /*//////////////////////////////////////////////////////////////////////////
                                 TYPE DECLARATIONS
     //////////////////////////////////////////////////////////////////////////*/
@@ -111,10 +112,7 @@ contract UniswapV3HistoricalTwapIntent {
                                    WRITE FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Function to execute the intent and hook.
-    /// @param intent Contains data related to intent.
-    /// @param hook Contains data related to hook.
-    /// @return true if the intent is valid, reverts otherwise.
+    /// @inheritdoc IIntentWithHook
     function execute(Intent calldata intent, Hook calldata hook) external view returns (bool) {
         if (intent.root != msg.sender) revert InvalidRoot();
         if (intent.target != address(this)) revert InvalidTarget();

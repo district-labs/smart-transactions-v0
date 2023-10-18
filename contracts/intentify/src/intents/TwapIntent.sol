@@ -6,11 +6,12 @@ import "@uniswap/v3-core/contracts/libraries/TickMath.sol";
 import "@uniswap/v3-core/contracts/libraries/FixedPoint96.sol";
 import "@uniswap/v3-core/contracts/libraries/FullMath.sol";
 
-import { IHook } from "../interfaces/IHook.sol";
+import { IIntent } from "../interfaces/IIntent.sol";
 import { Intent } from "../TypesAndDecoders.sol";
 import { BytesLib } from "../libraries/BytesLib.sol";
 
-contract TwapIntent is IHook {
+contract TwapIntent is IIntent {
+    /// @inheritdoc IIntent
     function execute(Intent calldata intent) external view returns (bool) {
         require(intent.root == msg.sender, "TwapIntent:invalid-root");
         require(intent.target == address(this), "TwapIntent:invalid-target");

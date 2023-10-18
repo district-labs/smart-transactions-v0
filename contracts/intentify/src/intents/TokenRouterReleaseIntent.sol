@@ -2,15 +2,16 @@
 pragma solidity >=0.8.19;
 
 import { ERC20 } from "solady/tokens/ERC20.sol";
-import { IHook } from "../interfaces/IHook.sol";
+import { IIntent } from "../interfaces/IIntent.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { BytesLib } from "../libraries/BytesLib.sol";
 
-contract TokenRouterReleaseIntent {
+contract TokenRouterReleaseIntent is IIntent {
     event Release(address indexed account, address indexed token, uint256 amount);
 
     mapping(address => mapping(address => uint256)) public till;
 
+    /// @inheritdoc IIntent
     function execute(Intent calldata intent) external returns (bool) {
         require(intent.root == msg.sender, "TokenRouterReleaseIntent:invalid-root");
         require(intent.target == address(this), "TokenRouterReleaseIntent:invalid-target");

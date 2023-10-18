@@ -3,6 +3,7 @@ pragma solidity >=0.8.19 <0.9.0;
 
 import { ERC20 } from "solady/tokens/ERC20.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
+import { IIntentWithHook } from "../interfaces/IIntentWithHook.sol";
 import { BytesLib } from "../libraries/BytesLib.sol";
 import { ChainlinkDataFeedHelper } from "../helpers/ChainlinkDataFeedHelper.sol";
 import { ExtractRevertReasonHelper } from "../helpers/ExtractRevertReasonHelper.sol";
@@ -10,7 +11,12 @@ import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
 /// @title ERC20 Swap Spot Price Intent
 /// @notice An intent to execute a buy or sell order at the market price at the time of execution.
-contract ERC20SwapSpotPriceIntent is ChainlinkDataFeedHelper, ExtractRevertReasonHelper, ExecuteRootTransaction {
+contract ERC20SwapSpotPriceIntent is
+    IIntentWithHook,
+    ExecuteRootTransaction,
+    ExtractRevertReasonHelper,
+    ChainlinkDataFeedHelper
+{
     /*//////////////////////////////////////////////////////////////////////////
                                   CONSTANTS
     //////////////////////////////////////////////////////////////////////////*/
@@ -77,10 +83,7 @@ contract ERC20SwapSpotPriceIntent is ChainlinkDataFeedHelper, ExtractRevertReaso
                                    WRITE FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Function to execute the intent and hook.
-    /// @param intent Contains data related to intent.
-    /// @param hook Contains data related to hook.
-    /// @return true if the intent is valid, reverts otherwise.
+    /// @inheritdoc IIntentWithHook
     function execute(Intent calldata intent, Hook calldata hook) external returns (bool) {
         if (intent.root != msg.sender) revert InvalidRoot();
         if (intent.target != address(this)) revert InvalidTarget();
