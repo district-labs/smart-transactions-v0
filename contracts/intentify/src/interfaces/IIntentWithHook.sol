@@ -10,6 +10,8 @@ interface IIntentWithHook {
     error InvalidRoot();
     /// @dev Intent target must be this contract.
     error InvalidTarget();
+    /// @dev Hook execution failed for an unknown reason.
+    error HookExecutionFailed();
 
     /// @notice Function to execute the intent and hook.
     /// @param intent Contains data related to intent.

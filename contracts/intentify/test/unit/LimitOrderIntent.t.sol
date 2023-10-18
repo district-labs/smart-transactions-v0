@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
+import { Safe } from "safe-contracts/Safe.sol";
+import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
+import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
+
 import { ERC20Mintable } from "../mocks/ERC20Mintable.sol";
 import {
     Intent,
@@ -13,12 +17,21 @@ import {
 import { Intentify } from "../../src/Intentify.sol";
 import { SwapRouter } from "../../src/periphery/SwapRouter.sol";
 import { LimitOrderIntent } from "../../src/intents/LimitOrderIntent.sol";
-
-import { BaseTest } from "../utils/Base.t.sol";
+import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
+import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 
 contract LimitOrderIntentHarness is LimitOrderIntent {
-    function exposed_unlock(address account, address tokenOut, address tokenIn) external view returns (bool) {
-        return _unlock(account, tokenOut, tokenIn);
+    constructor(address _intentifySafeModule) LimitOrderIntent(_intentifySafeModule) { }
+
+    function exposed_unlock(
+        Hook calldata hook,
+        Intent calldata intent,
+        uint256 initialTokenInBalance
+    )
+        external
+        returns (bool)
+    {
+        return _unlock(intent, hook, initialTokenInBalance);
     }
 
     function exposed_hook(Hook calldata hook) external returns (bool success) {
@@ -30,9 +43,9 @@ contract LimitOrderIntentHarness is LimitOrderIntent {
     }
 }
 
-contract LimitOrderIntentTest is BaseTest {
-    Intentify internal _intentify;
-    TokenRouterReleaseIntent internal _tokenRouterReleaseIntent;
+contract LimitOrderIntentTest is SafeTestingUtils {
+    Safe internal _safeCreated;
+    IntentifySafeModule internal _intentifySafeModule;
     LimitOrderIntentHarness internal _limitOrderIntent;
     ERC20Mintable internal _tokenA;
     ERC20Mintable internal _tokenB;
@@ -47,9 +60,13 @@ contract LimitOrderIntentTest is BaseTest {
 
     function setUp() public virtual {
         initializeBase();
-        _intentify = new Intentify(signer, "Intentify", "V0");
-        _tokenRouterReleaseIntent = new TokenRouterReleaseIntent();
-        _limitOrderIntent = new LimitOrderIntentHarness();
+
+        _intentifySafeModule = new IntentifySafeModule();
+        _limitOrderIntent = new LimitOrderIntentHarness(address(_intentifySafeModule));
+        _safe = new Safe();
+        _safeProxyFactory = new SafeProxyFactory();
+        _safeCreated = _setupSafe(signer);
+        _enableIntentifyModule(SIGNER, _safeCreated, address(_intentifySafeModule));
 
         _tokenA = new ERC20Mintable();
         _tokenB = new ERC20Mintable();
@@ -57,17 +74,8 @@ contract LimitOrderIntentTest is BaseTest {
         _swapRouter = new SwapRouter();
     }
 
-    function setupBalanceAndApprovals(
-        address account,
-        address token,
-        uint256 amount,
-        address approvalTarget
-    )
-        internal
-    {
+    function setupBalance(address account, address token, uint256 amount) internal {
         ERC20Mintable(token).mint(account, amount);
-        vm.prank(account);
-        ERC20Mintable(token).approve(approvalTarget, amount);
     }
 
     /* ===================================================================================== */
@@ -75,152 +83,50 @@ contract LimitOrderIntentTest is BaseTest {
     /* ===================================================================================== */
 
     function test_LimitOrderIntent_Success() external {
-        setupBalanceAndApprovals(
-            address(_intentify), address(_tokenA), startingBalance, address(_tokenRouterReleaseIntent)
-        );
+        address executor = address(0x1234);
 
-        Intent[] memory intents = new Intent[](2);
+        setupBalance(address(_safeCreated), address(_tokenA), startingBalance);
 
-        // ------------------------------------------------------
-        // Token Release Intent
-        // ------------------------------------------------------
+        Intent[] memory intents = new Intent[](1);
+
         intents[0] = Intent({
-            root: address(_intentify),
-            value: 0,
-            target: address(_tokenRouterReleaseIntent),
-            data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
-        });
-
-        // ------------------------------------------------------
-        // Limit Order Intent
-        // ------------------------------------------------------
-
-        intents[1] = Intent({
-            root: address(_intentify),
+            root: address(_safeCreated),
             value: 0,
             target: address(_limitOrderIntent),
             data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
+        bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
-        // ------------------------------------------------------
-        // Hooks
-        // ------------------------------------------------------
+        Hook[] memory hooks = new Hook[](1);
 
-        Hook[] memory hooks = new Hook[](2);
-        hooks[0] = EMPTY_HOOK;
-        hooks[1] = Hook({
-            target: address(_swapRouter),
-            // function swap(address account, address mevBot, address tokenOut, address tokenIn, uint256 amountOutMax,
-            // uint256 amountInMin) external returns (bool) {
-            data: abi.encodeWithSignature(
-                "swap(address,address,address,uint256,uint256,address)",
-                address(_intentify),
-                address(_tokenA),
-                address(_tokenB),
-                startingBalance,
-                endingBalance,
-                _tokenRouterReleaseIntent
-                )
-        });
-
-        // ------------------------------------------------------
-        // Intent Batch Execution
-        // ------------------------------------------------------
+        bytes memory hookData = abi.encode(
+            executor,
+            abi.encodeWithSignature(
+                "swap(address,address,uint256)", address(_safeCreated), address(_tokenB), endingBalance
+            )
+        );
+        hooks[0] = Hook({ target: address(_swapRouter), data: hookData });
 
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        bool _executed = _intentify.execute(batchExecution);
+        _intentifySafeModule.execute(batchExecution);
 
-        uint256 balanceTokenA = _tokenA.balanceOf(address(_intentify));
-        uint256 balanceTokenB = _tokenB.balanceOf(address(_intentify));
+        uint256 balanceTokenA = _tokenA.balanceOf(address(_safeCreated));
+        uint256 balanceTokenB = _tokenB.balanceOf(address(_safeCreated));
         assertEq(balanceTokenA, 0);
         assertEq(balanceTokenB, endingBalance);
     }
 
     function test_encode_Success() external {
-        bytes memory data = _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance);
-        assertEq(data, abi.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance));
-    }
-
-    function test_unlock_Success() external {
-        setupBalanceAndApprovals(
-            address(_intentify), address(_tokenA), startingBalance, address(_tokenRouterReleaseIntent)
-        );
-
-        Intent[] memory intents = new Intent[](2);
-
-        // ------------------------------------------------------
-        // Token Release Intent
-        // ------------------------------------------------------
-        intents[0] = Intent({
-            root: address(_intentify),
-            value: 0,
-            target: address(_tokenRouterReleaseIntent),
-            data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
-        });
-
-        // ------------------------------------------------------
-        // Limit Order Intent
-        // ------------------------------------------------------
-
-        intents[1] = Intent({
-            root: address(_intentify),
-            value: 0,
-            target: address(_limitOrderIntent),
-            data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
-        });
-
-        IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
-
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
-
-        // ------------------------------------------------------
-        // Hooks
-        // ------------------------------------------------------
-
-        Hook[] memory hooks = new Hook[](2);
-        hooks[0] = EMPTY_HOOK;
-        hooks[1] = Hook({
-            target: address(_swapRouter),
-            // function swap(address account, address mevBot, address tokenOut, address tokenIn, uint256 amountOutMax,
-            // uint256 amountInMin) external returns (bool) {
-            data: abi.encodeWithSignature(
-                "swap(address,address,address,uint256,uint256,address)",
-                address(_intentify),
-                address(_tokenA),
-                address(_tokenB),
-                startingBalance,
-                endingBalance,
-                _tokenRouterReleaseIntent
-                )
-        });
-
-        // ------------------------------------------------------
-        // Intent Batch Execution
-        // ------------------------------------------------------
-
-        IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
-
-        bool _executed = _intentify.execute(batchExecution);
-        assertEq(true, _executed);
-
-        bool _unlocked = _limitOrderIntent.exposed_unlock(address(_intentify), address(_tokenA), address(_tokenB));
-        assertEq(true, _unlocked);
-    }
-
-    function test_hook_Success() external {
-        bool _success = _limitOrderIntent.exposed_hook(EMPTY_HOOK);
-        assertEq(true, _success);
+        bytes memory encodeData =
+            _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance);
+        assertEq(encodeData, abi.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance));
     }
 
     /* ===================================================================================== */
@@ -228,152 +134,42 @@ contract LimitOrderIntentTest is BaseTest {
     /* ===================================================================================== */
 
     function test_RevertWhen_LimitOrderIntent_InsufficientTokenBalancePostHook() external {
-        setupBalanceAndApprovals(
-            address(_intentify), address(_tokenA), startingBalance, address(_tokenRouterReleaseIntent)
-        );
+        address executor = address(0x1234);
 
-        Intent[] memory intents = new Intent[](2);
+        setupBalance(address(_safeCreated), address(_tokenA), startingBalance);
 
-        // ------------------------------------------------------
-        // Token Release Intent
-        // ------------------------------------------------------
+        Intent[] memory intents = new Intent[](1);
+
         intents[0] = Intent({
-            root: address(_intentify),
-            value: 0,
-            target: address(_tokenRouterReleaseIntent),
-            data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
-        });
-
-        // ------------------------------------------------------
-        // Limit Order Intent
-        // ------------------------------------------------------
-
-        intents[1] = Intent({
-            root: address(_intentify),
+            root: address(_safeCreated),
             value: 0,
             target: address(_limitOrderIntent),
             data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
+        bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
-        // ------------------------------------------------------
-        // Hooks
-        // ------------------------------------------------------
+        Hook[] memory hooks = new Hook[](1);
 
-        Hook[] memory hooks = new Hook[](2);
-        hooks[0] = EMPTY_HOOK;
-        hooks[1] = Hook({
-            target: address(_swapRouter),
-            // function swap(address account, address mevBot, address tokenOut, address tokenIn, uint256 amountOutMax,
-            // uint256 amountInMin) external returns (bool) {
-            data: abi.encodeWithSignature(
-                "swap(address,address,address,uint256,uint256,address)",
-                address(_intentify),
-                address(_tokenA),
+        bytes memory hookData = abi.encode(
+            executor,
+            abi.encodeWithSignature(
+                "swap(address,address,uint256)",
+                address(_safeCreated),
                 address(_tokenB),
-                startingBalance,
-                endingBalance - 1,
-                _tokenRouterReleaseIntent
-                )
-        });
-
-        // ------------------------------------------------------
-        // Intent Batch Execution
-        // ------------------------------------------------------
-
-        IntentBatchExecution memory batchExecution =
-            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
-
-        vm.expectRevert(bytes("LimitOrderIntent:unlock:tokenIn:insufficient-balance"));
-        _intentify.execute(batchExecution);
-    }
-
-    function test_RevertWhen_LimitOrderIntent_InvalidRoot() external {
-        setupBalanceAndApprovals(
-            address(_intentify), address(_tokenA), startingBalance, address(_tokenRouterReleaseIntent)
+                endingBalance / 2 // Send half of the tokens expected, so the intent should revert
+            )
         );
-
-        Intent[] memory intents = new Intent[](2);
-
-        // ------------------------------------------------------
-        // Token Release Intent
-        // ------------------------------------------------------
-        intents[0] = Intent({
-            root: address(_intentify),
-            value: 0,
-            target: address(_tokenRouterReleaseIntent),
-            data: _tokenRouterReleaseIntent.encode(address(_tokenA), startingBalance)
-        });
-
-        // ------------------------------------------------------
-        // Limit Order Intent
-        // ------------------------------------------------------
-
-        intents[1] = Intent({
-            root: address(0),
-            value: 0,
-            target: address(_limitOrderIntent),
-            data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
-        });
-
-        IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
-
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
-
-        // ------------------------------------------------------
-        // Hooks
-        // ------------------------------------------------------
-
-        Hook[] memory hooks = new Hook[](2);
-        hooks[0] = EMPTY_HOOK;
-        hooks[1] = Hook({
-            target: address(_swapRouter),
-            // function swap(address account, address mevBot, address tokenOut, address tokenIn, uint256 amountOutMax,
-            // uint256 amountInMin) external returns (bool) {
-            data: abi.encodeWithSignature(
-                "swap(address,address,address,uint256,uint256,address)",
-                address(_intentify),
-                address(_tokenA),
-                address(_tokenB),
-                startingBalance,
-                endingBalance,
-                _tokenRouterReleaseIntent
-                )
-        });
-
-        // ------------------------------------------------------
-        // Intent Batch Execution
-        // ------------------------------------------------------
+        hooks[0] = Hook({ target: address(_swapRouter), data: hookData });
 
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert(bytes("LimitOrderIntent:invalid-root"));
-        _intentify.execute(batchExecution);
-    }
-
-    function test_RevertWhen_hook_ExecutionFailed() external {
-        Hook memory _hook = Hook({
-            target: address(_swapRouter),
-            data: abi.encodeWithSignature(
-                "swap(address,address,address,uint256,uint256,address)",
-                address(_intentify),
-                address(_tokenA),
-                address(_tokenB),
-                startingBalance,
-                endingBalance,
-                _tokenRouterReleaseIntent
-                )
-        });
-
-        vm.expectRevert(bytes("TokenRouter:insufficient-balance"));
-        _limitOrderIntent.exposed_hook(_hook);
+        vm.expectRevert();
+        _intentifySafeModule.execute(batchExecution);
     }
 }

@@ -1,37 +1,40 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.19;
+pragma solidity >=0.8.19 <0.9.0;
 
 import { ERC20 } from "solady/tokens/ERC20.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { IIntentWithHook } from "../interfaces/IIntentWithHook.sol";
-import { BytesLib } from "../libraries/BytesLib.sol";
+import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
+import { ExtractRevertReasonHelper } from "../helpers/ExtractRevertReasonHelper.sol";
 
-contract LimitOrderIntent is IIntentWithHook {
-    mapping(address => mapping(address => uint256)) public till;
+/// @title Limit Order Intent
+/// @notice An intent to execute a limit order at the rate defined by the user at the time of the intent creation.
+contract LimitOrderIntent is IIntentWithHook, ExecuteRootTransaction, ExtractRevertReasonHelper {
+    /*//////////////////////////////////////////////////////////////////////////
+                                CUSTOM ERRORS
+    //////////////////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc IIntentWithHook
-    function execute(Intent calldata intent, Hook calldata hook) external returns (bool) {
-        require(intent.root == msg.sender, "LimitOrderIntent:invalid-root");
-        require(intent.target == address(this), "LimitOrderIntent:invalid-target");
+    /// @dev The amount of tokens transferred to the intent root is less than the minimum amount expected.
+    error InsufficientInputAmount(uint256 amount, uint256 amountInMin);
 
-        (address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin) =
-            abi.decode(intent.data, (address, address, uint256, uint256));
+    /*//////////////////////////////////////////////////////////////////////////
+                                CONSTRUCTOR
+    //////////////////////////////////////////////////////////////////////////*/
 
-        uint256 tokenABalance = ERC20(tokenOut).balanceOf(intent.root);
-        uint256 tokenBBalance = ERC20(tokenIn).balanceOf(intent.root);
+    /// @notice Initialize the smart contract
+    /// @param _intentifySafeModule The address of the Intentify Safe Module
+    constructor(address _intentifySafeModule) ExecuteRootTransaction(_intentifySafeModule) { }
 
-        till[intent.root][tokenOut] = tokenABalance - amountOutMax;
-        till[intent.root][tokenIn] += tokenBBalance + amountInMin;
+    /*//////////////////////////////////////////////////////////////////////////
+                                READ FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
 
-        _hook(hook);
-        // The hook is expected to transfer the tokens to the intent root.
-        // NOTICE: We can likely optimize by using the `transient storage` when available.
-
-        _unlock(intent.root, tokenOut, tokenIn);
-
-        return true;
-    }
-
+    /// @notice Helper function to encode provided parameters into a byte array.
+    /// @param tokenOut The token to be sold.
+    /// @param tokenIn The token to be purchased.
+    /// @param amountOutMax The maximum amount of tokens to be sold.
+    /// @param amountInMin The minimum amount of tokens to be purchased.
+    /// @return data The encoded parameters.
     function encode(
         address tokenOut,
         address tokenIn,
@@ -45,40 +48,70 @@ contract LimitOrderIntent is IIntentWithHook {
         data = abi.encode(tokenOut, tokenIn, amountOutMax, amountInMin);
     }
 
-    function _unlock(address account, address tokenOut, address tokenIn) internal view returns (bool) {
-        uint256 tokenABalance = ERC20(tokenOut).balanceOf(account);
-        uint256 tokenBBalance = ERC20(tokenIn).balanceOf(account);
-        require(till[account][tokenOut] <= tokenABalance, "LimitOrderIntent:unlock:tokenOut:insufficient-balance");
-        require(till[account][tokenIn] <= tokenBBalance, "LimitOrderIntent:unlock:tokenIn:insufficient-balance");
+    /*//////////////////////////////////////////////////////////////////////////
+                                   WRITE FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @inheritdoc IIntentWithHook
+    function execute(Intent calldata intent, Hook calldata hook) external returns (bool) {
+        if (intent.root != msg.sender) revert InvalidRoot();
+        if (intent.target != address(this)) revert InvalidTarget();
+
+        (, address tokenIn,,) = abi.decode(intent.data, (address, address, uint256, uint256));
+
+        uint256 initialTokenInBalance = ERC20(tokenIn).balanceOf(intent.root);
+
+        _hook(hook);
+        // The hook is expected to transfer the tokens to the intent root.
+        // NOTICE: We can likely optimize by using the `transient storage` when available.
+
+        _unlock(intent, hook, initialTokenInBalance);
+
         return true;
     }
 
+    /*//////////////////////////////////////////////////////////////////////////
+                              INTERNAL READ FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice Execute the hook that sends the tokenIn to the user.
+    /// @param hook The hook to be executed.
     function _hook(Hook calldata hook) internal returns (bool success) {
         bytes memory errorMessage;
-        (success, errorMessage) = address(hook.target).call{ value: 0 }(hook.data);
+        (, bytes memory hookTxData) = abi.decode(hook.data, (address, bytes));
+        (success, errorMessage) = address(hook.target).call{ value: 0 }(hookTxData);
 
         if (!success) {
             if (errorMessage.length > 0) {
                 string memory reason = _extractRevertReason(errorMessage);
                 revert(reason);
             } else {
-                revert("LimitOrderIntentHook::execution-failed");
+                revert HookExecutionFailed();
             }
         }
     }
 
-    function _extractRevertReason(bytes memory revertData) internal pure returns (string memory reason) {
-        uint256 length = revertData.length;
-        if (length < 68) return "";
-        uint256 t;
-        assembly {
-            revertData := add(revertData, 4)
-            t := mload(revertData) // Save the content of the length slot
-            mstore(revertData, sub(length, 4)) // Set proper length
-        }
-        reason = abi.decode(revertData, (string));
-        assembly {
-            mstore(revertData, t) // Restore the content of the length slot
-        }
+    /// @notice Unlock the tokenOut to the hook executor if conditions are met
+    /// @param intent Contains data related to intent.
+    /// @param hook Contains data related to hook.
+    /// @param initialTokenInBalance The initial tokenIn balance of the intent root.
+    function _unlock(
+        Intent calldata intent,
+        Hook calldata hook,
+        uint256 initialTokenInBalance
+    )
+        internal
+        returns (bool)
+    {
+        (address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin) =
+            abi.decode(intent.data, (address, address, uint256, uint256));
+
+        uint256 amountIn = ERC20(tokenIn).balanceOf(intent.root) - initialTokenInBalance;
+        (address executor,) = abi.decode(hook.data, (address, bytes));
+
+        if (amountIn < amountInMin) revert InsufficientInputAmount(amountIn, amountInMin);
+
+        bytes memory txData = abi.encodeWithSignature("transfer(address,uint256)", executor, amountOutMax);
+        return executeFromRoot(tokenOut, 0, txData);
     }
 }

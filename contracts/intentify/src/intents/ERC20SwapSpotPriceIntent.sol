@@ -28,9 +28,6 @@ contract ERC20SwapSpotPriceIntent is
                                 CUSTOM ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @dev Hook execution failed for an unknown reason.
-    error HookExecutionFailed();
-
     /// @dev
     error InvalidTokenInTransfert(uint256 tokenInDeltaBalance, uint256 tokenInAmountExpected);
 

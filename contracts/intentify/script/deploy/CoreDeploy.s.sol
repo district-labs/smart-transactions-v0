@@ -7,11 +7,10 @@ import { IntentifySafeModuleBundler } from "../../src/module/IntentifySafeModule
 import { WalletFactory } from "../../src/WalletFactory.sol";
 import { LimitOrderIntent } from "../../src/intents/LimitOrderIntent.sol";
 import { TimestampIntent } from "../../src/intents/TimestampIntent.sol";
-import { TokenRouterReleaseIntent } from "../../src/intents/TokenRouterReleaseIntent.sol";
 import { TwapIntent } from "../../src/intents/TwapIntent.sol";
 
 contract CoreDeploy is Script {
-    function run() external {
+    function run(address intentifySafeModule) external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
         // Periphery Contracts
@@ -22,9 +21,8 @@ contract CoreDeploy is Script {
         new IntentifySafeModuleBundler();
 
         // Intent Modules Contracts
-        new LimitOrderIntent();
+        new LimitOrderIntent(intentifySafeModule);
         new TimestampIntent();
-        new TokenRouterReleaseIntent();
         new TwapIntent();
         vm.stopBroadcast();
     }
