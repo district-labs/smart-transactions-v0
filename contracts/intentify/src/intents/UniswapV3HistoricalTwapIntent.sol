@@ -111,9 +111,10 @@ contract UniswapV3HistoricalTwapIntent {
                                    WRITE FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Function to execute the intent and hook checks.
+    /// @notice Function to execute the intent and hook.
     /// @param intent Contains data related to intent.
     /// @param hook Contains data related to hook.
+    /// @return true if the intent is valid, reverts otherwise.
     function execute(Intent calldata intent, Hook calldata hook) external view returns (bool) {
         if (intent.root != msg.sender) revert InvalidRoot();
         if (intent.target != address(this)) revert InvalidTarget();

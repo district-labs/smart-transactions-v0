@@ -13,14 +13,14 @@ import {
     Hook,
     TypesAndDecoders
 } from "../../src/TypesAndDecoders.sol";
-import { MarketOrderIntent } from "../../src/intents/MarketOrderIntent.sol";
+import { ERC20SwapSpotPriceIntent } from "../../src/intents/ERC20SwapSpotPriceIntent.sol";
 import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 
-contract MarketOrderIntentTest is SafeTestingUtils {
+contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
     Safe internal _safeCreated;
     IntentifySafeModule internal _intentifySafeModule;
-    MarketOrderIntent internal _marketOrderIntent;
+    ERC20SwapSpotPriceIntent internal _erc20SwapSpotPriceIntent;
 
     address internal _whaleUSDC;
     address internal _whaleWETH;
@@ -43,7 +43,7 @@ contract MarketOrderIntentTest is SafeTestingUtils {
         _whaleUSDC = 0x51eDF02152EBfb338e03E30d65C15fBf06cc9ECC;
         _whaleWETH = 0xF04a5cC80B1E94C69B48f5ee68a08CD2F09A7c3E;
         _intentifySafeModule = new IntentifySafeModule();
-        _marketOrderIntent = new MarketOrderIntent(address(_intentifySafeModule));
+        _erc20SwapSpotPriceIntent = new ERC20SwapSpotPriceIntent(address(_intentifySafeModule));
         _safe = new Safe();
         _safeProxyFactory = new SafeProxyFactory();
         _safeCreated = _setupSafe(signer);
@@ -61,7 +61,7 @@ contract MarketOrderIntentTest is SafeTestingUtils {
      * - In order to execute a buy order, te last parameter of the `encode` function, the `isBuy` parameter, must be set
      * to `true`.
      */
-    function test_MarketOrderIntent_Buy_Success() external {
+    function test_ERC20SwapSpotPriceIntent_Buy_Success() external {
         // ETH/USD Price Feed on Ethereum Mainnet
         address priceFeedETHUSD = 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419;
 
@@ -81,8 +81,8 @@ contract MarketOrderIntentTest is SafeTestingUtils {
         intents[0] = Intent({
             root: address(_safeCreated),
             value: 0,
-            target: address(_marketOrderIntent),
-            data: _marketOrderIntent.encode(
+            target: address(_erc20SwapSpotPriceIntent),
+            data: _erc20SwapSpotPriceIntent.encode(
                 USDCAddress,
                 WETHAddress,
                 priceFeedUSDCUSD,
@@ -101,7 +101,7 @@ contract MarketOrderIntentTest is SafeTestingUtils {
 
         // Approve 0.8 ETH to the Market Order Intent, this is a helper to execute the hook trading
         vm.prank(_whaleWETH);
-        ERC20(WETHAddress).approve(address(_marketOrderIntent), 0.8 ether);
+        ERC20(WETHAddress).approve(address(_erc20SwapSpotPriceIntent), 0.8 ether);
 
         bytes memory hookTxData = abi.encodeWithSignature(
             "transferFrom(address,address,uint256)", _whaleWETH, address(_safeCreated), 0.8 ether
@@ -134,7 +134,7 @@ contract MarketOrderIntentTest is SafeTestingUtils {
      * - In order to execute a sell order, te last parameter of the `encode` function, the `isBuy` parameter, must be
      * set to `false`.
      */
-    function test_MarketOrderIntent_Sell_Success() external {
+    function test_ERC20SwapSpotPriceIntent_Sell_Success() external {
         // ETH/USD Price Feed on Ethereum Mainnet
         address priceFeedETHUSD = 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419;
 
@@ -154,8 +154,8 @@ contract MarketOrderIntentTest is SafeTestingUtils {
         intents[0] = Intent({
             root: address(_safeCreated),
             value: 0,
-            target: address(_marketOrderIntent),
-            data: _marketOrderIntent.encode(
+            target: address(_erc20SwapSpotPriceIntent),
+            data: _erc20SwapSpotPriceIntent.encode(
                 WETHAddress,
                 USDCAddress,
                 priceFeedETHUSD,
@@ -174,7 +174,7 @@ contract MarketOrderIntentTest is SafeTestingUtils {
 
         // Approve 1300 USDC to the Market Order Intent, this is a helper to execute the hook trading
         vm.prank(_whaleUSDC);
-        ERC20(USDCAddress).approve(address(_marketOrderIntent), 1300e6);
+        ERC20(USDCAddress).approve(address(_erc20SwapSpotPriceIntent), 1300e6);
 
         bytes memory hookTxData =
             abi.encodeWithSignature("transferFrom(address,address,uint256)", _whaleUSDC, address(_safeCreated), 1300e6);
