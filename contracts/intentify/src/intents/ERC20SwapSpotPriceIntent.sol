@@ -28,12 +28,6 @@ contract ERC20SwapSpotPriceIntent is
                                 CUSTOM ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @dev Intent root must be the msg sender.
-    error InvalidRoot();
-
-    /// @dev Intent target must be this contract.
-    error InvalidTarget();
-
     /// @dev Hook execution failed for an unknown reason.
     error HookExecutionFailed();
 

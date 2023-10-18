@@ -3,7 +3,7 @@ pragma solidity >=0.8.19;
 
 import { ERC20 } from "solady/tokens/ERC20.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
-import {IIntentWithHook} from "../interfaces/IIntentWithHook.sol";
+import { IIntentWithHook } from "../interfaces/IIntentWithHook.sol";
 import { BytesLib } from "../libraries/BytesLib.sol";
 
 contract LimitOrderIntent is IIntentWithHook {

@@ -6,6 +6,11 @@ import { Intent, Hook } from "../TypesAndDecoders.sol";
 /// @title IIntentWithHook Interface
 /// @dev This interface defines the `execute` function to execute intents with hooks.
 interface IIntentWithHook {
+    /// @dev Intent root must be the msg sender.
+    error InvalidRoot();
+    /// @dev Intent target must be this contract.
+    error InvalidTarget();
+
     /// @notice Function to execute the intent and hook.
     /// @param intent Contains data related to intent.
     /// @param hook Contains data related to hook.

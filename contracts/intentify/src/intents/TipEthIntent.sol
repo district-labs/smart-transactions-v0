@@ -2,7 +2,7 @@
 pragma solidity >=0.8.19;
 
 import { Intent, Hook } from "../TypesAndDecoders.sol";
-import {IIntentWithHook} from "../interfaces/IIntentWithHook.sol";
+import { IIntentWithHook } from "../interfaces/IIntentWithHook.sol";
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
 contract TipEthIntent is IIntentWithHook, ExecuteRootTransaction {
