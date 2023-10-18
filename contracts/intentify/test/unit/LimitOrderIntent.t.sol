@@ -12,7 +12,6 @@ import {
 } from "../../src/TypesAndDecoders.sol";
 import { Intentify } from "../../src/Intentify.sol";
 import { SwapRouter } from "../../src/periphery/SwapRouter.sol";
-import { TokenRouterReleaseIntent } from "../../src/intents/TokenRouterReleaseIntent.sol";
 import { LimitOrderIntent } from "../../src/intents/LimitOrderIntent.sol";
 
 import { BaseTest } from "../utils/Base.t.sol";

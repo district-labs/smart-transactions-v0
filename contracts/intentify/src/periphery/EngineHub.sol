@@ -4,8 +4,6 @@ pragma solidity >=0.8.19;
 import { ERC20Mintable } from "./ERC20Mintable.sol";
 import { Ownable } from "solady/auth/Ownable.sol";
 
-import { TokenRouterReleaseIntent } from "../intents/TokenRouterReleaseIntent.sol";
-
 contract EngineHub is Ownable {
     struct Call {
         address target;

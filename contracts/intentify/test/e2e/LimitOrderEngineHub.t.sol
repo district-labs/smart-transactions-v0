@@ -15,7 +15,6 @@ import {
     Hook,
     TypesAndDecoders
 } from "../../src/TypesAndDecoders.sol";
-import { TokenRouterReleaseIntent } from "../../src/intents/TokenRouterReleaseIntent.sol";
 import { LimitOrderIntent } from "../../src/intents/LimitOrderIntent.sol";
 import { BaseTest } from "../utils/Base.t.sol";
 
@@ -35,7 +34,6 @@ contract LimitOrderIntentHarness is LimitOrderIntent {
 
 contract LimitOrderEngineHubTest is BaseTest {
     Intentify internal _intentify;
-    TokenRouterReleaseIntent internal _tokenRouterReleaseIntent;
     LimitOrderIntentHarness internal _limitOrderIntent;
     EngineHub internal _engineHub;
 
