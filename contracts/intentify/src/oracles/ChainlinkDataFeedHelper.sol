@@ -12,7 +12,7 @@ contract ChainlinkDataFeedHelper {
         return (amount / uint256(price)) * (10 ** baseDecimal);
     }
 
-    function _calculateTokenInAmountEstimated(
+    function _calcuateTokenInAmountEstimated(
         uint8 tokenOutDecimals,
         uint8 tokenInDecimals,
         uint256 tokenAmountExpected,
