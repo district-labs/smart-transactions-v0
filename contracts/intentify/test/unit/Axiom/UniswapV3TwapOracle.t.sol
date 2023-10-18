@@ -12,35 +12,38 @@ import { BaseTest } from "../../utils/Base.t.sol";
 contract UniswapV3TwapOracleHarness is UniswapV3TwapOracle {
     constructor(address _axiomV1QueryAddress) UniswapV3TwapOracle(_axiomV1QueryAddress) { }
 
-    function exposed_validateData(AxiomResponseStruct calldata axiomResponse) public view {
-        _validateData(axiomResponse);
-    }
-
-    function exposed_unpackObservation(uint256 observation) public pure returns (Oracle.Observation memory) {
-        return _unpackObservation(observation);
-    }
-
-    function exposed_getObservations(
-        address poolAddress,
-        uint256 startBlockNumber,
-        uint256 endBlockNumber
-    )
-        public
-        view
-        returns (Oracle.Observation memory, Oracle.Observation memory)
-    {
-        return _getObservations(poolAddress, startBlockNumber, endBlockNumber);
-    }
-
-    function exposed_calculateTwaTickLiquidity(
+    function exposed_calculateTwaLiquidity(
         Oracle.Observation memory startObservation,
         Oracle.Observation memory endObservation
     )
-        public
+        external
         pure
-        returns (int24 twaTick, uint160 twaLiquidity)
+        returns (uint160 twaLiquidity)
     {
-        return _calculateTwaTickLiquidity(startObservation, endObservation);
+        return _calculateTwaLiquidity(startObservation, endObservation);
+    }
+
+    function exposed_calculateTwaTick(
+        Oracle.Observation memory startObservation,
+        Oracle.Observation memory endObservation
+    )
+        external
+        pure
+        returns (int24 twaTick)
+    {
+        return _calculateTwaTick(startObservation, endObservation);
+    }
+
+    function exposed_getObservationHash(address poolAddress, uint256 blockNumber) external pure returns (bytes32) {
+        return _getObservationHash(poolAddress, blockNumber);
+    }
+
+    function exposed_unpackObservation(uint256 observation) external pure returns (Oracle.Observation memory) {
+        return _unpackObservation(observation);
+    }
+
+    function exposed_validateAxiomData(AxiomResponseStruct calldata axiomResponse) external view returns (bool) {
+        return _validateAxiomData(axiomResponse);
     }
 }
 
@@ -200,53 +203,33 @@ contract UniswapV3TwapOracleTest is BaseTest {
         assertEq(initialized, true);
     }
 
-    function test_GetTwap_Success() external {
+    function test_GetTwaTick_Success() external {
         AxiomResponseStruct memory axiomResponse = getAxiomRespose();
 
         _uniswapV3TwapOracle.storeObservations(axiomResponse);
 
-        (
-            int56 twaTick,
-            uint160 twaLiquidity,
-            Oracle.Observation memory startObservation,
-            Oracle.Observation memory endObservation
-        ) = _uniswapV3TwapOracle.getUniswapV3TWAP(UNI_V3_POOL_ADDRESS, 9_798_709, 9_802_115);
+        (int56 twaTick, Oracle.Observation memory startObservation, Oracle.Observation memory endObservation) =
+            _uniswapV3TwapOracle.getTwaTick(UNI_V3_POOL_ADDRESS, 9_798_709, 9_802_115);
 
         assertEq(twaTick, 202_269);
+        assertEq(startObservation.blockTimestamp, 1_696_284_792);
+        assertEq(endObservation.blockTimestamp, 1_696_337_040);
+    }
+
+    function test_GetTwaLiquidity_Success() external {
+        AxiomResponseStruct memory axiomResponse = getAxiomRespose();
+
+        _uniswapV3TwapOracle.storeObservations(axiomResponse);
+
+        (uint160 twaLiquidity, Oracle.Observation memory startObservation, Oracle.Observation memory endObservation) =
+            _uniswapV3TwapOracle.getTwaLiquidity(UNI_V3_POOL_ADDRESS, 9_798_709, 9_802_115);
+
         assertEq(twaLiquidity, 425_692_773_283_842);
         assertEq(startObservation.blockTimestamp, 1_696_284_792);
         assertEq(endObservation.blockTimestamp, 1_696_337_040);
     }
 
-    function test_ValidateData_Success() external view {
-        AxiomResponseStruct memory axiomResponse = getAxiomRespose();
-        _uniswapV3TwapOracle.exposed_validateData(axiomResponse);
-    }
-
-    function test_UnpackObservation_Succss() external {
-        Oracle.Observation memory observation = _uniswapV3TwapOracle.exposed_unpackObservation(
-            452_312_848_583_266_388_393_004_091_316_455_592_718_743_602_750_844_626_884_460_571_921_802_281_080
-        );
-
-        assertEq(observation.blockTimestamp, 1_696_284_792);
-        assertEq(observation.tickCumulative, 178_572_296_592);
-        assertEq(observation.secondsPerLiquidityCumulativeX128, 63_589_287_046_984_900_412_872_929_525);
-        assertEq(observation.initialized, true);
-    }
-
-    function test_GetObservations_Success() external {
-        AxiomResponseStruct memory axiomResponse = getAxiomRespose();
-
-        _uniswapV3TwapOracle.storeObservations(axiomResponse);
-
-        (Oracle.Observation memory startObservation, Oracle.Observation memory endObservation) =
-            _uniswapV3TwapOracle.exposed_getObservations(UNI_V3_POOL_ADDRESS, 9_798_709, 9_802_115);
-
-        assertEq(startObservation.blockTimestamp, 1_696_284_792);
-        assertEq(endObservation.blockTimestamp, 1_696_337_040);
-    }
-
-    function test_CalculateTwaTickLiquidity_Success() external {
+    function test_CalculateTwaLiquidity_Success() external {
         Oracle.Observation memory startObservation = Oracle.Observation({
             blockTimestamp: 1_696_284_792,
             tickCumulative: 178_572_296_592,
@@ -261,11 +244,52 @@ contract UniswapV3TwapOracleTest is BaseTest {
             initialized: true
         });
 
-        (int24 twaTick, uint160 twaLiquidity) =
-            _uniswapV3TwapOracle.exposed_calculateTwaTickLiquidity(startObservation, endObservation);
+        uint160 twaLiquidity = _uniswapV3TwapOracle.exposed_calculateTwaLiquidity(startObservation, endObservation);
+
+        assertEq(twaLiquidity, 425_692_773_283_842);
+    }
+
+    function test_CalculateTwaTick_Success() external {
+        Oracle.Observation memory startObservation = Oracle.Observation({
+            blockTimestamp: 1_696_284_792,
+            tickCumulative: 178_572_296_592,
+            secondsPerLiquidityCumulativeX128: 63_589_287_046_984_900_412_872_929_525,
+            initialized: true
+        });
+
+        Oracle.Observation memory endObservation = Oracle.Observation({
+            blockTimestamp: 1_696_337_040,
+            tickCumulative: 189_140_460_096,
+            secondsPerLiquidityCumulativeX128: 105_354_320_946_281_382_213_822_565_334,
+            initialized: true
+        });
+
+        int24 twaTick = _uniswapV3TwapOracle.exposed_calculateTwaTick(startObservation, endObservation);
 
         assertEq(twaTick, 202_269);
-        assertEq(twaLiquidity, 425_692_773_283_842);
+    }
+
+    function test_GetObservationHash_Success() external {
+        bytes32 observationHash = _uniswapV3TwapOracle.exposed_getObservationHash(UNI_V3_POOL_ADDRESS, 9_798_709);
+        assertEq(observationHash, keccak256(abi.encode(UNI_V3_POOL_ADDRESS, 9_798_709)));
+    }
+
+    function test_UnpackObservation_Success() external {
+        Oracle.Observation memory observation = _uniswapV3TwapOracle.exposed_unpackObservation(
+            452_312_848_583_266_388_393_004_091_316_455_592_718_743_602_750_844_626_884_460_571_921_802_281_080
+        );
+
+        assertEq(observation.blockTimestamp, 1_696_284_792);
+        assertEq(observation.tickCumulative, 178_572_296_592);
+        assertEq(observation.secondsPerLiquidityCumulativeX128, 63_589_287_046_984_900_412_872_929_525);
+        assertEq(observation.initialized, true);
+    }
+
+    function test_ValidateData_Success() external {
+        AxiomResponseStruct memory axiomResponse = getAxiomRespose();
+        bool isValidProof = _uniswapV3TwapOracle.exposed_validateAxiomData(axiomResponse);
+
+        assertEq(isValidProof, true);
     }
 
     /* ===================================================================================== */
@@ -277,20 +301,22 @@ contract UniswapV3TwapOracleTest is BaseTest {
         axiomResponse.keccakStorageResponse =
             bytes32(0x1d401261f04d5b526c5c75b21b1da3ee14c59d1b06d3e219f17814f192424867);
 
-        vm.expectRevert("Invalid Proof");
+        vm.expectRevert(UniswapV3TwapOracle.InvalidProof.selector);
         _uniswapV3TwapOracle.storeObservations(axiomResponse);
     }
 
     function test_StoreObservations_RevertWhen_InvalidStorage() external {
         AxiomResponseStruct memory axiomResponse = getAxiomResposeWrongSlot();
 
-        vm.expectRevert("Invalid Slot");
+        vm.expectRevert(UniswapV3TwapOracle.InvalidSlot.selector);
         _uniswapV3TwapOracle.storeObservations(axiomResponse);
     }
 
-    function test_GetTwap_RevertWhen_ObservationNotStored() external {
-        vm.expectRevert("Observation Not Stored");
-        _uniswapV3TwapOracle.getUniswapV3TWAP(UNI_V3_POOL_ADDRESS, 9_798_710, 9_802_116);
+    function test_GetTwaTick_RevertWhen_ObservationNotStored() external {
+        vm.expectRevert(
+            abi.encodeWithSelector(UniswapV3TwapOracle.ObservationNotStored.selector, UNI_V3_POOL_ADDRESS, 9_798_710)
+        );
+        _uniswapV3TwapOracle.getTwaTick(UNI_V3_POOL_ADDRESS, 9_798_710, 9_802_116);
     }
 
     function test_ValidateData_RevertWhen_InvalidProof() external {
@@ -298,23 +324,18 @@ contract UniswapV3TwapOracleTest is BaseTest {
         axiomResponse.keccakStorageResponse =
             bytes32(0x1d401261f04d5b526c5c75b21b1da3ee14c59d1b06d3e219f17814f192424867);
 
-        vm.expectRevert("Invalid Proof");
-        _uniswapV3TwapOracle.exposed_validateData(axiomResponse);
+        vm.expectRevert(UniswapV3TwapOracle.InvalidProof.selector);
+        _uniswapV3TwapOracle.exposed_validateAxiomData(axiomResponse);
     }
 
     function test_ValidateData_RevertWhen_EmptyStorageResponses() external {
         AxiomResponseStruct memory axiomResponse = getAxiomResposeEmptyStorageResponses();
 
-        vm.expectRevert("No Storage Responses");
-        _uniswapV3TwapOracle.exposed_validateData(axiomResponse);
+        vm.expectRevert(UniswapV3TwapOracle.NoStorageResponses.selector);
+        _uniswapV3TwapOracle.exposed_validateAxiomData(axiomResponse);
     }
 
-    function test_GetObservations_RevertWhen_ObservationNotStored() external {
-        vm.expectRevert("Observation Not Stored");
-        _uniswapV3TwapOracle.exposed_getObservations(UNI_V3_POOL_ADDRESS, 9_798_710, 9_802_116);
-    }
-
-    function test_CalculateTwaTickLiquidity_RevertWhen_InvalidObservationOrder() external {
+    function test_CalculateTwaTick_RevertWhen_InvalidObservationOrder() external {
         Oracle.Observation memory startObservation = Oracle.Observation({
             blockTimestamp: 1_696_337_040,
             tickCumulative: 178_572_296_592,
@@ -329,7 +350,7 @@ contract UniswapV3TwapOracleTest is BaseTest {
             initialized: true
         });
 
-        vm.expectRevert("Invalid Observation Order");
-        _uniswapV3TwapOracle.exposed_calculateTwaTickLiquidity(startObservation, endObservation);
+        vm.expectRevert(UniswapV3TwapOracle.InvalidObservationOrder.selector);
+        _uniswapV3TwapOracle.exposed_calculateTwaTick(startObservation, endObservation);
     }
 }

@@ -108,11 +108,11 @@ contract UniV3HistoricalTwapIntent {
             uint256 denominatorEndBlock
         ) = abi.decode(hookData, (uint256, uint256, uint256, uint256));
 
-        (int24 numeratorTwaTick,,,) =
-            _uniswapV3TwapOracle.getUniswapV3TWAP(uniswapV3Pool, numeratorStartBlock, numeratorEndBlock);
+        (int24 numeratorTwaTick,,) =
+            _uniswapV3TwapOracle.getTwaTick(uniswapV3Pool, numeratorStartBlock, numeratorEndBlock);
 
-        (int24 denominatorTwaTick,,,) =
-            _uniswapV3TwapOracle.getUniswapV3TWAP(uniswapV3Pool, denominatorStartBlock, denominatorEndBlock);
+        (int24 denominatorTwaTick,,) =
+            _uniswapV3TwapOracle.getTwaTick(uniswapV3Pool, denominatorStartBlock, denominatorEndBlock);
 
         uint160 numeratorSqrtPriceX96 = TickMath.getSqrtRatioAtTick(numeratorTwaTick);
         uint160 denominatorSqrtPriceX96 = TickMath.getSqrtRatioAtTick(denominatorTwaTick);
