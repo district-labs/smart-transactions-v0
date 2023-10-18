@@ -1,8 +1,6 @@
 @prb/test/=lib/prb-test/src/
 forge-std/=lib/forge-std/src/
 solady/=lib/solady/src/
-@uniswap/core/=lib/@uniswap/v3-core/contracts/
-@uniswap/periphery/=lib/@uniswap/v3-periphery/contracts/
 uniswap-v3-periphery/=lib/@uniswap/v3-periphery/contracts/
 uniswap-v3-core/=lib/@uniswap/v3-core/contracts/
 @openzeppelin/=lib/openzeppelin-contracts/
