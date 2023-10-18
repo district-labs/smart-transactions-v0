@@ -28,6 +28,12 @@
 	path = contracts/intentify/contracts/intentify/lib/@uniswap/v3-periphery
 	url = https://github.com/Uniswap/v3-periphery
 	branch = 0.8
+[submodule "contracts/intentify/lib/aave-v3-core"]
+	path = contracts/intentify/lib/aave-v3-core
+	url = https://github.com/aave/aave-v3-core
+[submodule "contracts/intentify/lib/aave-v3-periphery"]
+	path = contracts/intentify/lib/aave-v3-periphery
+	url = https://github.com/aave/aave-v3-periphery
 [submodule "contracts/intentify/lib/axiom-v1"]
 	path = contracts/intentify/lib/axiom-v1
 	url = https://github.com/axiom-crypto/axiom-v1-contracts

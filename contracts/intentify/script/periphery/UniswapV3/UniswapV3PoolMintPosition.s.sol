@@ -3,12 +3,12 @@ pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
 import { ERC20Mintable } from "../../../src/periphery/ERC20Mintable.sol";
-import { TickMath } from "@uniswap/v3-core/contracts/libraries/TickMath.sol";
+import { TickMath } from "uniswap-v3-core/libraries/TickMath.sol";
 import { UniswapV3Address } from "./lib/UniswapV3Address.sol";
-import { IUniswapV3Factory } from "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
-import { IUniswapV3Pool } from "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
-import { INonfungiblePositionManager } from "@uniswap/v3-periphery/contracts/interfaces/INonfungiblePositionManager.sol";
-import { TransferHelper } from "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
+import { IUniswapV3Factory } from "uniswap-v3-core/interfaces/IUniswapV3Factory.sol";
+import { IUniswapV3Pool } from "uniswap-v3-core/interfaces/IUniswapV3Pool.sol";
+import { INonfungiblePositionManager } from "uniswap-v3-periphery/interfaces/INonfungiblePositionManager.sol";
+import { TransferHelper } from "uniswap-v3-periphery/libraries/TransferHelper.sol";
 
 // This script mints a new position in a Uniswap V3 pool.
 contract UniswapV3MintPosition is Script {

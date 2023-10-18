@@ -2,7 +2,7 @@
 pragma solidity >=0.8.19 <0.9.0;
 
 import { IAxiomV1Query } from "axiom-v1/contracts/interfaces/IAxiomV1Query.sol";
-import { Oracle } from "@uniswap/v3-core/contracts/libraries/Oracle.sol";
+import { Oracle } from "uniswap-v3-core/libraries/Oracle.sol";
 import { AxiomResponseStruct } from "./AxiomStructs.sol";
 
 /// @title Uniswap V3 Twap Oracle

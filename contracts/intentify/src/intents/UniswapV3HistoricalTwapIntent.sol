@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import { IUniswapV3Pool } from "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
-import { TickMath } from "@uniswap/v3-core/contracts/libraries/TickMath.sol";
-import { FixedPoint96 } from "@uniswap/v3-core/contracts/libraries/FixedPoint96.sol";
-import { FullMath } from "@uniswap/v3-core/contracts/libraries/FullMath.sol";
+import { IUniswapV3Pool } from "uniswap-v3-core/interfaces/IUniswapV3Pool.sol";
+import { TickMath } from "uniswap-v3-core/libraries/TickMath.sol";
+import { FixedPoint96 } from "uniswap-v3-core/libraries/FixedPoint96.sol";
+import { FullMath } from "uniswap-v3-core/libraries/FullMath.sol";
 import { UniswapV3TwapOracle } from "../periphery/Axiom/UniswapV3TwapOracle.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 
