@@ -105,8 +105,8 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
             uint256 minHealthFactor,
             uint32 fee
         ) = abi.decode(intent.data, (uint8, address, address, address, uint256, uint256, uint32));
-        uint256 balanceStart = IERC20(supplyAsset).balanceOf(intent.root);
-        _hook(hook); // Expectation is that the hook will add funds to the root account i.e. flash loan
+        uint256 balanceStart = IERC20(supplyAsset).balanceOf(intent.root); // change to borrow asset
+        _hook(hook); // Expectation is that the hook will add funds to the intent module i.e. flash loan
         _leverage(intent, hook);
         uint256 repayAmount = _checkHookInstructions(swapType, priceFeed, supplyAsset, borrowAsset, fee, hook.data);
         _transferFromRoot(borrowAsset, hook.target, repayAmount);
