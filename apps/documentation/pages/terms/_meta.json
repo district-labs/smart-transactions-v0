@@ -1,0 +1,29 @@
+{
+  "intents": {
+    "title": "🧿 Intent"
+  },
+  "reactive-conditions": {
+    "title": "🖇️ Reactive Condition"
+  },
+  "smart-transaction": {
+    "title": "🧠 Smart Transaction"
+  },
+  "data-hub": {
+    "title": "📡 Data Hub"
+  },
+  "intent-module": {
+    "title": "🧩 Intent Module"
+  },
+  "intent-batch": {
+    "title": "🔐 Intent Batch"
+  },
+  "strategy": {
+    "title": "🎯 Strategy"
+  },
+  "prover": {
+    "title": "🤔 Provers"
+  },
+  "searchers": {
+    "title": "🔍 Searchers"
+  }
+}

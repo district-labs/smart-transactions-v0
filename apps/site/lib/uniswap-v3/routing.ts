@@ -65,3 +65,52 @@ export async function routeSwapExactOutput({
 
   return route
 }
+
+interface RouteSwapExactInputParams {
+  chainId: number
+  recipient: string
+  amountIn: string
+  inputToken: Token
+  outputToken: Token
+}
+
+export async function routeSwapExactInput({
+  chainId,
+  amountIn,
+  inputToken,
+  outputToken,
+  recipient,
+}: RouteSwapExactInputParams) {
+  const router = new AlphaRouter({
+    chainId,
+    provider: new ethers.providers.JsonRpcProvider(process.env.RPC_URL),
+  })
+
+  const inputTokenUniV3 = new UniV3Token(
+    chainId,
+    inputToken.address,
+    inputToken.decimals
+  )
+
+  const outputTokenUniV3 = new UniV3Token(
+    chainId,
+    outputToken.address,
+    outputToken.decimals
+  )
+
+  const options: SwapOptionsSwapRouter02 = {
+    recipient,
+    slippageTolerance: new Percent(50, 10_000),
+    deadline: Math.floor(Date.now() / 1000 + 1800),
+    type: SwapType.SWAP_ROUTER_02,
+  }
+
+  const route = await router.route(
+    CurrencyAmount.fromRawAmount(inputTokenUniV3, amountIn),
+    outputTokenUniV3,
+    TradeType.EXACT_INPUT,
+    options
+  )
+
+  return route
+}
