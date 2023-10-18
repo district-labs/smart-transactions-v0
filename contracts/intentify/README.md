@@ -2,9 +2,7 @@
 
 A framework for expressing blockchain EVM intents.
 
-
 # Scripts
-
 
 ### Load environment variables
 ```bash
