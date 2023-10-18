@@ -12,7 +12,7 @@ export default defineConfig({
         'Intentify.json',
         'IntentifySafeModule.json',
         'IntentifySafeModuleBundler.json',
-        'TimestampBeforeIntent.json',
+        'TimestampIntent.json',
         'TokenRouterReleaseIntent.json',
         'LimitOrderIntent.json',
       ],

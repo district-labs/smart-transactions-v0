@@ -3,5 +3,6 @@ forge-std/=lib/forge-std/src/
 solady/=lib/solady/src/
 @uniswap/=lib/@uniswap/
 @openzeppelin/=lib/openzeppelin-contracts/
+@chainlink/=lib/chainlink/contracts/src/
 safe-contracts/=lib/safe-contracts/contracts
 surl/=lib/surl/src

@@ -1,4 +1,4 @@
-import { IntentBatch, IntentifyModuleAddressList, getIntentBatchTypedDataHash } from "@district-labs/intentify-utils";
+import { IntentBatch, IntentifyModuleAddressList, getIntentBatchTypedDataHash } from "@district-labs/intentify-core";
 import { useIntentifySafeModuleDomainSeparator } from "../../blockchain";
 import { useChainId } from "wagmi";
 import { isAddress } from "viem";

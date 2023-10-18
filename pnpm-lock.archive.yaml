@@ -29,7 +29,7 @@ importers:
       '@district-labs/intentify-react':
         specifier: 0.0.0
         version: link:../../sdk/intentify-react
-      '@district-labs/intentify-utils':
+      '@district-labs/intentify-core':
         specifier: 0.0.0
         version: link:../../sdk/intentify-utils
       '@graphql-typed-document-node/core':
@@ -801,7 +801,7 @@ importers:
 
   sdk/intentify-react:
     dependencies:
-      '@district-labs/intentify-utils':
+      '@district-labs/intentify-core':
         specifier: 0.0.0
         version: link:../intentify-utils
       '@radix-ui/colors':

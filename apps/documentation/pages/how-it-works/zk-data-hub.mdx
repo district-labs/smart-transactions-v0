@@ -1,0 +1,76 @@
+# Zero-Knowledge Data Hub
+
+<br/>
+import SlidesZkDataHub from '../../components/slides/slides-zk-data-hub'
+
+<SlidesZkDataHub />
+
+The District Finance Zero-Knowledge Data Hub creates is a high-value data oracle for historical onchain data.
+
+- ERC20 Prices
+- ERC721 Prices
+- Protocol APY
+- Protocol TVL
+
+It unlocks historical onchain data to be verified (**with minimal gas costs**) when executing a transaction.
+
+![Transaction vs Smart Transaction](/transaction-vs-smart-transaction.png)
+
+Giving users and searchers the ability to "trustlessly" collaborate on [intent](/terms/intent) execution.
+
+# Why
+
+Today when submitting a transaction only the current block state is available.
+
+That's a problem if you want to create "set it and forget it" trading strategies that are cryptographically enforced it's not currently possible. Significantly degrading the user experience when interacting with a global and open finance compute platform.
+
+More sophisticated [Strategies](/terms/strategies) require access to historical onchain data.
+
+For example if I want to automatically deposit my stabletokens an approved vault with the yield for the last 3 days I need to be able to calculate the average APY onchain... ideally without introducing any third-party for verification i.e. no offchain oracles. 
+
+# How It Works
+
+The Zero-Knowledge Data Hub regularly takes snapshots of blockchain state at specific time intervals. Making that information available during the execution of an [Intent batch](/terms/intent-batch) which includes constraints that reference historical data.
+
+![Data Hub Architecture](/how-it-works/data-hub-with-intent.png)
+
+Intents can reference historical onchain data to validate whether or not the smart transaction should be executed.
+
+For example [UniswapV3]() pools include a method called `slot` which contains important information about the current token pair price and average price.
+
+```solidity
+  function slot0() external view returns (
+    uint160 sqrtPriceX96,
+    int24 tick,
+    uint16 observationIndex,
+    uint16 observationCardinality,
+    uint16 observationCardinalityNext,
+    uint8 feeProtocol,
+    bool unlocked
+)
+```
+
+Depending on the specific token pair the data is also stored temporarily onchain for X amount of time. In other words you can read previous block data to calculate a time-weighted average price for X time. But that amount of time is usually very limited and unpredictable across pools with different TWAP configurations.
+
+So why is this important? 
+
+# The Big Picture
+
+EVM blockchains contain lots of high-value information. That's why they are worth trillions of dollars.
+
+But not all information is created equal.
+
+We need to identity and observe the most important data. **And make it available across time.**
+
+![Data Hub Architecture](/how-it-works/data-hub-architecture.png)
+
+To unlock the full value of [Smart Transactions](/how-it-works/smart-transactions) we need to create data pipes to all of the important Open Finance data points on public EVM blockchains. Finance in large part about patterns, trends and creating strategies. Without access to historical onchain data we won't be able to create a flexible enough transaction system to reach the full potential of a global and open finance compute platform.
+
+## Axiom
+
+The protocol uses [Axiom](https://www.axiom.xyz/) a ZK Coprocessor for Ethereum to "trustlessly" access historical onchain data. Queries are created to observe high-value Open Finance data ERC20 prices from sources like Uniswap and protocol APY rates from sources like [Aave](), [Compound]() and [Spark]()
+
+
+# What Makes This Special?
+
+![Data Hub Architecture](/how-it-works/data-hub-preview.png)

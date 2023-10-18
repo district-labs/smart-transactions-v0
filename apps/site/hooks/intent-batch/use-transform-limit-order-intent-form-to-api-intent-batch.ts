@@ -1,10 +1,10 @@
-import { expiryToTimestamp } from "@/app/(app)/limit/utils";
-import { useGetIntentLimitOrderAddress, useGetIntentTimestampBeforeAddress, useGetIntentTokenRouterAddress, useGetSafeAddress } from "@district-labs/intentify-react";
-import { generateIntentModuleId } from "@district-labs/intentify-utils";
-import { useEffect, useState } from "react";
-import { encodeAbiParameters, encodePacked, parseUnits } from "viem";
+import { expiryToTimestamp } from "@/lib/utils/limit";
 import type { ApiIntentBatch } from "@/lib/validations/api/intent-batch";
 import type { Token } from "@/types/token-list";
+import { generateIntentModuleId } from "@district-labs/intentify-core";
+import { useGetIntentLimitOrderAddress, useGetIntentTimestampAddress, useGetIntentTokenRouterAddress, useGetSafeAddress } from "@district-labs/intentify-react";
+import { useEffect, useState } from "react";
+import { encodeAbiParameters, encodePacked, parseUnits } from "viem";
 
 type Input = {
     expiry: string
@@ -32,7 +32,7 @@ export function useTransformLimitOrderIntentFormToApiIntentBatch({
     signature
 }: Input): ApiIntentBatch | undefined {
     const safeAddress = useGetSafeAddress()
-    const timestampBeforeIntentAddress = useGetIntentTimestampBeforeAddress(chainId)
+    const timestampIntentAddress = useGetIntentTimestampAddress(chainId)
     const limitOrderIntentAddress = useGetIntentLimitOrderAddress(chainId)
     const tokenRouterReleaseIntentAddress = useGetIntentTokenRouterAddress(chainId)
 
@@ -81,10 +81,13 @@ export function useTransformLimitOrderIntentFormToApiIntentBatch({
             userId,
             intents: [
               {
-                intentId: generateIntentModuleId("TimestampBeforeIntent", "1") as string,
+                intentId: generateIntentModuleId("TimestampIntent", "1") as string,
                 root: safeAddress as string,
-                target: timestampBeforeIntentAddress as string,
-                data: encodePacked(["uint128"], [BigInt(expiryTimestamp)]) as string,
+                target: timestampIntentAddress as string,
+                data: encodeAbiParameters([
+                  { type: "uint128", name: "minTimestamp" },
+                  { type: "uint128", name: "maxTimestamp" },
+                ], [BigInt(0), BigInt(expiryTimestamp)]),
                 value: "0",
                 intentArgs: [
                   {
@@ -159,7 +162,7 @@ export function useTransformLimitOrderIntentFormToApiIntentBatch({
             ],
           }
           setApiIntentBatch({intentBatch})
-    }, [expiry, chainId, userId, tokenOut, amountOut, tokenIn, amountIn, domainSeparator, intentBatchHash, signature, safeAddress, timestampBeforeIntentAddress, limitOrderIntentAddress, tokenRouterReleaseIntentAddress])
+    }, [expiry, chainId, userId, tokenOut, amountOut, tokenIn, amountIn, domainSeparator, intentBatchHash, signature, safeAddress, timestampIntentAddress, limitOrderIntentAddress, tokenRouterReleaseIntentAddress])
 
     return apiIntentBatch
 }

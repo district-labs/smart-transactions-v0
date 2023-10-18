@@ -27,7 +27,7 @@ forge script script/intents/TwapIntentDeploy.s.sol:TwapIntentDeploy --rpc-url $G
 forge script script/intents/LimitOrderIntentDeploy.s.sol:LimitOrderIntentDeploy --fork-url http://localhost:8545 --broadcast 
 forge script script/intents/LimitOrderIntentDeploy.s.sol:LimitOrderIntentDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify
 
-forge script script/intents/TimestampBeforeIntentDeploy.s.sol:TimestampBeforeIntentDeploy --fork-url http://localhost:8545 --broadcast forge script script/intents/TimestampBeforeIntentDeploy.s.sol:TimestampBeforeIntentDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify
+forge script script/intents/TimestampIntentDeploy.s.sol:TimestampIntentDeploy --fork-url http://localhost:8545 --broadcast forge script script/intents/TimestampIntentDeploy.s.sol:TimestampIntentDeploy --rpc-url $GOERLI_RPC_URL --broadcast --verify
 
 forge script script/intents/TokenRouterReleaseIntentDeploy.s.sol:TokenRouterReleaseIntentDeploy --fork-url http://localhost:8545 --broadcast 
 

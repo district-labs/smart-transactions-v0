@@ -1,0 +1,77 @@
+# Intents
+
+The [Smart Transaction](/how-it-works/smart-transactions) protocol is comprised of intent modules.
+
+Intent module have to primary functions: read and write.
+
+### Read
+A intent module can be designed specifically to read onchain state.
+
+For example the [BlockNumber Range](/intent-modules/block-number-range-intent) reads the current `blockNumber` and compares it to the constraints.
+
+### Write
+A intent module can be designed to execute specific onchain writes.
+
+For example the [ERC20 Swap Spot Price](/intent-modules/-swap-spot-price) intent module requests a token swap for the current onchain spot price.
+
+### Hybrid
+An intent module can read and write if the logic requires it.
+
+For example the [Finance Leverage Long](/intent-modules/aave-leverage-long) intent module reads important onchain data like a depositors `healthFactor` and requests requests both supplying and borrowing from the [Aave V3 Lending Pool](https://docs.aave.com/developers/getting-started/readme). 
+
+# Checklist
+
+Below is a recommended checklist for starting a new intent module.
+
+**General**
+- [ ] Impact Analysis
+- [ ] Requirements
+- [ ] Input Constraints
+- [ ] Diagram
+- [ ] Prototype 
+
+Finance
+- [ ] Data Requirements
+- [ ] Protocol Integrations
+
+Data Hub
+- [ ] Data Requirements
+
+# Example
+
+## Block Number Range Intent Module
+
+#### Impact Analysis
+
+The intent will allow users to define block number ranges when a smart transaction can be executed.
+
+#### Requirements
+No external requirements. The intent module reads data directly from an EVM blockchain.
+
+#### Input Constraints
+The Block Number Range intent module has 2 data instruction requirements:
+
+1. StartBlock (uint64) - `startBlock`
+
+The smart transaction must be executed on or after the `starBlock` instruction. 
+
+2. EndBlock (uint64) - `endBlock`
+
+The smart transaction must be executed on or before the `endBlock` instruction.
+
+```solidity
+function encode(
+    uint64 startBlock,
+    uint64 endBlock
+)
+    external
+    pure
+    returns (bytes memory data)
+{
+    data = abi.encodePacked(startBlock, endBlock);
+}
+```
+
+#### Diagram
+
+#### Prototype

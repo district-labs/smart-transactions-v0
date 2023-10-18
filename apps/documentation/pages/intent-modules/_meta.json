@@ -1,0 +1,8 @@
+{
+  "tip-eth": "ETH Tip",
+  "erc-tip": "ERC20 Tip",
+  "erc20-swap-spot-price": "ERC20 Swap Spot Price",
+  "limit-order": "ERC20 Limit Order",
+  "aave-leverage-long": "ERC20 Leverage Long",
+  "mean-reversion": "ERC20 Mean Reversion"
+}

@@ -28,3 +28,6 @@
 	path = contracts/intentify/contracts/intentify/lib/@uniswap/v3-periphery
 	url = https://github.com/Uniswap/v3-periphery
 	branch = 0.8
+[submodule "contracts/intentify/lib/chainlink"]
+	path = contracts/intentify/lib/chainlink
+	url = https://github.com/smartcontractkit/chainlink
