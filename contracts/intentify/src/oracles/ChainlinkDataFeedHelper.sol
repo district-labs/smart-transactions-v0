@@ -66,6 +66,7 @@ contract ChainlinkDataFeedHelper {
         int256 scaledDecimals
     )
         internal
+        view
         returns (int256)
     {
         basePrice = _scalePrice(basePrice, baseDecimals, decimals);
