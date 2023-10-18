@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import { console2 } from "forge-std/console2.sol";
 import { Ownable } from "solady/auth/Ownable.sol";
 import { IAxiomV1Query } from "axiom-v1/contracts/interfaces/IAxiomV1Query.sol";
 import { Oracle } from "@uniswap/v3-core/contracts/libraries/Oracle.sol";

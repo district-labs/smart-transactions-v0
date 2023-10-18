@@ -12,6 +12,28 @@ import { AxiomResponseStruct } from "./AxiomStructs.sol";
 /// observations
 contract UniswapV3TwapOracle {
     /*//////////////////////////////////////////////////////////////////////////
+                                PUBLIC STORAGE
+    //////////////////////////////////////////////////////////////////////////*/
+
+    IAxiomV1Query public axiomV1Query;
+
+    /// @notice Mapping of keccak256(poolAddress, blockNumber) => observation
+    /// @dev observation.blockNumber == 0 indicates that the observation is not yet initialized
+    mapping(bytes32 observationHash => Oracle.Observation observation) public observations;
+
+    /*//////////////////////////////////////////////////////////////////////////
+                                  CONSTANTS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    uint8 private constant POOL_OBSERVATIONS_SLOT = 8;
+
+    /*//////////////////////////////////////////////////////////////////////////
+                                   EVENTS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    event ObservationStored(address indexed pool, uint256 blockNumber);
+
+    /*//////////////////////////////////////////////////////////////////////////
                                 CUSTOM ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
@@ -29,28 +51,6 @@ contract UniswapV3TwapOracle {
 
     /// @dev No storage responses found in the Axiom ZK Proof Response
     error NoStorageResponses();
-
-    /*//////////////////////////////////////////////////////////////////////////
-                                   EVENTS
-    //////////////////////////////////////////////////////////////////////////*/
-
-    event ObservationStored(address indexed pool, uint256 blockNumber);
-
-    /*//////////////////////////////////////////////////////////////////////////
-                                PUBLIC STORAGE
-    //////////////////////////////////////////////////////////////////////////*/
-
-    IAxiomV1Query public axiomV1Query;
-
-    /// @notice Mapping of keccak256(poolAddress, blockNumber) => observation
-    /// @dev observation.blockNumber == 0 indicates that the observation is not yet initialized
-    mapping(bytes32 observationHash => Oracle.Observation observation) public observations;
-
-    /*//////////////////////////////////////////////////////////////////////////
-                                  CONSTANTS
-    //////////////////////////////////////////////////////////////////////////*/
-
-    uint8 private constant POOL_OBSERVATIONS_SLOT = 8;
 
     /*//////////////////////////////////////////////////////////////////////////
                                 CONSTRUCTOR
@@ -145,9 +145,7 @@ contract UniswapV3TwapOracle {
 
         for (uint256 i = 0; i < axiomResponse.storageResponses.length; i++) {
             // Ensure the slot is correct (slot POOL_OBSERVATIONS_SLOT = observations array)
-            if (axiomResponse.storageResponses[i].slot != POOL_OBSERVATIONS_SLOT) {
-                revert InvalidSlot();
-            }
+            if (axiomResponse.storageResponses[i].slot != POOL_OBSERVATIONS_SLOT) revert InvalidSlot();
 
             Oracle.Observation memory observation = _unpackObservation(axiomResponse.storageResponses[i].value);
 
@@ -177,9 +175,8 @@ contract UniswapV3TwapOracle {
         pure
         returns (uint160 twaLiquidity)
     {
-        if (startObservation.blockTimestamp >= endObservation.blockTimestamp) {
-            revert InvalidObservationOrder();
-        }
+        if (startObservation.blockTimestamp >= endObservation.blockTimestamp) revert InvalidObservationOrder();
+
         uint32 secondsElapsed = endObservation.blockTimestamp - startObservation.blockTimestamp;
 
         twaLiquidity = ((uint160(1) << 128) * secondsElapsed)
@@ -198,9 +195,8 @@ contract UniswapV3TwapOracle {
         pure
         returns (int24 twaTick)
     {
-        if (startObservation.blockTimestamp >= endObservation.blockTimestamp) {
-            revert InvalidObservationOrder();
-        }
+        if (startObservation.blockTimestamp >= endObservation.blockTimestamp) revert InvalidObservationOrder();
+
         uint32 secondsElapsed = endObservation.blockTimestamp - startObservation.blockTimestamp;
 
         twaTick =
@@ -240,12 +236,7 @@ contract UniswapV3TwapOracle {
             axiomResponse.storageResponses
         );
 
-        if (!isValidProof) {
-            revert InvalidProof();
-        }
-
-        if (axiomResponse.storageResponses.length == 0) {
-            revert NoStorageResponses();
-        }
+        if (!isValidProof) revert InvalidProof();
+        if (axiomResponse.storageResponses.length == 0) revert NoStorageResponses();
     }
 }
