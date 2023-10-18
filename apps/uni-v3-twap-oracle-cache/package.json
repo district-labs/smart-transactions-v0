@@ -1,4 +1,6 @@
 {
+  "name": "intentify-uni-v3-twap-oracle-cache",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "ponder dev",
