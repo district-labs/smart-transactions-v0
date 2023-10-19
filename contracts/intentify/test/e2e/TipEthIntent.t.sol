@@ -36,10 +36,6 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
     }
 
     /* ===================================================================================== */
-    /* Failure Tests                                                                         */
-    /* ===================================================================================== */
-
-    /* ===================================================================================== */
     /* Success Tests                                                                         */
     /* ===================================================================================== */
     function test_TipEthIntent_Success() external {
@@ -49,7 +45,7 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_tipEthIntent),
-            data: _tipEthIntent.encode(1e18)
+            data: _tipEthIntent.encodeIntent(1e18)
         });
         IntentBatch memory intentBatch =
             IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
@@ -64,4 +60,8 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
 
         assert(address(0xdEAD).balance == 1e18);
     }
+
+    /* ===================================================================================== */
+    /* Failure Tests                                                                         */
+    /* ===================================================================================== */
 }
