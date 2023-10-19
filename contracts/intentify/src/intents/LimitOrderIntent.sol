@@ -1,15 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19 <0.9.0;
 
+import { console2 } from "forge-std/console2.sol";
+
 import { ERC20 } from "solady/tokens/ERC20.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
+import { RevertMessageReasonHelper } from "../helpers/RevertMessageReasonHelper.sol";
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
-import { ExtractRevertReasonHelper } from "../helpers/ExtractRevertReasonHelper.sol";
 
 /// @title Limit Order Intent
 /// @notice An intent to execute a limit order at the rate defined by the user at the time of the intent creation.
-contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction, ExtractRevertReasonHelper {
+contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction, RevertMessageReasonHelper {
     /*//////////////////////////////////////////////////////////////////////////
                                 CUSTOM ERRORS
     //////////////////////////////////////////////////////////////////////////*/
@@ -63,7 +65,7 @@ contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction, Ext
         validIntentTarget(intent)
         returns (bool)
     {
-        (, address tokenIn,,) = _decodeIntent(intent);
+        (, address tokenIn,, uint256 amountInMin) = _decodeIntent(intent);
 
         uint256 initialTokenInBalance = ERC20(tokenIn).balanceOf(intent.root);
 
@@ -71,7 +73,11 @@ contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction, Ext
         // The hook is expected to transfer the tokens to the intent root.
         // NOTICE: We can likely optimize by using the `transient storage` when available.
 
-        _unlock(intent, hook, initialTokenInBalance);
+        uint256 amountIn = ERC20(tokenIn).balanceOf(intent.root) - initialTokenInBalance;
+
+        if (amountIn < amountInMin) revert InsufficientInputAmount(amountIn, amountInMin);
+
+        _unlock(intent, hook);
 
         return true;
     }
@@ -103,32 +109,19 @@ contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction, Ext
 
         if (!success) {
             if (errorMessage.length > 0) {
-                string memory reason = _extractRevertReason(errorMessage);
-                revert(reason);
+                _revertMessageReason(errorMessage);
             } else {
                 revert HookExecutionFailed();
             }
         }
     }
 
-    /// @notice Unlock the tokenOut to the hook executor if conditions are met
+    /// @notice Unlock the tokenOut to the hook executor
     /// @param intent Contains data related to intent.
     /// @param hook Contains data related to hook.
-    /// @param initialTokenInBalance The initial tokenIn balance of the intent root.
-    function _unlock(
-        Intent calldata intent,
-        Hook calldata hook,
-        uint256 initialTokenInBalance
-    )
-        internal
-        returns (bool)
-    {
-        (address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin) = _decodeIntent(intent);
-
-        uint256 amountIn = ERC20(tokenIn).balanceOf(intent.root) - initialTokenInBalance;
+    function _unlock(Intent calldata intent, Hook calldata hook) internal returns (bool) {
+        (address tokenOut,, uint256 amountOutMax,) = _decodeIntent(intent);
         (address executor,) = abi.decode(hook.data, (address, bytes));
-
-        if (amountIn < amountInMin) revert InsufficientInputAmount(amountIn, amountInMin);
 
         bytes memory txData = abi.encodeWithSignature("transfer(address,uint256)", executor, amountOutMax);
         return executeFromRoot(tokenOut, 0, txData);

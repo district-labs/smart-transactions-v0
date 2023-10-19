@@ -15,8 +15,10 @@ import {
 } from "../TypesAndDecoders.sol";
 import { SafeMinimal } from "../interfaces/SafeMinimal.sol";
 import { NonceManagerMultiTenant } from "../nonce/NonceManagerMultiTenant.sol";
+import { RevertMessageReasonHelper } from "../helpers/RevertMessageReasonHelper.sol";
 
-contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant {
+
+contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, RevertMessageReasonHelper {
     // EIP712 Domain Separator
     string public constant NAME = "Intentify Safe Module";
     string public constant VERSION = "0";
@@ -180,26 +182,10 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant {
     function _handleTransactionCallback(bool success, bytes memory returnData) internal pure {
         if (!success) {
             if (returnData.length > 0) {
-                string memory reason = _extractRevertReason(returnData);
-                revert(reason);
+                _revertMessageReason(returnData);
             } else {
                 revert("Intent::execution-failed");
             }
-        }
-    }
-
-    function _extractRevertReason(bytes memory revertData) internal pure returns (string memory reason) {
-        uint256 length = revertData.length;
-        if (length < 68) return "";
-        uint256 t;
-        assembly {
-            revertData := add(revertData, 4)
-            t := mload(revertData) // Save the content of the length slot
-            mstore(revertData, sub(length, 4)) // Set proper length
-        }
-        reason = abi.decode(revertData, (string));
-        assembly {
-            mstore(revertData, t) // Restore the content of the length slot
         }
     }
 

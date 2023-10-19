@@ -11,7 +11,7 @@ import {
     TypesAndDecoders
 } from "../../src/TypesAndDecoders.sol";
 import { Intentify } from "../../src/Intentify.sol";
-import { UniswapV3TwapIntent } from "../../src/intents/UniswapV3TwapIntent.sol";
+import { UniswapV3TwapIntent, IntentAbstract } from "../../src/intents/UniswapV3TwapIntent.sol";
 
 import { BaseTest } from "../utils/Base.t.sol";
 
@@ -125,7 +125,7 @@ contract UniswapV3TwapIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert();
+        vm.expectRevert(UniswapV3TwapIntent.LowPrice.selector);
         _intentify.execute(batchExecution);
     }
 
@@ -153,7 +153,7 @@ contract UniswapV3TwapIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert();
+        vm.expectRevert(UniswapV3TwapIntent.HighPrice.selector);
         _intentify.execute(batchExecution);
     }
 
@@ -181,7 +181,7 @@ contract UniswapV3TwapIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert();
+        vm.expectRevert(IntentAbstract.InvalidRoot.selector);
         _intentify.execute(batchExecution);
     }
 }

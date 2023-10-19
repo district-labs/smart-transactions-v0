@@ -11,7 +11,7 @@ import {
     TypesAndDecoders
 } from "../../src/TypesAndDecoders.sol";
 import { Intentify } from "../../src/Intentify.sol";
-import { ChainlinkDataFeedIntent } from "../../src/intents/ChainlinkDataFeedIntent.sol";
+import { ChainlinkDataFeedIntent,IntentAbstract } from "../../src/intents/ChainlinkDataFeedIntent.sol";
 
 import { BaseTest } from "../utils/Base.t.sol";
 
@@ -183,7 +183,7 @@ contract TwapIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert();
+        vm.expectRevert(ChainlinkDataFeedIntent.LowValue.selector);
         _intentify.execute(batchExecution);
     }
 
@@ -216,7 +216,7 @@ contract TwapIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert();
+        vm.expectRevert(ChainlinkDataFeedIntent.HighValue.selector);
         _intentify.execute(batchExecution);
     }
 
@@ -249,7 +249,7 @@ contract TwapIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert();
+        vm.expectRevert(ChainlinkDataFeedIntent.StaleData.selector);
         _intentify.execute(batchExecution);
     }
 
@@ -282,7 +282,7 @@ contract TwapIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert();
+        vm.expectRevert(IntentAbstract.InvalidRoot.selector);
         _intentify.execute(batchExecution);
     }
 }

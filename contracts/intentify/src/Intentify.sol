@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import { console2 } from "forge-std/console2.sol";
-
 import {
     Signature,
     Hook,
@@ -13,8 +11,9 @@ import {
     EIP712DOMAIN_TYPEHASH,
     TypesAndDecoders
 } from "./TypesAndDecoders.sol";
+import { RevertMessageReasonHelper } from "./helpers/RevertMessageReasonHelper.sol";
 
-contract Intentify is TypesAndDecoders {
+contract Intentify is TypesAndDecoders, RevertMessageReasonHelper {
     address public immutable owner;
 
     /// @notice The hash of the domain separator used in the EIP712 domain hash.
@@ -92,8 +91,7 @@ contract Intentify is TypesAndDecoders {
         (success, errorMessage) = address(intent.target).call{ value: 0 }(data);
         if (!success) {
             if (errorMessage.length > 0) {
-                string memory reason = _extractRevertReason(errorMessage);
-                revert(reason);
+                _revertMessageReason(errorMessage);
             } else {
                 revert("Intent::execution-failed");
             }
@@ -106,26 +104,10 @@ contract Intentify is TypesAndDecoders {
         (success, errorMessage) = address(intent.target).call{ value: 0 }(data);
         if (!success) {
             if (errorMessage.length > 0) {
-                string memory reason = _extractRevertReason(errorMessage);
-                revert(reason);
+                _revertMessageReason(errorMessage);
             } else {
                 revert("Intent::execution-failed");
             }
-        }
-    }
-
-    function _extractRevertReason(bytes memory revertData) internal pure returns (string memory reason) {
-        uint256 length = revertData.length;
-        if (length < 68) return "";
-        uint256 t;
-        assembly {
-            revertData := add(revertData, 4)
-            t := mload(revertData) // Save the content of the length slot
-            mstore(revertData, sub(length, 4)) // Set proper length
-        }
-        reason = abi.decode(revertData, (string));
-        assembly {
-            mstore(revertData, t) // Restore the content of the length slot
         }
     }
 

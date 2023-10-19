@@ -6,7 +6,7 @@ import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
 import { BytesLib } from "../libraries/BytesLib.sol";
 import { ChainlinkDataFeedHelper } from "../helpers/ChainlinkDataFeedHelper.sol";
-import { ExtractRevertReasonHelper } from "../helpers/ExtractRevertReasonHelper.sol";
+import { RevertMessageReasonHelper } from "../helpers/RevertMessageReasonHelper.sol";
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
 /// @title ERC20 Swap Spot Price Intent
@@ -14,7 +14,7 @@ import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 contract ERC20SwapSpotPriceIntent is
     IntentWithHookAbstract,
     ExecuteRootTransaction,
-    ExtractRevertReasonHelper,
+    RevertMessageReasonHelper,
     ChainlinkDataFeedHelper
 {
     /*//////////////////////////////////////////////////////////////////////////
@@ -168,8 +168,7 @@ contract ERC20SwapSpotPriceIntent is
 
         if (!success) {
             if (errorMessage.length > 0) {
-                string memory reason = _extractRevertReason(errorMessage);
-                revert(reason);
+                _revertMessageReason(errorMessage);
             } else {
                 revert HookExecutionFailed();
             }

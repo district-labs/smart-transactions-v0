@@ -10,7 +10,7 @@ import {
     TypesAndDecoders
 } from "../../src/TypesAndDecoders.sol";
 import { Intentify } from "../../src/Intentify.sol";
-import { TimestampIntent } from "../../src/intents/TimestampIntent.sol";
+import { TimestampIntent, IntentAbstract } from "../../src/intents/TimestampIntent.sol";
 
 import { BaseTest } from "../utils/Base.t.sol";
 
@@ -157,7 +157,7 @@ contract TimestampIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert();
+        vm.expectRevert(TimestampIntent.Early.selector);
         _intentify.execute(batchExecution);
     }
 
@@ -185,7 +185,7 @@ contract TimestampIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert();
+        vm.expectRevert(TimestampIntent.Expired.selector);
         _intentify.execute(batchExecution);
     }
 
@@ -211,7 +211,7 @@ contract TimestampIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert();
+        vm.expectRevert(IntentAbstract.InvalidRoot.selector);
         _intentify.execute(batchExecution);
     }
 }
