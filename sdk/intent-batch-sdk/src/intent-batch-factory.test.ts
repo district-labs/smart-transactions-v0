@@ -3,10 +3,13 @@ import { expect, test } from 'vitest'
 import { IntentBatchFactory } from './intent-batch-factory'
 import { IntentModule } from './types'
 
+import { TimestampRangeIntent } from '@district-labs/intentify-deployments' 
+
 const modules: IntentModule[] = [
     {
         name: 'TimestampRange',
         target: '0x000000000000000000000000000000000000dEaD',
+        deployed: TimestampRangeIntent,
         args: [
             {
                 name: 'start',
@@ -28,14 +31,14 @@ test('encode module arguments from intent batch factory', () => {
 
 test('encode module arguments from intent batch manager', () => {
     const intentBatchFactory = new IntentBatchFactory(modules)
-    const intentBatch = intentBatchFactory.create('0x000000000000000000000000000000000000dEaD')
+    const intentBatch = intentBatchFactory.create(5, '0x000000000000000000000000000000000000dEaD')
     const result = intentBatch.add('TimestampRange', ['1', '2'])
     expect(result).toBe('0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000002')
 })
 
 test('generate intent batch', () => {
     const intentBatchFactory = new IntentBatchFactory(modules)
-    const intentBatch = intentBatchFactory.create('0x000000000000000000000000000000000000dEaD')
+    const intentBatch = intentBatchFactory.create(5, '0x000000000000000000000000000000000000dEaD')
 
     intentBatch.nonce('standard', ['1'])
     intentBatch.add('TimestampRange', ['1', '2'])

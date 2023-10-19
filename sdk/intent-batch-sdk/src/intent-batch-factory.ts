@@ -5,22 +5,21 @@ import { encodeAbiParameters } from 'viem'
 export class IntentBatchFactory {
     modules: IntentModule[];
 
-
     constructor(modules:IntentModule[]) {
         this.modules = modules;
     }
 
-    create(root: `0x${string}`) {
-        return new IntentBatchManager(this, root);
+    create( chainId: number, root: `0x${string}`) {
+        return new IntentBatchManager(this, chainId, root);
     }
 
-    target(name: string) {
-        const module = this.modules.find(m => m.name === name);
+    target(name: string, chainId: number) {
+        const module = this.modules.find(m => m.name === name)?.deployed[chainId];
         if (!module) {
             throw new Error(`Module not found: ${name}`);
         }
 
-        return module.target;
+        return module;
     }
 
     encode(name: string, args: string[]) {

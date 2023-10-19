@@ -4,11 +4,13 @@ import type { Intent, IntentBatch } from '@district-labs/intentify-core'
 
 export class IntentBatchManager {
     _factory: IntentBatchFactory;
+    _chainId: number;
     _root: `0x${string}`;
     _nonce: `0x${string}` = '0x00';
     _intents: Intent[] = [];
 
-    constructor(factory: IntentBatchFactory, root: `0x${string}`) {
+    constructor(factory: IntentBatchFactory, chainId: number, root: `0x${string}`) {
+        this._chainId = chainId;
         this._factory = factory;
         this._root = root;
     }
@@ -36,7 +38,7 @@ export class IntentBatchManager {
         const encodedArguments = this._factory.encode(name, args);
         this._intents.push({
             root: this._root,
-            target: this._factory.target(name),
+            target: this._factory.target(name, this._chainId),
             data: encodedArguments,
             value: BigInt(0),
         });

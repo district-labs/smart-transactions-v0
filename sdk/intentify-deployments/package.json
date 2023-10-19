@@ -1,5 +1,5 @@
 {
-  "name": "@district-labs/intent-batch-sdk",
+  "name": "@district-labs/intentify-deployments",
   "version": "0.0.0",
   "license": "MIT",
   "author": "Kames Geraghty",
@@ -21,8 +21,6 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "@district-labs/intentify-core": "workspace:*",
-    "@district-labs/intentify-deployments": "workspace:*",
     "@types/node": "^20.5.2",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
@@ -30,8 +28,7 @@
     "react": "^18.2.0",
     "tsconfig": "workspace:*",
     "tsup": "^6.1.3",
-    "typescript": "^5.0.4",
-    "vitest": "^0.34.5"
+    "typescript": "^5.0.4"
   },
   "dependencies": {
     "@wagmi/cli": "1.1.0",
