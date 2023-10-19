@@ -2,13 +2,13 @@
 pragma solidity >=0.8.19 <0.9.0;
 
 import { AggregatorV3Interface } from "@chainlink/v0.8/interfaces/AggregatorV3Interface.sol";
-import { IIntent } from "../interfaces/IIntent.sol";
+import { IntentAbstract } from "../abstracts/IntentAbstract.sol";
 import { Intent } from "../TypesAndDecoders.sol";
 
 /// @title Chainlink Data Feed Intent
 /// @notice This intent is used to check the value of a Chainlink data feed is within a range and the data is not stale
 /// given a threshold.
-contract ChainlinkDataFeedIntent is IIntent {
+contract ChainlinkDataFeedIntent is IntentAbstract {
     /*//////////////////////////////////////////////////////////////////////////
                                 CUSTOM ERRORS
     //////////////////////////////////////////////////////////////////////////*/
@@ -49,11 +49,15 @@ contract ChainlinkDataFeedIntent is IIntent {
                                    WRITE FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc IIntent
-    function execute(Intent calldata intent) external view returns (bool) {
-        if (intent.root != msg.sender) revert InvalidRoot();
-        if (intent.target != address(this)) revert InvalidTarget();
-
+    /// @inheritdoc IntentAbstract
+    function execute(Intent calldata intent)
+        external
+        view
+        override
+        validIntentRoot(intent)
+        validIntentTarget(intent)
+        returns (bool)
+    {
         (address dataFeed, int256 minValue, int256 maxValue, uint256 thresholdSeconds) = _decodeIntent(intent);
 
         (, int256 answer,, uint256 updatedAt,) = AggregatorV3Interface(dataFeed).latestRoundData();

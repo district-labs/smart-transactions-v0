@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19 <0.9.0;
 
-import { IIntent } from "../interfaces/IIntent.sol";
+import { IntentAbstract } from "../abstracts/IntentAbstract.sol";
 import { Intent } from "../TypesAndDecoders.sol";
 
 /// @title Timestamp Intent
 /// @notice This intent is executed if the current block timestamp is within a range. Otherwise, it reverts.
-contract TimestampIntent is IIntent {
+contract TimestampIntent is IntentAbstract {
     /*//////////////////////////////////////////////////////////////////////////
                                 CUSTOM ERRORS
     //////////////////////////////////////////////////////////////////////////*/
@@ -33,11 +33,15 @@ contract TimestampIntent is IIntent {
                                    WRITE FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc IIntent
-    function execute(Intent calldata intent) external view returns (bool) {
-        if (intent.root != msg.sender) revert InvalidRoot();
-        if (intent.target != address(this)) revert InvalidTarget();
-
+    /// @inheritdoc IntentAbstract
+    function execute(Intent calldata intent)
+        external
+        view
+        override
+        validIntentRoot(intent)
+        validIntentTarget(intent)
+        returns (bool)
+    {
         (uint128 minTimestamp, uint128 maxTimestamp) = _decodeIntent(intent);
 
         if (block.timestamp > maxTimestamp) {

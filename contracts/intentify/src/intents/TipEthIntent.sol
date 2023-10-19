@@ -2,12 +2,12 @@
 pragma solidity >=0.8.19 <0.9.0;
 
 import { Intent, Hook } from "../TypesAndDecoders.sol";
-import { IIntentWithHook } from "../interfaces/IIntentWithHook.sol";
+import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
 /// @title Tip Eth Intent
 /// @notice An intent that allows the intent root to tip the hook executor with ETH.
-contract TipEthIntent is IIntentWithHook, ExecuteRootTransaction {
+contract TipEthIntent is IntentWithHookAbstract, ExecuteRootTransaction {
     /*//////////////////////////////////////////////////////////////////////////
                                 CONSTRUCTOR
     //////////////////////////////////////////////////////////////////////////*/
@@ -31,11 +31,17 @@ contract TipEthIntent is IIntentWithHook, ExecuteRootTransaction {
                                    WRITE FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc IIntentWithHook
-    function execute(Intent calldata intent, Hook calldata hook) external returns (bool) {
-        if (intent.root != msg.sender) revert InvalidRoot();
-        if (intent.target != address(this)) revert InvalidTarget();
-
+    /// @inheritdoc IntentWithHookAbstract
+    function execute(
+        Intent calldata intent,
+        Hook calldata hook
+    )
+        external
+        override
+        validIntentRoot(intent)
+        validIntentTarget(intent)
+        returns (bool)
+    {
         (uint256 amount) = _decodeIntent(intent);
         return executeFromRoot(hook.target, amount, new bytes(0));
     }

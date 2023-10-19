@@ -3,13 +3,13 @@ pragma solidity >=0.8.19 <0.9.0;
 
 import { ERC20 } from "solady/tokens/ERC20.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
-import { IIntentWithHook } from "../interfaces/IIntentWithHook.sol";
+import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 import { ExtractRevertReasonHelper } from "../helpers/ExtractRevertReasonHelper.sol";
 
 /// @title Limit Order Intent
 /// @notice An intent to execute a limit order at the rate defined by the user at the time of the intent creation.
-contract LimitOrderIntent is IIntentWithHook, ExecuteRootTransaction, ExtractRevertReasonHelper {
+contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction, ExtractRevertReasonHelper {
     /*//////////////////////////////////////////////////////////////////////////
                                 CUSTOM ERRORS
     //////////////////////////////////////////////////////////////////////////*/
@@ -52,11 +52,17 @@ contract LimitOrderIntent is IIntentWithHook, ExecuteRootTransaction, ExtractRev
                                    WRITE FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc IIntentWithHook
-    function execute(Intent calldata intent, Hook calldata hook) external returns (bool) {
-        if (intent.root != msg.sender) revert InvalidRoot();
-        if (intent.target != address(this)) revert InvalidTarget();
-
+    /// @inheritdoc IntentWithHookAbstract
+    function execute(
+        Intent calldata intent,
+        Hook calldata hook
+    )
+        external
+        override
+        validIntentRoot(intent)
+        validIntentTarget(intent)
+        returns (bool)
+    {
         (, address tokenIn,,) = _decodeIntent(intent);
 
         uint256 initialTokenInBalance = ERC20(tokenIn).balanceOf(intent.root);

@@ -7,12 +7,12 @@ import { FixedPoint96 } from "uniswap-v3-core/libraries/FixedPoint96.sol";
 import { FullMath } from "uniswap-v3-core/libraries/FullMath.sol";
 import { UniswapV3TwapOracle } from "../periphery/Axiom/UniswapV3TwapOracle.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
-import { IIntentWithHook } from "../interfaces/IIntentWithHook.sol";
+import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
 
 /// @title Uniswap V3 Historical Time Weighted Average Price Intent
 /// @notice An intent that checks block windows and percentage differences based on Uniswap v3 TWAP data. If the price
 /// difference percentage is not within the given range or the provided data is invalid, the intent will revert.
-contract UniswapV3HistoricalTwapIntent is IIntentWithHook {
+contract UniswapV3HistoricalTwapIntent is IntentWithHookAbstract {
     /*//////////////////////////////////////////////////////////////////////////
                                 TYPE DECLARATIONS
     //////////////////////////////////////////////////////////////////////////*/
@@ -107,11 +107,18 @@ contract UniswapV3HistoricalTwapIntent is IIntentWithHook {
                                    WRITE FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc IIntentWithHook
-    function execute(Intent calldata intent, Hook calldata hook) external view returns (bool) {
-        if (intent.root != msg.sender) revert InvalidRoot();
-        if (intent.target != address(this)) revert InvalidTarget();
-
+    /// @inheritdoc IntentWithHookAbstract
+    function execute(
+        Intent calldata intent,
+        Hook calldata hook
+    )
+        external
+        view
+        override
+        validIntentRoot(intent)
+        validIntentTarget(intent)
+        returns (bool)
+    {
         (
             ,
             uint256 numeratorReferenceBlockOffset,
@@ -130,23 +137,22 @@ contract UniswapV3HistoricalTwapIntent is IIntentWithHook {
             uint256 denominatorEndBlock
         ) = abi.decode(hook.data, (uint256, uint256, uint256, uint256));
 
-        BlockData memory numerator = BlockData({
-            referenceBlockOffset: numeratorReferenceBlockOffset,
-            blockWindow: numeratorBlockWindow,
-            blockWindowTolerance: numeratorBlockWindowTolerance,
-            startBlock: numeratorStartBlock,
-            endBlock: numeratorEndBlock
-        });
-
-        BlockData memory denominator = BlockData({
-            referenceBlockOffset: denominatorReferenceBlockOffset,
-            blockWindow: denominatorBlockWindow,
-            blockWindowTolerance: denominatorBlockWindowTolerance,
-            startBlock: denominatorStartBlock,
-            endBlock: denominatorEndBlock
-        });
-
-        _checkBlocksRange(numerator, denominator);
+        _checkBlocksRange(
+            BlockData({
+                referenceBlockOffset: numeratorReferenceBlockOffset,
+                blockWindow: numeratorBlockWindow,
+                blockWindowTolerance: numeratorBlockWindowTolerance,
+                startBlock: numeratorStartBlock,
+                endBlock: numeratorEndBlock
+            }),
+            BlockData({
+                referenceBlockOffset: denominatorReferenceBlockOffset,
+                blockWindow: denominatorBlockWindow,
+                blockWindowTolerance: denominatorBlockWindowTolerance,
+                startBlock: denominatorStartBlock,
+                endBlock: denominatorEndBlock
+            })
+        );
         _checkPercentageDifference(intent, hook);
 
         return true;

@@ -3,7 +3,7 @@ pragma solidity >=0.8.19 <0.9.0;
 
 import { ERC20 } from "solady/tokens/ERC20.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
-import { IIntentWithHook } from "../interfaces/IIntentWithHook.sol";
+import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
 import { BytesLib } from "../libraries/BytesLib.sol";
 import { ChainlinkDataFeedHelper } from "../helpers/ChainlinkDataFeedHelper.sol";
 import { ExtractRevertReasonHelper } from "../helpers/ExtractRevertReasonHelper.sol";
@@ -12,7 +12,7 @@ import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 /// @title ERC20 Swap Spot Price Intent
 /// @notice An intent to execute a buy or sell order at the market price at the time of execution.
 contract ERC20SwapSpotPriceIntent is
-    IIntentWithHook,
+    IntentWithHookAbstract,
     ExecuteRootTransaction,
     ExtractRevertReasonHelper,
     ChainlinkDataFeedHelper
@@ -74,11 +74,17 @@ contract ERC20SwapSpotPriceIntent is
                                    WRITE FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc IIntentWithHook
-    function execute(Intent calldata intent, Hook calldata hook) external returns (bool) {
-        if (intent.root != msg.sender) revert InvalidRoot();
-        if (intent.target != address(this)) revert InvalidTarget();
-
+    /// @inheritdoc IntentWithHookAbstract
+    function execute(
+        Intent calldata intent,
+        Hook calldata hook
+    )
+        external
+        override
+        validIntentRoot(intent)
+        validIntentTarget(intent)
+        returns (bool)
+    {
         (
             address tokenOut,
             address tokenIn,

@@ -11,7 +11,7 @@ import {
     TypesAndDecoders
 } from "../../src/TypesAndDecoders.sol";
 import { Intentify } from "../../src/Intentify.sol";
-import { ChainlinkDataFeedIntent, IIntent } from "../../src/intents/ChainlinkDataFeedIntent.sol";
+import { ChainlinkDataFeedIntent } from "../../src/intents/ChainlinkDataFeedIntent.sol";
 
 import { BaseTest } from "../utils/Base.t.sol";
 

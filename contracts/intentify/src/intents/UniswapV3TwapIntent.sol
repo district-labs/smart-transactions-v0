@@ -6,13 +6,13 @@ import { TickMath } from "@uniswap/v3-core/contracts/libraries/TickMath.sol";
 import { FullMath } from "@uniswap/v3-core/contracts/libraries/FullMath.sol";
 import { FixedPoint96 } from "@uniswap/v3-core/contracts/libraries/FixedPoint96.sol";
 
-import { IIntent } from "../interfaces/IIntent.sol";
+import { IntentAbstract } from "../abstracts/IntentAbstract.sol";
 import { Intent } from "../TypesAndDecoders.sol";
 
 /// @title Uniswap V3 TWAP Intent
 /// @notice An intent that executes if the time weighted average price of a Uniswap V3 pool is within a range over a
 /// time period.
-contract UniswapV3TwapIntent is IIntent {
+contract UniswapV3TwapIntent is IntentAbstract {
     /*//////////////////////////////////////////////////////////////////////////
                                 CUSTOM ERRORS
     //////////////////////////////////////////////////////////////////////////*/
@@ -50,11 +50,15 @@ contract UniswapV3TwapIntent is IIntent {
                                    WRITE FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @inheritdoc IIntent
-    function execute(Intent calldata intent) external view returns (bool) {
-        if (intent.root != msg.sender) revert InvalidRoot();
-        if (intent.target != address(this)) revert InvalidTarget();
-
+    /// @inheritdoc IntentAbstract
+    function execute(Intent calldata intent)
+        external
+        view
+        override
+        validIntentRoot(intent)
+        validIntentTarget(intent)
+        returns (bool)
+    {
         (address uniswapV3Pool, uint32 twapIntervalSeconds, uint256 minPriceX96, uint256 maxPriceX96) =
             _decodeIntent(intent);
         uint256 priceX96 = _getTwapX96(uniswapV3Pool, twapIntervalSeconds);
