@@ -7,7 +7,7 @@ import { IntentifySafeModuleBundler } from "../../src/module/IntentifySafeModule
 import { WalletFactory } from "../../src/WalletFactory.sol";
 import { LimitOrderIntent } from "../../src/intents/LimitOrderIntent.sol";
 import { TimestampIntent } from "../../src/intents/TimestampIntent.sol";
-import { TwapIntent } from "../../src/intents/TwapIntent.sol";
+import { UniswapV3TwapIntent } from "../../src/intents/UniswapV3TwapIntent.sol";
 
 contract CoreDeploy is Script {
     function run(address intentifySafeModule) external {
@@ -23,7 +23,7 @@ contract CoreDeploy is Script {
         // Intent Modules Contracts
         new LimitOrderIntent(intentifySafeModule);
         new TimestampIntent();
-        new TwapIntent();
+        new UniswapV3TwapIntent();
         vm.stopBroadcast();
     }
 }

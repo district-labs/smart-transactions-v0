@@ -75,6 +75,11 @@ contract LimitOrderIntent is IIntentWithHook, ExecuteRootTransaction, ExtractRev
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice Helper function to decode intent parameters from a byte array.
+    /// @param intent The intent to be decoded.
+    /// @return tokenOut The token to be sold.
+    /// @return tokenIn The token to be purchased.
+    /// @return amountOutMax The maximum amount of tokens to be sold.
+    /// @return amountInMin The minimum amount of tokens to be purchased.
     function _decodeIntent(Intent calldata intent)
         internal
         pure
