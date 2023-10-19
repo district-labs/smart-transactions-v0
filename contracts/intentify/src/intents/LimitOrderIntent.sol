@@ -4,12 +4,11 @@ pragma solidity >=0.8.19 <0.9.0;
 import { ERC20 } from "solady/tokens/ERC20.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
-import { RevertMessageReasonHelper } from "../helpers/RevertMessageReasonHelper.sol";
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
 /// @title Limit Order Intent
 /// @notice An intent to execute a limit order at the rate defined by the user at the time of the intent creation.
-contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction, RevertMessageReasonHelper {
+contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction {
     /*//////////////////////////////////////////////////////////////////////////
                                 CUSTOM ERRORS
     //////////////////////////////////////////////////////////////////////////*/

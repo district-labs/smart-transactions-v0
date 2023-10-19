@@ -6,7 +6,6 @@ import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
 import { BytesLib } from "../libraries/BytesLib.sol";
 import { ChainlinkDataFeedHelper } from "../helpers/ChainlinkDataFeedHelper.sol";
-import { RevertMessageReasonHelper } from "../helpers/RevertMessageReasonHelper.sol";
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
 /// @title ERC20 Swap Spot Price Intent
@@ -14,7 +13,6 @@ import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 contract ERC20SwapSpotPriceIntent is
     IntentWithHookAbstract,
     ExecuteRootTransaction,
-    RevertMessageReasonHelper,
     ChainlinkDataFeedHelper
 {
     /*//////////////////////////////////////////////////////////////////////////
