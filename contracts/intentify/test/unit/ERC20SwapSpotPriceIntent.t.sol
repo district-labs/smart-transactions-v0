@@ -82,7 +82,7 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_erc20SwapSpotPriceIntent),
-            data: _erc20SwapSpotPriceIntent.encode(
+            data: _erc20SwapSpotPriceIntent.encodeIntent(
                 USDCAddress,
                 WETHAddress,
                 priceFeedUSDCUSD,
@@ -155,7 +155,7 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_erc20SwapSpotPriceIntent),
-            data: _erc20SwapSpotPriceIntent.encode(
+            data: _erc20SwapSpotPriceIntent.encodeIntent(
                 WETHAddress,
                 USDCAddress,
                 priceFeedETHUSD,
