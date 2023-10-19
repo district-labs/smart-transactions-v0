@@ -5,7 +5,6 @@ import { ERC20Mintable } from "./ERC20Mintable.sol";
 import { Ownable } from "solady/auth/Ownable.sol";
 import { RevertMessageReasonHelper } from "../helpers/RevertMessageReasonHelper.sol";
 
-
 contract EngineHub is Ownable, RevertMessageReasonHelper {
     struct Call {
         address target;
@@ -24,7 +23,7 @@ contract EngineHub is Ownable, RevertMessageReasonHelper {
             (bool success, bytes memory result) = calls[i].target.call(calls[i].callData);
             if (!success) {
                 if (result.length > 0) {
-                   _revertMessageReason(result);
+                    _revertMessageReason(result);
                 } else {
                     revert("EngineHub:call-failed");
                 }

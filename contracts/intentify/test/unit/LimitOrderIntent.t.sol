@@ -22,13 +22,7 @@ import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 contract LimitOrderIntentHarness is LimitOrderIntent {
     constructor(address _intentifySafeModule) LimitOrderIntent(_intentifySafeModule) { }
 
-    function exposed_unlock(
-        Hook calldata hook,
-        Intent calldata intent
-    )
-        external
-        returns (bool)
-    {
+    function exposed_unlock(Hook calldata hook, Intent calldata intent) external returns (bool) {
         return _unlock(intent, hook);
     }
 

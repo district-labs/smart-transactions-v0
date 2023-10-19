@@ -17,7 +17,6 @@ import { SafeMinimal } from "../interfaces/SafeMinimal.sol";
 import { NonceManagerMultiTenant } from "../nonce/NonceManagerMultiTenant.sol";
 import { RevertMessageReasonHelper } from "../helpers/RevertMessageReasonHelper.sol";
 
-
 contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, RevertMessageReasonHelper {
     // EIP712 Domain Separator
     string public constant NAME = "Intentify Safe Module";
