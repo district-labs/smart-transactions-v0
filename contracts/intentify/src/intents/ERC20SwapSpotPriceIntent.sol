@@ -10,11 +10,7 @@ import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
 /// @title ERC20 Swap Spot Price Intent
 /// @notice An intent to execute a buy or sell order at the market price at the time of execution.
-contract ERC20SwapSpotPriceIntent is
-    IntentWithHookAbstract,
-    ExecuteRootTransaction,
-    ChainlinkDataFeedHelper
-{
+contract ERC20SwapSpotPriceIntent is IntentWithHookAbstract, ExecuteRootTransaction, ChainlinkDataFeedHelper {
     /*//////////////////////////////////////////////////////////////////////////
                                   CONSTANTS
     //////////////////////////////////////////////////////////////////////////*/
