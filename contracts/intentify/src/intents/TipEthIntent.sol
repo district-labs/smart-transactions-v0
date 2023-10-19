@@ -48,6 +48,6 @@ contract TipEthIntent is IIntentWithHook, ExecuteRootTransaction {
     /// @param intent The intent to decode.
     /// @return amount The amount of ETH to be tipped.
     function _decodeIntent(Intent calldata intent) internal pure returns (uint256 amount) {
-        (amount) = abi.decode(intent.data, (uint256));
+        return abi.decode(intent.data, (uint256));
     }
 }

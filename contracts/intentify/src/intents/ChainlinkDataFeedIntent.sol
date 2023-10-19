@@ -89,6 +89,6 @@ contract ChainlinkDataFeedIntent is IIntent {
         pure
         returns (address dataFeed, int256 minValue, int256 maxValue, uint256 thresholdSeconds)
     {
-        (dataFeed, minValue, maxValue, thresholdSeconds) = abi.decode(intent.data, (address, int256, int256, uint256));
+        return abi.decode(intent.data, (address, int256, int256, uint256));
     }
 }

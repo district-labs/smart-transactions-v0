@@ -85,7 +85,7 @@ contract LimitOrderIntent is IIntentWithHook, ExecuteRootTransaction, ExtractRev
         pure
         returns (address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin)
     {
-        (tokenOut, tokenIn, amountOutMax, amountInMin) = abi.decode(intent.data, (address, address, uint256, uint256));
+        return abi.decode(intent.data, (address, address, uint256, uint256));
     }
 
     /// @notice Execute the hook that sends the tokenIn to the user.

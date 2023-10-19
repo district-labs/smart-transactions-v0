@@ -74,7 +74,8 @@ contract UniswapV3HistoricalTwapIntent is IIntentWithHook {
     /// @param denominatorBlockWindowTolerance Tolerance window for denominator.
     /// @param minPercentageDifference Minimum allowed percentage difference.
     /// @param maxPercentageDifference Maximum allowed percentage difference.
-    function encode(
+    /// @return data The encoded parameters.
+    function encodeIntent(
         address uniswapV3Pool,
         uint256 numeratorReferenceBlockOffset,
         uint256 numeratorBlockWindow,
@@ -120,7 +121,7 @@ contract UniswapV3HistoricalTwapIntent is IIntentWithHook {
             uint256 denominatorBlockWindow,
             uint256 denominatorBlockWindowTolerance,
             ,
-        ) = abi.decode(intent.data, (address, uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256));
+        ) = _decodeIntent(intent);
 
         (
             uint256 numeratorStartBlock,
@@ -146,7 +147,7 @@ contract UniswapV3HistoricalTwapIntent is IIntentWithHook {
         });
 
         _checkBlocksRange(numerator, denominator);
-        _checkPercentageDifference(intent.data, hook.data);
+        _checkPercentageDifference(intent, hook);
 
         return true;
     }
@@ -193,18 +194,18 @@ contract UniswapV3HistoricalTwapIntent is IIntentWithHook {
     /// is within the allowed range. This function determines the TWAP (Time Weighted Average Price)
     /// for the numerator and denominator using the Uniswap V3 TWAP Oracle. It then computes the
     /// percentage difference between them and ensures it's within the given min and max limits.
-    /// @param intentData Encoded intent data.
-    /// @param hookData Encoded hook data.
-    function _checkPercentageDifference(bytes memory intentData, bytes memory hookData) internal view {
+    /// @param intent Intent data.
+    /// @param hook Hook data.
+    function _checkPercentageDifference(Intent calldata intent, Hook calldata hook) internal view {
         (address uniswapV3Pool,,,,,,, uint256 minPercentageDifference, uint256 maxPercentageDifference) =
-            abi.decode(intentData, (address, uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256));
+            _decodeIntent(intent);
 
         (
             uint256 numeratorStartBlock,
             uint256 numeratorEndBlock,
             uint256 denominatorStartBlock,
             uint256 denominatorEndBlock
-        ) = abi.decode(hookData, (uint256, uint256, uint256, uint256));
+        ) = abi.decode(hook.data, (uint256, uint256, uint256, uint256));
 
         (int24 numeratorTwaTick,,) =
             _uniswapV3TwapOracle.getTwaTick(uniswapV3Pool, numeratorStartBlock, numeratorEndBlock);
@@ -223,5 +224,35 @@ contract UniswapV3HistoricalTwapIntent is IIntentWithHook {
 
         if (percentageDifference < minPercentageDifference) revert LowPercentageDifference();
         if (percentageDifference > maxPercentageDifference) revert HighPercentageDifference();
+    }
+
+    /// @notice Helper function to decode intent parameters from a byte array.
+    /// @param intent The intent.
+    /// @return uniswapV3Pool The address of the Uniswap V3 pool.
+    /// @return numeratorReferenceBlockOffset Number of blocks previous to the current block
+    /// @return numeratorBlockWindow Block window for numerator.
+    /// @return numeratorBlockWindowTolerance Tolerance window for numerator.
+    /// @return denominatorReferenceBlockOffset Number of blocks previous to the current block
+    /// @return denominatorBlockWindow Block window for denominator.
+    /// @return denominatorBlockWindowTolerance Tolerance window for denominator.
+    /// @return minPercentageDifference Minimum allowed percentage difference.
+    /// @return maxPercentageDifference Maximum allowed percentage difference.
+    function _decodeIntent(Intent calldata intent)
+        internal
+        pure
+        returns (
+            address uniswapV3Pool,
+            uint256 numeratorReferenceBlockOffset,
+            uint256 numeratorBlockWindow,
+            uint256 numeratorBlockWindowTolerance,
+            uint256 denominatorReferenceBlockOffset,
+            uint256 denominatorBlockWindow,
+            uint256 denominatorBlockWindowTolerance,
+            uint256 minPercentageDifference,
+            uint256 maxPercentageDifference
+        )
+    {
+        return
+            abi.decode(intent.data, (address, uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256));
     }
 }

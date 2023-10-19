@@ -27,8 +27,8 @@ contract UniswapV3HistoricalTwapIntentHarness is UniswapV3HistoricalTwapIntent {
         _checkBlocksRange(numerator, denominator);
     }
 
-    function exposed_checkPercentageDifference(bytes memory intentData, bytes memory hookData) external view {
-        _checkPercentageDifference(intentData, hookData);
+    function exposed_checkPercentageDifference(Intent calldata intent, Hook calldata hook) external view {
+        _checkPercentageDifference(intent, hook);
     }
 }
 
@@ -164,7 +164,7 @@ contract UniswapV3HistoricalTwapIntentTest is BaseTest {
             root: address(_intentify),
             value: 0,
             target: address(_uniswapV3HistoricalTwapIntentHarness),
-            data: _uniswapV3HistoricalTwapIntentHarness.encode(
+            data: _uniswapV3HistoricalTwapIntentHarness.encodeIntent(
                 uniswapV3Pool, 37_590, 89_220, 40, 37_590, 49_950, 40, 105_000, 110_000
                 )
         });
@@ -222,12 +222,20 @@ contract UniswapV3HistoricalTwapIntentTest is BaseTest {
 
     function test_CheckPercentageDifference_Success() external view {
         address uniswapV3Pool = 0x5c33044BdBbE55dAb3d526CE70F908aAF6990373;
-        bytes memory intentData = _uniswapV3HistoricalTwapIntentHarness.encode(
-            uniswapV3Pool, 37_590, 89_220, 40, 37_590, 49_950, 40, 105_000, 110_000
-        );
-        bytes memory hookData = abi.encode(9_759_424, 9_848_630, 9_798_709, 9_848_630);
+        Intent memory intent = Intent({
+            root: address(_intentify),
+            value: 0,
+            target: address(_uniswapV3HistoricalTwapIntentHarness),
+            data: _uniswapV3HistoricalTwapIntentHarness.encodeIntent(
+                uniswapV3Pool, 37_590, 89_220, 40, 37_590, 49_950, 40, 105_000, 110_000
+                )
+        });
+        Hook memory hook = Hook({
+            target: address(_uniswapV3HistoricalTwapIntentHarness),
+            data: abi.encode(9_759_424, 9_848_630, 9_798_709, 9_848_630)
+        });
 
-        _uniswapV3HistoricalTwapIntentHarness.exposed_checkPercentageDifference(intentData, hookData);
+        _uniswapV3HistoricalTwapIntentHarness.exposed_checkPercentageDifference(intent, hook);
     }
 
     // /* ===================================================================================== */
@@ -308,18 +316,33 @@ contract UniswapV3HistoricalTwapIntentTest is BaseTest {
 
     function test_CheckPercentageDifference_RevertWhen_OutOfRange() external {
         address uniswapV3Pool = 0x5c33044BdBbE55dAb3d526CE70F908aAF6990373;
-        bytes memory intentDataHigh = _uniswapV3HistoricalTwapIntentHarness.encode(
-            uniswapV3Pool, 37_590, 89_220, 40, 37_590, 49_950, 40, 105_000, 108_000
-        );
-        bytes memory intentDataLow = _uniswapV3HistoricalTwapIntentHarness.encode(
-            uniswapV3Pool, 37_590, 89_220, 40, 37_590, 49_950, 40, 110_000, 115_000
-        );
-        bytes memory hookData = abi.encode(9_759_424, 9_848_630, 9_798_709, 9_848_630);
+        Intent memory intentHigh = Intent({
+            root: address(_intentify),
+            value: 0,
+            target: address(_uniswapV3HistoricalTwapIntentHarness),
+            data: _uniswapV3HistoricalTwapIntentHarness.encodeIntent(
+                uniswapV3Pool, 37_590, 89_220, 40, 37_590, 49_950, 40, 105_000, 108_000
+                )
+        });
+
+        Intent memory intentLow = Intent({
+            root: address(_intentify),
+            value: 0,
+            target: address(_uniswapV3HistoricalTwapIntentHarness),
+            data: _uniswapV3HistoricalTwapIntentHarness.encodeIntent(
+                uniswapV3Pool, 37_590, 89_220, 40, 37_590, 49_950, 40, 110_000, 115_000
+                )
+        });
+
+        Hook memory hook = Hook({
+            target: address(_uniswapV3HistoricalTwapIntentHarness),
+            data: abi.encode(9_759_424, 9_848_630, 9_798_709, 9_848_630)
+        });
 
         vm.expectRevert(UniswapV3HistoricalTwapIntent.HighPercentageDifference.selector);
-        _uniswapV3HistoricalTwapIntentHarness.exposed_checkPercentageDifference(intentDataHigh, hookData);
+        _uniswapV3HistoricalTwapIntentHarness.exposed_checkPercentageDifference(intentHigh, hook);
 
         vm.expectRevert(UniswapV3HistoricalTwapIntent.LowPercentageDifference.selector);
-        _uniswapV3HistoricalTwapIntentHarness.exposed_checkPercentageDifference(intentDataLow, hookData);
+        _uniswapV3HistoricalTwapIntentHarness.exposed_checkPercentageDifference(intentLow, hook);
     }
 }

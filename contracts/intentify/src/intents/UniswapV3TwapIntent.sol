@@ -78,8 +78,7 @@ contract UniswapV3TwapIntent is IIntent {
         pure
         returns (address uniswapV3Pool, uint32 twapIntervalSeconds, uint256 minPriceX96, uint256 maxPriceX96)
     {
-        (uniswapV3Pool, twapIntervalSeconds, minPriceX96, maxPriceX96) =
-            abi.decode(intent.data, (address, uint32, uint256, uint256));
+        return abi.decode(intent.data, (address, uint32, uint256, uint256));
     }
 
     /// @notice Helper function to get the twap price of a Uniswap V3 pool.

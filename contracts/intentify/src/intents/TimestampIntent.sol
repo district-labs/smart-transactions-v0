@@ -55,6 +55,6 @@ contract TimestampIntent is IIntent {
 
     /// @notice Helper function to decode intent parameters from a byte array.
     function _decodeIntent(Intent calldata intent) internal pure returns (uint128 minTimestamp, uint128 maxTimestamp) {
-        (minTimestamp, maxTimestamp) = abi.decode(intent.data, (uint128, uint128));
+        return abi.decode(intent.data, (uint128, uint128));
     }
 }
