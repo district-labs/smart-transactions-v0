@@ -73,7 +73,7 @@ contract SaveIntent is Script, StdCheats {
             root: address(_safe),
             value: 0,
             target: address(_timestampIntent),
-            data: _timestampIntent.encode(type(uint128).min, uint128(block.timestamp + 100))
+            data: _timestampIntent.encodeIntent(type(uint128).min, uint128(block.timestamp + 100))
         });
 
         IntentBatch memory intentBatch = IntentBatch({ root: address(_safe), nonce: nonceStandard, intents: intents });

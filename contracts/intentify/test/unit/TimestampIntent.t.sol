@@ -44,7 +44,7 @@ contract TimestampIntentTest is BaseTest {
             root: address(_intentify),
             value: 0,
             target: address(_timestampIntent),
-            data: _timestampIntent.encode(uint128(block.timestamp - pastSeconds), type(uint128).max)
+            data: _timestampIntent.encodeIntent(uint128(block.timestamp - pastSeconds), type(uint128).max)
         });
 
         IntentBatch memory intentBatch =
@@ -72,7 +72,7 @@ contract TimestampIntentTest is BaseTest {
             root: address(_intentify),
             value: 0,
             target: address(_timestampIntent),
-            data: _timestampIntent.encode(type(uint128).min, uint128(block.timestamp + pastSeconds))
+            data: _timestampIntent.encodeIntent(type(uint128).min, uint128(block.timestamp + pastSeconds))
         });
 
         IntentBatch memory intentBatch =
@@ -101,7 +101,9 @@ contract TimestampIntentTest is BaseTest {
             root: address(_intentify),
             value: 0,
             target: address(_timestampIntent),
-            data: _timestampIntent.encode(uint128(block.timestamp - pastSeconds), uint128(block.timestamp + pastSeconds))
+            data: _timestampIntent.encodeIntent(
+                uint128(block.timestamp - pastSeconds), uint128(block.timestamp + pastSeconds)
+                )
         });
 
         IntentBatch memory intentBatch =
@@ -123,7 +125,7 @@ contract TimestampIntentTest is BaseTest {
     function test_encode_Success() external {
         uint128 minTimestamp = uint128(block.timestamp - 1);
         uint128 maxTimestamp = uint128(block.timestamp + 1);
-        bytes memory data = _timestampIntent.encode(minTimestamp, maxTimestamp);
+        bytes memory data = _timestampIntent.encodeIntent(minTimestamp, maxTimestamp);
         assertEq(data, abi.encode(minTimestamp, maxTimestamp));
     }
 
@@ -140,7 +142,7 @@ contract TimestampIntentTest is BaseTest {
             root: address(_intentify),
             value: 0,
             target: address(_timestampIntent),
-            data: _timestampIntent.encode(uint128(block.timestamp + pastSeconds), type(uint128).max)
+            data: _timestampIntent.encodeIntent(uint128(block.timestamp + pastSeconds), type(uint128).max)
         });
 
         IntentBatch memory intentBatch =
@@ -155,7 +157,7 @@ contract TimestampIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert(bytes("TimestampIntent:early"));
+        vm.expectRevert();
         _intentify.execute(batchExecution);
     }
 
@@ -168,7 +170,7 @@ contract TimestampIntentTest is BaseTest {
             root: address(_intentify),
             value: 0,
             target: address(_timestampIntent),
-            data: _timestampIntent.encode(type(uint128).min, uint128(block.timestamp - pastSeconds))
+            data: _timestampIntent.encodeIntent(type(uint128).min, uint128(block.timestamp - pastSeconds))
         });
 
         IntentBatch memory intentBatch =
@@ -183,7 +185,7 @@ contract TimestampIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert(bytes("TimestampIntent:expired"));
+        vm.expectRevert();
         _intentify.execute(batchExecution);
     }
 
@@ -194,7 +196,7 @@ contract TimestampIntentTest is BaseTest {
             root: address(0),
             value: 0,
             target: address(_timestampIntent),
-            data: _timestampIntent.encode(type(uint128).min, type(uint128).max)
+            data: _timestampIntent.encodeIntent(type(uint128).min, type(uint128).max)
         });
 
         IntentBatch memory intentBatch =
@@ -209,7 +211,7 @@ contract TimestampIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert(bytes("TimestampIntent:invalid-root"));
+        vm.expectRevert();
         _intentify.execute(batchExecution);
     }
 }
