@@ -5,7 +5,8 @@ import { console2 } from "forge-std/console2.sol";
 import { IPool } from "@aave/v3-core/interfaces/IPool.sol";
 import { AggregatorV3Interface } from "chainlink/interfaces/AggregatorV3Interface.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
-import { ChainlinkOracleHelper } from "../oracles/ChainlinkOracleHelper.sol";
+import { ChainlinkDataFeedHelper } from "../oracles/ChainlinkDataFeedHelper.sol";
+import { ChainlinkDataFeedBaseUSDRoundData } from "../oracles/ChainlinkDataFeedBaseUSDRoundData.sol";
 import { HookTransaction } from "./utils/HookTransaction.sol";
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
@@ -15,11 +16,29 @@ interface IERC20 {
     function decimals() external view returns (uint256);
 }
 
-contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, ChainlinkOracleHelper {
+contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, ChainlinkDataFeedHelper {
     /*//////////////////////////////////////////////////////////////////////////
                                    PUBLIC STORAGE
     //////////////////////////////////////////////////////////////////////////*/
+    uint8 internal constant DECIMAL_SCALE = 18;
+    uint8 internal constant DECIMAL_USD_FEED = 8;
+
     address internal immutable _pool;
+    address internal immutable _chainlinkDataFeedBaseUSDRoundData;
+    address internal immutable _weth;
+
+    /*//////////////////////////////////////////////////////////////////////////
+                                CUSTOM ERRORS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @dev Insufficient health factor after intent execution
+    error InsufficientHealthFactor();
+
+    /// @dev Insufficient token balance after intent execution
+    error InsufficientTokenBalance();
+
+    /// @dev Borrow amount exceeds estimated amount
+    error InsufficientBorrowAmount();
 
     /*//////////////////////////////////////////////////////////////////////////
                                     CONSTRUCTOR
@@ -27,9 +46,20 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     /**
      * @notice Initialize the smart contract
      * @param intentifySafeModule Canonical Intentify Safe Module
+     * @param __weth Canonical WETH
+     * @param __chainlinkDataFeedBaseUSDRoundData Chainlink Data Feed Base USD Round Data
      * @param __pool Canonical Aave Pool
      */
-    constructor(address intentifySafeModule, address __pool) ExecuteRootTransaction(intentifySafeModule) {
+    constructor(
+        address intentifySafeModule,
+        address __weth,
+        address __chainlinkDataFeedBaseUSDRoundData,
+        address __pool
+    )
+        ExecuteRootTransaction(intentifySafeModule)
+    {
+        _weth = __weth;
+        _chainlinkDataFeedBaseUSDRoundData = __chainlinkDataFeedBaseUSDRoundData;
         _pool = __pool;
     }
 
@@ -39,8 +69,6 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     /**
      * @notice Encode hook instructions.
      * @dev The executor/searcher should calculate these values before encoding.
-     * @param swapType uint8 - Base or Quote asset used to calculate payout
-     * @param priceFeed address - Chainlink price feed for supply and borrow asset
      * @param supplyAsset address - ERC20 supplied to Aave
      * @param borrowAsset address - ERC20 borrowed from Aave
      * @param interestRateMode uint256 - Interest rate mode for Aave
@@ -48,8 +76,6 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
      * @param fee uint32 - Fee paid to executor i.e. 3000 = 3%
      */
     function encode(
-        uint8 swapType,
-        address priceFeed,
         address supplyAsset,
         address borrowAsset,
         uint256 interestRateMode,
@@ -60,7 +86,7 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
         pure
         returns (bytes memory data)
     {
-        return abi.encode(swapType, priceFeed, supplyAsset, borrowAsset, interestRateMode, minHealthFactor, fee);
+        return abi.encode(supplyAsset, borrowAsset, interestRateMode, minHealthFactor, fee);
     }
 
     /**
@@ -81,6 +107,20 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
         return abi.encode(supplyAmount, borrowAmount, hookData);
     }
 
+    function _decodeIntentData(bytes calldata data)
+        internal
+        pure
+        returns (
+            address supplyAsset,
+            address borrowAsset,
+            uint256 interestRateMode,
+            uint256 minHealthFactor,
+            uint32 fee
+        )
+    {
+        return abi.decode(data, (address, address, uint256, uint256, uint32));
+    }
+
     /*//////////////////////////////////////////////////////////////////////////
                                    WRITE FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
@@ -97,18 +137,16 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
         require(intent.root == msg.sender, "TimestampIntent:invalid-root");
         require(intent.target == address(this), "TimestampIntent:invalid-target");
         (
-            uint8 swapType,
-            address priceFeed,
             address supplyAsset,
             address borrowAsset,
             , // interestRateMode
             uint256 minHealthFactor,
             uint32 fee
-        ) = abi.decode(intent.data, (uint8, address, address, address, uint256, uint256, uint32));
+        ) = _decodeIntentData(intent.data);
         uint256 balanceStart = IERC20(supplyAsset).balanceOf(intent.root); // change to borrow asset
         _hook(hook); // Expectation is that the hook will add funds to the intent module i.e. flash loan
         _leverage(intent, hook);
-        uint256 repayAmount = _checkHookInstructions(swapType, priceFeed, supplyAsset, borrowAsset, fee, hook.data);
+        uint256 repayAmount = _checkIntentAndHookData(supplyAsset, borrowAsset, fee, hook.data);
         _transferFromRoot(borrowAsset, hook.target, repayAmount);
         _checkHealthFactor(intent.root, minHealthFactor);
         _checkFinalBalance(intent.root, supplyAsset, balanceStart);
@@ -121,41 +159,6 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     //////////////////////////////////////////////////////////////////////////*/
 
     /**
-     * @notice Calculates the amount to be repaid to the executor of the transaction.
-     * @param price int256 - Token pair price from Chainlink oracle
-     * @param supplyAssetDecimals Decimal amount in supply asset
-     * @param borrowAssetDecimals Decimal amount in borrow asset
-     * @param supplyAmount uin256 - ERC20 token amount
-     * @param borrowAmount uin256 - ERC20 token amount
-     * @param fee uint32 - Fee paid to executor i.e. 3000 = 3%
-     * @return amountRepay The amount of the borrowed asset that will be repaid to the executor
-     */
-    function _calculatePayout(
-        uint8 swapType,
-        int256 price,
-        uint256 supplyAssetDecimals,
-        uint256 borrowAssetDecimals,
-        uint256 supplyAmount,
-        uint256 borrowAmount,
-        uint32 fee
-    )
-        internal
-        view
-        returns (uint256 amountRepay)
-    {
-        uint256 supplyAmountWithFee = supplyAmount + (supplyAmount * fee / 100_000);
-        if (swapType == 0) {
-            amountRepay = _calculateQuoteAsset(price, borrowAssetDecimals, supplyAmountWithFee);
-            require(borrowAmount >= amountRepay, "AaveLeverageLongIntent:insufficient-supply-amount");
-        } else if (swapType == 1) {
-            amountRepay = _calculateBaseAsset(price, supplyAssetDecimals, supplyAmountWithFee);
-            require(borrowAmount >= amountRepay, "AaveLeverageLongIntent:insufficient-supply-amount");
-        } else {
-            revert("AaveLeverageLongIntent:invalid-swap-type");
-        }
-    }
-
-    /**
      * @notice Checks account health factor is above minimum threshold
      * @param account address - Account to get Aave user data about
      * @param token address - ERC20 token
@@ -163,7 +166,7 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
      */
     function _checkFinalBalance(address account, address token, uint256 balanceStart) internal view {
         uint256 balanceEnd = IERC20(token).balanceOf(account);
-        require(balanceEnd >= balanceStart, "AaveLeverageLongIntent:insufficient-ending-balance");
+        if (balanceEnd < balanceStart) revert InsufficientTokenBalance();
     }
 
     /**
@@ -173,20 +176,18 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
      */
     function _checkHealthFactor(address account, uint256 minHealthFactor) internal view {
         (,,,,, uint256 healthFactor) = IPool(_pool).getUserAccountData(account);
-        require(healthFactor >= minHealthFactor, "AaveLeverageLongIntent:insufficient-health-factor");
+        if (healthFactor < minHealthFactor) revert InsufficientHealthFactor();
     }
 
     /**
      * @notice Fetches external data required to constrain hook instructions
-     * @param priceFeed The price feed of the numerator asset.
      * @param supplyAsset The address of the numerator asset.
      * @param borrowAsset The address of the denominator asset.
      * @param fee The fee that will be charged by the execution of the transaction.
      * @return amountRepay The amount of the borrowed asset that will be repaid to the executor
      */
-    function _checkHookInstructions(
-        uint8 swapType,
-        address priceFeed,
+
+    function _checkIntentAndHookData(
         address supplyAsset,
         address borrowAsset,
         uint32 fee,
@@ -195,14 +196,44 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
         internal
         returns (uint256 amountRepay)
     {
-        AggregatorV3Interface feed = AggregatorV3Interface(priceFeed);
-        (, int256 price,,,) = feed.latestRoundData();
         (uint256 supplyAmount, uint256 borrowAmount,) = abi.decode(hookData, (uint256, uint256, bytes));
-        uint256 supplyAssetDecimals = IERC20(supplyAsset).decimals();
-        uint256 borrowAssetDecimals = IERC20(borrowAsset).decimals();
+        uint256 supplyAmountWithFee = supplyAmount + (supplyAmount * fee / 100_000);
+        int256 derivedPrice = _getDerivedPrice(supplyAsset, borrowAsset);
+        uint256 outAmount = _calculateTokenInAmount(
+            uint8(IERC20(supplyAsset).decimals()),
+            uint8(IERC20(borrowAsset).decimals()),
+            supplyAmountWithFee,
+            DECIMAL_SCALE,
+            derivedPrice
+        );
 
-        return
-            _calculatePayout(swapType, price, supplyAssetDecimals, borrowAssetDecimals, supplyAmount, borrowAmount, fee);
+        // Executor must only borrow the amount that is required to repay the flash loan
+        // using the estimated price from the Chainlink oracle.
+        if (outAmount > borrowAmount) revert InsufficientBorrowAmount();
+
+        return outAmount;
+    }
+    /**
+     * @notice Fetches external data required to constrain hook instructions.
+     * @dev If WETH is supplied as an asset the Chainlink oracle will return the price of ETH.
+     * @param supplyAsset The address of the base asset.
+     * @param borrowAsset The address of the quote asset.
+     */
+
+    function _getDerivedPrice(address supplyAsset, address borrowAsset) internal returns (int256) {
+        // Base Data
+        (, int256 basePrice,,,) = ChainlinkDataFeedBaseUSDRoundData(_chainlinkDataFeedBaseUSDRoundData)
+            .getLatestRoundData(supplyAsset == _weth ? 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE : supplyAsset);
+
+        // Quote Data
+        (, int256 quotePrice,,,) = ChainlinkDataFeedBaseUSDRoundData(_chainlinkDataFeedBaseUSDRoundData)
+            .getLatestRoundData(borrowAsset == _weth ? 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE : borrowAsset);
+
+        int256 scaledDecimals = int256(10 ** uint256(DECIMAL_SCALE));
+
+        return _calculateDerivedPrice(
+            basePrice, DECIMAL_USD_FEED, quotePrice, DECIMAL_USD_FEED, DECIMAL_SCALE, scaledDecimals
+        );
     }
 
     /**
@@ -211,9 +242,9 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
      * @param hook Hook - Executor supplied hook
      */
     function _leverage(Intent calldata intent, Hook calldata hook) internal {
-        // Intent Instructions
-        (,, address supplyAsset, address borrowAsset, uint256 interestRateMode, uint256 minHealthFactor, uint256 delta)
-        = abi.decode(intent.data, (uint8, address, address, address, uint256, uint256, uint256));
+        // Intent Data
+        (address supplyAsset, address borrowAsset, uint256 interestRateMode, uint256 minHealthFactor, uint256 delta) =
+            _decodeIntentData(intent.data);
 
         // Hook Instructions
         (uint256 supplyAmount, uint256 borrowAmount,) = abi.decode(hook.data, (uint256, uint256, bytes));

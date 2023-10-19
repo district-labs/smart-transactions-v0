@@ -4,35 +4,6 @@ pragma solidity >=0.8.19 <0.9.0;
 import { AggregatorV3Interface } from "@chainlink/v0.8/interfaces/AggregatorV3Interface.sol";
 
 contract ChainlinkDataFeedHelper {
-    function _calculateBaseAsset(int256 price, uint256 baseDecimal, uint256 amount) internal pure returns (uint256) {
-        return amount * uint256(price) / 10 ** baseDecimal;
-    }
-
-    function _calculateQuoteAsset(int256 price, uint256 baseDecimal, uint256 amount) internal pure returns (uint256) {
-        return (amount / uint256(price)) * (10 ** baseDecimal);
-    }
-
-    function _calcuateTokenInAmountEstimated(
-        uint8 tokenOutDecimals,
-        uint8 tokenInDecimals,
-        uint256 tokenAmountExpected,
-        uint8 feedDecimals,
-        int256 derivedPrice,
-        bool isBuy
-    )
-        internal
-        pure
-        returns (uint256 tokenAmountEstimated)
-    {
-        if (isBuy) {
-            tokenAmountEstimated = (tokenAmountExpected * uint256(derivedPrice) * 10 ** uint256(tokenOutDecimals))
-                / (10 ** uint256(tokenInDecimals + feedDecimals));
-        } else {
-            tokenAmountEstimated = (tokenAmountExpected * uint256(derivedPrice) * 10 ** uint256(tokenInDecimals))
-                / (10 ** uint256(tokenOutDecimals + feedDecimals));
-        }
-    }
-
     function _getDerivedPrice(
         address _base,
         address _quote,
@@ -72,6 +43,21 @@ contract ChainlinkDataFeedHelper {
         basePrice = _scalePrice(basePrice, baseDecimals, decimals);
         quotePrice = _scalePrice(quotePrice, quoteDecimals, decimals);
         return (basePrice * scaledDecimals) / quotePrice;
+    }
+
+    function _calculateTokenInAmount(
+        uint8 tokenOutDecimals,
+        uint8 tokenInDecimals,
+        uint256 amountOut,
+        uint8 feedDecimals,
+        int256 derivedPrice
+    )
+        internal
+        pure
+        returns (uint256)
+    {
+        return (amountOut * uint256(derivedPrice) * 10 ** uint256(tokenInDecimals))
+            / (10 ** uint256(tokenOutDecimals + feedDecimals));
     }
 
     function _scalePrice(int256 _price, uint8 _priceDecimals, uint8 _decimals) internal pure returns (int256) {
