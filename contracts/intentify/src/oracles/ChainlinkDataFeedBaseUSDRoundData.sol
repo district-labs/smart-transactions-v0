@@ -5,10 +5,12 @@ import { FeedRegistryInterface } from "@chainlink/v0.8/interfaces/FeedRegistryIn
 import { Denominations } from "@chainlink/v0.8/Denominations.sol";
 
 contract ChainlinkDataFeedBaseUSDRoundData {
-    FeedRegistryInterface internal registry;
+    address internal immutable _weth;
+    FeedRegistryInterface internal _registry;
 
-    constructor(address _registry) {
-        registry = FeedRegistryInterface(_registry);
+    constructor(address __registry, address __weth) {
+        _weth = __weth;
+        _registry = FeedRegistryInterface(__registry);
     }
 
     function getLatestRoundData(address base)
@@ -16,6 +18,7 @@ contract ChainlinkDataFeedBaseUSDRoundData {
         view
         returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound)
     {
-        return registry.latestRoundData(base, Denominations.USD);
+        base = base == _weth ? 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE : base;
+        return _registry.latestRoundData(base, Denominations.USD);
     }
 }

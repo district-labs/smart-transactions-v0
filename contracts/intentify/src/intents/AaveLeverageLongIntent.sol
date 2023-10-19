@@ -22,10 +22,11 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     //////////////////////////////////////////////////////////////////////////*/
     uint8 internal constant DECIMAL_SCALE = 18;
     uint8 internal constant DECIMAL_USD_FEED = 8;
+    uint256 internal immutable FEED_THRESHOLD_SECONDS = 500000; // TODO: Calcuate best value
 
     address internal immutable _pool;
     address internal immutable _chainlinkDataFeedBaseUSDRoundData;
-    address internal immutable _weth;
+
 
     /*//////////////////////////////////////////////////////////////////////////
                                 CUSTOM ERRORS
@@ -46,19 +47,16 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     /**
      * @notice Initialize the smart contract
      * @param intentifySafeModule Canonical Intentify Safe Module
-     * @param __weth Canonical WETH
      * @param __chainlinkDataFeedBaseUSDRoundData Chainlink Data Feed Base USD Round Data
      * @param __pool Canonical Aave Pool
      */
     constructor(
         address intentifySafeModule,
-        address __weth,
         address __chainlinkDataFeedBaseUSDRoundData,
         address __pool
     )
         ExecuteRootTransaction(intentifySafeModule)
     {
-        _weth = __weth;
         _chainlinkDataFeedBaseUSDRoundData = __chainlinkDataFeedBaseUSDRoundData;
         _pool = __pool;
     }
@@ -222,12 +220,14 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
 
     function _getDerivedPrice(address supplyAsset, address borrowAsset) internal returns (int256) {
         // Base Data
-        (, int256 basePrice,,,) = ChainlinkDataFeedBaseUSDRoundData(_chainlinkDataFeedBaseUSDRoundData)
-            .getLatestRoundData(supplyAsset == _weth ? 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE : supplyAsset);
+        (, int256 basePrice,, uint256 baseUpdatedAt,) = ChainlinkDataFeedBaseUSDRoundData(_chainlinkDataFeedBaseUSDRoundData)
+            .getLatestRoundData(supplyAsset);
+        require(block.timestamp - baseUpdatedAt <= FEED_THRESHOLD_SECONDS, "ChainlinkDataFeedHelper:stale-price");
 
         // Quote Data
-        (, int256 quotePrice,,,) = ChainlinkDataFeedBaseUSDRoundData(_chainlinkDataFeedBaseUSDRoundData)
-            .getLatestRoundData(borrowAsset == _weth ? 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE : borrowAsset);
+        (, int256 quotePrice,, uint256 quoteUpdatedAt,) = ChainlinkDataFeedBaseUSDRoundData(_chainlinkDataFeedBaseUSDRoundData)
+            .getLatestRoundData(borrowAsset);
+        require(block.timestamp - quoteUpdatedAt <= FEED_THRESHOLD_SECONDS, "ChainlinkDataFeedHelper:stale-price");
 
         int256 scaledDecimals = int256(10 ** uint256(DECIMAL_SCALE));
 

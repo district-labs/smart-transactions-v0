@@ -64,17 +64,19 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         vm.rollFork(MAINNET_FORK_BLOCK);
 
         initializeBase();
-        _chainlinkDataFeedBaseUSDRoundData = new ChainlinkDataFeedBaseUSDRoundData(CHAINLINK_FEED_REGISTRY);
+        _chainlinkDataFeedBaseUSDRoundData = new ChainlinkDataFeedBaseUSDRoundData(CHAINLINK_FEED_REGISTRY, WETH);
         _simulateFlashloan = new SimulateFlashLoan();
         _intentifySafeModule = new IntentifySafeModule();
         _aaveLeverageLongIntent =
-        new AaveLeverageLongIntent(address(_intentifySafeModule), WETH, address(_chainlinkDataFeedBaseUSDRoundData), AAVE_POOL);
+        new AaveLeverageLongIntent(address(_intentifySafeModule), address(_chainlinkDataFeedBaseUSDRoundData), AAVE_POOL);
         _safe = new Safe();
         _safeProxyFactory = new SafeProxyFactory();
         _safeCreated = _setupSafe(signer);
         _enableIntentifyModule(SIGNER, _safeCreated, address(_intentifySafeModule));
 
         vm.prank(vm.envOr("WHALE_USDC", 0x28C6c06298d514Db089934071355E5743bf21d60));
+
+        // vm.warp(1694570140);
     }
 
     /* ===================================================================================== */
