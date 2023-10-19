@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19 <0.9.0;
 
-import { console2 } from "forge-std/console2.sol";
-
 import { ERC20 } from "solady/tokens/ERC20.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
@@ -65,7 +63,7 @@ contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction, Rev
         validIntentTarget(intent)
         returns (bool)
     {
-        (, address tokenIn,, uint256 amountInMin) = _decodeIntent(intent);
+        (, address tokenIn,,) = _decodeIntent(intent);
 
         uint256 initialTokenInBalance = ERC20(tokenIn).balanceOf(intent.root);
 
@@ -73,11 +71,7 @@ contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction, Rev
         // The hook is expected to transfer the tokens to the intent root.
         // NOTICE: We can likely optimize by using the `transient storage` when available.
 
-        uint256 amountIn = ERC20(tokenIn).balanceOf(intent.root) - initialTokenInBalance;
-
-        if (amountIn < amountInMin) revert InsufficientInputAmount(amountIn, amountInMin);
-
-        _unlock(intent, hook);
+        _unlock(intent, hook, initialTokenInBalance);
 
         return true;
     }
@@ -116,12 +110,23 @@ contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction, Rev
         }
     }
 
-    /// @notice Unlock the tokenOut to the hook executor
+    /// @notice Unlock the tokenOut to the hook executor if the amountIn is greater than the amountInMin.
     /// @param intent Contains data related to intent.
     /// @param hook Contains data related to hook.
-    function _unlock(Intent calldata intent, Hook calldata hook) internal returns (bool) {
-        (address tokenOut,, uint256 amountOutMax,) = _decodeIntent(intent);
+    function _unlock(
+        Intent calldata intent,
+        Hook calldata hook,
+        uint256 initialTokenInBalance
+    )
+        internal
+        returns (bool)
+    {
+        (address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin) = _decodeIntent(intent);
         (address executor,) = abi.decode(hook.data, (address, bytes));
+
+        uint256 amountIn = ERC20(tokenIn).balanceOf(intent.root) - initialTokenInBalance;
+
+        if (amountIn < amountInMin) revert InsufficientInputAmount(amountIn, amountInMin);
 
         bytes memory txData = abi.encodeWithSignature("transfer(address,uint256)", executor, amountOutMax);
         return executeFromRoot(tokenOut, 0, txData);
