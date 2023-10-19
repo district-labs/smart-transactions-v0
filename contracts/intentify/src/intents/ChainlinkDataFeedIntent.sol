@@ -26,13 +26,13 @@ contract ChainlinkDataFeedIntent is IIntent {
                                 READ FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Helper function to encode provided parameters into a byte array.
+    /// @notice Helper function to encode intent parameters into a byte array.
     /// @param dataFeed The address of the Chainlink data feed.
     /// @param minValue The minimum value the data feed can have.
     /// @param maxValue The maximum value the data feed can have.
     /// @param thresholdSeconds The maximum number of seconds the data feed can be stale.
     /// @return data The encoded data.
-    function encode(
+    function encodeIntent(
         address dataFeed,
         int256 minValue,
         int256 maxValue,
@@ -54,8 +54,7 @@ contract ChainlinkDataFeedIntent is IIntent {
         if (intent.root != msg.sender) revert InvalidRoot();
         if (intent.target != address(this)) revert InvalidTarget();
 
-        (address dataFeed, int256 minValue, int256 maxValue, uint256 thresholdSeconds) =
-            abi.decode(intent.data, (address, int256, int256, uint256));
+        (address dataFeed, int256 minValue, int256 maxValue, uint256 thresholdSeconds) = _decodeIntent(intent);
 
         (, int256 answer,, uint256 updatedAt,) = AggregatorV3Interface(dataFeed).latestRoundData();
 
@@ -73,5 +72,23 @@ contract ChainlinkDataFeedIntent is IIntent {
         }
 
         return true;
+    }
+
+    /*//////////////////////////////////////////////////////////////////////////
+                              INTERNAL READ FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice Helper function to decode intent parameters from a byte array.
+    /// @param intent The intent.
+    /// @return dataFeed The address of the Chainlink data feed.
+    /// @return minValue The minimum value the data feed can have.
+    /// @return maxValue The maximum value the data feed can have.
+    /// @return thresholdSeconds The maximum number of seconds the data feed can be stale.
+    function _decodeIntent(Intent calldata intent)
+        internal
+        pure
+        returns (address dataFeed, int256 minValue, int256 maxValue, uint256 thresholdSeconds)
+    {
+        (dataFeed, minValue, maxValue, thresholdSeconds) = abi.decode(intent.data, (address, int256, int256, uint256));
     }
 }

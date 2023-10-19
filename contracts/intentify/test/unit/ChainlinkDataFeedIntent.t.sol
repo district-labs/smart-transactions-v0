@@ -54,7 +54,7 @@ contract TwapIntentTest is BaseTest {
             root: address(_intentify),
             value: 0,
             target: address(_chainlinkDataFeedIntent),
-            data: _chainlinkDataFeedIntent.encode(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds)
+            data: _chainlinkDataFeedIntent.encodeIntent(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds)
         });
 
         IntentBatch memory intentBatch =
@@ -87,7 +87,7 @@ contract TwapIntentTest is BaseTest {
             root: address(_intentify),
             value: 0,
             target: address(_chainlinkDataFeedIntent),
-            data: _chainlinkDataFeedIntent.encode(proofOfReserveWBTC, minValue, maxValue, thresholdSeconds)
+            data: _chainlinkDataFeedIntent.encodeIntent(proofOfReserveWBTC, minValue, maxValue, thresholdSeconds)
         });
 
         IntentBatch memory intentBatch =
@@ -120,7 +120,7 @@ contract TwapIntentTest is BaseTest {
             root: address(_intentify),
             value: 0,
             target: address(_chainlinkDataFeedIntent),
-            data: _chainlinkDataFeedIntent.encode(nftFloorPriceCryptoPunks, minValue, maxValue, thresholdSeconds)
+            data: _chainlinkDataFeedIntent.encodeIntent(nftFloorPriceCryptoPunks, minValue, maxValue, thresholdSeconds)
         });
 
         IntentBatch memory intentBatch =
@@ -145,7 +145,8 @@ contract TwapIntentTest is BaseTest {
         int256 maxValue = int256(1685e8);
         uint256 thresholdSeconds = 5 minutes;
 
-        bytes memory data = _chainlinkDataFeedIntent.encode(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds);
+        bytes memory data =
+            _chainlinkDataFeedIntent.encodeIntent(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds);
         assertEq(data, abi.encode(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds));
     }
 
@@ -167,7 +168,7 @@ contract TwapIntentTest is BaseTest {
             root: address(_intentify),
             value: 0,
             target: address(_chainlinkDataFeedIntent),
-            data: _chainlinkDataFeedIntent.encode(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds)
+            data: _chainlinkDataFeedIntent.encodeIntent(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds)
         });
 
         IntentBatch memory intentBatch =
@@ -200,7 +201,7 @@ contract TwapIntentTest is BaseTest {
             root: address(_intentify),
             value: 0,
             target: address(_chainlinkDataFeedIntent),
-            data: _chainlinkDataFeedIntent.encode(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds)
+            data: _chainlinkDataFeedIntent.encodeIntent(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds)
         });
 
         IntentBatch memory intentBatch =
@@ -233,7 +234,7 @@ contract TwapIntentTest is BaseTest {
             root: address(_intentify),
             value: 0,
             target: address(_chainlinkDataFeedIntent),
-            data: _chainlinkDataFeedIntent.encode(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds)
+            data: _chainlinkDataFeedIntent.encodeIntent(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds)
         });
 
         IntentBatch memory intentBatch =
@@ -266,7 +267,7 @@ contract TwapIntentTest is BaseTest {
             root: address(0),
             value: 0,
             target: address(_chainlinkDataFeedIntent),
-            data: _chainlinkDataFeedIntent.encode(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds)
+            data: _chainlinkDataFeedIntent.encodeIntent(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds)
         });
 
         IntentBatch memory intentBatch =

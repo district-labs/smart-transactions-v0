@@ -93,7 +93,7 @@ contract LimitOrderIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_limitOrderIntent),
-            data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
+            data: _limitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
 
         IntentBatch memory intentBatch =
@@ -125,7 +125,7 @@ contract LimitOrderIntentTest is SafeTestingUtils {
 
     function test_encode_Success() external {
         bytes memory encodeData =
-            _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance);
+            _limitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance);
         assertEq(encodeData, abi.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance));
     }
 
@@ -144,7 +144,7 @@ contract LimitOrderIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_limitOrderIntent),
-            data: _limitOrderIntent.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
+            data: _limitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
 
         IntentBatch memory intentBatch =

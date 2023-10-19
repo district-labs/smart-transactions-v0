@@ -29,13 +29,13 @@ contract LimitOrderIntent is IIntentWithHook, ExecuteRootTransaction, ExtractRev
                                 READ FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Helper function to encode provided parameters into a byte array.
+    /// @notice Helper function to encode intent parameters into a byte array.
     /// @param tokenOut The token to be sold.
     /// @param tokenIn The token to be purchased.
     /// @param amountOutMax The maximum amount of tokens to be sold.
     /// @param amountInMin The minimum amount of tokens to be purchased.
     /// @return data The encoded parameters.
-    function encode(
+    function encodeIntent(
         address tokenOut,
         address tokenIn,
         uint256 amountOutMax,
@@ -57,7 +57,7 @@ contract LimitOrderIntent is IIntentWithHook, ExecuteRootTransaction, ExtractRev
         if (intent.root != msg.sender) revert InvalidRoot();
         if (intent.target != address(this)) revert InvalidTarget();
 
-        (, address tokenIn,,) = abi.decode(intent.data, (address, address, uint256, uint256));
+        (, address tokenIn,,) = _decodeIntent(intent);
 
         uint256 initialTokenInBalance = ERC20(tokenIn).balanceOf(intent.root);
 
@@ -73,6 +73,15 @@ contract LimitOrderIntent is IIntentWithHook, ExecuteRootTransaction, ExtractRev
     /*//////////////////////////////////////////////////////////////////////////
                               INTERNAL READ FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice Helper function to decode intent parameters from a byte array.
+    function _decodeIntent(Intent calldata intent)
+        internal
+        pure
+        returns (address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin)
+    {
+        (tokenOut, tokenIn, amountOutMax, amountInMin) = abi.decode(intent.data, (address, address, uint256, uint256));
+    }
 
     /// @notice Execute the hook that sends the tokenIn to the user.
     /// @param hook The hook to be executed.
@@ -103,8 +112,7 @@ contract LimitOrderIntent is IIntentWithHook, ExecuteRootTransaction, ExtractRev
         internal
         returns (bool)
     {
-        (address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin) =
-            abi.decode(intent.data, (address, address, uint256, uint256));
+        (address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin) = _decodeIntent(intent);
 
         uint256 amountIn = ERC20(tokenIn).balanceOf(intent.root) - initialTokenInBalance;
         (address executor,) = abi.decode(hook.data, (address, bytes));
