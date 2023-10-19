@@ -3,7 +3,7 @@ pragma solidity >=0.8.19 <0.9.0;
 
 import { Ownable } from "solady/auth/Ownable.sol";
 import { IAxiomV1Query } from "axiom-v1/contracts/interfaces/IAxiomV1Query.sol";
-import { Oracle } from "@uniswap/v3-core/contracts/libraries/Oracle.sol";
+import { Oracle } from "uniswap-v3-core/libraries/Oracle.sol";
 
 import { UniswapV3TwapOracle, AxiomResponseStruct } from "../../../src/periphery/Axiom/UniswapV3TwapOracle.sol";
 import { BaseTest } from "../../utils/Base.t.sol";

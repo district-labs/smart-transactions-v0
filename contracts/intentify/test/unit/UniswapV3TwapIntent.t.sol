@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import "@uniswap/v3-core/contracts/libraries/FullMath.sol";
+import "uniswap-v3-core/libraries/FullMath.sol";
 import {
     Intent,
     IntentBatch,

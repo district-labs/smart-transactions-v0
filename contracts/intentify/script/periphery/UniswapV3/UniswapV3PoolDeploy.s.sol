@@ -6,9 +6,9 @@ import "./lib/SqrtMath.sol";
 
 import { console2 } from "forge-std/console2.sol";
 import { UniswapV3Address } from "./lib/UniswapV3Address.sol";
-import { IUniswapV3Factory } from "@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol";
-import { IUniswapV3Pool } from "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
-import { INonfungiblePositionManager } from "@uniswap/v3-periphery/contracts/interfaces/INonfungiblePositionManager.sol";
+import { IUniswapV3Factory } from "uniswap-v3-core/interfaces/IUniswapV3Factory.sol";
+import { IUniswapV3Pool } from "uniswap-v3-core/interfaces/IUniswapV3Pool.sol";
+import { INonfungiblePositionManager } from "uniswap-v3-periphery/interfaces/INonfungiblePositionManager.sol";
 
 // This script deploys a Uniswap V3 pool and initializes it.
 contract UniswapV3PoolDeploy is Script {
