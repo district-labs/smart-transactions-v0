@@ -2,7 +2,7 @@
 
 
 ```ts
-intentBatchFactory = new IntentBatchFactory(
+intentBatchFactory = new IntentBatchFactory([
     {
         name: 'TimestampRange',
         target: '0x000000000000000000000000000000000000dEaD',
@@ -17,7 +17,7 @@ intentBatchFactory = new IntentBatchFactory(
             }
         ]
     }
-);
+]);
 
 intentBatch = intentBatchFactory.create('0x000000000000000000000000000000000000dEaD');
 intentBatch.nonce("standard", 0)
