@@ -86,7 +86,7 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
         // // Try to execute the Intent Bundle
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
-        vm.expectRevert("Intent:cancelled");
+        vm.expectRevert(IntentifySafeModule.IntentAlreadyCancelled.selector);
         _intentifySafeModule.execute(batchExecution);
     }
 
