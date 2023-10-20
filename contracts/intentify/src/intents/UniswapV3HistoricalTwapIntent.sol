@@ -26,7 +26,7 @@ contract UniswapV3HistoricalTwapIntent is IntentWithHookAbstract {
     }
 
     /*//////////////////////////////////////////////////////////////////////////
-                                PUBLIC STORAGE
+                                INTERNAL STORAGE
     //////////////////////////////////////////////////////////////////////////*/
 
     UniswapV3TwapOracle internal _uniswapV3TwapOracle;
