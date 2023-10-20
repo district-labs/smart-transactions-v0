@@ -4,7 +4,6 @@ pragma solidity >=0.8.19 <0.9.0;
 import { ERC20 } from "solady/tokens/ERC20.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
-import { BytesLib } from "../libraries/BytesLib.sol";
 import { ChainlinkDataFeedHelper } from "../helpers/ChainlinkDataFeedHelper.sol";
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
