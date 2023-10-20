@@ -1,26 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import { Safe } from "safe-contracts/Safe.sol";
-import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
-import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 
-import {
-    Intent,
-    IntentBatch,
-    IntentBatchExecution,
-    Signature,
-    Hook,
-    TypesAndDecoders
-} from "../../src/TypesAndDecoders.sol";
+import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "../../src/TypesAndDecoders.sol";
 import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 import { Counter } from "../mocks/Counter.sol";
 
 contract IntentifySafeModuleTest is SafeTestingUtils {
-    Safe internal _safeCreated;
-    IntentifySafeModule internal _intentifySafeModule;
     Counter internal _counter;
 
     event IntentBatchExecuted(address executor, address indexed root, bytes32 indexed intentBatchId);
@@ -29,12 +17,7 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
 
     function setUp() public virtual {
         initializeBase();
-
-        _intentifySafeModule = new IntentifySafeModule();
-        _safe = new Safe();
-        _safeProxyFactory = new SafeProxyFactory();
-        _safeCreated = _setupSafe(signer);
-        _enableIntentifyModule(SIGNER, _safeCreated, address(_intentifySafeModule));
+        initializeSafeBase();
 
         _counter = new Counter();
     }

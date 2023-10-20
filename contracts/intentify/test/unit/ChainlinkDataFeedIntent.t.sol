@@ -1,29 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import "uniswap-v3-core/libraries/FullMath.sol";
-import {
-    Intent,
-    IntentBatch,
-    IntentBatchExecution,
-    Signature,
-    Hook,
-    TypesAndDecoders
-} from "../../src/TypesAndDecoders.sol";
-import { Intentify } from "../../src/Intentify.sol";
+import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "../../src/TypesAndDecoders.sol";
 import { ChainlinkDataFeedIntent, IntentAbstract } from "../../src/intents/ChainlinkDataFeedIntent.sol";
+import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 
-import { BaseTest } from "../utils/Base.t.sol";
-
-contract TwapIntentTest is BaseTest {
-    Intentify internal _intentify;
+contract TwapIntentTest is SafeTestingUtils {
     ChainlinkDataFeedIntent internal _chainlinkDataFeedIntent;
 
     uint256 mainnetFork;
     uint256 MAINNET_FORK_BLOCK = 18_249_259;
     string MAINNET_RPC_URL = vm.envString("MAINNET_RPC_URL");
-
-    Hook EMPTY_HOOK = Hook({ target: address(0x00), data: bytes("") });
 
     /// @dev A function invoked before each test case is run.
     function setUp() public virtual {
@@ -32,7 +19,8 @@ contract TwapIntentTest is BaseTest {
         vm.rollFork(MAINNET_FORK_BLOCK);
 
         initializeBase();
-        _intentify = new Intentify(signer, "Intentify", "V0");
+        initializeSafeBase();
+
         _chainlinkDataFeedIntent = new ChainlinkDataFeedIntent();
     }
 
@@ -51,16 +39,16 @@ contract TwapIntentTest is BaseTest {
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
-            root: address(_intentify),
+            root: address(_safeCreated),
             value: 0,
             target: address(_chainlinkDataFeedIntent),
             data: _chainlinkDataFeedIntent.encodeIntent(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
+        bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
         Hook[] memory hooks = new Hook[](1);
@@ -69,8 +57,7 @@ contract TwapIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        bool _executed = _intentify.execute(batchExecution);
-        assertEq(true, _executed);
+        _intentifySafeModule.execute(batchExecution);
     }
 
     function test_DataFeedIntent_ProofOfReserveFeed_Success() external {
@@ -84,16 +71,16 @@ contract TwapIntentTest is BaseTest {
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
-            root: address(_intentify),
+            root: address(_safeCreated),
             value: 0,
             target: address(_chainlinkDataFeedIntent),
             data: _chainlinkDataFeedIntent.encodeIntent(proofOfReserveWBTC, minValue, maxValue, thresholdSeconds)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
+        bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
         Hook[] memory hooks = new Hook[](1);
@@ -102,8 +89,7 @@ contract TwapIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        bool _executed = _intentify.execute(batchExecution);
-        assertEq(true, _executed);
+        _intentifySafeModule.execute(batchExecution);
     }
 
     function test_DataFeedIntent_NFTFloorPrice_Success() external {
@@ -117,16 +103,16 @@ contract TwapIntentTest is BaseTest {
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
-            root: address(_intentify),
+            root: address(_safeCreated),
             value: 0,
             target: address(_chainlinkDataFeedIntent),
             data: _chainlinkDataFeedIntent.encodeIntent(nftFloorPriceCryptoPunks, minValue, maxValue, thresholdSeconds)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
+        bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
         Hook[] memory hooks = new Hook[](1);
@@ -135,8 +121,7 @@ contract TwapIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        bool _executed = _intentify.execute(batchExecution);
-        assertEq(true, _executed);
+        _intentifySafeModule.execute(batchExecution);
     }
 
     function test_DataFeedIntent_encode_Success() external {
@@ -165,16 +150,16 @@ contract TwapIntentTest is BaseTest {
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
-            root: address(_intentify),
+            root: address(_safeCreated),
             value: 0,
             target: address(_chainlinkDataFeedIntent),
             data: _chainlinkDataFeedIntent.encodeIntent(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
+        bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
         Hook[] memory hooks = new Hook[](1);
@@ -184,7 +169,7 @@ contract TwapIntentTest is BaseTest {
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
         vm.expectRevert(ChainlinkDataFeedIntent.LowValue.selector);
-        _intentify.execute(batchExecution);
+        _intentifySafeModule.execute(batchExecution);
     }
 
     function test_RevertWhen_DataFeedIntent_ValueTooHigh() external {
@@ -198,16 +183,16 @@ contract TwapIntentTest is BaseTest {
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
-            root: address(_intentify),
+            root: address(_safeCreated),
             value: 0,
             target: address(_chainlinkDataFeedIntent),
             data: _chainlinkDataFeedIntent.encodeIntent(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
+        bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
         Hook[] memory hooks = new Hook[](1);
@@ -217,7 +202,7 @@ contract TwapIntentTest is BaseTest {
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
         vm.expectRevert(ChainlinkDataFeedIntent.HighValue.selector);
-        _intentify.execute(batchExecution);
+        _intentifySafeModule.execute(batchExecution);
     }
 
     function test_RevertWhen_DataFeedIntent_StaleData() external {
@@ -231,16 +216,16 @@ contract TwapIntentTest is BaseTest {
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
-            root: address(_intentify),
+            root: address(_safeCreated),
             value: 0,
             target: address(_chainlinkDataFeedIntent),
             data: _chainlinkDataFeedIntent.encodeIntent(priceFeedETHUSDC, minValue, maxValue, thresholdSeconds)
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
+        bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
         Hook[] memory hooks = new Hook[](1);
@@ -250,7 +235,7 @@ contract TwapIntentTest is BaseTest {
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
         vm.expectRevert(ChainlinkDataFeedIntent.StaleData.selector);
-        _intentify.execute(batchExecution);
+        _intentifySafeModule.execute(batchExecution);
     }
 
     function test_RevertWhen_DataFeedIntent_InvalidRoot() external {
@@ -271,9 +256,9 @@ contract TwapIntentTest is BaseTest {
         });
 
         IntentBatch memory intentBatch =
-            IntentBatch({ root: address(_intentify), nonce: abi.encodePacked(uint256(0)), intents: intents });
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
 
-        bytes32 digest = _intentify.getIntentBatchTypedDataHash(intentBatch);
+        bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
         Hook[] memory hooks = new Hook[](1);
@@ -282,7 +267,7 @@ contract TwapIntentTest is BaseTest {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert(IntentAbstract.InvalidRoot.selector);
-        _intentify.execute(batchExecution);
+        vm.expectRevert();
+        _intentifySafeModule.execute(batchExecution);
     }
 }

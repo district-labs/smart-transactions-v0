@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import { console2 } from "forge-std/StdCheats.sol";
 import { ChainlinkOracleHelper } from "../../src/oracles/ChainlinkOracleHelper.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 

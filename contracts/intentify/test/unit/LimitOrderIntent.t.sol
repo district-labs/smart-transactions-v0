@@ -1,22 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import { Safe } from "safe-contracts/Safe.sol";
-import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
-import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
-
 import { ERC20Mintable } from "../mocks/ERC20Mintable.sol";
-import {
-    Intent,
-    IntentBatch,
-    IntentBatchExecution,
-    Signature,
-    Hook,
-    TypesAndDecoders
-} from "../../src/TypesAndDecoders.sol";
+import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "../../src/TypesAndDecoders.sol";
 import { SwapRouter } from "../../src/periphery/SwapRouter.sol";
 import { LimitOrderIntent } from "../../src/intents/LimitOrderIntent.sol";
-import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 
 contract LimitOrderIntentHarness is LimitOrderIntent {
@@ -39,8 +27,6 @@ contract LimitOrderIntentHarness is LimitOrderIntent {
 }
 
 contract LimitOrderIntentTest is SafeTestingUtils {
-    Safe internal _safeCreated;
-    IntentifySafeModule internal _intentifySafeModule;
     LimitOrderIntentHarness internal _limitOrderIntent;
     ERC20Mintable internal _tokenA;
     ERC20Mintable internal _tokenB;
@@ -50,19 +36,11 @@ contract LimitOrderIntentTest is SafeTestingUtils {
     uint256 startingBalance = 1000;
     uint256 endingBalance = 2000;
 
-    Signature internal EMPTY_SIGNATURE = Signature({ r: bytes32(0x00), s: bytes32(0x00), v: uint8(0x00) });
-    Hook EMPTY_HOOK = Hook({ target: address(0x00), data: bytes("") });
-
     function setUp() public virtual {
         initializeBase();
+        initializeSafeBase();
 
-        _intentifySafeModule = new IntentifySafeModule();
         _limitOrderIntent = new LimitOrderIntentHarness(address(_intentifySafeModule));
-        _safe = new Safe();
-        _safeProxyFactory = new SafeProxyFactory();
-        _safeCreated = _setupSafe(signer);
-        _enableIntentifyModule(SIGNER, _safeCreated, address(_intentifySafeModule));
-
         _tokenA = new ERC20Mintable();
         _tokenB = new ERC20Mintable();
 

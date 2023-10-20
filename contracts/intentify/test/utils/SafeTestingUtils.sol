@@ -8,12 +8,26 @@ import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
 import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 import { BaseTest } from "./Base.t.sol";
+import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
+import { Hook, Signature } from "../../src/TypesAndDecoders.sol";
 
 contract SafeTestingUtils is BaseTest {
     Safe internal _safe;
     SafeProxyFactory internal _safeProxyFactory;
+    Safe internal _safeCreated;
+    IntentifySafeModule internal _intentifySafeModule;
 
     bytes32 private constant SAFE_MSG_TYPEHASH = 0x60b3cbf8b4a223d68d641b3b6ddf9a298e7f33710cf3d3a9d1146b5a6150fbca;
+    Hook internal EMPTY_HOOK = Hook({ target: address(0x00), data: bytes("") });
+    Signature internal EMPTY_SIGNATURE = Signature({ r: bytes32(0x00), s: bytes32(0x00), v: uint8(0x00) });
+
+    function initializeSafeBase() public {
+        _intentifySafeModule = new IntentifySafeModule();
+        _safe = new Safe();
+        _safeProxyFactory = new SafeProxyFactory();
+        _safeCreated = _setupSafe(signer);
+        _enableIntentifyModule(SIGNER, _safeCreated, address(_intentifySafeModule));
+    }
 
     function _combineRSV(bytes32 r, bytes32 s, uint8 v) internal pure returns (bytes memory) {
         bytes memory signature = new bytes(65);
