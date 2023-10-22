@@ -9,7 +9,7 @@ import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "../.
 import { AaveLeverageLongIntent } from "../../src/intents/AaveLeverageLongIntent.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 import { FundMainnetAccounts } from "../utils/FundMainnetAccounts.sol";
-import { Counter } from "../mocks/Counter.sol";
+import { ChainlinkDataFeedBaseUSDRoundData } from "../../src/oracles/ChainlinkDataFeedBaseUSDRoundData.sol";
 
 contract SimulateFlashLoan is FundMainnetAccounts {
     function simulateFlashLoanETH(address account, uint256 amount) external {
@@ -32,11 +32,13 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
     address public constant USDC_ETH_PRICE_FEED = 0x986b5E1e1755e3C2440e960477f25201B0a8bbD4;
     address public constant DAI_ETH_PRICE_FEED = 0x773616E4d11A78F511299002da57A0a94577F1f4;
     address public constant AAVE_POOL = 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2;
+    address public constant CHAINLINK_FEED_REGISTRY = 0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf;
     address public constant SWAP_ROUTER = 0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45;
 
     AaveLeverageLongIntent internal _aaveLeverageLongIntent;
     SimulateFlashLoan internal _simulateFlashloan;
     IPool internal _pool = IPool(AAVE_POOL);
+    ChainlinkDataFeedBaseUSDRoundData internal _chainlinkDataFeedBaseUSDRoundData;
 
     uint256 mainnetFork;
     string MAINNET_RPC_URL = vm.envString("MAINNET_RPC_URL");
@@ -50,10 +52,11 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
 
         initializeBase();
         initializeSafeBase();
-
+        _chainlinkDataFeedBaseUSDRoundData = new ChainlinkDataFeedBaseUSDRoundData(CHAINLINK_FEED_REGISTRY, WETH);
         _simulateFlashloan = new SimulateFlashLoan();
-        _aaveLeverageLongIntent = new AaveLeverageLongIntent(address(_intentifySafeModule), AAVE_POOL);
 
+        _aaveLeverageLongIntent =
+        new AaveLeverageLongIntent(address(_intentifySafeModule), address(_chainlinkDataFeedBaseUSDRoundData), AAVE_POOL);
         vm.prank(vm.envOr("WHALE_USDC", 0x28C6c06298d514Db089934071355E5743bf21d60));
     }
 
@@ -75,7 +78,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_aaveLeverageLongIntent),
-            data: _aaveLeverageLongIntent.encode(0, USDC_ETH_PRICE_FEED, WETH, USDC, 2, 1.2e18, 3000)
+            data: _aaveLeverageLongIntent.encode(WETH, USDC, 2, 1.2e18, 3000)
         });
 
         IntentBatch memory intentBatch =
@@ -86,7 +89,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         bytes memory flashloanTx = abi.encodeWithSelector(
             SimulateFlashLoan.simulateFlashLoanETH.selector, address(_aaveLeverageLongIntent), 1e18
         );
-        bytes memory leverageHookData = _aaveLeverageLongIntent.encodeHook(1e18, 1_652_000_000, flashloanTx);
+        bytes memory leverageHookData = _aaveLeverageLongIntent.encodeHook(1e18, 1_646_223_999, flashloanTx);
 
         hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
 
@@ -95,7 +98,8 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         _intentifySafeModule.execute(batchExecution);
 
         (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
-        assert(healthFactor == 1_606_015_562_015_790_245);
+        console2.log("Health Factor: %s", healthFactor);
+        assert(healthFactor == 1_611_650_486_248_476_254);
     }
 
     /**
@@ -112,7 +116,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_aaveLeverageLongIntent),
-            data: _aaveLeverageLongIntent.encode(1, USDC_ETH_PRICE_FEED, USDC, WETH, 2, 1.2e18, 3000)
+            data: _aaveLeverageLongIntent.encode(USDC, WETH, 2, 1.2e18, 3000)
         });
 
         IntentBatch memory intentBatch =
@@ -124,7 +128,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             SimulateFlashLoan.simulateFlashLoanUSDC.selector, address(_aaveLeverageLongIntent), 1_604_000_000
         );
         bytes memory leverageHookData =
-            _aaveLeverageLongIntent.encodeHook(1_604_000_000, 1_029_839_463_407_237_934, flashloanTx);
+            _aaveLeverageLongIntent.encodeHook(1_604_000_000, 1_033_688_975_610_298_965, flashloanTx);
 
         hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
 
@@ -133,7 +137,8 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         _intentifySafeModule.execute(batchExecution);
 
         (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
-        assert(healthFactor == 1_265_638_661_563_111_203);
+        console2.log("Health Factor: %s", healthFactor);
+        assert(healthFactor == 1_260_925_356_515_622_929);
     }
 
     /**
@@ -150,7 +155,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_aaveLeverageLongIntent),
-            data: _aaveLeverageLongIntent.encode(0, DAI_ETH_PRICE_FEED, WETH, DAI, 2, 1.2e18, 3000)
+            data: _aaveLeverageLongIntent.encode(WETH, DAI, 2, 1.2e18, 3000)
         });
 
         IntentBatch memory intentBatch =
@@ -162,7 +167,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             SimulateFlashLoan.simulateFlashLoanETH.selector, address(_aaveLeverageLongIntent), 1e18
         );
         bytes memory leverageHookData =
-            _aaveLeverageLongIntent.encodeHook(1e18, 1_638_000_000_000_000_000_000, flashloanTx);
+            _aaveLeverageLongIntent.encodeHook(1e18, 1_646_593_317_720_372_037_203, flashloanTx);
 
         hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
 
@@ -171,7 +176,8 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         _intentifySafeModule.execute(batchExecution);
 
         (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
-        assert(healthFactor == 1_620_105_567_656_887_789);
+        console2.log("Health Factor: %s", healthFactor);
+        assert(healthFactor == 1_611_650_485_445_797_443);
     }
 
     function test_AaveLeverageLongIntent_ETH_DAI_Success() external {
@@ -185,7 +191,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_aaveLeverageLongIntent),
-            data: _aaveLeverageLongIntent.encode(1, DAI_ETH_PRICE_FEED, DAI, WETH, 2, 1.2e18, 3000)
+            data: _aaveLeverageLongIntent.encode(DAI, WETH, 2, 1.2e18, 3000)
         });
 
         IntentBatch memory intentBatch =
@@ -199,7 +205,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             1_590_000_000_000_000_000_000
         );
         bytes memory leverageHookData =
-            _aaveLeverageLongIntent.encodeHook(1_590_000_000_000_000_000_000, 1_029_516_630_395_914_811, flashloanTx);
+            _aaveLeverageLongIntent.encodeHook(1_590_000_000_000_000_000_000, 1_024_436_927_957_009_910, flashloanTx);
 
         hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
 
@@ -209,7 +215,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
 
         (,,,,, uint256 healthFactor) = _pool.getUserAccountData(address(_safeCreated));
         console2.log("Health Factor: %s", healthFactor);
-        assert(healthFactor == 1_258_946_459_298_217_358);
+        assert(healthFactor == 1_265_188_984_559_231_334);
     }
 
     /* ===================================================================================== */
