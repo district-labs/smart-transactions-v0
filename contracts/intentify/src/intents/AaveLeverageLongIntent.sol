@@ -22,11 +22,10 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
     //////////////////////////////////////////////////////////////////////////*/
     uint8 internal constant DECIMAL_SCALE = 18;
     uint8 internal constant DECIMAL_USD_FEED = 8;
-    uint256 internal immutable FEED_THRESHOLD_SECONDS = 500000; // TODO: Calcuate best value
+    uint256 internal immutable FEED_THRESHOLD_SECONDS = 500_000; // TODO: Calcuate best value
 
     address internal immutable _pool;
     address internal immutable _chainlinkDataFeedBaseUSDRoundData;
-
 
     /*//////////////////////////////////////////////////////////////////////////
                                 CUSTOM ERRORS
@@ -220,13 +219,13 @@ contract AaveLeverageLongIntent is ExecuteRootTransaction, HookTransaction, Chai
 
     function _getDerivedPrice(address supplyAsset, address borrowAsset) internal returns (int256) {
         // Base Data
-        (, int256 basePrice,, uint256 baseUpdatedAt,) = ChainlinkDataFeedBaseUSDRoundData(_chainlinkDataFeedBaseUSDRoundData)
-            .getLatestRoundData(supplyAsset);
+        (, int256 basePrice,, uint256 baseUpdatedAt,) =
+            ChainlinkDataFeedBaseUSDRoundData(_chainlinkDataFeedBaseUSDRoundData).getLatestRoundData(supplyAsset);
         require(block.timestamp - baseUpdatedAt <= FEED_THRESHOLD_SECONDS, "ChainlinkDataFeedHelper:stale-price");
 
         // Quote Data
-        (, int256 quotePrice,, uint256 quoteUpdatedAt,) = ChainlinkDataFeedBaseUSDRoundData(_chainlinkDataFeedBaseUSDRoundData)
-            .getLatestRoundData(borrowAsset);
+        (, int256 quotePrice,, uint256 quoteUpdatedAt,) =
+            ChainlinkDataFeedBaseUSDRoundData(_chainlinkDataFeedBaseUSDRoundData).getLatestRoundData(borrowAsset);
         require(block.timestamp - quoteUpdatedAt <= FEED_THRESHOLD_SECONDS, "ChainlinkDataFeedHelper:stale-price");
 
         int256 scaledDecimals = int256(10 ** uint256(DECIMAL_SCALE));
