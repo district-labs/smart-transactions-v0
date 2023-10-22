@@ -77,12 +77,11 @@ contract LimitOrderIntentTest is SafeTestingUtils {
 
         Hook[] memory hooks = new Hook[](1);
 
-        bytes memory hookData = abi.encode(
-            executor,
-            abi.encodeWithSignature(
-                "swap(address,address,uint256)", address(_safeCreated), address(_tokenB), endingBalance
-            )
+        bytes memory hookTxData = abi.encodeWithSignature(
+            "swap(address,address,uint256)", address(_safeCreated), address(_tokenB), endingBalance
         );
+
+        bytes memory hookData = _limitOrderIntent.encodeHook(executor, hookTxData);
         hooks[0] = Hook({ target: address(_swapRouter), data: hookData });
 
         IntentBatchExecution memory batchExecution =
@@ -128,15 +127,14 @@ contract LimitOrderIntentTest is SafeTestingUtils {
 
         Hook[] memory hooks = new Hook[](1);
 
-        bytes memory hookData = abi.encode(
-            executor,
-            abi.encodeWithSignature(
-                "swap(address,address,uint256)",
-                address(_safeCreated),
-                address(_tokenB),
-                endingBalance / 2 // Send half of the tokens expected, so the intent should revert
-            )
+        bytes memory hookTxData = abi.encodeWithSignature(
+            "swap(address,address,uint256)",
+            address(_safeCreated),
+            address(_tokenB),
+            endingBalance / 2 // Send half of the tokens expected, so the intent should revert
         );
+        bytes memory hookData = _limitOrderIntent.encodeHook(executor, hookTxData);
+
         hooks[0] = Hook({ target: address(_swapRouter), data: hookData });
 
         IntentBatchExecution memory batchExecution =

@@ -11,7 +11,7 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
 
     address internal _whaleUSDC;
     address internal _whaleWETH;
-    address internal _searcher;
+    address internal _executor;
 
     uint256 mainnetFork;
     uint256 MAINNET_FORK_BLOCK = 18_341_359;
@@ -26,7 +26,7 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
         initializeBase();
         initializeSafeBase();
 
-        _searcher = address(0x1234);
+        _executor = address(0x1234);
         _whaleUSDC = 0x51eDF02152EBfb338e03E30d65C15fBf06cc9ECC;
         _whaleWETH = 0xF04a5cC80B1E94C69B48f5ee68a08CD2F09A7c3E;
         _erc20SwapSpotPriceIntent = new ERC20SwapSpotPriceIntent(address(_intentifySafeModule));
@@ -90,9 +90,9 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
         );
 
         uint256 initialSafeWETHBalance = ERC20(WETHAddress).balanceOf(address(_safeCreated));
-        uint256 initialSearcherUSDCBalance = ERC20(USDCAddress).balanceOf(_searcher);
+        uint256 initialSearcherUSDCBalance = ERC20(USDCAddress).balanceOf(_executor);
 
-        bytes memory hookData = abi.encode(_searcher, hookTxData);
+        bytes memory hookData = _erc20SwapSpotPriceIntent.encodeHook(_executor, hookTxData);
 
         Hook[] memory hooks = new Hook[](1);
         hooks[0] = Hook({ target: WETHAddress, data: hookData });
@@ -106,7 +106,7 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
 
         // Asserts the searcher received 1236.38 USDC in exchange for the 0.8 ETH
         // at the current market rate (sell amount)
-        assertEq(ERC20(USDCAddress).balanceOf(_searcher) - initialSearcherUSDCBalance, 1_236_380_549);
+        assertEq(ERC20(USDCAddress).balanceOf(_executor) - initialSearcherUSDCBalance, 1_236_380_549);
     }
 
     /**
@@ -162,9 +162,9 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
             abi.encodeWithSignature("transferFrom(address,address,uint256)", _whaleUSDC, address(_safeCreated), 1300e6);
 
         uint256 initialSafeUSDCBalance = ERC20(USDCAddress).balanceOf(address(_safeCreated));
-        uint256 initialSearcherWETHBalance = ERC20(WETHAddress).balanceOf(_searcher);
+        uint256 initialSearcherWETHBalance = ERC20(WETHAddress).balanceOf(_executor);
 
-        bytes memory hookData = abi.encode(_searcher, hookTxData);
+        bytes memory hookData = _erc20SwapSpotPriceIntent.encodeHook(_executor, hookTxData);
 
         Hook[] memory hooks = new Hook[](1);
         hooks[0] = Hook({ target: USDCAddress, data: hookData });
@@ -178,7 +178,7 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
         assert(ERC20(USDCAddress).balanceOf(address(_safeCreated)) - initialSafeUSDCBalance >= 1_236_380_549);
 
         // Asserts the searcher received 0.8 ETH (sell amount)
-        assertEq(ERC20(WETHAddress).balanceOf(_searcher) - initialSearcherWETHBalance, 0.8 ether);
+        assertEq(ERC20(WETHAddress).balanceOf(_executor) - initialSearcherWETHBalance, 0.8 ether);
     }
 
     /* ===================================================================================== */

@@ -64,6 +64,25 @@ contract UniswapV3HistoricalTwapIntent is IntentWithHookAbstract {
                                 READ FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
+    /// @notice Helper function to encode hook parameters into a byte array.
+    /// @param numeratorStartBlock The start block for the numerator.
+    /// @param numeratorEndBlock The end block for the numerator.
+    /// @param denominatorStartBlock The start block for the denominator.
+    /// @param denominatorEndBlock The end block for the denominator.
+    /// @return data The encoded data.
+    function encodeHook(
+        uint256 numeratorStartBlock,
+        uint256 numeratorEndBlock,
+        uint256 denominatorStartBlock,
+        uint256 denominatorEndBlock
+    )
+        external
+        pure
+        returns (bytes memory data)
+    {
+        data = abi.encode(numeratorStartBlock, numeratorEndBlock, denominatorStartBlock, denominatorEndBlock);
+    }
+
     /// @notice Helper function to encode provided parameters into a byte array.
     /// @param uniswapV3Pool Address of the UniswapV3Pool.
     /// @param numeratorReferenceBlockOffset Number of blocks previous to the current block
@@ -135,7 +154,7 @@ contract UniswapV3HistoricalTwapIntent is IntentWithHookAbstract {
             uint256 numeratorEndBlock,
             uint256 denominatorStartBlock,
             uint256 denominatorEndBlock
-        ) = abi.decode(hook.data, (uint256, uint256, uint256, uint256));
+        ) = _decodeHook(hook);
 
         _checkBlocksRange(
             BlockData({
@@ -211,7 +230,7 @@ contract UniswapV3HistoricalTwapIntent is IntentWithHookAbstract {
             uint256 numeratorEndBlock,
             uint256 denominatorStartBlock,
             uint256 denominatorEndBlock
-        ) = abi.decode(hook.data, (uint256, uint256, uint256, uint256));
+        ) = _decodeHook(hook);
 
         (int24 numeratorTwaTick,,) =
             _uniswapV3TwapOracle.getTwaTick(uniswapV3Pool, numeratorStartBlock, numeratorEndBlock);
@@ -232,6 +251,24 @@ contract UniswapV3HistoricalTwapIntent is IntentWithHookAbstract {
         if (percentageDifference > maxPercentageDifference) revert HighPercentageDifference();
     }
 
+    /// @notice Helper function to decode hook parameters from a byte array.
+    /// @param hook The hook to be decoded.
+    /// @return numeratorStartBlock The start block for the numerator.
+    /// @return numeratorEndBlock The end block for the numerator.
+    /// @return denominatorStartBlock The start block for the denominator.
+    /// @return denominatorEndBlock The end block for the denominator.
+    function _decodeHook(Hook calldata hook)
+        internal
+        pure
+        returns (
+            uint256 numeratorStartBlock,
+            uint256 numeratorEndBlock,
+            uint256 denominatorStartBlock,
+            uint256 denominatorEndBlock
+        )
+    {
+        return abi.decode(hook.data, (uint256, uint256, uint256, uint256));
+    }
     /// @notice Helper function to decode intent parameters from a byte array.
     /// @param intent The intent.
     /// @return uniswapV3Pool The address of the Uniswap V3 pool.
@@ -243,6 +280,7 @@ contract UniswapV3HistoricalTwapIntent is IntentWithHookAbstract {
     /// @return denominatorBlockWindowTolerance Tolerance window for denominator.
     /// @return minPercentageDifference Minimum allowed percentage difference.
     /// @return maxPercentageDifference Maximum allowed percentage difference.
+
     function _decodeIntent(Intent calldata intent)
         internal
         pure

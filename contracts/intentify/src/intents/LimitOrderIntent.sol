@@ -28,6 +28,14 @@ contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction {
                                 READ FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
+    /// @notice Helper function to encode hook parameters into a byte array.
+    /// @param executor The address of the hook executor.
+    /// @param hookTxData The transaction data to be executed in the hook.
+    /// @return data The encoded data.
+    function encodeHook(address executor, bytes memory hookTxData) external pure returns (bytes memory data) {
+        data = abi.encode(executor, hookTxData);
+    }
+
     /// @notice Helper function to encode intent parameters into a byte array.
     /// @param tokenOut The token to be sold.
     /// @param tokenIn The token to be purchased.
@@ -79,6 +87,14 @@ contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction {
                               INTERNAL READ FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
+    /// @notice Helper function to decode hook parameters from a byte array.
+    /// @param hook The hook to be decoded.
+    /// @return executor The address of the hook executor.
+    /// @return hookTxData The transaction data to be executed in the hook.
+    function _decodeHook(Hook calldata hook) internal pure returns (address executor, bytes memory hookTxData) {
+        return abi.decode(hook.data, (address, bytes));
+    }
+
     /// @notice Helper function to decode intent parameters from a byte array.
     /// @param intent The intent to be decoded.
     /// @return tokenOut The token to be sold.
@@ -97,7 +113,7 @@ contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction {
     /// @param hook The hook to be executed.
     function _hook(Hook calldata hook) internal returns (bool success) {
         bytes memory errorMessage;
-        (, bytes memory hookTxData) = abi.decode(hook.data, (address, bytes));
+        (, bytes memory hookTxData) = _decodeHook(hook);
         (success, errorMessage) = address(hook.target).call{ value: 0 }(hookTxData);
 
         if (!success) {
@@ -121,7 +137,7 @@ contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction {
         returns (bool)
     {
         (address tokenOut, address tokenIn, uint256 amountOutMax, uint256 amountInMin) = _decodeIntent(intent);
-        (address executor,) = abi.decode(hook.data, (address, bytes));
+        (address executor,) = _decodeHook(hook);
 
         uint256 amountIn = ERC20(tokenIn).balanceOf(intent.root) - initialTokenInBalance;
 
