@@ -1,0 +1,86 @@
+# Uniswap V3 Feed
+
+<br/>
+import SlidesUniswapV3Feed from '../../components/slides/slides-uniswap-v3-feed'
+
+<SlidesUniswapV3Feed />
+
+Uniswap V3, the most popular swapping protocol, provides historical swapping and AMM metadata.
+
+# Observing Token Price
+
+The Uniswap V3 Feed measures token prices by requesting historical token prices via the `slot0` method data.
+
+```solidity
+function slot0() {
+    external
+    view
+    returns (
+        uint160 sqrtPriceX96,
+        int24 tick,
+        uint16 observationIndex,
+        uint16 observationCardinality,
+        uint16 observationCardinalityNext,
+        uint8 feeProtocol,
+        bool unlocked
+    );
+}
+```
+
+The most important values being `sqrtPriceX96` and `tick` which provide the most relevant pricing data.
+
+# Recording Token Price
+A zero-knowledge proof (generated via Axiom) is submitted in combination with the historical UniswapV3 data.
+
+An `ObservationStored` event is emitted and a observation record saved in the a `observations` mapping. 
+
+```solidity
+event ObservationStored(address indexed pool, uint256 blockNumber);
+
+mapping(bytes32 => Oracle.Observation) public observations;
+
+function storeObservations(AxiomResponseStruct calldata axiomResponse) external {
+    _validateData(axiomResponse);
+
+    for (uint256 i = 0; i < axiomResponse.storageResponses.length; i++) {
+        // Ensure the slot is correct (slot 8 = observations array)
+        require(axiomResponse.storageResponses[i].slot == 8, "Invalid Slot");
+
+        Oracle.Observation memory observation = _unpackObservation(axiomResponse.storageResponses[i].value);
+
+        observations[keccak256(
+            abi.encode(axiomResponse.storageResponses[i].addr, axiomResponse.storageResponses[i].blockNumber)
+        )] = observation;
+
+        emit ObservationStored(
+            axiomResponse.storageResponses[i].addr, axiomResponse.storageResponses[i].blockNumber
+        );
+    }
+}
+```
+
+# Fetching Token Price
+
+The proof is referenced using the `blockNumber` and `poolAddress` data - creating a deterministic to way to look up historical proofs onchain.
+
+If a proof has been generated and published anyone can use the `getUniswapV3TWAP` method to fetch data.
+
+```solidity
+function getUniswapV3TWAP(
+    address poolAddress,
+    uint256 startBlockNumber,
+    uint256 endBlockNumber
+)
+    external
+    view
+    returns (
+        int24 twaTick,
+        uint160 twaLiquidity,
+        Oracle.Observation memory startObservation,
+        Oracle.Observation memory endObservation
+    )
+{
+    (startObservation, endObservation) = _getObservations(poolAddress, startBlockNumber, endBlockNumber);
+    (twaTick, twaLiquidity) = _calculateTwaTickLiquidity(startObservation, endObservation);
+}
+```

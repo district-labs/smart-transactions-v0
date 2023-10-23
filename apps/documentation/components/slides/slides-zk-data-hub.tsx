@@ -1,4 +1,3 @@
-import React from 'react';
 import ImageGallery from "react-image-gallery";
 
 const slides = [
@@ -33,6 +32,10 @@ const slides = [
     {
         name: 'Public Good',
         original:'/slides/zk-data-hub/public-good.png'
+    },
+    {
+        name: 'ZK Indexer API',
+        original:'/slides/zk-data-hub/zk-indexer.png'
     },
 ]
 
