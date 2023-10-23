@@ -1,0 +1,27 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1697978549596,
+      "tag": "0000_known_blonde_phantom",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1698079758298,
+      "tag": "0001_rapid_leper_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1698080174647,
+      "tag": "0002_yellow_toad",
+      "breakpoints": true
+    }
+  ]
+}
