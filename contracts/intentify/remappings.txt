@@ -10,4 +10,5 @@ surl/=lib/surl/src/
 @aave/v3-periphery/=lib/aave-v3-periphery/contracts/
 chainlink/=lib/chainlink/contracts/src/v0.8/
 @chainlink/=lib/chainlink/contracts/src/
+~/=./
 
