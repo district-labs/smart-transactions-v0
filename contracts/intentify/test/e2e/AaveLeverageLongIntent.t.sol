@@ -78,7 +78,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_aaveLeverageLongIntent),
-            data: _aaveLeverageLongIntent.encode(WETH, USDC, 2, 1.2e18, 3000)
+            data: _aaveLeverageLongIntent.encodeIntent(WETH, USDC, 2, 1.2e18, 3000)
         });
 
         IntentBatch memory intentBatch =
@@ -116,7 +116,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_aaveLeverageLongIntent),
-            data: _aaveLeverageLongIntent.encode(USDC, WETH, 2, 1.2e18, 3000)
+            data: _aaveLeverageLongIntent.encodeIntent(USDC, WETH, 2, 1.2e18, 3000)
         });
 
         IntentBatch memory intentBatch =
@@ -155,7 +155,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_aaveLeverageLongIntent),
-            data: _aaveLeverageLongIntent.encode(WETH, DAI, 2, 1.2e18, 3000)
+            data: _aaveLeverageLongIntent.encodeIntent(WETH, DAI, 2, 1.2e18, 3000)
         });
 
         IntentBatch memory intentBatch =
@@ -191,7 +191,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_aaveLeverageLongIntent),
-            data: _aaveLeverageLongIntent.encode(DAI, WETH, 2, 1.2e18, 3000)
+            data: _aaveLeverageLongIntent.encodeIntent(DAI, WETH, 2, 1.2e18, 3000)
         });
 
         IntentBatch memory intentBatch =
