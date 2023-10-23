@@ -3,6 +3,8 @@ name: "Intentify Contracts CI"
 env:
   MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
   GOERLI_RPC_URL: ${{ secrets.GOERLI_RPC_URL }}
+  WHALE_ACCOUNT: ${{ secrets.WHALE_ACCOUNT }}
+  WHALE_USDC: ${{ secrets.WHALE_USDC }}
   FOUNDRY_PROFILE: "ci"
 
 on:

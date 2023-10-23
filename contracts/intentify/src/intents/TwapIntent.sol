@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
 
-import "@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
-import "@uniswap/v3-core/contracts/libraries/TickMath.sol";
-import "@uniswap/v3-core/contracts/libraries/FixedPoint96.sol";
-import "@uniswap/v3-core/contracts/libraries/FullMath.sol";
+import "uniswap-v3-core/interfaces/IUniswapV3Pool.sol";
+import "uniswap-v3-core/libraries/TickMath.sol";
+import "uniswap-v3-core/libraries/FixedPoint96.sol";
+import "uniswap-v3-core/libraries/FullMath.sol";
 
 import { IHook } from "../interfaces/IHook.sol";
 import { Intent } from "../TypesAndDecoders.sol";

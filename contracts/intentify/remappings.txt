@@ -1,7 +1,13 @@
 @prb/test/=lib/prb-test/src/
 forge-std/=lib/forge-std/src/
 solady/=lib/solady/src/
-@uniswap/=lib/@uniswap/
+uniswap-v3-periphery/=lib/@uniswap/v3-periphery/contracts/
+uniswap-v3-core/=lib/@uniswap/v3-core/contracts/
 @openzeppelin/=lib/openzeppelin-contracts/
-safe-contracts/=lib/safe-contracts/contracts
-surl/=lib/surl/src
+safe-contracts/=lib/safe-contracts/contracts/
+surl/=lib/surl/src/
+@aave/v3-core/=lib/aave-v3-core/contracts/
+@aave/v3-periphery/=lib/aave-v3-periphery/contracts/
+chainlink/=lib/chainlink/contracts/src/v0.8/
+@chainlink/=lib/chainlink/contracts/src/
+
