@@ -2,35 +2,20 @@
 pragma solidity >=0.8.19 <0.9.0;
 
 import { ERC20 } from "solady/tokens/ERC20.sol";
-import { Safe } from "safe-contracts/Safe.sol";
-import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
-
-import {
-    Intent,
-    IntentBatch,
-    IntentBatchExecution,
-    Signature,
-    Hook,
-    TypesAndDecoders
-} from "../../src/TypesAndDecoders.sol";
+import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "../../src/TypesAndDecoders.sol";
 import { ERC20SwapSpotPriceIntent } from "../../src/intents/ERC20SwapSpotPriceIntent.sol";
-import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 
 contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
-    Safe internal _safeCreated;
-    IntentifySafeModule internal _intentifySafeModule;
     ERC20SwapSpotPriceIntent internal _erc20SwapSpotPriceIntent;
 
     address internal _whaleUSDC;
     address internal _whaleWETH;
-    address internal _searcher;
+    address internal _executor;
 
     uint256 mainnetFork;
     uint256 MAINNET_FORK_BLOCK = 18_341_359;
     string MAINNET_RPC_URL = vm.envString("MAINNET_RPC_URL");
-
-    Hook EMPTY_HOOK = Hook({ target: address(0x00), data: bytes("") });
 
     /// @dev A function invoked before each test case is run.
     function setUp() public virtual {
@@ -39,15 +24,12 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
         vm.rollFork(MAINNET_FORK_BLOCK);
 
         initializeBase();
-        _searcher = address(0x1234);
+        initializeSafeBase();
+
+        _executor = address(0x1234);
         _whaleUSDC = 0x51eDF02152EBfb338e03E30d65C15fBf06cc9ECC;
         _whaleWETH = 0xF04a5cC80B1E94C69B48f5ee68a08CD2F09A7c3E;
-        _intentifySafeModule = new IntentifySafeModule();
         _erc20SwapSpotPriceIntent = new ERC20SwapSpotPriceIntent(address(_intentifySafeModule));
-        _safe = new Safe();
-        _safeProxyFactory = new SafeProxyFactory();
-        _safeCreated = _setupSafe(signer);
-        _enableIntentifyModule(SIGNER, _safeCreated, address(_intentifySafeModule));
     }
 
     /* ===================================================================================== */
@@ -82,7 +64,7 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_erc20SwapSpotPriceIntent),
-            data: _erc20SwapSpotPriceIntent.encode(
+            data: _erc20SwapSpotPriceIntent.encodeIntent(
                 USDCAddress,
                 WETHAddress,
                 priceFeedUSDCUSD,
@@ -108,9 +90,9 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
         );
 
         uint256 initialSafeWETHBalance = ERC20(WETHAddress).balanceOf(address(_safeCreated));
-        uint256 initialSearcherUSDCBalance = ERC20(USDCAddress).balanceOf(_searcher);
+        uint256 initialSearcherUSDCBalance = ERC20(USDCAddress).balanceOf(_executor);
 
-        bytes memory hookData = abi.encode(_searcher, hookTxData);
+        bytes memory hookData = _erc20SwapSpotPriceIntent.encodeHook(_executor, hookTxData);
 
         Hook[] memory hooks = new Hook[](1);
         hooks[0] = Hook({ target: WETHAddress, data: hookData });
@@ -124,7 +106,7 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
 
         // Asserts the searcher received 1236.38 USDC in exchange for the 0.8 ETH
         // at the current market rate (sell amount)
-        assertEq(ERC20(USDCAddress).balanceOf(_searcher) - initialSearcherUSDCBalance, 1_236_380_549);
+        assertEq(ERC20(USDCAddress).balanceOf(_executor) - initialSearcherUSDCBalance, 1_236_380_549);
     }
 
     /**
@@ -155,7 +137,7 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_erc20SwapSpotPriceIntent),
-            data: _erc20SwapSpotPriceIntent.encode(
+            data: _erc20SwapSpotPriceIntent.encodeIntent(
                 WETHAddress,
                 USDCAddress,
                 priceFeedETHUSD,
@@ -180,9 +162,9 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
             abi.encodeWithSignature("transferFrom(address,address,uint256)", _whaleUSDC, address(_safeCreated), 1300e6);
 
         uint256 initialSafeUSDCBalance = ERC20(USDCAddress).balanceOf(address(_safeCreated));
-        uint256 initialSearcherWETHBalance = ERC20(WETHAddress).balanceOf(_searcher);
+        uint256 initialSearcherWETHBalance = ERC20(WETHAddress).balanceOf(_executor);
 
-        bytes memory hookData = abi.encode(_searcher, hookTxData);
+        bytes memory hookData = _erc20SwapSpotPriceIntent.encodeHook(_executor, hookTxData);
 
         Hook[] memory hooks = new Hook[](1);
         hooks[0] = Hook({ target: USDCAddress, data: hookData });
@@ -196,7 +178,7 @@ contract ERC20SwapSpotPriceIntentTest is SafeTestingUtils {
         assert(ERC20(USDCAddress).balanceOf(address(_safeCreated)) - initialSafeUSDCBalance >= 1_236_380_549);
 
         // Asserts the searcher received 0.8 ETH (sell amount)
-        assertEq(ERC20(WETHAddress).balanceOf(_searcher) - initialSearcherWETHBalance, 0.8 ether);
+        assertEq(ERC20(WETHAddress).balanceOf(_executor) - initialSearcherWETHBalance, 0.8 ether);
     }
 
     /* ===================================================================================== */

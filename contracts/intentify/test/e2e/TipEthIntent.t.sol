@@ -6,38 +6,20 @@ import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
 import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 
-import {
-    Intent,
-    IntentBatch,
-    IntentBatchExecution,
-    Signature,
-    Hook,
-    TypesAndDecoders
-} from "../../src/TypesAndDecoders.sol";
+import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "../../src/TypesAndDecoders.sol";
 import { TipEthIntent } from "../../src/intents/TipEthIntent.sol";
-import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 import { Counter } from "../mocks/Counter.sol";
 
 contract IntentifySafeModuleTest is SafeTestingUtils {
-    Safe internal _safeCreated;
-    IntentifySafeModule internal _intentifySafeModule;
     TipEthIntent internal _tipEthIntent;
 
     function setUp() public virtual {
         initializeBase();
+        initializeSafeBase();
 
-        _intentifySafeModule = new IntentifySafeModule();
         _tipEthIntent = new TipEthIntent(address(_intentifySafeModule));
-        _safe = new Safe();
-        _safeProxyFactory = new SafeProxyFactory();
-        _safeCreated = _setupSafe(signer);
-        _enableIntentifyModule(SIGNER, _safeCreated, address(_intentifySafeModule));
     }
-
-    /* ===================================================================================== */
-    /* Failure Tests                                                                         */
-    /* ===================================================================================== */
 
     /* ===================================================================================== */
     /* Success Tests                                                                         */
@@ -49,7 +31,7 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_tipEthIntent),
-            data: _tipEthIntent.encode(1e18)
+            data: _tipEthIntent.encodeIntent(1e18)
         });
         IntentBatch memory intentBatch =
             IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
@@ -64,4 +46,8 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
 
         assert(address(0xdEAD).balance == 1e18);
     }
+
+    /* ===================================================================================== */
+    /* Failure Tests                                                                         */
+    /* ===================================================================================== */
 }

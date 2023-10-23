@@ -2,14 +2,14 @@
 pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
-import { TokenRouterReleaseIntent } from "../../../src/intents/TokenRouterReleaseIntent.sol";
+import { UniswapV3TwapIntent } from "../../../src/intents/UniswapV3TwapIntent.sol";
 
-contract TokenRouterReleaseIntentDeploy is Script {
+contract TwapIntentDeploy is Script {
     function run() external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        TokenRouterReleaseIntent tokenRouterReleaseIntent = new TokenRouterReleaseIntent();
+        UniswapV3TwapIntent uniswapV3TwapIntent = new UniswapV3TwapIntent();
 
         vm.stopBroadcast();
     }

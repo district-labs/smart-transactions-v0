@@ -3,14 +3,13 @@ pragma solidity >=0.8.19 <0.9.0;
 
 import { ERC20 } from "solady/tokens/ERC20.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
-import { BytesLib } from "../libraries/BytesLib.sol";
+import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
 import { ChainlinkDataFeedHelper } from "../helpers/ChainlinkDataFeedHelper.sol";
-import { ExtractRevertReasonHelper } from "../helpers/ExtractRevertReasonHelper.sol";
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
 /// @title ERC20 Swap Spot Price Intent
 /// @notice An intent to execute a buy or sell order at the market price at the time of execution.
-contract ERC20SwapSpotPriceIntent is ChainlinkDataFeedHelper, ExtractRevertReasonHelper, ExecuteRootTransaction {
+contract ERC20SwapSpotPriceIntent is IntentWithHookAbstract, ExecuteRootTransaction, ChainlinkDataFeedHelper {
     /*//////////////////////////////////////////////////////////////////////////
                                   CONSTANTS
     //////////////////////////////////////////////////////////////////////////*/
@@ -22,17 +21,8 @@ contract ERC20SwapSpotPriceIntent is ChainlinkDataFeedHelper, ExtractRevertReaso
                                 CUSTOM ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @dev Intent root must be the msg sender.
-    error InvalidRoot();
-
-    /// @dev Intent target must be this contract.
-    error InvalidTarget();
-
-    /// @dev Hook execution failed for an unknown reason.
-    error HookExecutionFailed();
-
-    /// @dev
-    error InvalidTokenInTransfert(uint256 tokenInDeltaBalance, uint256 tokenInAmountExpected);
+    /// @dev The amount of tokens transferred to the intent root is less than the minimum amount expected.
+    error InvalidTokenInTransfer(uint256 tokenInDeltaBalance, uint256 tokenInAmountExpected);
 
     /*//////////////////////////////////////////////////////////////////////////
                                 CONSTRUCTOR
@@ -46,6 +36,14 @@ contract ERC20SwapSpotPriceIntent is ChainlinkDataFeedHelper, ExtractRevertReaso
                                 READ FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
+    /// @notice Helper function to encode hook parameters into a byte array.
+    /// @param executor The address of the hook executor.
+    /// @param hookTxData The transaction data to be executed in the hook.
+    /// @return data The encoded data.
+    function encodeHook(address executor, bytes memory hookTxData) external pure returns (bytes memory data) {
+        data = abi.encode(executor, hookTxData);
+    }
+
     /// @notice Helper function to encode provided parameters into a byte array.
     /// @param tokenOut The token to be sold.
     /// @param tokenIn The token to be purchased.
@@ -55,7 +53,7 @@ contract ERC20SwapSpotPriceIntent is ChainlinkDataFeedHelper, ExtractRevertReaso
     /// parameter. (purchased if true, sold if false)
     /// @param thresholdSeconds The number of seconds of tolerance for freshness of the price feed.
     /// @param isBuy Whether the order is a buy or sell order.
-    function encode(
+    function encodeIntent(
         address tokenOut,
         address tokenIn,
         address tokenOutPriceFeed,
@@ -77,14 +75,17 @@ contract ERC20SwapSpotPriceIntent is ChainlinkDataFeedHelper, ExtractRevertReaso
                                    WRITE FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Function to execute the intent and hook.
-    /// @param intent Contains data related to intent.
-    /// @param hook Contains data related to hook.
-    /// @return true if the intent is valid, reverts otherwise.
-    function execute(Intent calldata intent, Hook calldata hook) external returns (bool) {
-        if (intent.root != msg.sender) revert InvalidRoot();
-        if (intent.target != address(this)) revert InvalidTarget();
-
+    /// @inheritdoc IntentWithHookAbstract
+    function execute(
+        Intent calldata intent,
+        Hook calldata hook
+    )
+        external
+        override
+        validIntentRoot(intent)
+        validIntentTarget(intent)
+        returns (bool)
+    {
         (
             address tokenOut,
             address tokenIn,
@@ -93,7 +94,7 @@ contract ERC20SwapSpotPriceIntent is ChainlinkDataFeedHelper, ExtractRevertReaso
             uint256 tokenAmountExpected,
             uint256 thresholdSeconds,
             bool isBuy
-        ) = abi.decode(intent.data, (address, address, address, address, uint256, uint256, bool));
+        ) = _decodeIntent(intent);
 
         int256 derivedPrice;
 
@@ -113,10 +114,15 @@ contract ERC20SwapSpotPriceIntent is ChainlinkDataFeedHelper, ExtractRevertReaso
             );
         }
 
+        uint256 initialTokenInBalance = ERC20(tokenIn).balanceOf(intent.root);
         uint256 tokenAmountEstimated =
             _calculateTokenInAmountEstimated(tokenOut, tokenIn, tokenAmountExpected, derivedPrice, isBuy);
 
-        _unlock(tokenAmountEstimated, intent, hook);
+        _hook(hook);
+        // The hook is expected to transfer the tokens to the intent root.
+        // NOTICE: We can likely optimize by using the `transient storage` when available.
+
+        _unlock(intent, hook, tokenAmountEstimated, initialTokenInBalance);
 
         return true;
     }
@@ -156,20 +162,57 @@ contract ERC20SwapSpotPriceIntent is ChainlinkDataFeedHelper, ExtractRevertReaso
     }
 
     /*//////////////////////////////////////////////////////////////////////////
+                              INTERNAL READ FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice Helper function to decode hook parameters from a byte array.
+    /// @param hook The hook to be decoded.
+    /// @return executor The address of the hook executor.
+    /// @return hookTxData The transaction data to be executed in the hook.
+    function _decodeHook(Hook calldata hook) internal pure returns (address executor, bytes memory hookTxData) {
+        return abi.decode(hook.data, (address, bytes));
+    }
+
+    /// @notice Helper function to decode intent parameters from a byte array.
+    /// @param intent The intent to be decoded.
+    /// @return tokenOut The token to be sold.
+    /// @return tokenIn The token to be purchased.
+    /// @return tokenOutPriceFeed The Chainlink price feed for the token to be sold.
+    /// @return tokenInPriceFeed The Chainlink price feed for the token to be purchased.
+    /// @return tokenAmountExpected The amount of tokens to be either sold or purchased depending on the `isBuy`
+    /// parameter. (purchased if true, sold if false)
+    /// @return thresholdSeconds The number of seconds of tolerance for freshness of the price feed.
+    /// @return isBuy Whether the order is a buy or sell order.
+    function _decodeIntent(Intent calldata intent)
+        internal
+        pure
+        returns (
+            address tokenOut,
+            address tokenIn,
+            address tokenOutPriceFeed,
+            address tokenInPriceFeed,
+            uint256 tokenAmountExpected,
+            uint256 thresholdSeconds,
+            bool isBuy
+        )
+    {
+        return abi.decode(intent.data, (address, address, address, address, uint256, uint256, bool));
+    }
+
+    /*//////////////////////////////////////////////////////////////////////////
                               INTERNAL WRITE FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice Execute the hook that sends the tokenIn to the user.
     /// @param hook Contains data related to hook.
     function _hook(Hook calldata hook) internal returns (bool success) {
-        (, bytes memory hookTxData) = abi.decode(hook.data, (address, bytes));
+        (, bytes memory hookTxData) = _decodeHook(hook);
         bytes memory errorMessage;
         (success, errorMessage) = address(hook.target).call{ value: 0 }(hookTxData);
 
         if (!success) {
             if (errorMessage.length > 0) {
-                string memory reason = _extractRevertReason(errorMessage);
-                revert(reason);
+                _revertMessageReason(errorMessage);
             } else {
                 revert HookExecutionFailed();
             }
@@ -182,23 +225,17 @@ contract ERC20SwapSpotPriceIntent is ChainlinkDataFeedHelper, ExtractRevertReaso
     /// @param intent Contains data related to intent.
     /// @param hook Contains data related to hook.
     function _unlock(
-        uint256 tokenAmountEstimated,
         Intent calldata intent,
-        Hook calldata hook
+        Hook calldata hook,
+        uint256 tokenAmountEstimated,
+        uint256 initialTokenInBalance
     )
         internal
         returns (bool)
     {
-        (address tokenOut, address tokenIn,,, uint256 tokenAmountExpected,, bool isBuy) =
-            abi.decode(intent.data, (address, address, address, address, uint256, uint256, bool));
+        (address tokenOut, address tokenIn,,, uint256 tokenAmountExpected,, bool isBuy) = _decodeIntent(intent);
 
-        (address searcher,) = abi.decode(hook.data, (address, bytes));
-
-        uint256 initialTokenInBalance = ERC20(tokenIn).balanceOf(intent.root);
-
-        _hook(hook);
-        // The hook is expected to transfer the tokens to the intent root.
-        // NOTICE: We can likely optimize by using the `transient storage` when available.
+        (address executor,) = _decodeHook(hook);
 
         uint256 tokenInBalanceDelta = ERC20(tokenIn).balanceOf(intent.root) - initialTokenInBalance;
         uint256 tokenAmountFromRoot;
@@ -206,17 +243,17 @@ contract ERC20SwapSpotPriceIntent is ChainlinkDataFeedHelper, ExtractRevertReaso
         if (isBuy) {
             tokenAmountFromRoot = tokenAmountEstimated;
             if (tokenInBalanceDelta < tokenAmountExpected) {
-                revert InvalidTokenInTransfert(tokenInBalanceDelta, tokenAmountExpected);
+                revert InvalidTokenInTransfer(tokenInBalanceDelta, tokenAmountExpected);
             }
         } else {
             tokenAmountFromRoot = tokenAmountExpected;
             if (tokenInBalanceDelta < tokenAmountEstimated) {
-                revert InvalidTokenInTransfert(tokenInBalanceDelta, tokenAmountEstimated);
+                revert InvalidTokenInTransfer(tokenInBalanceDelta, tokenAmountEstimated);
             }
         }
 
         // Send the tokens to the hook executor.
-        bytes memory data = abi.encodeWithSignature("transfer(address,uint256)", searcher, tokenAmountFromRoot);
+        bytes memory data = abi.encodeWithSignature("transfer(address,uint256)", executor, tokenAmountFromRoot);
 
         return executeFromRoot(tokenOut, 0, data);
     }

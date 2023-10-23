@@ -4,6 +4,10 @@ pragma solidity >=0.8.19 <0.9.0;
 import { AggregatorV3Interface } from "@chainlink/v0.8/interfaces/AggregatorV3Interface.sol";
 
 contract ChainlinkDataFeedHelper {
+    error StalePrice(uint256 lastUpdatedSeconds, uint256 thresholdSeconds);
+
+    error InvalidDecimals(uint8 decimals);
+
     function _getDerivedPrice(
         address _base,
         address _quote,
@@ -14,15 +18,23 @@ contract ChainlinkDataFeedHelper {
         view
         returns (int256)
     {
-        require(_decimals > uint8(0) && _decimals <= uint8(18), "Invalid _decimals");
+        if (_decimals <= uint8(0) || _decimals > uint8(18)) {
+            revert InvalidDecimals(_decimals);
+        }
         int256 decimals = int256(10 ** uint256(_decimals));
         (, int256 basePrice,, uint256 baseUpdatedAt,) = AggregatorV3Interface(_base).latestRoundData();
-        require(block.timestamp - baseUpdatedAt <= thresholdSeconds, "ChainlinkDataFeedHelper:stale-price");
+
+        if (block.timestamp - baseUpdatedAt > thresholdSeconds) {
+            revert StalePrice(block.timestamp - baseUpdatedAt, thresholdSeconds);
+        }
 
         uint8 baseDecimals = AggregatorV3Interface(_base).decimals();
 
         (, int256 quotePrice,, uint256 quoteUpdatedAt,) = AggregatorV3Interface(_quote).latestRoundData();
-        require(block.timestamp - quoteUpdatedAt <= thresholdSeconds, "ChainlinkDataFeedHelper:stale-price");
+
+        if (block.timestamp - quoteUpdatedAt > thresholdSeconds) {
+            revert StalePrice(block.timestamp - quoteUpdatedAt, thresholdSeconds);
+        }
         uint8 quoteDecimals = AggregatorV3Interface(_quote).decimals();
 
         return _calculateDerivedPrice(basePrice, baseDecimals, quotePrice, quoteDecimals, _decimals, decimals);
@@ -37,7 +49,7 @@ contract ChainlinkDataFeedHelper {
         int256 scaledDecimals
     )
         internal
-        view
+        pure
         returns (int256)
     {
         basePrice = _scalePrice(basePrice, baseDecimals, decimals);

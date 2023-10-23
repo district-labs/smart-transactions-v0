@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import { console2 } from "forge-std/console2.sol";
 import { Ownable } from "solady/auth/Ownable.sol";
 import { EngineHub } from "../../src/periphery/EngineHub.sol";
 import { ERC20Mintable } from "../../src/periphery/ERC20Mintable.sol";

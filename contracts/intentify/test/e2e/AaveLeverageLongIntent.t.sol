@@ -3,21 +3,10 @@ pragma solidity >=0.8.19 <0.9.0;
 
 import { console2 } from "forge-std/StdCheats.sol";
 import { IPool } from "@aave/v3-core/interfaces/IPool.sol";
-import { Safe } from "safe-contracts/Safe.sol";
-import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
-import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 
-import {
-    Intent,
-    IntentBatch,
-    IntentBatchExecution,
-    Signature,
-    Hook,
-    TypesAndDecoders
-} from "../../src/TypesAndDecoders.sol";
+import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "../../src/TypesAndDecoders.sol";
 import { AaveLeverageLongIntent } from "../../src/intents/AaveLeverageLongIntent.sol";
-import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 import { FundMainnetAccounts } from "../utils/FundMainnetAccounts.sol";
 import { ChainlinkDataFeedBaseUSDRoundData } from "../../src/oracles/ChainlinkDataFeedBaseUSDRoundData.sol";
@@ -46,8 +35,6 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
     address public constant CHAINLINK_FEED_REGISTRY = 0x47Fb2585D2C56Fe188D0E6ec628a38b74fCeeeDf;
     address public constant SWAP_ROUTER = 0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45;
 
-    Safe internal _safeCreated;
-    IntentifySafeModule internal _intentifySafeModule;
     AaveLeverageLongIntent internal _aaveLeverageLongIntent;
     SimulateFlashLoan internal _simulateFlashloan;
     IPool internal _pool = IPool(AAVE_POOL);
@@ -64,19 +51,13 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
         vm.rollFork(MAINNET_FORK_BLOCK);
 
         initializeBase();
+        initializeSafeBase();
         _chainlinkDataFeedBaseUSDRoundData = new ChainlinkDataFeedBaseUSDRoundData(CHAINLINK_FEED_REGISTRY, WETH);
         _simulateFlashloan = new SimulateFlashLoan();
-        _intentifySafeModule = new IntentifySafeModule();
+
         _aaveLeverageLongIntent =
         new AaveLeverageLongIntent(address(_intentifySafeModule), address(_chainlinkDataFeedBaseUSDRoundData), AAVE_POOL);
-        _safe = new Safe();
-        _safeProxyFactory = new SafeProxyFactory();
-        _safeCreated = _setupSafe(signer);
-        _enableIntentifyModule(SIGNER, _safeCreated, address(_intentifySafeModule));
-
         vm.prank(vm.envOr("WHALE_USDC", 0x28C6c06298d514Db089934071355E5743bf21d60));
-
-        // vm.warp(1694570140);
     }
 
     /* ===================================================================================== */
@@ -97,7 +78,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_aaveLeverageLongIntent),
-            data: _aaveLeverageLongIntent.encode(WETH, USDC, 2, 1.2e18, 3000)
+            data: _aaveLeverageLongIntent.encodeIntent(WETH, USDC, 2, 1.2e18, 3000)
         });
 
         IntentBatch memory intentBatch =
@@ -135,7 +116,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_aaveLeverageLongIntent),
-            data: _aaveLeverageLongIntent.encode(USDC, WETH, 2, 1.2e18, 3000)
+            data: _aaveLeverageLongIntent.encodeIntent(USDC, WETH, 2, 1.2e18, 3000)
         });
 
         IntentBatch memory intentBatch =
@@ -174,7 +155,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_aaveLeverageLongIntent),
-            data: _aaveLeverageLongIntent.encode(WETH, DAI, 2, 1.2e18, 3000)
+            data: _aaveLeverageLongIntent.encodeIntent(WETH, DAI, 2, 1.2e18, 3000)
         });
 
         IntentBatch memory intentBatch =
@@ -210,7 +191,7 @@ contract AaveLeverageLongIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_aaveLeverageLongIntent),
-            data: _aaveLeverageLongIntent.encode(DAI, WETH, 2, 1.2e18, 3000)
+            data: _aaveLeverageLongIntent.encodeIntent(DAI, WETH, 2, 1.2e18, 3000)
         });
 
         IntentBatch memory intentBatch =
