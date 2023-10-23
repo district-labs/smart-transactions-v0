@@ -1,4 +1,4 @@
-import { HTMLAttributes } from "react"
+import { type HTMLAttributes } from "react"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 
 import { Button } from "../ui/button"

@@ -1,10 +1,9 @@
 import type { ChangeEvent, Dispatch, SetStateAction } from "react"
 
-
+import { type Token } from "@/types/token-list"
 import { cn } from "@/lib/utils"
-import { Label } from "@/components/ui/label"
 import { useCurrentPriceERC20 } from "@/hooks/intent-batch/use-current-price"
-import { Token } from "@/types/token-list"
+import { Label } from "@/components/ui/label"
 
 interface LimitPriceInputProps {
   tokenIn: Token

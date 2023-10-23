@@ -1,4 +1,4 @@
-import { HtmlHTMLAttributes } from "react"
+import { type HtmlHTMLAttributes } from "react"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 
 export const WalletConnect = ({

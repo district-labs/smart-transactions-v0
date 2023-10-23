@@ -21,9 +21,13 @@ export function LinkComponent({
   ...props
 }: LinkComponentProps) {
   const pathname = usePathname()
-  const classes = cn(className, {
-    active: pathname === href,
-  }, 'text-blue-500 hover:text-blue-600')
+  const classes = cn(
+    className,
+    {
+      active: pathname === href,
+    },
+    "text-blue-500 hover:text-blue-600"
+  )
   const isExternalEnabled =
     href.match(/^([a-z0-9]*:|.{0})\/\/.*$/) || isExternal
 

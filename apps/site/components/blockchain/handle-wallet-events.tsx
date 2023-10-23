@@ -1,9 +1,9 @@
 "use client"
 
-import { ReactNode } from "react"
+import { type ReactNode } from "react"
+import { siweLogout } from "@/integrations/siwe/actions/siwe-logout"
 import { useAccount } from "wagmi"
 
-import { siweLogout } from "@/integrations/siwe/actions/siwe-logout"
 import { useUser } from "@/hooks/use-user"
 
 interface HandleWalletEventsProps {
@@ -12,7 +12,7 @@ interface HandleWalletEventsProps {
 
 export const HandleWalletEvents = ({ children }: HandleWalletEventsProps) => {
   const { mutateUser } = useUser()
-   useAccount({
+  useAccount({
     async onConnect() {
       await mutateUser()
     },
@@ -21,7 +21,6 @@ export const HandleWalletEvents = ({ children }: HandleWalletEventsProps) => {
       await mutateUser()
     },
   })
-
 
   return <>{children}</>
 }

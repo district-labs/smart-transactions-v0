@@ -12,9 +12,9 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
-        'limit-order': "url('/images/story/limit-order.png')",
-        'saving': "url('/images/story/savings.png')",
-        'rebalance': "url('/images/story/reblance.png')",
+        "limit-order": "url('/images/story/limit-order.png')",
+        saving: "url('/images/story/savings.png')",
+        rebalance: "url('/images/story/reblance.png')",
       },
       colors: {
         border: "hsl(var(--border))",

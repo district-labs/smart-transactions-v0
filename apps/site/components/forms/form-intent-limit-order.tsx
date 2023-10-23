@@ -1,8 +1,21 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import tokenListGoerli from "@/data/token-list-district-goerli.json"
+import {
+  generateIntentBatchEIP712,
+  getIntentBatchTypedDataHash,
+} from "@district-labs/intentify-core"
+import {
+  useGetIntentifyModuleAddress,
+  useIntentifySafeModuleDomainSeparator,
+} from "@district-labs/intentify-core-react"
 import { useAccount, useChainId, useSignTypedData } from "wagmi"
 
+import type { Token, TokenList } from "@/types/token-list"
+import { useIntentBatchCreate } from "@/hooks/intent-batch/use-intent-batch-create"
+import { useTransformLimitOrderIntentFormToApiIntentBatch } from "@/hooks/intent-batch/use-transform-limit-order-intent-form-to-api-intent-batch"
+import { useTransformLimitOrderIntentFormToStructIntentBatch } from "@/hooks/intent-batch/use-transform-limit-order-intent-form-to-struct-intent-batch"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -13,15 +26,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import TokenInputAmount from "@/components/blockchain/token-input-amount"
-import { useTransformLimitOrderIntentFormToApiIntentBatch } from "@/hooks/intent-batch/use-transform-limit-order-intent-form-to-api-intent-batch"
-import { useTransformLimitOrderIntentFormToStructIntentBatch } from "@/hooks/intent-batch/use-transform-limit-order-intent-form-to-struct-intent-batch"
-import { getIntentBatchTypedDataHash, generateIntentBatchEIP712 } from "@district-labs/intentify-core"
-import { useGetIntentifyModuleAddress, useIntentifySafeModuleDomainSeparator } from "@district-labs/intentify-react"
-import { useIntentBatchCreate } from "@/hooks/intent-batch/use-intent-batch-create"
-import type { Token, TokenList } from "@/types/token-list"
+import TokenInputAmount from "@/components/fields/token-input-amount"
 
-import tokenListGoerli from '@/data/token-list-district-goerli.json'
 const tokenListDistrictGoerli: TokenList = tokenListGoerli
 
 export default function FormIntentLimitOrder() {
@@ -32,8 +38,12 @@ export default function FormIntentLimitOrder() {
   const [amountIn, setAmountIn] = useState<number | undefined>()
   const [expiry, setExpiry] = useState<string>("1d")
 
-  const [ outToken, setOutToken ] = useState<Token>(tokenListDistrictGoerli.tokens[0])
-  const [ inToken, setInToken ] = useState<Token>(tokenListDistrictGoerli.tokens[1])
+  const [outToken, setOutToken] = useState<Token>(
+    tokenListDistrictGoerli.tokens[0]
+  )
+  const [inToken, setInToken] = useState<Token>(
+    tokenListDistrictGoerli.tokens[1]
+  )
 
   function handleSwapTokens() {
     setOutToken(inToken)
@@ -52,20 +62,22 @@ export default function FormIntentLimitOrder() {
   // Construct Intent for API
   // --------------------------------------------------------
 
-  const structIntentBatch = useTransformLimitOrderIntentFormToStructIntentBatch({
-    chainId,
-    amountIn,
-    amountOut,
-    expiry,
-    tokenIn: inToken,
-    tokenOut: outToken,
-  })
+  const structIntentBatch = useTransformLimitOrderIntentFormToStructIntentBatch(
+    {
+      chainId,
+      amountIn,
+      amountOut,
+      expiry,
+      tokenIn: inToken,
+      tokenOut: outToken,
+    }
+  )
 
-  console.log(structIntentBatch, 'structIntentBatchstructIntentBatch')
+  console.log(structIntentBatch, "structIntentBatchstructIntentBatch")
 
   const intentifyModuleAddress = useGetIntentifyModuleAddress(chainId)
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  const {data: domainSeparator} = useIntentifySafeModuleDomainSeparator({
+  const { data: domainSeparator } = useIntentifySafeModuleDomainSeparator({
     address: intentifyModuleAddress,
     chainId,
   })
@@ -76,9 +88,13 @@ export default function FormIntentLimitOrder() {
     verifyingContract: intentifyAddress,
     intentBatch: structIntentBatch,
   })
-  const { isLoading: isLoadingSign, signTypedData, data:signature } = useSignTypedData(intentBatchEIP712)
+  const {
+    isLoading: isLoadingSign,
+    signTypedData,
+    data: signature,
+  } = useSignTypedData(intentBatchEIP712)
   const apiIntentBatch = useTransformLimitOrderIntentFormToApiIntentBatch({
-    userId: account.address ,
+    userId: account.address,
     chainId,
     amountIn,
     amountOut,
@@ -86,18 +102,21 @@ export default function FormIntentLimitOrder() {
     tokenIn: inToken,
     tokenOut: outToken,
     signature: signature,
-    intentBatchHash:  getIntentBatchTypedDataHash(domainSeparator, structIntentBatch),
+    intentBatchHash: getIntentBatchTypedDataHash(
+      domainSeparator,
+      structIntentBatch
+    ),
     domainSeparator: domainSeparator,
   })
-  const { mutateAsync, isSuccess, isError, isLoading, error } = useIntentBatchCreate()
+  const { mutateAsync, isSuccess, isError, isLoading, error } =
+    useIntentBatchCreate()
 
-  useEffect( () => { 
-      if(!apiIntentBatch) return
-      if(isSuccess) return
-      if(isError) return
-      mutateAsync(apiIntentBatch)
+  useEffect(() => {
+    if (!apiIntentBatch) return
+    if (isSuccess) return
+    if (isError) return
+    mutateAsync(apiIntentBatch)
   }, [apiIntentBatch, signature, isSuccess, isError, mutateAsync])
-
 
   return (
     <Card>
@@ -126,7 +145,23 @@ export default function FormIntentLimitOrder() {
               variant={"ghost"}
               className="bg-background  px-2 text-muted-foreground"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-arrow-up-down"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                className="lucide lucide-arrow-up-down"
+              >
+                <path d="m21 16-4 4-4-4" />
+                <path d="M17 20V4" />
+                <path d="m3 8 4-4 4 4" />
+                <path d="M7 4v16" />
+              </svg>
             </Button>
           </div>
         </div>
@@ -157,14 +192,8 @@ export default function FormIntentLimitOrder() {
         </div>
       </CardContent>
       <CardFooter className="flex flex-col gap-y-3">
-        {
-          isSuccess &&
-          <Button className="w-full">
-            Intent Saved
-          </Button>
-        }
-        {
-          !isSuccess &&
+        {isSuccess && <Button className="w-full">Intent Saved</Button>}
+        {!isSuccess && (
           <Button
             onClick={() => signTypedData()}
             disabled={
@@ -180,7 +209,7 @@ export default function FormIntentLimitOrder() {
               ? "Intent Saved"
               : "Save Intent"}
           </Button>
-          } 
+        )}
         {isError && (
           <div className="text-sm text-red-500">
             {error instanceof Error

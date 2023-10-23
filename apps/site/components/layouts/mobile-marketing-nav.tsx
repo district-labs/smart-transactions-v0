@@ -2,6 +2,8 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
+import { ButtonSIWELogout } from "@/integrations/siwe/components/button-siwe-logout"
+import { IsSignedIn } from "@/integrations/siwe/components/is-signed-in"
 import { type MainNavItem } from "@/types"
 
 import { siteConfig } from "@/config/site"
@@ -9,8 +11,6 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Icons } from "@/components/icons"
-import { ButtonSIWELogout } from "@/integrations/siwe/components/button-siwe-logout"
-import { IsSignedIn } from "@/integrations/siwe/components/is-signed-in"
 
 export function MobileMarketingNav() {
   const [open, setOpen] = useState(false)
@@ -40,18 +40,18 @@ export function MobileMarketingNav() {
             <span className="sr-only">Home</span>
           </Link>
         </div>
-          <div className="flex flex-col pl-1 pr-7">
-            <Link
-              href={siteConfig.links.discord}
-              className="w-full border-b py-4 text-sm font-medium"
-              onClick={() => setOpen(false)}
-            >
-              Community
-            </Link>
-          </div>
-          <IsSignedIn>
-            <ButtonSIWELogout className="mt-4" />
-          </IsSignedIn>
+        <div className="flex flex-col pl-1 pr-7">
+          <Link
+            href={siteConfig.links.discord}
+            className="w-full border-b py-4 text-sm font-medium"
+            onClick={() => setOpen(false)}
+          >
+            Community
+          </Link>
+        </div>
+        <IsSignedIn>
+          <ButtonSIWELogout className="mt-4" />
+        </IsSignedIn>
       </SheetContent>
     </Sheet>
   )

@@ -2,6 +2,7 @@
 
 import React from "react"
 import Link from "next/link"
+
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import {
@@ -12,16 +13,22 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 
-
 export function MarketingNav() {
   return (
     <div className="mr-4 hidden md:flex">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <Link href={siteConfig.links.discord} legacyBehavior passHref>
+            <Link href={'/'} legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Community
+                Strategies
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href={'/data-hub'} legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                ZK Data Hub
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>

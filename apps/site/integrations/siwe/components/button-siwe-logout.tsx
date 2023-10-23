@@ -1,11 +1,10 @@
 "use client"
 
 import { HTMLAttributes } from "react"
-
-
-import { Button } from "@/components/ui/button"
 import { siweLogout } from "@/integrations/siwe/actions/siwe-logout"
+
 import { useUser } from "@/hooks/use-user"
+import { Button } from "@/components/ui/button"
 
 interface ButtonSIWELogoutProps extends HTMLAttributes<HTMLButtonElement> {
   label?: string

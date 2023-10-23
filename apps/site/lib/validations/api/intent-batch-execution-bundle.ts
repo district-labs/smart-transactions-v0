@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod"
 
 const hexStringPattern = /^0x[a-fA-F0-9]+$/
 
@@ -23,7 +23,6 @@ const ApiIntentBatch = z.object({
     })
   ),
 })
-
 
 export const hookSchema = z.object({
   target: z.string().refine((value) => hexStringPattern.test(value), {

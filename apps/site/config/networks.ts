@@ -4,10 +4,7 @@
 import { env } from "@/env.mjs"
 import type { Chain, ChainProviderFn } from "wagmi"
 import { configureChains } from "wagmi"
-import {
-  goerli as goerliNoIcon,
-  hardhat,
-} from "wagmi/chains"
+import { goerli as goerliNoIcon, hardhat } from "wagmi/chains"
 import { alchemyProvider } from "wagmi/providers/alchemy"
 import { infuraProvider } from "wagmi/providers/infura"
 import { publicProvider } from "wagmi/providers/public"
@@ -17,15 +14,9 @@ const goerli = {
   iconUrl: "/icons/NetworkEthereumTest.svg",
 }
 
-export const ETH_CHAINS_TEST = [
-  goerli,
-  hardhat,
-]
+export const ETH_CHAINS_TEST = [goerli, hardhat]
 export const ETH_CHAINS_L2_TEST = []
-export const ETH_CHAINS_PROD = [
-  goerli,
-  hardhat,
-]
+export const ETH_CHAINS_PROD = [goerli, hardhat]
 export const ETH_CHAINS_DEV =
   env.NEXT_PUBLIC_PROD_NETWORKS_DEV === "true"
     ? [...ETH_CHAINS_PROD, ...ETH_CHAINS_TEST, ...ETH_CHAINS_L2_TEST]

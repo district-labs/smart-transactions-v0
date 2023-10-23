@@ -1,12 +1,12 @@
 "use client"
 
 import { HTMLAttributes } from "react"
+import { siweLogin } from "@/integrations/siwe/actions/siwe-login"
 import { useAccount, useNetwork, useSignMessage } from "wagmi"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { siweLogin } from "@/integrations/siwe/actions/siwe-login"
 import { useUser } from "@/hooks/use-user"
+import { Button } from "@/components/ui/button"
 
 interface ButtonSIWELoginProps extends HTMLAttributes<HTMLButtonElement> {
   label?: string
@@ -47,14 +47,10 @@ export const ButtonSIWELogin = ({
       onClick={() => void handleCreateMessage()}
       {...props}
     >
-      {isLoading && (
-          "Sign Message"
+      {isLoading && "Sign Message"}
+      {!isLoading && (
+        <span className={labelClasses}>{children || label || "Logout"}</span>
       )}
-      {
-        !isLoading && (
-          <span className={labelClasses}>{children || label || "Logout"}</span>
-        )
-      }
     </Button>
   )
 }

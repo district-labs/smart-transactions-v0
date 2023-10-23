@@ -1,5 +1,5 @@
 # Setup Local Environment
-forge script script/deploy/SafeDeploy.s.sol:SafeDeploy --fork-url http://localhost:8545 --broadcast
+forge script script/deploy/SafeDeploy.s.sol:SafeDeploy --rpc-url http://localhost:8545 --broadcast
 forge script script/deploy/CoreDeploy.s.sol:CoreDeploy --rpc-url http://localhost:8545 --broadcast
 
 # E2E Testing
