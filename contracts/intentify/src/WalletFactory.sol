@@ -70,7 +70,8 @@ contract WalletFactory is SafeProxyFactory {
         address owner,
         uint256 saltNonce
     )
-        public virtual
+        public
+        virtual
         returns (SafeProxy proxy)
     {
         bytes memory initializer = _encodeInitializer(owner);
