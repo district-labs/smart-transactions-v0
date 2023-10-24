@@ -106,8 +106,7 @@ contract TwapIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_chainlinkDataFeedIntent),
-            data: _chainlinkDataFeedIntent.encodeIntent(nftFloorPriceCryptoPunks, minValue, maxValue,
-thresholdSeconds)
+            data: _chainlinkDataFeedIntent.encodeIntent(nftFloorPriceCryptoPunks, minValue, maxValue, thresholdSeconds)
         });
 
         IntentBatch memory intentBatch =

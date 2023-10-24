@@ -2,13 +2,13 @@
 // pragma solidity >=0.8.19 <0.9.0;
 
 // import { ERC20Mintable } from "../mocks/ERC20Mintable.sol";
-// import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "~/src/TypesAndDecoders.sol";
-// import { SwapRouter } from "~/src/periphery/SwapRouter.sol";
-// import { LimitOrderIntent } from "~/src/intents/LimitOrderIntent.sol";
-// import { SafeTestingUtils } from "~/test/SafeTestingUtils.sol";
+// import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "../../src/TypesAndDecoders.sol";
+// import { SwapRouter } from "../../src/periphery/SwapRouter.sol";
+// import { ERC20LimitOrderIntent } from "../../src/intents/ERC20LimitOrderIntent.sol";
+// import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 
-// contract LimitOrderIntentHarness is LimitOrderIntent {
-//     constructor(address _intentifySafeModule) LimitOrderIntent(_intentifySafeModule) { }
+// contract ERC20LimitOrderIntentHarness is ERC20LimitOrderIntent {
+//     constructor(address _intentifySafeModule) ERC20LimitOrderIntent(_intentifySafeModule) { }
 
 //     function exposed_unlock(
 //         Intent calldata intent,
@@ -26,8 +26,8 @@
 //     }
 // }
 
-// contract LimitOrderIntentTest is SafeTestingUtils {
-//     LimitOrderIntentHarness internal _limitOrderIntent;
+// contract ERC20LimitOrderIntentTest is SafeTestingUtils {
+//     ERC20LimitOrderIntent internal _erc20LimitOrderIntent;
 //     ERC20Mintable internal _tokenA;
 //     ERC20Mintable internal _tokenB;
 
@@ -40,9 +40,9 @@
 //         initializeBase();
 //         initializeSafeBase();
 
-//         _limitOrderIntent = new LimitOrderIntentHarness(address(_intentifySafeModule));
-//         _tokenA = new ERC20Mintable();
-//         _tokenB = new ERC20Mintable();
+// _erc20LimitOrderIntent = new ERC20LimitOrderIntentHarness(address(_intentifySafeModule));
+// _tokenA = new ERC20Mintable();
+// _tokenB = new ERC20Mintable();
 
 //         _swapRouter = new SwapRouter();
 //     }
@@ -55,19 +55,19 @@
 //     /* Success                                                                               */
 //     /* ===================================================================================== */
 
-//     function test_LimitOrderIntent_Success() external {
-//         address executor = address(0x1234);
+// function test_ERC20LimitOrderIntent_Success() external {
+//     address executor = address(0x1234);
 
 //         setupBalance(address(_safeCreated), address(_tokenA), startingBalance);
 
 //         Intent[] memory intents = new Intent[](1);
 
-//         intents[0] = Intent({
-//             root: address(_safeCreated),
-//             value: 0,
-//             target: address(_limitOrderIntent),
-//             data: _limitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
-//         });
+// intents[0] = Intent({
+//     root: address(_safeCreated),
+//     value: 0,
+//     target: address(_erc20LimitOrderIntent),
+//     data: _erc20LimitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
+// });
 
 //         IntentBatch memory intentBatch =
 //             IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
@@ -77,12 +77,12 @@
 
 //         Hook[] memory hooks = new Hook[](1);
 
-//         bytes memory hookTxData = abi.encodeWithSignature(
-//             "swap(address,address,uint256)", address(_safeCreated), address(_tokenB), endingBalance
-//         );
+// bytes memory hookData = abi.encodeWithSignature(
+//     "swap(address,address,uint256)", address(_safeCreated), address(_tokenB), endingBalance
+// );
+// bytes memory hookInstructions = _erc20LimitOrderIntent.encodeHookInstructions(executor);
 
-//         bytes memory hookData = _limitOrderIntent.encodeHook(executor, hookTxData);
-//         hooks[0] = Hook({ target: address(_swapRouter), data: hookData });
+// hooks[0] = Hook({ target: address(_swapRouter), data: hookData, instructions: hookInstructions });
 
 //         IntentBatchExecution memory batchExecution =
 //             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
@@ -95,29 +95,29 @@
 //         assertEq(balanceTokenB, endingBalance);
 //     }
 
-//     function test_encode_Success() external {
-//         bytes memory encodeData =
-//             _limitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance);
-//         assertEq(encodeData, abi.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance));
-//     }
+// function test_encode_Success() external {
+//     bytes memory encodeData =
+//         _erc20LimitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance);
+//     assertEq(encodeData, abi.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance));
+// }
 
 //     /* ===================================================================================== */
 //     /* Failing                                                                               */
 //     /* ===================================================================================== */
 
-//     function test_RevertWhen_LimitOrderIntent_InsufficientTokenBalancePostHook() external {
-//         address executor = address(0x1234);
+// function test_RevertWhen_ERC20LimitOrderIntent_InsufficientTokenBalancePostHook() external {
+//     address executor = address(0x1234);
 
 //         setupBalance(address(_safeCreated), address(_tokenA), startingBalance);
 
 //         Intent[] memory intents = new Intent[](1);
 
-//         intents[0] = Intent({
-//             root: address(_safeCreated),
-//             value: 0,
-//             target: address(_limitOrderIntent),
-//             data: _limitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
-//         });
+// intents[0] = Intent({
+//     root: address(_safeCreated),
+//     value: 0,
+//     target: address(_erc20LimitOrderIntent),
+//     data: _erc20LimitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
+// });
 
 //         IntentBatch memory intentBatch =
 //             IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
@@ -127,15 +127,15 @@
 
 //         Hook[] memory hooks = new Hook[](1);
 
-//         bytes memory hookTxData = abi.encodeWithSignature(
-//             "swap(address,address,uint256)",
-//             address(_safeCreated),
-//             address(_tokenB),
-//             endingBalance / 2 // Send half of the tokens expected, so the intent should revert
-//         );
-//         bytes memory hookData = _limitOrderIntent.encodeHook(executor, hookTxData);
+// bytes memory hookData = abi.encodeWithSignature(
+//     "swap(address,address,uint256)",
+//     address(_safeCreated),
+//     address(_tokenB),
+//     endingBalance / 2 // Send half of the tokens expected, so the intent should revert
+// );
+// bytes memory hookInstructions = _erc20LimitOrderIntent.encodeHookInstructions(executor);
 
-//         hooks[0] = Hook({ target: address(_swapRouter), data: hookData });
+// hooks[0] = Hook({ target: address(_swapRouter), data: hookData, instructions: hookInstructions });
 
 //         IntentBatchExecution memory batchExecution =
 //             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });

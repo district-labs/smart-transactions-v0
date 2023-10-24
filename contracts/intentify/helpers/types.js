@@ -35,6 +35,7 @@ const typedMessage = {
     Hook: [
       { name: "target", type: "address" },
       { name: "data", type: "bytes" },
+      { name: "instructions", type: "bytes"}
     ],
     IntentBatchExecution: [
       { name: "batch", type: "IntentBatch" },

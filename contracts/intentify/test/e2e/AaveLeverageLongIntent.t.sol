@@ -88,12 +88,12 @@
 // _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
 //         Hook[] memory hooks = new Hook[](1);
 
-//         bytes memory flashloanTx = abi.encodeWithSelector(
-//             SimulateFlashLoan.simulateFlashLoanETH.selector, address(_aaveLeverageLongIntent), 1e18
-//         );
-//         bytes memory leverageHookData = _aaveLeverageLongIntent.encodeHook(1e18, 1_646_223_999, flashloanTx);
+// bytes memory flashloanTx = abi.encodeWithSelector(
+//     SimulateFlashLoan.simulateFlashLoanETH.selector, address(_aaveLeverageLongIntent), 1e18
+// );
+// bytes memory hookInstructions = _aaveLeverageLongIntent.encodeHookInstructions(1e18, 1_646_223_999);
 
-//         hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
+// hooks[0] = Hook({ target: address(_simulateFlashloan), data: flashloanTx, instructions: hookInstructions });
 
 //         IntentBatchExecution memory batchExecution =
 //             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
@@ -127,13 +127,13 @@
 // _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
 //         Hook[] memory hooks = new Hook[](1);
 
-//         bytes memory flashloanTx = abi.encodeWithSelector(
-//             SimulateFlashLoan.simulateFlashLoanUSDC.selector, address(_aaveLeverageLongIntent), 1_604_000_000
-//         );
-//         bytes memory leverageHookData =
-//             _aaveLeverageLongIntent.encodeHook(1_604_000_000, 1_033_688_975_610_298_965, flashloanTx);
+// bytes memory flashloanTx = abi.encodeWithSelector(
+//     SimulateFlashLoan.simulateFlashLoanUSDC.selector, address(_aaveLeverageLongIntent), 1_604_000_000
+// );
+// bytes memory hookInstructions =
+//     _aaveLeverageLongIntent.encodeHookInstructions(1_604_000_000, 1_033_688_975_610_298_965);
 
-//         hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
+// hooks[0] = Hook({ target: address(_simulateFlashloan), data: flashloanTx, instructions: hookInstructions });
 
 //         IntentBatchExecution memory batchExecution =
 //             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
@@ -167,13 +167,13 @@
 // _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
 //         Hook[] memory hooks = new Hook[](1);
 
-//         bytes memory flashloanTx = abi.encodeWithSelector(
-//             SimulateFlashLoan.simulateFlashLoanETH.selector, address(_aaveLeverageLongIntent), 1e18
-//         );
-//         bytes memory leverageHookData =
-//             _aaveLeverageLongIntent.encodeHook(1e18, 1_646_593_317_720_372_037_203, flashloanTx);
+// bytes memory flashloanTx = abi.encodeWithSelector(
+//     SimulateFlashLoan.simulateFlashLoanETH.selector, address(_aaveLeverageLongIntent), 1e18
+// );
+// bytes memory hookInstructions =
+//     _aaveLeverageLongIntent.encodeHookInstructions(1e18, 1_646_593_317_720_372_037_203);
 
-//         hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
+// hooks[0] = Hook({ target: address(_simulateFlashloan), data: flashloanTx, instructions: hookInstructions });
 
 //         IntentBatchExecution memory batchExecution =
 //             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
@@ -204,16 +204,15 @@
 // _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
 //         Hook[] memory hooks = new Hook[](1);
 
-//         bytes memory flashloanTx = abi.encodeWithSelector(
-//             SimulateFlashLoan.simulateFlashLoanDAI.selector,
-//             address(_aaveLeverageLongIntent),
-//             1_590_000_000_000_000_000_000
-//         );
-//         bytes memory leverageHookData =
-//             _aaveLeverageLongIntent.encodeHook(1_590_000_000_000_000_000_000, 1_024_436_927_957_009_910,
-// flashloanTx);
+// bytes memory flashloanTx = abi.encodeWithSelector(
+//     SimulateFlashLoan.simulateFlashLoanDAI.selector,
+//     address(_aaveLeverageLongIntent),
+//     1_590_000_000_000_000_000_000
+// );
+// bytes memory hookInstructions =
+//     _aaveLeverageLongIntent.encodeHookInstructions(1_590_000_000_000_000_000_000, 1_024_436_927_957_009_910);
 
-//         hooks[0] = Hook({ target: address(_simulateFlashloan), data: leverageHookData });
+// hooks[0] = Hook({ target: address(_simulateFlashloan), data: flashloanTx, instructions: hookInstructions });
 
 //         IntentBatchExecution memory batchExecution =
 //             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });

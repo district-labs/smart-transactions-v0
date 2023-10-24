@@ -22,7 +22,7 @@ import { WalletFactory } from "../../src/WalletFactory.sol";
 
 contract ExecuteIntent is Script, StdCheats {
     TimestampIntent _timestampIntent = new TimestampIntent();
-    Hook EMPTY_HOOK = Hook({ target: address(0), data: bytes("") });
+    Hook EMPTY_HOOK = Hook({ target: address(0), data: bytes(""), instructions: bytes("") });
 
     // Deterministicaly deploted in TestnetDeploy.s.sol
     IntentifySafeModule internal _intentifySafeModule = IntentifySafeModule(0x5FbDB2315678afecb367f032d93F642f64180aa3);

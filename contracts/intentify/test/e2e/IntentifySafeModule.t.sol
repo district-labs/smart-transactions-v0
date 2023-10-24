@@ -26,15 +26,14 @@
 //     /* Failure Tests                                                                         */
 //     /* ===================================================================================== */
 
-//     function test_RevertWhen_intentSafeModule_IntentBundleCancelled_Success() external {
-//         Intent[] memory intents = new Intent[](1);
-//         intents[0] = Intent({ root: address(0), value: 0, target: address(0), data: bytes("") });
-//         IntentBatch memory intentBatch =
-//             IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
-//         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER,
-// _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
-//         Hook[] memory hooks = new Hook[](1);
-//         hooks[0] = Hook({ target: address(0), data: bytes("") });
+// function test_RevertWhen_intentSafeModule_IntentBundleCancelled_Success() external {
+//     Intent[] memory intents = new Intent[](1);
+//     intents[0] = Intent({ root: address(0), value: 0, target: address(0), data: bytes("") });
+//     IntentBatch memory intentBatch =
+//         IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
+//     (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
+//     Hook[] memory hooks = new Hook[](1);
+//     hooks[0] = Hook({ target: address(0), data: bytes(""), instructions: bytes("") });
 
 //         // Cancel the Intent Bundle
 //         {
@@ -77,13 +76,12 @@
 //     function test_RevertWhen_intentSafeModule_IntentSendETH_Success() external {
 //         Intent[] memory intents = new Intent[](1);
 
-//         intents[0] = Intent({ root: address(_safeCreated), value: 1e18, target: address(0), data: bytes("") });
-//         IntentBatch memory intentBatch =
-//             IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
-//         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER,
-// _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
-//         Hook[] memory hooks = new Hook[](1);
-//         hooks[0] = Hook({ target: address(0), data: bytes("") });
+// intents[0] = Intent({ root: address(_safeCreated), value: 1e18, target: address(0), data: bytes("") });
+// IntentBatch memory intentBatch =
+//     IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
+// (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
+// Hook[] memory hooks = new Hook[](1);
+// hooks[0] = Hook({ target: address(0), data: bytes(""), instructions: bytes("") });
 
 //         vm.deal(address(_safeCreated), 1e18);
 //         assertEq(address(_safeCreated).balance, 1e18);
@@ -102,15 +100,14 @@
 //         bytes memory intentdata = abi.encodeWithSignature("increment()");
 //         bytes memory intentTxData = abi.encode(address(_counter), intentdata);
 
-//         Intent[] memory intents = new Intent[](1);
-//         intents[0] =
-//             Intent({ root: address(_safeCreated), value: 0, target: address(_safeCreated), data: intentTxData });
-//         IntentBatch memory intentBatch =
-//             IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
-//         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER,
-// _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
-//         Hook[] memory hooks = new Hook[](1);
-//         hooks[0] = Hook({ target: address(0), data: bytes("") });
+// Intent[] memory intents = new Intent[](1);
+// intents[0] =
+//     Intent({ root: address(_safeCreated), value: 0, target: address(_safeCreated), data: intentTxData });
+// IntentBatch memory intentBatch =
+//     IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
+// (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
+// Hook[] memory hooks = new Hook[](1);
+// hooks[0] = Hook({ target: address(0), data: bytes(""), instructions: bytes("") });
 
 //         assertEq(_counter.getCount(), 0);
 //         IntentBatchExecution memory batchExecution =

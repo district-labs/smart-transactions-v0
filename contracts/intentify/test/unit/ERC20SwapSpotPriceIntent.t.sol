@@ -86,19 +86,18 @@
 //         vm.prank(_whaleWETH);
 //         ERC20(WETHAddress).approve(address(_erc20SwapSpotPriceIntent), 0.8 ether);
 
-//         bytes memory hookTxData = abi.encodeWithSignature(
-//             "transferFrom(address,address,uint256)", _whaleWETH, address(_safeCreated), 0.8 ether
-//         );
+// uint256 initialSafeWETHBalance = ERC20(WETHAddress).balanceOf(address(_safeCreated));
+// uint256 initialSearcherUSDCBalance = ERC20(USDCAddress).balanceOf(_executor);
 
-//         uint256 initialSafeWETHBalance = ERC20(WETHAddress).balanceOf(address(_safeCreated));
-//         uint256 initialSearcherUSDCBalance = ERC20(USDCAddress).balanceOf(_executor);
+// bytes memory hookData = abi.encodeWithSignature(
+//     "transferFrom(address,address,uint256)", _whaleWETH, address(_safeCreated), 0.8 ether
+// );
+// bytes memory hookInstructions = _erc20SwapSpotPriceIntent.encodeHookInstructions(_executor);
 
-//         bytes memory hookData = _erc20SwapSpotPriceIntent.encodeHook(_executor, hookTxData);
-
-//         Hook[] memory hooks = new Hook[](1);
-//         hooks[0] = Hook({ target: WETHAddress, data: hookData });
-//         IntentBatchExecution memory batchExecution =
-//             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+// Hook[] memory hooks = new Hook[](1);
+// hooks[0] = Hook({ target: WETHAddress, data: hookData, instructions: hookInstructions });
+// IntentBatchExecution memory batchExecution =
+//     IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
 //         _intentifySafeModule.execute(batchExecution);
 
@@ -159,19 +158,17 @@
 //         vm.prank(_whaleUSDC);
 //         ERC20(USDCAddress).approve(address(_erc20SwapSpotPriceIntent), 1300e6);
 
-//         bytes memory hookTxData =
-//             abi.encodeWithSignature("transferFrom(address,address,uint256)", _whaleUSDC, address(_safeCreated),
-// 1300e6);
+// uint256 initialSafeUSDCBalance = ERC20(USDCAddress).balanceOf(address(_safeCreated));
+// uint256 initialSearcherWETHBalance = ERC20(WETHAddress).balanceOf(_executor);
 
-//         uint256 initialSafeUSDCBalance = ERC20(USDCAddress).balanceOf(address(_safeCreated));
-//         uint256 initialSearcherWETHBalance = ERC20(WETHAddress).balanceOf(_executor);
+// bytes memory hookData =
+//     abi.encodeWithSignature("transferFrom(address,address,uint256)", _whaleUSDC, address(_safeCreated), 1300e6);
+// bytes memory hookInstructions = _erc20SwapSpotPriceIntent.encodeHookInstructions(_executor);
 
-//         bytes memory hookData = _erc20SwapSpotPriceIntent.encodeHook(_executor, hookTxData);
-
-//         Hook[] memory hooks = new Hook[](1);
-//         hooks[0] = Hook({ target: USDCAddress, data: hookData });
-//         IntentBatchExecution memory batchExecution =
-//             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+// Hook[] memory hooks = new Hook[](1);
+// hooks[0] = Hook({ target: USDCAddress, data: hookData, instructions: hookInstructions });
+// IntentBatchExecution memory batchExecution =
+//     IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
 //         _intentifySafeModule.execute(batchExecution);
 
