@@ -5,10 +5,10 @@ import { ERC20Mintable } from "~/test/mocks/ERC20Mintable.sol";
 import { Intent, Signature, Hook } from "~/src/TypesAndDecoders.sol";
 import { SwapRouter } from "~/src/periphery/SwapRouter.sol";
 import { LimitOrderIntent, IntentWithHookAbstract } from "~/src/intents/LimitOrderIntent.sol";
-import { LimitOrderIntentHarness } from "~/test/mocks/harness/LimitOrderIntentHarness.sol";
+import { LimitOrderIntentHarness } from "~/test/mocks/harness/intents/LimitOrderIntentHarness.sol";
 import { BaseTest } from "~/test/Base.t.sol";
 
-contract LimitOrderIntent_Unit_Concrete_Test is BaseTest {
+contract LimitOrderIntentUnitConcreteTest is BaseTest {
     LimitOrderIntentHarness internal _limitOrderIntentHarness;
     ERC20Mintable internal _tokenA;
     ERC20Mintable internal _tokenB;
@@ -206,7 +206,7 @@ contract LimitOrderIntent_Unit_Concrete_Test is BaseTest {
 
     function test_execute_RevertWhen_InvalidRoot() external {
         Hook memory hook = setupHook();
-             Intent memory intent = Intent({
+        Intent memory intent = Intent({
             // The root is not the same as the safe created address, so it should revert with `InvalidRoot`.
             root: address(0),
             value: 0,
@@ -220,7 +220,7 @@ contract LimitOrderIntent_Unit_Concrete_Test is BaseTest {
 
     function test_execute_RevertWhen_InvalidTarget() external {
         Hook memory hook = setupHook();
-             Intent memory intent = Intent({
+        Intent memory intent = Intent({
             // The root is not the same as the safe created address, so it should revert with `InvalidRoot`.
             root: address(_safeCreatedMock),
             value: 0,
@@ -233,6 +233,4 @@ contract LimitOrderIntent_Unit_Concrete_Test is BaseTest {
         vm.expectRevert(IntentWithHookAbstract.InvalidTarget.selector);
         _limitOrderIntentHarness.execute(intent, hook);
     }
-
-
 }

@@ -3,10 +3,10 @@ pragma solidity >=0.8.19 <0.9.0;
 
 import { Intent } from "~/src/TypesAndDecoders.sol";
 import { TimestampIntent, IntentAbstract } from "~/src/intents/TimestampIntent.sol";
-import { TimestampIntentHarness } from "~/test/mocks/harness/TimestampIntentHarness.sol";
+import { TimestampIntentHarness } from "~/test/mocks/harness/intents/TimestampIntentHarness.sol";
 import { BaseTest } from "~/test/Base.t.sol";
 
-contract TimestampIntent_Unit_Concrete_Test is BaseTest {
+contract TimestampIntentUnitConcreteTest is BaseTest {
     TimestampIntentHarness internal _timestampIntentHarness;
 
     address internal immutable _safeCreatedMock = address(0x1111);
