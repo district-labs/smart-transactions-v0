@@ -3,8 +3,9 @@ pragma solidity >=0.8.19 <0.9.0;
 
 import { StdCheats } from "forge-std/StdCheats.sol";
 import { PRBTest } from "@prb/test/PRBTest.sol";
+import { RevertMessageReasonHelper } from "~/src/helpers/RevertMessageReasonHelper.sol";
 
-contract BaseTest is PRBTest, StdCheats {
+contract BaseTest is PRBTest, StdCheats, RevertMessageReasonHelper {
     uint256 SIGNER = 0xA11CE;
     uint256 WALLET1 = 0xA11CE;
     uint256 WALLET2 = 0xA11CE;
