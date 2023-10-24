@@ -32,7 +32,7 @@ contract EthTipIntentTest is SafeTestingUtils {
             IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
         Hook[] memory hooks = new Hook[](1);
-        hooks[0] = Hook({ target: address(0xdEAD), data: new bytes(0x00) });
+        hooks[0] = Hook({ target: address(0xdEAD), data: new bytes(0x00), instructions: bytes("") });
 
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });

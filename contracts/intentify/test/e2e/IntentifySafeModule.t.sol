@@ -33,7 +33,7 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
             IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
         Hook[] memory hooks = new Hook[](1);
-        hooks[0] = Hook({ target: address(0), data: bytes("") });
+        hooks[0] = Hook({ target: address(0), data: bytes(""), instructions: bytes("") });
 
         // Cancel the Intent Bundle
         {
@@ -81,7 +81,7 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
             IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
         Hook[] memory hooks = new Hook[](1);
-        hooks[0] = Hook({ target: address(0), data: bytes("") });
+        hooks[0] = Hook({ target: address(0), data: bytes(""), instructions: bytes("") });
 
         vm.deal(address(_safeCreated), 1e18);
         assertEq(address(_safeCreated).balance, 1e18);
@@ -107,7 +107,7 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
             IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
         Hook[] memory hooks = new Hook[](1);
-        hooks[0] = Hook({ target: address(0), data: bytes("") });
+        hooks[0] = Hook({ target: address(0), data: bytes(""), instructions: bytes("") });
 
         assertEq(_counter.getCount(), 0);
         IntentBatchExecution memory batchExecution =

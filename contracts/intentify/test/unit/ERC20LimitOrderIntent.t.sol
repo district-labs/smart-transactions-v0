@@ -77,12 +77,12 @@ contract ERC20LimitOrderIntentTest is SafeTestingUtils {
 
         Hook[] memory hooks = new Hook[](1);
 
-        bytes memory hookTxData = abi.encodeWithSignature(
+        bytes memory hookData = abi.encodeWithSignature(
             "swap(address,address,uint256)", address(_safeCreated), address(_tokenB), endingBalance
         );
+        bytes memory hookInstructions = _erc20LimitOrderIntent.encodeHookInstructions(executor);
 
-        bytes memory hookData = _erc20LimitOrderIntent.encodeHook(executor, hookTxData);
-        hooks[0] = Hook({ target: address(_swapRouter), data: hookData });
+        hooks[0] = Hook({ target: address(_swapRouter), data: hookData, instructions: hookInstructions });
 
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
@@ -127,15 +127,15 @@ contract ERC20LimitOrderIntentTest is SafeTestingUtils {
 
         Hook[] memory hooks = new Hook[](1);
 
-        bytes memory hookTxData = abi.encodeWithSignature(
+        bytes memory hookData = abi.encodeWithSignature(
             "swap(address,address,uint256)",
             address(_safeCreated),
             address(_tokenB),
             endingBalance / 2 // Send half of the tokens expected, so the intent should revert
         );
-        bytes memory hookData = _erc20LimitOrderIntent.encodeHook(executor, hookTxData);
+        bytes memory hookInstructions = _erc20LimitOrderIntent.encodeHookInstructions(executor);
 
-        hooks[0] = Hook({ target: address(_swapRouter), data: hookData });
+        hooks[0] = Hook({ target: address(_swapRouter), data: hookData, instructions: hookInstructions });
 
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });

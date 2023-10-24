@@ -169,11 +169,15 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
         bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
-        bytes memory hookData =
-            _uniswapV3HistoricalTwapIntentHarness.encodeHook(9_759_424, 9_848_630, 9_798_709, 9_848_630);
+        bytes memory hookInstructions =
+            _uniswapV3HistoricalTwapIntentHarness.encodeHookInstructions(9_759_424, 9_848_630, 9_798_709, 9_848_630);
 
         Hook[] memory hooks = new Hook[](1);
-        hooks[0] = Hook({ target: address(_uniswapV3HistoricalTwapIntentHarness), data: hookData });
+        hooks[0] = Hook({
+            target: address(_uniswapV3HistoricalTwapIntentHarness),
+            data: bytes(""),
+            instructions: hookInstructions
+        });
 
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
@@ -224,9 +228,13 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
                 )
         });
 
-        bytes memory hookData =
-            _uniswapV3HistoricalTwapIntentHarness.encodeHook(9_759_424, 9_848_630, 9_798_709, 9_848_630);
-        Hook memory hook = Hook({ target: address(_uniswapV3HistoricalTwapIntentHarness), data: hookData });
+        bytes memory hookInstructions =
+            _uniswapV3HistoricalTwapIntentHarness.encodeHookInstructions(9_759_424, 9_848_630, 9_798_709, 9_848_630);
+        Hook memory hook = Hook({
+            target: address(_uniswapV3HistoricalTwapIntentHarness),
+            data: bytes(""),
+            instructions: hookInstructions
+        });
 
         _uniswapV3HistoricalTwapIntentHarness.exposed_checkPercentageDifference(intent, hook);
     }
@@ -327,9 +335,13 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
                 )
         });
 
+        bytes memory hookInstructions =
+            _uniswapV3HistoricalTwapIntentHarness.encodeHookInstructions(9_759_424, 9_848_630, 9_798_709, 9_848_630);
+
         Hook memory hook = Hook({
             target: address(_uniswapV3HistoricalTwapIntentHarness),
-            data: _uniswapV3HistoricalTwapIntentHarness.encodeHook(9_759_424, 9_848_630, 9_798_709, 9_848_630)
+            data: bytes(""),
+            instructions: hookInstructions
         });
 
         vm.expectRevert(UniswapV3HistoricalTwapIntent.HighPercentageDifference.selector);

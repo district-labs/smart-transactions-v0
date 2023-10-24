@@ -18,7 +18,7 @@ contract SafeTestingUtils is BaseTest {
     IntentifySafeModule internal _intentifySafeModule;
 
     bytes32 private constant SAFE_MSG_TYPEHASH = 0x60b3cbf8b4a223d68d641b3b6ddf9a298e7f33710cf3d3a9d1146b5a6150fbca;
-    Hook internal EMPTY_HOOK = Hook({ target: address(0x00), data: bytes("") });
+    Hook internal EMPTY_HOOK = Hook({ target: address(0x00), data: bytes(""), instructions: bytes("") });
     Signature internal EMPTY_SIGNATURE = Signature({ r: bytes32(0x00), s: bytes32(0x00), v: uint8(0x00) });
 
     function initializeSafeBase() public {
