@@ -1,6 +1,7 @@
 "use client"
 
 import { useMemo } from "react"
+import { useIntentBatchUserFind } from "@/actions/user/use-intent-batch-user-find"
 import { ERC20ConvertBalance } from "@/integrations/erc20/components/erc20-convert-balance"
 import {
   ERC20Name,
@@ -9,7 +10,10 @@ import {
 import { CancelIntentBundle } from "@district-labs/intentify-core-react"
 import { type ColumnDef } from "@tanstack/react-table"
 
-import type { LimitOrderIntent } from "@/lib/transformations/transform-limit-order-intent-query-to-limit-order-data"
+import {
+  transformLimitOrderIntentQueryToLimitOrderData,
+  type LimitOrderIntent,
+} from "@/lib/transformations/transform-limit-order-intent-query-to-limit-order-data"
 import { Address } from "@/components/blockchain/address"
 import { DataTable } from "@/components/data-table/data-table"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
@@ -19,14 +23,20 @@ import { SheetIntentBatchDetails } from "../intents/sheet-intent-batch-details"
 import { Button } from "../ui/button"
 
 interface UserLimitOrdersTable {
-  data: LimitOrderIntent[]
+  strategyId: string
   pageCount: number
 }
 
 export function UserLimitOrdersTable({
-  data,
+  strategyId,
   pageCount,
 }: UserLimitOrdersTable) {
+  const { data, isSuccess } = useIntentBatchUserFind({
+    filters: {
+      strategyId: strategyId,
+    },
+  })
+
   const columns = useMemo<ColumnDef<LimitOrderIntent, unknown>[]>(
     () => [
       {
@@ -71,7 +81,11 @@ export function UserLimitOrdersTable({
         ),
         cell: ({ row }) => (
           <div className="flex items-center">
-            {/* <ERC20ConvertBalance address={row.original.sell.asset as `0x${string}`} balance={row.original.sell.amount} chainId={row.original.chainId} /> */}
+            <ERC20ConvertBalance
+              address={row.original.sell.asset as `0x${string}`}
+              balance={row.original.sell.amount}
+              chainId={row.original.chainId}
+            />
           </div>
         ),
       },
@@ -120,16 +134,31 @@ export function UserLimitOrdersTable({
         ),
       },
       {
-        accessorKey: "expiry",
+        accessorKey: "executeAfter",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Expiry" />
+          <DataTableColumnHeader column={column} title="Execute After" />
         ),
         cell: ({ row }) => (
           <div className="flex items-center">
             <TimeFromEpoch
               length={1}
               type="DATETIME"
-              date={row.original.expiry}
+              date={row.original.executeAfter}
+            />
+          </div>
+        ),
+      },
+      {
+        accessorKey: "executeBefore",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Execute Before" />
+        ),
+        cell: ({ row }) => (
+          <div className="flex items-center">
+            <TimeFromEpoch
+              length={1}
+              type="DATETIME"
+              date={row.original.executeBefore}
             />
           </div>
         ),
@@ -147,7 +176,7 @@ export function UserLimitOrdersTable({
         ),
         cell: ({ row }) => (
           <div className="flex items-center">
-            <div className="flex gap-x-2">
+            {/* <div className="flex gap-x-2">
               {row.original.status === "open" && (
                 <CancelIntentBundle
                   intentBatch={row.original.intentBatch}
@@ -164,7 +193,7 @@ export function UserLimitOrdersTable({
                 />
               )}
               <SheetIntentBatchDetails data={row.original.intentBatchDb} />
-            </div>
+            </div> */}
           </div>
         ),
       },
@@ -172,5 +201,17 @@ export function UserLimitOrdersTable({
     []
   )
 
-  return <DataTable columns={columns} data={data} pageCount={pageCount} />
+  return (
+    <DataTable
+      columns={columns}
+      data={
+        !isSuccess
+          ? []
+          : (data.map(
+              transformLimitOrderIntentQueryToLimitOrderData
+            ) as unknown as LimitOrderIntent[])
+      }
+      pageCount={pageCount}
+    />
+  )
 }

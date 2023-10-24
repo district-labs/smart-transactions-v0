@@ -19,42 +19,54 @@ export const intentTimestampRange = {
 } as TimestampRange
 
 export const intentTimestampRangeFields = {
-  minTimestamp: (setIntentBatch: any, config: TimestampRangeFieldConfig) => (
-    <>
+  minTimestamp: (
+    setIntentBatch: any,
+    config: {
+      label: string
+      classNameLabel?: string
+    }
+  ) => (
+    <div>
       {config.label && (
-        <Label htmlFor="minTimestamp" className="text-muted-foreground">
+        <Label htmlFor="minTimestamp" className={config.classNameLabel}>
           {config.label}
         </Label>
       )}
       <Input
-        type="number"
-        onChange={(event:any) =>
+        type="datetime-local"
+        onChange={(event: any) => {
+          const date = new Date(event.target.value)
+          const epoch = Math.floor(date.getTime() / 1000)
           setIntentBatch((draft: any) => {
-            draft["timestampRange"]["minTimestamp"] = (
-              event.target as HTMLInputElement
-            ).value
+            draft["timestampRange"]["minTimestamp"] = epoch
           })
-        }
+        }}
       />
-    </>
+    </div>
   ),
-  maxTimestamp: (setIntentBatch: any, config: TimestampRangeFieldConfig) => (
-    <>
+  maxTimestamp: (
+    setIntentBatch: any,
+    config: {
+      label: string
+      classNameLabel?: string
+    }
+  ) => (
+    <div>
       {config.label && (
-        <Label htmlFor="minTimestamp" className="text-muted-foreground">
+        <Label htmlFor="minTimestamp" className={config.classNameLabel}>
           {config.label}
         </Label>
       )}
       <Input
-        type="number"
-        onChange={(event:any) =>
+        type="datetime-local"
+        onChange={(event: any) => {
+          const date = new Date(event.target.value)
+          const epoch = Math.floor(date.getTime() / 1000)
           setIntentBatch((draft: any) => {
-            draft["timestampRange"]["maxTimestamp"] = (
-              event.target as HTMLInputElement
-            ).value
+            draft["timestampRange"]["maxTimestamp"] = epoch
           })
-        }
+        }}
       />
-    </>
+    </div>
   ),
 }

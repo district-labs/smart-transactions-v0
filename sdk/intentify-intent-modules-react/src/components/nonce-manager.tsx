@@ -51,69 +51,67 @@ export const nonceManagerFields = {
     </div>
   ),
   NonceDimensional: (setIntentBatch: any) => (
-        <div className=''>
-          <Label htmlFor="supply" className="text-muted-foreground">
-            Queue
-          </Label>
-          <Input
-            type="number"
-            onChange={(event:any) =>
-              setIntentBatch((draft: any) => {
-                draft["nonce"]["args"][0] = (
-                  event.target as HTMLInputElement
-                ).value
-              })
-            }
-          />
-        </div>
+    <div className="">
+      <Label htmlFor="supply" className="text-muted-foreground">
+        Queue
+      </Label>
+      <Input
+        type="number"
+        onChange={(event: any) =>
+          setIntentBatch((draft: any) => {
+            draft["nonce"]["args"][0] = (event.target as HTMLInputElement).value
+          })
+        }
+      />
+    </div>
   ),
   NonceTime: (setIntentBatch: any) => (
-      <div className="flex justify-between gap-x-4">
-        <div className='flex-1'>
-          <Label htmlFor="supply" className="text-muted-foreground">
-            ID
-          </Label>
-          <Input
-            type="number"
-            onChange={(event:any) =>
-              setIntentBatch((draft: any) => {
-                draft["nonce"]["args"][0] = (
-                  event.target as HTMLInputElement
-                ).value
-              })
-            }
-          />
-        </div>
-        <div className='flex-1'>
-          <Label htmlFor="supply" className="text-muted-foreground">
-            Delta
-          </Label>
-          <Input
-            type="number"
-            onChange={(event:any) =>
-              setIntentBatch((draft: any) => {
-                draft["nonce"]["args"][1] = (
-                  event.target as HTMLInputElement
-                ).value
-              })
-            }
-          />
-        </div>
-        <div className='flex-1'>
-          <Label htmlFor="supply" className="text-muted-foreground">
-            Count
-          </Label>
-          <Input
-            type="number"
-            onChange={(event:any) =>
-              setIntentBatch((draft: any) => {
-                draft["nonce"]["args"][2] = (
-                  event.target as HTMLInputElement
-                ).value
-              })
-            }
-          />
-        </div>
+    <div className="flex justify-between gap-x-4">
+      <div className="flex-1">
+        <Label htmlFor="supply" className="text-muted-foreground">
+          ID
+        </Label>
+        <Input
+          type="number"
+          onChange={(event: any) =>
+            setIntentBatch((draft: any) => {
+              draft["nonce"]["args"][0] = (
+                event.target as HTMLInputElement
+              ).value
+            })
+          }
+        />
       </div>
+      <div className="flex-1">
+        <Label htmlFor="supply" className="text-muted-foreground">
+          Delta
+        </Label>
+        <Input
+          type="number"
+          onChange={(event: any) =>
+            setIntentBatch((draft: any) => {
+              draft["nonce"]["args"][1] = (
+                event.target as HTMLInputElement
+              ).value
+            })
+          }
+        />
+      </div>
+      <div className="flex-1">
+        <Label htmlFor="supply" className="text-muted-foreground">
+          Count
+        </Label>
+        <Input
+          type="number"
+          onChange={(event: any) =>
+            setIntentBatch((draft: any) => {
+              draft["nonce"]["args"][2] = (
+                event.target as HTMLInputElement
+              ).value
+            })
+          }
+        />
+      </div>
+    </div>
   ),
 }

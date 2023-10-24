@@ -1,7 +1,8 @@
 import 'dotenv/config'
 import express from "express";
 import cors from "cors";
-import intentBatchRoutes from "./routes/intent-batch";
+import intentBatchAdminRoutes from "./routes/admin/intent-batch";
+import intentBatchUserRoutes from "./routes/user/intent-batch";
 import { errorHandler } from "./middleware/errorHandler";
 
 const PORT = process.env.PORT || 3000;
@@ -12,7 +13,8 @@ app.use(cors()) // include before other routes
 app.use(express.json());
 
 // Route groups
-app.use("/intent-batch", intentBatchRoutes);
+app.use("/intent-batch", intentBatchUserRoutes);
+app.use("/admin/intent-batch", intentBatchAdminRoutes);
 
 // API documentation endpoint
 app.get("/docs", (req, res) => {

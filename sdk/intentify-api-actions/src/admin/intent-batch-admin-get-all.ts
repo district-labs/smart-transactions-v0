@@ -1,7 +1,7 @@
-import { API_URL } from "./constants"
+import { API_URL } from "../constants"
 
-export async function intentBatchGetAll() {
-    const response = await fetch(`${API_URL}/intent-batch`, {
+export async function intentBatchAdminGetAll() {
+    const response = await fetch(`${API_URL}/admin/intent-batch`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -1,9 +1,11 @@
 "use client"
+
+import { useIntentBatchAdminGetAll } from "@/actions/admin/use-intent-batch-admin-get-all"
+
 import { IntentBatchTable } from "../../../components/admin/intent-batch-table"
-import { useIntentBatchGetAll } from "@/actions/use-get-intent-batch-all"
 
 export default function AdminPage() {
-  const intentBatch = useIntentBatchGetAll()
+  const intentBatch = useIntentBatchAdminGetAll()
   return (
     <>
       <div className="container pt-10 lg:pt-20">

@@ -13,22 +13,15 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 
-export function MarketingNav() {
+export function NavigationCore() {
   return (
     <div className="mr-4 hidden md:flex">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <Link href={'/'} legacyBehavior passHref>
+            <Link href={"/"} legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Strategies
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href={'/data-hub'} legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                ZK Data Hub
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>

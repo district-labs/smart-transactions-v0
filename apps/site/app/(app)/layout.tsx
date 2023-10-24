@@ -1,7 +1,7 @@
 import React from "react"
 
-import MarketingFooter from "@/components/layouts/marketing-footer"
-import MarketingHeader from "@/components/layouts/marketing-header"
+import Footer from "@/components/layouts/layout-footer"
+import Header from "@/components/layouts/layout-header"
 
 interface MarketingLayoutProps {
   children: React.ReactNode
@@ -10,9 +10,9 @@ interface MarketingLayoutProps {
 export default function MarketingLayout({ children }: MarketingLayoutProps) {
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
-      <MarketingHeader />
-      <main className="flex-1 py-10">{children}</main>
-      <MarketingFooter />
+      <Header />
+      <main className="flex-1">{children}</main>
+      <Footer />
     </div>
   )
 }

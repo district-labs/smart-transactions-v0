@@ -1,4 +1,4 @@
-import { db, eq, intentBatch, intents } from "@district-labs/intentify-database";
+import { and, db, eq, intentBatch, intents } from "@district-labs/intentify-database";
 import type { DbIntentBatch } from "@district-labs/intentify-database";
 
 /**
@@ -7,9 +7,16 @@ import type { DbIntentBatch } from "@district-labs/intentify-database";
  * @returns - Array of IntentBatch matching the filters.
  */
 export const getIntentBatchesFromDB = async (
-  filters: Partial<Omit<DbIntentBatch, "id" | "createdAt" | "updatedAt">>
+  filters: Partial<Omit<DbIntentBatch, "id" | "updatedAt">>
 ): Promise<DbIntentBatch[]> => {
-  return await db.query.intentBatch.findMany({
+
+  let filtersToApply: any = []
+  if(filters.strategyId) {
+    filtersToApply.push(eq(intentBatch.strategyId, filters.strategyId))
+  }
+
+  return db.query.intentBatch.findMany({
+    where: !filtersToApply ? undefined : (intentBatch) => and(...filtersToApply),
     with: {
       intents: true,
       intentBatchExecution: {

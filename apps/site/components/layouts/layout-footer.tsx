@@ -5,7 +5,7 @@ import { siteConfig } from "@/config/site"
 import { Icons } from "@/components/icons"
 import { ThemeToggle } from "@/components/theme-toggle"
 
-export default function MarketingFooter() {
+export default function Footer() {
   return (
     <footer className="border-t bg-background">
       <div className="container flex flex-col items-center justify-between py-8 md:flex-row">

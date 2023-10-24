@@ -1,6 +1,6 @@
+import { intentBatchCreate } from "@district-labs/intentify-api-actions"
 import { useGetSafeAddress } from "@district-labs/intentify-core-react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { intentBatchCreate } from '@district-labs/intentify-api-actions' 
 
 export function useActionIntentBatchCreate() {
   const queryClient = useQueryClient()

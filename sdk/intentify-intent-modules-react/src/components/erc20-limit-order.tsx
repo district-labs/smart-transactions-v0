@@ -3,11 +3,6 @@ import { Label } from "@district-labs/ui-react"
 
 import { TokenInputAmount } from "./fields/token-input-amount"
 
-interface Erc20LimitOrderTokenFieldConfig {
-  label: string
-  tokenList: TokenList
-}
-
 const defaultToken = {
   chainId: 5,
   address: "0x27326DeB3c3dc9EEf9C5769e7C2960C465B50156",
@@ -38,16 +33,20 @@ export const intentErc20LimitOrderFields = {
   tokenOutAndAmount: (
     intentBatch: any,
     setIntentBatch: any,
-    config: Erc20LimitOrderTokenFieldConfig
+    tokenList: TokenList,
+    config: {
+      label: string
+      classNameLabel?: string
+    }
   ) => (
     <>
       {config.label && (
-        <Label htmlFor="tokenOut" className="text-muted-foreground">
+        <Label htmlFor="tokenOut" className={config.classNameLabel}>
           {config.label}
         </Label>
       )}
       <TokenInputAmount
-        tokenList={config.tokenList}
+        tokenList={tokenList}
         amount={intentBatch["erc20LimitOrder"]["amountOut"]}
         setAmount={(newAmount) =>
           setIntentBatch((draft: any) => {
@@ -66,16 +65,20 @@ export const intentErc20LimitOrderFields = {
   tokenInAndAmount: (
     intentBatch: any,
     setIntentBatch: any,
-    config: Erc20LimitOrderTokenFieldConfig
+    tokenList: TokenList,
+    config: {
+      label: string
+      classNameLabel?: string
+    }
   ) => (
     <>
       {config.label && (
-        <Label htmlFor="tokenOut" className="text-muted-foreground">
+        <Label htmlFor="tokenOut" className={config.classNameLabel}>
           {config.label}
         </Label>
       )}
       <TokenInputAmount
-        tokenList={config.tokenList}
+        tokenList={tokenList}
         amount={intentBatch["erc20LimitOrder"]["amountIn"]}
         setAmount={(newAmount) =>
           setIntentBatch((draft: any) => {

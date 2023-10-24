@@ -3,10 +3,10 @@ import {
   createIntentBatchInDB,
   getIntentBatchFromDB,
   getIntentBatchesFromDB
-} from "../models/intent-batch";
-import CustomError from "../utils/customError";
-import { intentBatchFactory } from "../intent-batch-factory";
-import { SUPPORTED_CHAINS } from "../constants";
+} from "../../models/intent-batch";
+import CustomError from "../../utils/customError";
+import { intentBatchFactory } from "../../intent-batch-factory";
+import { SUPPORTED_CHAINS } from "../../constants";
 import { getIntentBatchTypedDataHash, getEIP712DomainPacketHash } from '@district-labs/intentify-core' 
 import { IntentifySafeModule } from '@district-labs/intentify-deployments' 
 
@@ -21,6 +21,8 @@ export const getIntentBatches = async (
 ) => {
   try {
     const filters = request.query;
+    console.log(filters, 'filters')
+    
     const intentBatches = await getIntentBatchesFromDB(filters);
 
     return response.status(200).json({ data: intentBatches });
@@ -62,8 +64,6 @@ export const createIntentBatch = async (
   try {
     // Destructure and validate required fields from the request body
     const { intentBatch, signature, chainId, strategyId } = request.body;
-
-    console.log(strategyId, 'strategyIdstrategyId')
 
     // Validate the signature
     if (!signature || signature.length !== 132) {

@@ -15,7 +15,8 @@ export type LimitOrderIntent = {
     amount: number
   }
   limitPrice: string
-  expiry: string
+  executeAfter: string
+  executeBefore: string
   status: "open" | "closed" | "canceled"
   intentBatch: IntentBatch
   intentBatchDb: IntentBatchQuery
@@ -23,22 +24,21 @@ export type LimitOrderIntent = {
 
 export function transformLimitOrderIntentQueryToLimitOrderData(
   intentBatch: IntentBatchQuery
-): LimitOrderIntent {
+) {
   const { intents } = intentBatch
-
-  // TODO: check if the intent is a limit order intent by using the ID
   return {
     chainId: Number(intentBatch.chainId),
     sell: {
-      asset: String(intents[2]?.intentArgs[0]?.value),
-      amount: Number(intents[2]?.intentArgs[2]?.value),
+      asset: String(intents[1]?.intentArgs[0]?.value),
+      amount: Number(intents[1]?.intentArgs[2]?.value),
     },
     receive: {
-      asset: String(intents[2]?.intentArgs[1]?.value),
-      amount: Number(intents[2]?.intentArgs[3]?.value),
+      asset: String(intents[1]?.intentArgs[1]?.value),
+      amount: Number(intents[1]?.intentArgs[3]?.value),
     },
-    limitPrice: String(intents[1]?.intentArgs[1]?.value),
-    expiry: String(intents[0]?.intentArgs[0]?.value),
+    limitPrice: String(0),
+    executeAfter: String(intents[0]?.intentArgs[0]?.value),
+    executeBefore: String(intents[0]?.intentArgs[1]?.value),
     status: getStatus(intentBatch.executedAt, intentBatch?.cancelledAt),
     intentBatch: transformIntentQueryToIntentBatchStruct(intentBatch),
     intentBatchDb: intentBatch,

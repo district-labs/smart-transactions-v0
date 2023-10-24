@@ -6,7 +6,7 @@
 import {
   strategyLeverageLongForm,
   useStrategyLeverageLong,
-} from "@/data/strategies/leverage-long"
+} from "@/data/strategies_archive/leverage-long"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"

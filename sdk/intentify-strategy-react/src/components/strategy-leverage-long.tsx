@@ -3,39 +3,26 @@
 import { IntentBatch, type TokenList } from "@district-labs/intentify-core"
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
-  intentErc20LimitOrder,
-  intentErc20LimitOrderFields,
-  intentTimestampRange,
-  intentTimestampRangeFields,
-  nonceManager,
-  nonceManagerFields,
+    intentAaveLeverageLong,
+    intentAaveLeverageLongFields,
+    nonceManager,
+    nonceManagerFields,
 } from "@district-labs/intentify-intent-modules-react"
 import { Card, CardContent, CardFooter } from "@district-labs/ui-react"
 import { useImmer } from "use-immer"
 import { useIntentifySafeModuleGetStandardNonce, useIntentifySafeModuleGetDimensionalNonce } from '@district-labs/intentify-core-react' 
 
-export type StrategyLimitOrder = {
+export type StrategyLeverageLong = {
   intentifySafeModuleAddress?: `0x${string}`
   root?: `0x${string}`
   chainId?: number
   tokenList: TokenList
   intentBatchFactory?: IntentBatchFactory
   config: {
-    minTimestamp: {
+    minHealthFactor: {
         label: string
         classNameLabel?: string
-    }
-    maxTimestamp: {
-        label: string
-        classNameLabel?: string
-    }
-    tokenOutAndAmount: {
-        label: string
-        classNameLabel?: string
-    }
-    tokenInAndAmount: {
-        label: string
-        classNameLabel?: string
+        classNameValue?: string
     }
   }
   onIntentBatchGenerated: (
@@ -46,20 +33,19 @@ export type StrategyLimitOrder = {
   }) => React.ReactNode
 }
 
-export function StrategyLimitOrder({
+export function StrategyLeverageLong({
   children,
   intentifySafeModuleAddress,
   root,
   chainId,
   tokenList,
-  config,
   intentBatchFactory,
   onIntentBatchGenerated,
-}: StrategyLimitOrder) {
+  config
+}: StrategyLeverageLong) {
   const [intentBatch, setIntentBatch] = useImmer({
     ...nonceManager,
-    ...intentTimestampRange,
-    ...intentErc20LimitOrder,
+    ...intentAaveLeverageLong
   })
 
   const {data: nonceStandardData, error: nonceStandardError} = useIntentifySafeModuleGetStandardNonce({
@@ -101,15 +87,9 @@ export function StrategyLimitOrder({
       ])
     }
 
-    intentBatchManager.add("TimestampRange", [
+    intentBatchManager.add("AaveLeverageLong", [
       String(intentBatch.timestampRange.minTimestamp),
       String(intentBatch.timestampRange.maxTimestamp),
-    ])
-    intentBatchManager.add("Erc20LimitOrder", [
-      intentBatch.erc20LimitOrder.tokenIn.address,
-      intentBatch.erc20LimitOrder.tokenOut.address,
-      intentBatch.erc20LimitOrder.amountIn,
-      intentBatch.erc20LimitOrder.amountOut,
     ])
     const intentBatchStruct =
       intentBatchManager.generate()
@@ -119,6 +99,7 @@ export function StrategyLimitOrder({
   return (
     <Card>
       <CardContent className="grid gap-6 pt-4">
+        {/* ----- Nonce Manager ----- */}
         <div>
           {
             nonceManagerFields.NonceType(
@@ -139,24 +120,44 @@ export function StrategyLimitOrder({
             )
           }
         </div>
-        <div className='grid grid-cols-2 gap-x-4'>
-          {intentTimestampRangeFields.minTimestamp(setIntentBatch, config.minTimestamp)}
-          {intentTimestampRangeFields.maxTimestamp(setIntentBatch, config.maxTimestamp)}
-        </div>
+        {/* ----- Interest Rate Mode ----- */}
         <div className=''>
-          {intentErc20LimitOrderFields.tokenOutAndAmount(
+          {intentAaveLeverageLongFields.InterestRateMode(
             intentBatch,
             setIntentBatch,
-            tokenList,
-            config.tokenOutAndAmount
+            {
+              label: "Interest Rate Mode",
+            }
           )}
         </div>
+        {/* ----- Supply Token ----- */}
         <div className=''>
-          {intentErc20LimitOrderFields.tokenInAndAmount(
+          {intentAaveLeverageLongFields.SupplyToken(
             intentBatch,
             setIntentBatch,
             tokenList,
-            config.tokenInAndAmount
+            {
+              label: "Supply",
+            }
+          )}
+        </div>
+        {/* ----- Borrow Token ----- */}
+        <div className=''>
+          {intentAaveLeverageLongFields.BorrowToken(
+            intentBatch,
+            setIntentBatch,
+            tokenList,
+            {
+              label: "Borrow",
+            }
+          )}
+        </div>
+        {/* ----- Minimum Health Factor ----- */}
+        <div className=''>
+          {intentAaveLeverageLongFields.MinHealthFactor(
+            intentBatch,
+            setIntentBatch,
+            config.minHealthFactor
           )}
         </div>
       </CardContent>

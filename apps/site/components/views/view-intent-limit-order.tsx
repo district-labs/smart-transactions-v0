@@ -19,12 +19,7 @@ export const ViewIntentLimitOrder = ({
     <div className={classes}>
       <FormIntentLimitOrder />
       {isSuccess && intentBatchQuery && Array.isArray(intentBatchQuery) && (
-        <UserLimitOrdersTable
-          pageCount={1}
-          data={intentBatchQuery?.map(
-            transformLimitOrderIntentQueryToLimitOrderData
-          )}
-        />
+        <UserLimitOrdersTable pageCount={1} />
       )}
     </div>
   )

@@ -12,6 +12,7 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "limit-order": "url('/images/story/limit-order.png')",
         saving: "url('/images/story/savings.png')",
         rebalance: "url('/images/story/reblance.png')",

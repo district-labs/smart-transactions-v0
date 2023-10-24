@@ -10,15 +10,17 @@ import {
 } from "@district-labs/intentify-core"
 import { useGetIntentifyModuleAddress } from "@district-labs/intentify-core-react"
 import { IntentModule } from "@district-labs/intentify-intent-batch"
-import { StrategyLimitOrder } from "@district-labs/intentify-strategy-react"
+import { StrategyLeverageLong } from "@district-labs/intentify-strategy-react"
 import { Button } from "@district-labs/ui-react"
 import { useAccount, useChainId, useSignTypedData } from "wagmi"
 
-export type FormErc20LimitOrder = React.HTMLAttributes<HTMLElement> & {
+console.log(StrategyLeverageLong, 'StrategyLeverageLongStrategyLeverageLong')
+
+export type FormStrategyLeverageLong = React.HTMLAttributes<HTMLElement> & {
   strategyId: string
 }
 
-export function FormErc20LimitOrder({ strategyId }: FormErc20LimitOrder) {
+export function FormStrategyLeverageLong({ strategyId }: FormStrategyLeverageLong) {
   const { address } = useAccount()
   const chainId = useChainId()
   const intentifyAddress = useGetIntentifyModuleAddress(chainId)
@@ -51,7 +53,7 @@ export function FormErc20LimitOrder({ strategyId }: FormErc20LimitOrder) {
     [signTypedDataAsync, chainId, intentifyAddress, mutateAsync]
   )
   return (
-    <StrategyLimitOrder
+    <StrategyLeverageLong
       intentifySafeModuleAddress={intentifyAddress}
       root={address}
       chainId={chainId}
@@ -59,23 +61,12 @@ export function FormErc20LimitOrder({ strategyId }: FormErc20LimitOrder) {
       onIntentBatchGenerated={onIntentBatchGenerated}
       intentBatchFactory={intentBatchFactory}
       config={{
-        minTimestamp: {
-          label: "Execute After",
-          className: "text-muted",
-        },
-        maxTimestamp: {
-          label: "Execute Before",
-          className: "text-muted-background",
-        },
-        tokenOutAndAmount: {
-          label: "Sell",
-          className: "text-muted-background",
-        },
-        tokenInAndAmount: {
-          label: "Buy",
-          className: "text-muted-background",
-        },
-      }}
+        minHealthFactor: {
+            label: "Minimum Health Factor",
+            classNameLabel: 'text-muted-background',
+            classNameValue: 'pl-2 text-lg text-muted-background w-[36px] block text-right'
+          },
+        }}
     >
       {({
         handleGenerateIntentBatch,
@@ -94,8 +85,8 @@ export function FormErc20LimitOrder({ strategyId }: FormErc20LimitOrder) {
           )}
         </>
       )}
-    </StrategyLimitOrder>
+    </StrategyLeverageLong>
   )
 }
 
-export default FormErc20LimitOrder
+export default FormStrategyLeverageLong

@@ -1,5 +1,5 @@
-import { API_URL } from "./constants"
-import { toObjectString } from "./utils"
+import { API_URL } from "../constants"
+import { toObjectString } from "../utils"
 
 export async function intentBatchCreate(intentBatch: any) {
     if (!intentBatch) throw new Error("No intent batch provided")

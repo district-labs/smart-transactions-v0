@@ -3,7 +3,7 @@ import { type MainNavItem } from "@/types"
 import { Icons } from "@/components/icons"
 
 export const siteConfig = {
-  name: "District",
+  name: "District Finance",
   url: "https://districtlabs.com",
   description:
     "Interact with blockchains without the hassle. Smart transactions for smart contracts.",

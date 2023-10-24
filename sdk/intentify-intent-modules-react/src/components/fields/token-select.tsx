@@ -21,7 +21,9 @@ export function TokenSelect({
         setSelectedToken={setSelectedToken}
         className="mr-2"
       />
-      <span className="text-sm font-medium">{selectedToken.symbol}</span>
+      <span className="text-sm font-medium">
+        {selectedToken.name} ({selectedToken.symbol})
+      </span>
     </div>
   )
 }

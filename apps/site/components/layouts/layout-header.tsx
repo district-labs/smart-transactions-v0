@@ -8,13 +8,14 @@ import { IsSignedIn } from "@/integrations/siwe/components/is-signed-in"
 
 import { cn } from "@/lib/utils"
 import useScroll from "@/hooks/use-scroll"
-import { MarketingNav } from "@/components/layouts/marketing-nav"
-import { MobileMarketingNav } from "@/components/layouts/mobile-marketing-nav"
+import { NavigationCore } from "@/components/layouts/navigation-core"
+import { NavigationPanel } from "@/components/layouts/navigation-panel"
 
 import { WalletConnect } from "../blockchain/wallet-connect"
 import { IsWalletConnected } from "../shared/is-wallet-connected"
+import { NavigationAccount } from "./navigation-account"
 
-export default function MarketingHeader() {
+export default function Header() {
   const scrolled = useScroll(0)
 
   return (
@@ -24,12 +25,11 @@ export default function MarketingHeader() {
         scrolled && "border-b bg-background/90"
       )}
     >
-      <div className=" flex h-16 flex-row-reverse items-center justify-between px-10 sm:flex-row">
-        <div className="flex flex-1 justify-end sm:justify-start">
-          <MarketingNav />
-          <MobileMarketingNav />
+      <div className=" flex h-16 items-center justify-between px-10 sm:flex-row">
+        <div className="sm:flex flex-1 hidden justify-end sm:justify-start">
+          <NavigationCore />
         </div>
-        <Link href="/" className="flex items-center space-x-2">
+        <Link href="/" className="flex flex-1 items-center space-x-2">
           <Image
             src="/images/auth-layout.webp"
             alt="District Labs Logo"
@@ -37,13 +37,9 @@ export default function MarketingHeader() {
             height={45}
           />
         </Link>
-        <div className="hidden flex-1 justify-end space-x-2 sm:flex">
-          <IsWalletConnected>
-            <WalletConnect />
-          </IsWalletConnected>
-          <IsSignedIn>
-            <ButtonSIWELogout />
-          </IsSignedIn>
+        <div className="justify-end space-x-2 sm:flex">
+          {/* <NavigationAccount /> */}
+          <NavigationPanel />
         </div>
       </div>
     </header>
