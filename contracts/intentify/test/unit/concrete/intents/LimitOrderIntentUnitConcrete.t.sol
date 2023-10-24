@@ -4,7 +4,7 @@ pragma solidity >=0.8.19 <0.9.0;
 import { ERC20Mintable } from "~/test/mocks/ERC20Mintable.sol";
 import { Intent, Signature, Hook } from "~/src/TypesAndDecoders.sol";
 import { SwapRouter } from "~/src/periphery/SwapRouter.sol";
-import { LimitOrderIntent } from "~/src/intents/LimitOrderIntent.sol";
+import { LimitOrderIntent, IntentWithHookAbstract } from "~/src/intents/LimitOrderIntent.sol";
 import { LimitOrderIntentHarness } from "~/test/mocks/harness/LimitOrderIntentHarness.sol";
 import { BaseTest } from "~/test/Base.t.sol";
 
@@ -203,4 +203,36 @@ contract LimitOrderIntent_Unit_Concrete_Test is BaseTest {
         );
         _limitOrderIntentHarness.exposed_unlock(intent, hook, 0);
     }
+
+    function test_execute_RevertWhen_InvalidRoot() external {
+        Hook memory hook = setupHook();
+             Intent memory intent = Intent({
+            // The root is not the same as the safe created address, so it should revert with `InvalidRoot`.
+            root: address(0),
+            value: 0,
+            target: address(_limitOrderIntentHarness),
+            data: bytes("")
+        });
+
+        vm.expectRevert(IntentWithHookAbstract.InvalidRoot.selector);
+        _limitOrderIntentHarness.execute(intent, hook);
+    }
+
+    function test_execute_RevertWhen_InvalidTarget() external {
+        Hook memory hook = setupHook();
+             Intent memory intent = Intent({
+            // The root is not the same as the safe created address, so it should revert with `InvalidRoot`.
+            root: address(_safeCreatedMock),
+            value: 0,
+            target: address(0),
+            data: bytes("")
+        });
+
+        // Execute from the root address
+        vm.prank(_safeCreatedMock);
+        vm.expectRevert(IntentWithHookAbstract.InvalidTarget.selector);
+        _limitOrderIntentHarness.execute(intent, hook);
+    }
+
+
 }

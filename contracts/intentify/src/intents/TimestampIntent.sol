@@ -12,10 +12,10 @@ contract TimestampIntent is IntentAbstract {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @dev The current block timestamp is greater than the maximum timestamp.
-    error Expired();
+    error Expired(uint128 currentTimestamp, uint128 maxTimestamp);
 
     /// @dev The current block timestamp is less than the minimum timestamp.
-    error Early();
+    error Early(uint128 currentTimestamp, uint128 minTimestamp);
 
     /*//////////////////////////////////////////////////////////////////////////
                                 READ FUNCTIONS
@@ -45,9 +45,9 @@ contract TimestampIntent is IntentAbstract {
         (uint128 minTimestamp, uint128 maxTimestamp) = _decodeIntent(intent);
 
         if (block.timestamp > maxTimestamp) {
-            revert Expired();
+            revert Expired(uint128(block.timestamp), maxTimestamp);
         } else if (block.timestamp < minTimestamp) {
-            revert Early();
+            revert Early(uint128(block.timestamp), minTimestamp);
         }
 
         return true;
