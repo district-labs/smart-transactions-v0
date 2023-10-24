@@ -7,7 +7,13 @@ import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol"
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 import { AggregatorV3Interface } from "@chainlink/v0.8/interfaces/AggregatorV3Interface.sol";
 
+/// @title Rebalance Intent
+/// @notice An intent to rebalance the tokens in the balance of a wallet given a set of tokens and weights.
 contract RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransaction {
+    /*//////////////////////////////////////////////////////////////////////////
+                                TYPE DECLARATIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
     struct RebalanceToken {
         address token;
         address tokenPriceFeed;
@@ -15,8 +21,23 @@ contract RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransaction {
         uint24 weight;
     }
 
-    /// @dev Rebalance weights must sum to 100% with 3 decimals of precision (100_000).
+    /*//////////////////////////////////////////////////////////////////////////
+                                  CONSTANTS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice The maximum weight of a token in the rebalance with 3 decimals of precision. All rebalance token weights
+    /// must sum to 100% (MAX_WEIGHT).
+    uint24 public constant MAX_WEIGHT = 100_000;
+
+    /*//////////////////////////////////////////////////////////////////////////
+                                CUSTOM ERRORS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @dev Rebalance weights must sum to 100% with 3 decimals of precision (MAX_WEIGHT).
     error InvalidRebalanceWeights();
+
+    /// @dev There must be at least 2 tokens to rebalance.
+    error InvalidRebalanceTokensAmount();
 
     /// @dev A token cannot have a weight of 0.
     error ZeroWeightRebalanceToken();
@@ -24,25 +45,39 @@ contract RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransaction {
     /// @dev The user does not have any balance of the tokens to be rebalanced.
     error InsufficientInitialBalance();
 
+    /// @dev The amount of tokens transferred to the intent root is less than the minimum amount expected.
     error InsufficientBalancePostHook(address token, uint256 balance, uint256 minBalance);
 
+    /*//////////////////////////////////////////////////////////////////////////
+                                CONSTRUCTOR
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice Initialize the smart contract
+    /// @param _intentifySafeModule The address of the Intentify Safe Module
     constructor(address _intentifySafeModule) ExecuteRootTransaction(_intentifySafeModule) { }
 
+    /*//////////////////////////////////////////////////////////////////////////
+                                READ FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice Helper function to encode hook parameters into a byte array.
+    /// @param executor The address of the hook executor.
+    /// @param hookTxData The transaction data to be executed in the hook.
+    /// @return data The encoded data.
     function encodeHook(address executor, bytes memory hookTxData) external pure returns (bytes memory data) {
         data = abi.encode(executor, hookTxData);
     }
 
+    /// @notice Helper function to encode provided parameters into a byte array.
+    /// @param rebalanceTokens The tokens to be rebalanced.
+    /// @return data The encoded intent parameters.
     function encodeIntent(RebalanceToken[] memory rebalanceTokens) external pure returns (bytes memory) {
         return abi.encode(rebalanceTokens);
     }
 
-    function _decodeHook(Hook calldata hook) internal pure returns (address executor, bytes memory hookTxData) {
-        return abi.decode(hook.data, (address, bytes));
-    }
-
-    function _decodeIntent(Intent calldata intent) internal pure returns (RebalanceToken[] memory) {
-        return abi.decode(intent.data, (RebalanceToken[]));
-    }
+    /*//////////////////////////////////////////////////////////////////////////
+                                   WRITE FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
 
     /// @inheritdoc IntentWithHookAbstract
     function execute(
@@ -66,16 +101,33 @@ contract RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransaction {
         return true;
     }
 
+    /*//////////////////////////////////////////////////////////////////////////
+                              INTERNAL READ FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice Calculate the expected balance of each token after the rebalance.
+    /// @param intent The intent to be executed.
+    /// @return tokenMinBalances The expected balance of each token after the rebalance.
     function _calculateExpectedTokenBalances(Intent calldata intent) internal view returns (uint256[] memory) {
         RebalanceToken[] memory rebalanceTokens = _decodeIntent(intent);
+
+        if (rebalanceTokens.length < 2) {
+            revert InvalidRebalanceTokensAmount();
+        }
+
         uint256[] memory tokenMinBalances = new uint256[](rebalanceTokens.length);
         int256[] memory tokenPrices = new int256[](rebalanceTokens.length);
 
+        // Total weight of the tokens to be rebalanced. It must be 100% with 3 decimals of precision (MAX_WEIGHT).
         uint256 totalWeight = 0;
+
+        // Total value of the tokens to be rebalanced in the base currency of the price feed. It has the amount of
+        // decimals of precision of the price feed.
+        // It must be greater than 0.
         uint256 totalValue = 0;
 
         // Calculate the total value of the tokens to be rebalanced.
-        // Ensure that the total weight is 100% with 3 decimals of precision (100_000).
+        // Ensure that the total weight is 100% with 3 decimals of precision (MAX_WEIGHT).
         for (uint256 i = 0; i < rebalanceTokens.length; i++) {
             /// @dev The token cannot have a weight of 0.
             if (rebalanceTokens[i].weight == 0) {
@@ -90,7 +142,7 @@ contract RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransaction {
             totalValue += (uint256(tokenPrices[i]) * tokenBalance) / (10 ** ERC20(rebalanceTokens[i].token).decimals());
         }
 
-        if (totalWeight != 100_000) {
+        if (totalWeight != MAX_WEIGHT) {
             revert InvalidRebalanceWeights();
         }
 
@@ -102,12 +154,33 @@ contract RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransaction {
         for (uint256 i = 0; i < rebalanceTokens.length; i++) {
             tokenMinBalances[i] = (
                 totalValue * rebalanceTokens[i].weight * 10 ** ERC20(rebalanceTokens[i].token).decimals()
-            ) / (100_000 * uint256(tokenPrices[i]));
+            ) / (MAX_WEIGHT * uint256(tokenPrices[i]));
         }
 
         return tokenMinBalances;
     }
 
+    /// @notice Helper function to decode hook parameters from a byte array.
+    /// @param hook The hook to be decoded.
+    /// @return executor The address of the hook executor.
+    function _decodeHook(Hook calldata hook) internal pure returns (address executor, bytes memory hookTxData) {
+        return abi.decode(hook.data, (address, bytes));
+    }
+
+    /// @notice Helper function to decode intent parameters from a byte array.
+    /// @param intent The intent to be decoded.
+    /// @return rebalanceTokens The tokens to be rebalanced.
+    function _decodeIntent(Intent calldata intent) internal pure returns (RebalanceToken[] memory) {
+        return abi.decode(intent.data, (RebalanceToken[]));
+    }
+
+    /*//////////////////////////////////////////////////////////////////////////
+                              INTERNAL WRITE FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice Execute the hook that sends the tokens to rebalance the balances in the intent root.
+    /// @param hook The hook to be executed.
+    /// @return success Whether the hook was executed successfully.
     function _hook(Hook calldata hook) internal returns (bool success) {
         (, bytes memory hookTxData) = _decodeHook(hook);
         bytes memory errorMessage;
@@ -121,6 +194,12 @@ contract RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransaction {
         }
     }
 
+    /// @notice Unlock the tokens to the hook executor if the balance of each rebalanced token is greater than the
+    /// minimum balance.
+    /// @param intent Contains data related to intent.
+    /// @param hook Contains data related to hook.
+    /// @param tokenMinBalances The minimum balance of each token after the rebalance.
+    /// @return success Whether the tokens were unlocked successfully.
     function _unlock(
         Intent calldata intent,
         Hook calldata hook,
@@ -134,7 +213,7 @@ contract RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransaction {
 
         for (uint256 i = 0; i < rebalanceTokens.length; i++) {
             uint256 tokenBalance = ERC20(rebalanceTokens[i].token).balanceOf(intent.root);
-            if (tokenMinBalances[i] > tokenBalance) {
+            if (tokenBalance < tokenMinBalances[i]) {
                 revert InsufficientBalancePostHook(rebalanceTokens[i].token, tokenBalance, tokenMinBalances[i]);
             }
 
