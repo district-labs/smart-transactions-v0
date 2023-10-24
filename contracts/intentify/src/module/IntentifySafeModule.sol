@@ -10,6 +10,8 @@ import {
     TypesAndDecoders
 } from "../TypesAndDecoders.sol";
 import { SafeMinimal, Enum } from "../interfaces/SafeMinimal.sol";
+import { IntentAbstract } from "../abstracts/IntentAbstract.sol";
+import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
 import { NonceManagerMultiTenant } from "../nonce/NonceManagerMultiTenant.sol";
 import { RevertMessageReasonHelper } from "../helpers/RevertMessageReasonHelper.sol";
 
@@ -208,7 +210,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Rever
     /// @param intent The intent to be encoded.
     /// @return data The calldata to be executed.
     function _generateIntentCalldata(Intent memory intent) internal pure returns (bytes memory) {
-        return abi.encodeWithSignature("execute((address,address,uint256,bytes))", intent);
+        return abi.encodeWithSelector(IntentAbstract.execute.selector, intent);
     }
 
     /// @notice Helper function to generate the calldata for the intent with the hook.
@@ -223,7 +225,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Rever
         pure
         returns (bytes memory)
     {
-        return abi.encodeWithSignature("execute((address,address,uint256,bytes),(address,bytes))", intent, hook);
+        return abi.encodeWithSelector(IntentWithHookAbstract.execute.selector, intent, hook);
     }
 
     /// @notice Helper function to generate the EIP712 domain hash for the intentify safe module.
