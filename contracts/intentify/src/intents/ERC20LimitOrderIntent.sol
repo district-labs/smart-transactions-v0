@@ -6,9 +6,10 @@ import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
-/// @title Limit Order Intent
-/// @notice An intent to execute a limit order at the rate defined by the user at the time of the intent creation.
-contract LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction {
+/// @title ERC20 Limit Order Intent
+/// @notice An intent to execute a limit order of ERC20 tokens at the rate defined by the user at the time of the intent
+/// creation.
+contract ERC20LimitOrderIntent is IntentWithHookAbstract, ExecuteRootTransaction {
     /*//////////////////////////////////////////////////////////////////////////
                                 CUSTOM ERRORS
     //////////////////////////////////////////////////////////////////////////*/

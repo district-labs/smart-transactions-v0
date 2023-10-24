@@ -4,11 +4,11 @@ pragma solidity >=0.8.19 <0.9.0;
 import { ERC20Mintable } from "../mocks/ERC20Mintable.sol";
 import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "../../src/TypesAndDecoders.sol";
 import { SwapRouter } from "../../src/periphery/SwapRouter.sol";
-import { LimitOrderIntent } from "../../src/intents/LimitOrderIntent.sol";
+import { ERC20LimitOrderIntent } from "../../src/intents/ERC20LimitOrderIntent.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 
-contract LimitOrderIntentHarness is LimitOrderIntent {
-    constructor(address _intentifySafeModule) LimitOrderIntent(_intentifySafeModule) { }
+contract ERC20LimitOrderIntentHarness is ERC20LimitOrderIntent {
+    constructor(address _intentifySafeModule) ERC20LimitOrderIntent(_intentifySafeModule) { }
 
     function exposed_unlock(
         Intent calldata intent,
@@ -26,8 +26,8 @@ contract LimitOrderIntentHarness is LimitOrderIntent {
     }
 }
 
-contract LimitOrderIntentTest is SafeTestingUtils {
-    LimitOrderIntentHarness internal _limitOrderIntent;
+contract ERC20LimitOrderIntentTest is SafeTestingUtils {
+    ERC20LimitOrderIntent internal _erc20LimitOrderIntent;
     ERC20Mintable internal _tokenA;
     ERC20Mintable internal _tokenB;
 
@@ -40,7 +40,7 @@ contract LimitOrderIntentTest is SafeTestingUtils {
         initializeBase();
         initializeSafeBase();
 
-        _limitOrderIntent = new LimitOrderIntentHarness(address(_intentifySafeModule));
+        _erc20LimitOrderIntent = new ERC20LimitOrderIntentHarness(address(_intentifySafeModule));
         _tokenA = new ERC20Mintable();
         _tokenB = new ERC20Mintable();
 
@@ -55,7 +55,7 @@ contract LimitOrderIntentTest is SafeTestingUtils {
     /* Success                                                                               */
     /* ===================================================================================== */
 
-    function test_LimitOrderIntent_Success() external {
+    function test_ERC20LimitOrderIntent_Success() external {
         address executor = address(0x1234);
 
         setupBalance(address(_safeCreated), address(_tokenA), startingBalance);
@@ -65,8 +65,8 @@ contract LimitOrderIntentTest is SafeTestingUtils {
         intents[0] = Intent({
             root: address(_safeCreated),
             value: 0,
-            target: address(_limitOrderIntent),
-            data: _limitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
+            target: address(_erc20LimitOrderIntent),
+            data: _erc20LimitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
 
         IntentBatch memory intentBatch =
@@ -81,7 +81,7 @@ contract LimitOrderIntentTest is SafeTestingUtils {
             "swap(address,address,uint256)", address(_safeCreated), address(_tokenB), endingBalance
         );
 
-        bytes memory hookData = _limitOrderIntent.encodeHook(executor, hookTxData);
+        bytes memory hookData = _erc20LimitOrderIntent.encodeHook(executor, hookTxData);
         hooks[0] = Hook({ target: address(_swapRouter), data: hookData });
 
         IntentBatchExecution memory batchExecution =
@@ -97,7 +97,7 @@ contract LimitOrderIntentTest is SafeTestingUtils {
 
     function test_encode_Success() external {
         bytes memory encodeData =
-            _limitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance);
+            _erc20LimitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance);
         assertEq(encodeData, abi.encode(address(_tokenA), address(_tokenB), startingBalance, endingBalance));
     }
 
@@ -105,7 +105,7 @@ contract LimitOrderIntentTest is SafeTestingUtils {
     /* Failing                                                                               */
     /* ===================================================================================== */
 
-    function test_RevertWhen_LimitOrderIntent_InsufficientTokenBalancePostHook() external {
+    function test_RevertWhen_ERC20LimitOrderIntent_InsufficientTokenBalancePostHook() external {
         address executor = address(0x1234);
 
         setupBalance(address(_safeCreated), address(_tokenA), startingBalance);
@@ -115,8 +115,8 @@ contract LimitOrderIntentTest is SafeTestingUtils {
         intents[0] = Intent({
             root: address(_safeCreated),
             value: 0,
-            target: address(_limitOrderIntent),
-            data: _limitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
+            target: address(_erc20LimitOrderIntent),
+            data: _erc20LimitOrderIntent.encodeIntent(address(_tokenA), address(_tokenB), startingBalance, endingBalance)
         });
 
         IntentBatch memory intentBatch =
@@ -133,7 +133,7 @@ contract LimitOrderIntentTest is SafeTestingUtils {
             address(_tokenB),
             endingBalance / 2 // Send half of the tokens expected, so the intent should revert
         );
-        bytes memory hookData = _limitOrderIntent.encodeHook(executor, hookTxData);
+        bytes memory hookData = _erc20LimitOrderIntent.encodeHook(executor, hookTxData);
 
         hooks[0] = Hook({ target: address(_swapRouter), data: hookData });
 

@@ -2,14 +2,14 @@
 pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
-import { LimitOrderIntent } from "../../../src/intents/LimitOrderIntent.sol";
+import { ERC20LimitOrderIntent } from "../../../src/intents/ERC20LimitOrderIntent.sol";
 
-contract LimitOrderIntentDeploy is Script {
+contract ERC20LimitOrderIntentDeploy is Script {
     function run(address intentifySafeModule) external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        LimitOrderIntent limitOrderIntent = new LimitOrderIntent(intentifySafeModule);
+        ERC20LimitOrderIntent erc20LimitOrderIntent = new ERC20LimitOrderIntent(intentifySafeModule);
 
         vm.stopBroadcast();
     }
