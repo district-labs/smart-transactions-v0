@@ -5,9 +5,9 @@ import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
-/// @title Tip Eth Intent
+/// @title Eth Tip Intent
 /// @notice An intent that allows the intent root to tip the hook executor with ETH.
-contract TipEthIntent is IntentWithHookAbstract, ExecuteRootTransaction {
+contract EthTipIntent is IntentWithHookAbstract, ExecuteRootTransaction {
     /*//////////////////////////////////////////////////////////////////////////
                                 CONSTRUCTOR
     //////////////////////////////////////////////////////////////////////////*/
