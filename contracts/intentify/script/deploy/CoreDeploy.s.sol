@@ -6,6 +6,7 @@ import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
 import { IntentifySafeModuleBundler } from "../../src/module/IntentifySafeModuleBundler.sol";
 import { WalletFactory } from "../../src/WalletFactory.sol";
 import { ERC20LimitOrderIntent } from "../../src/intents/ERC20LimitOrderIntent.sol";
+import { BlockNumberIntent } from "../../src/intents/BlockNumberIntent.sol";
 import { TimestampIntent } from "../../src/intents/TimestampIntent.sol";
 import { UniswapV3TwapIntent } from "../../src/intents/UniswapV3TwapIntent.sol";
 
@@ -22,6 +23,7 @@ contract CoreDeploy is Script {
 
         // Intent Modules Contracts
         new ERC20LimitOrderIntent(intentifySafeModule);
+        new BlockNumberIntent();
         new TimestampIntent();
         new UniswapV3TwapIntent();
         vm.stopBroadcast();

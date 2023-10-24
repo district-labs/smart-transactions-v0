@@ -11,7 +11,6 @@ contract EthTipIntentTest is SafeTestingUtils {
     ERC20TipIntent internal _erc20TipIntent;
     ERC20Mintable internal _erc20Token;
 
-
     function setUp() public virtual {
         initializeBase();
         initializeSafeBase();
