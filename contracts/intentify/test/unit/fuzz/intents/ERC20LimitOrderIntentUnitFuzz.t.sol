@@ -82,7 +82,7 @@ contract ERC20LimitOrderIntentUnitFuzzTest is BaseTest {
         _erc20limitOrderIntentHarness.execute(intent, hook);
 
         // Mocks the `balanceOf` function to simulate a transfer for the safe.
-           vm.mockCall(
+        vm.mockCall(
             address(_tokenB),
             abi.encodeWithSelector(_tokenB.balanceOf.selector, _safeCreatedMock),
             abi.encode(endingBalance)
@@ -122,12 +122,16 @@ contract ERC20LimitOrderIntentUnitFuzzTest is BaseTest {
         _erc20limitOrderIntentHarness.exposed_unlock(intent, hook, 0);
     }
 
-    function test_exposed_unlock_ReverWhen_InsufficientInputAmount_InsufficientEndingBalance(   uint256 startingBalance,
-        uint256 endingBalance, uint256 insufficientEndingBalance) external {
-                    vm.assume(startingBalance > 0);
+    function test_exposed_unlock_ReverWhen_InsufficientInputAmount_InsufficientEndingBalance(
+        uint256 startingBalance,
+        uint256 endingBalance,
+        uint256 insufficientEndingBalance
+    )
+        external
+    {
+        vm.assume(startingBalance > 0);
         vm.assume(endingBalance > 0);
         vm.assume(endingBalance > insufficientEndingBalance);
-
 
         // Prepare intent
         Intent memory intent = setupIntent(startingBalance, endingBalance);
@@ -145,8 +149,9 @@ contract ERC20LimitOrderIntentUnitFuzzTest is BaseTest {
         // Execute exposed_unlock. Expects it to revert with InsufficientInputAmount since the amountIn token was not
         // sent to the safe entirely, just half of it.
         vm.expectRevert(
-            abi.encodeWithSelector(ERC20LimitOrderIntent.InsufficientInputAmount.selector, insufficientEndingBalance,
-    endingBalance)
+            abi.encodeWithSelector(
+                ERC20LimitOrderIntent.InsufficientInputAmount.selector, insufficientEndingBalance, endingBalance
+            )
         );
         _erc20limitOrderIntentHarness.exposed_unlock(intent, hook, 0);
     }

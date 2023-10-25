@@ -9,7 +9,7 @@ import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 import { BaseTest } from "../Base.t.sol";
 import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
-import { Hook, Signature } from "../../src/TypesAndDecoders.sol";
+import { Hook, Intent, IntentBatch, IntentBatchExecution, Signature } from "../../src/TypesAndDecoders.sol";
 
 contract SafeTestingUtils is BaseTest {
     Safe internal _safe;
@@ -47,6 +47,22 @@ contract SafeTestingUtils is BaseTest {
     function _getMessageHash(Safe _safe, bytes memory message) internal view returns (bytes32) {
         bytes32 safeMessageHash = keccak256(abi.encode(SAFE_MSG_TYPEHASH, keccak256(message)));
         return keccak256(abi.encodePacked(bytes1(0x19), bytes1(0x01), _safe.domainSeparator(), safeMessageHash));
+    }
+
+    function _generateIntentBatchExecution(
+        Intent[] memory intents,
+        Hook[] memory hooks
+    )
+        internal
+        view
+        returns (IntentBatchExecution memory batchExecution)
+    {
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
+
+        batchExecution =
+            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
     }
 
     function _setupSafe(address owner) internal returns (Safe safe) {
