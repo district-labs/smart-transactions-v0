@@ -57,6 +57,8 @@ contract TimestampIntentUnitConcreteTest is BaseTest {
             data: bytes("")
         });
 
+        // Execute from the root address
+        vm.prank(_safeCreatedMock);
         vm.expectRevert(IntentAbstract.InvalidRoot.selector);
         _timestampIntentHarness.execute(intent);
     }

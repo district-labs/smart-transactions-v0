@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19 <0.9.0;
 
-import { IUniswapV3Pool } from "uniswap-v3-core/interfaces/IUniswapV3Pool.sol";
 import { TickMath } from "uniswap-v3-core/libraries/TickMath.sol";
 import { FixedPoint96 } from "uniswap-v3-core/libraries/FixedPoint96.sol";
 import { FullMath } from "uniswap-v3-core/libraries/FullMath.sol";

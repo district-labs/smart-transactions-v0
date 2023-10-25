@@ -92,7 +92,7 @@ contract TimestampIntent_Unit_Fuzz_Test is BaseTest {
 
         // Execute from the root address
         vm.prank(_safeCreatedMock);
-        vm.expectRevert(abi.encodeWithSelector(TimestampIntent.Early.selector, block.timestamp, maxTimestamp));
+        vm.expectRevert(abi.encodeWithSelector(TimestampIntent.Expired.selector, block.timestamp, maxTimestamp));
         _timestampIntent.execute(intent);
     }
 }

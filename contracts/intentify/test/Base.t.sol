@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import { StdCheats } from "forge-std/StdCheats.sol";
-import { PRBTest } from "@prb/test/PRBTest.sol";
+import { Test } from "forge-std/Test.sol";
 import { RevertMessageReasonHelper } from "~/src/helpers/RevertMessageReasonHelper.sol";
 
-contract BaseTest is PRBTest, StdCheats, RevertMessageReasonHelper {
+contract BaseTest is Test, RevertMessageReasonHelper {
     uint256 SIGNER = 0xA11CE;
     uint256 WALLET1 = 0xA11CE;
     uint256 WALLET2 = 0xA11CE;
