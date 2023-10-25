@@ -2,14 +2,14 @@
 pragma solidity >=0.8.19;
 
 import "forge-std/Script.sol";
-import { TokenRouterReleaseIntent } from "../../../src/intents/TokenRouterReleaseIntent.sol";
+import { BlockNumberIntent } from "../../../src/intents/BlockNumberIntent.sol";
 
-contract TokenRouterReleaseIntentDeploy is Script {
+contract BlockNumberIntentDeploy is Script {
     function run() external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        TokenRouterReleaseIntent tokenRouterReleaseIntent = new TokenRouterReleaseIntent();
+        BlockNumberIntent blockNumberIntent = new BlockNumberIntent();
 
         vm.stopBroadcast();
     }

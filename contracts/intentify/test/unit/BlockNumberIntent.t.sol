@@ -9,17 +9,17 @@ import {
     Hook,
     TypesAndDecoders
 } from "../../src/TypesAndDecoders.sol";
-import { TimestampIntent, IntentAbstract } from "../../src/intents/TimestampIntent.sol";
+import { BlockNumberIntent, IntentAbstract } from "../../src/intents/BlockNumberIntent.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 
-contract TimestampIntentTest is SafeTestingUtils {
-    TimestampIntent internal _timestampIntent;
+contract BlockNumberIntentTest is SafeTestingUtils {
+    BlockNumberIntent internal _blockNumberIntent;
 
     function setUp() public virtual {
         initializeBase();
         initializeSafeBase();
 
-        _timestampIntent = new TimestampIntent();
+        _blockNumberIntent = new BlockNumberIntent();
     }
 
     function generateCalldata(Intent calldata intent) external pure returns (bytes memory) {
@@ -31,16 +31,20 @@ contract TimestampIntentTest is SafeTestingUtils {
     /* Success                                                                               */
     /* ===================================================================================== */
 
-    function test_timestampAfterIntent_Success(uint128 pastSeconds) external {
-        vm.assume(pastSeconds > 0);
-        vm.assume(pastSeconds < block.timestamp);
+    function test_blockNumberAfterIntent_Success(uint128 pastBlocks, uint128 blockNumber) external {
+        vm.assume(pastBlocks > 0);
+        vm.assume(blockNumber > 0);
+        vm.assume(pastBlocks < blockNumber);
+
+        // Set the block.number to `blockNumber`
+        vm.roll(blockNumber);
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             root: address(_safeCreated),
             value: 0,
-            target: address(_timestampIntent),
-            data: _timestampIntent.encodeIntent(uint128(block.timestamp - pastSeconds), type(uint128).max)
+            target: address(_blockNumberIntent),
+            data: _blockNumberIntent.encodeIntent(uint128(block.number - pastBlocks), type(uint128).max)
         });
 
         IntentBatch memory intentBatch =
@@ -58,16 +62,21 @@ contract TimestampIntentTest is SafeTestingUtils {
         _intentifySafeModule.execute(batchExecution);
     }
 
-    function test_timestampBeforeIntent_Success(uint128 pastSeconds) external {
-        vm.assume(pastSeconds > 0);
-        vm.assume(pastSeconds + block.timestamp < type(uint128).max);
+    function test_blockNumberBeforeIntent_Success(uint128 pastBlocks, uint128 blockNumber) external {
+        vm.assume(pastBlocks > 0);
+        vm.assume(blockNumber > 0);
+        vm.assume(pastBlocks < type(uint128).max / 2);
+        vm.assume(blockNumber < type(uint128).max / 2);
+
+        // Set the block.number to `blockNumber`
+        vm.roll(blockNumber);
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             root: address(_safeCreated),
             value: 0,
-            target: address(_timestampIntent),
-            data: _timestampIntent.encodeIntent(type(uint128).min, uint128(block.timestamp + pastSeconds))
+            target: address(_blockNumberIntent),
+            data: _blockNumberIntent.encodeIntent(type(uint128).min, uint128(block.number + pastBlocks))
         });
 
         IntentBatch memory intentBatch =
@@ -85,19 +94,22 @@ contract TimestampIntentTest is SafeTestingUtils {
         _intentifySafeModule.execute(batchExecution);
     }
 
-    function test_timestampInRangeIntent_Success(uint128 pastSeconds) external {
-        vm.assume(pastSeconds > 0);
-        vm.assume(pastSeconds < block.timestamp);
-        vm.assume(pastSeconds + block.timestamp < type(uint128).max);
+    function test_blockNumberInRangeIntent_Success(uint128 pastBlocks, uint128 blockNumber) external {
+        vm.assume(pastBlocks > 0);
+        vm.assume(blockNumber > 0);
+        vm.assume(pastBlocks < blockNumber);
+        vm.assume(pastBlocks < type(uint128).max / 2);
+        vm.assume(blockNumber < type(uint128).max / 2);
+
+        // Set the block.number to `blockNumber`
+        vm.roll(blockNumber);
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             root: address(_safeCreated),
             value: 0,
-            target: address(_timestampIntent),
-            data: _timestampIntent.encodeIntent(
-                uint128(block.timestamp - pastSeconds), uint128(block.timestamp + pastSeconds)
-                )
+            target: address(_blockNumberIntent),
+            data: _blockNumberIntent.encodeIntent(uint128(block.number - pastBlocks), uint128(block.number + pastBlocks))
         });
 
         IntentBatch memory intentBatch =
@@ -116,26 +128,31 @@ contract TimestampIntentTest is SafeTestingUtils {
     }
 
     function test_encode_Success() external {
-        uint128 minTimestamp = uint128(block.timestamp - 1);
-        uint128 maxTimestamp = uint128(block.timestamp + 1);
-        bytes memory data = _timestampIntent.encodeIntent(minTimestamp, maxTimestamp);
-        assertEq(data, abi.encode(minTimestamp, maxTimestamp));
+        uint128 minBlockNumber = uint128(block.number - 1);
+        uint128 maxBlockNumber = uint128(block.number + 1);
+        bytes memory data = _blockNumberIntent.encodeIntent(minBlockNumber, maxBlockNumber);
+        assertEq(data, abi.encode(minBlockNumber, maxBlockNumber));
     }
 
-    /* ===================================================================================== */
-    /* Failing                                                                               */
-    /* ===================================================================================== */
+    // /* ===================================================================================== */
+    // /* Failing                                                                               */
+    // /* ===================================================================================== */
 
-    function test_RevertWhen_timestampAfterIntent_IsEarly(uint128 pastSeconds) external {
-        vm.assume(pastSeconds > 0);
-        vm.assume(pastSeconds + block.timestamp < type(uint128).max);
+    function test_RevertWhen_blockNumberAfterIntent_IsEarly(uint128 pastBlocks, uint128 blockNumber) external {
+        vm.assume(pastBlocks > 0);
+        vm.assume(blockNumber > 0);
+        vm.assume(pastBlocks < type(uint128).max / 2);
+        vm.assume(blockNumber < type(uint128).max / 2);
+
+        // Set the block.number to `blockNumber`
+        vm.roll(blockNumber);
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             root: address(_safeCreated),
             value: 0,
-            target: address(_timestampIntent),
-            data: _timestampIntent.encodeIntent(uint128(block.timestamp + pastSeconds), type(uint128).max)
+            target: address(_blockNumberIntent),
+            data: _blockNumberIntent.encodeIntent(uint128(block.number + pastBlocks), type(uint128).max)
         });
 
         IntentBatch memory intentBatch =
@@ -150,20 +167,24 @@ contract TimestampIntentTest is SafeTestingUtils {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert(TimestampIntent.Early.selector);
+        vm.expectRevert(BlockNumberIntent.Early.selector);
         _intentifySafeModule.execute(batchExecution);
     }
 
-    function test_RevertWhen_timestampBeforeIntent_IsExpired(uint128 pastSeconds) external {
-        vm.assume(pastSeconds > 0);
-        vm.assume(pastSeconds < block.timestamp);
+    function test_RevertWhen_blockNumberBeforeIntent_IsExpired(uint128 pastBlocks, uint128 blockNumber) external {
+        vm.assume(pastBlocks > 0);
+        vm.assume(blockNumber > 0);
+        vm.assume(pastBlocks < blockNumber);
+
+        // Set the block.number to `blockNumber`
+        vm.roll(blockNumber);
 
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
             root: address(_safeCreated),
             value: 0,
-            target: address(_timestampIntent),
-            data: _timestampIntent.encodeIntent(type(uint128).min, uint128(block.timestamp - pastSeconds))
+            target: address(_blockNumberIntent),
+            data: _blockNumberIntent.encodeIntent(type(uint128).min, uint128(block.number - pastBlocks))
         });
 
         IntentBatch memory intentBatch =
@@ -178,7 +199,7 @@ contract TimestampIntentTest is SafeTestingUtils {
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 
-        vm.expectRevert(TimestampIntent.Expired.selector);
+        vm.expectRevert(BlockNumberIntent.Expired.selector);
         _intentifySafeModule.execute(batchExecution);
     }
 
@@ -188,8 +209,8 @@ contract TimestampIntentTest is SafeTestingUtils {
         intents[0] = Intent({
             root: address(0),
             value: 0,
-            target: address(_timestampIntent),
-            data: _timestampIntent.encodeIntent(type(uint128).min, type(uint128).max)
+            target: address(_blockNumberIntent),
+            data: _blockNumberIntent.encodeIntent(type(uint128).min, type(uint128).max)
         });
 
         IntentBatch memory intentBatch =

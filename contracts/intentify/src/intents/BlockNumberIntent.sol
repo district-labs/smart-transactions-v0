@@ -4,17 +4,17 @@ pragma solidity >=0.8.19 <0.9.0;
 import { IntentAbstract } from "../abstracts/IntentAbstract.sol";
 import { Intent } from "../TypesAndDecoders.sol";
 
-/// @title Timestamp Intent
-/// @notice This intent is executed if the current block timestamp is within a range. Otherwise, it reverts.
-contract TimestampIntent is IntentAbstract {
+/// @title Block Number Intent
+/// @notice This intent is executed if the current block number is within a range. Otherwise, it reverts.
+contract BlockNumberIntent is IntentAbstract {
     /*//////////////////////////////////////////////////////////////////////////
                                 CUSTOM ERRORS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @dev The current block timestamp is greater than the maximum timestamp.
+    /// @dev The current block block number is greater than the maximum block number.
     error Expired();
 
-    /// @dev The current block timestamp is less than the minimum timestamp.
+    /// @dev The current block block number is less than the minimum block number.
     error Early();
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -22,11 +22,11 @@ contract TimestampIntent is IntentAbstract {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice Helper function to encode intent parameters into a byte array.
-    /// @param minTimestamp The minimum timestamp the intent can be executed.
-    /// @param maxTimestamp The maximum timestamp the intent can be executed.
+    /// @param minBlockNumber The minimum block number the intent can be executed.
+    /// @param maxBlockNumber The maximum block number the intent can be executed.
     /// @return data The encoded parameters.
-    function encodeIntent(uint128 minTimestamp, uint128 maxTimestamp) external pure returns (bytes memory data) {
-        data = abi.encode(minTimestamp, maxTimestamp);
+    function encodeIntent(uint128 minBlockNumber, uint128 maxBlockNumber) external pure returns (bytes memory data) {
+        data = abi.encode(minBlockNumber, maxBlockNumber);
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -42,11 +42,11 @@ contract TimestampIntent is IntentAbstract {
         validIntentTarget(intent)
         returns (bool)
     {
-        (uint128 minTimestamp, uint128 maxTimestamp) = _decodeIntent(intent);
+        (uint128 minBlockNumber, uint128 maxBlockNumber) = _decodeIntent(intent);
 
-        if (block.timestamp > maxTimestamp) {
+        if (block.number > maxBlockNumber) {
             revert Expired();
-        } else if (block.timestamp < minTimestamp) {
+        } else if (block.number < minBlockNumber) {
             revert Early();
         }
 
@@ -58,7 +58,11 @@ contract TimestampIntent is IntentAbstract {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice Helper function to decode intent parameters from a byte array.
-    function _decodeIntent(Intent calldata intent) internal pure returns (uint128 minTimestamp, uint128 maxTimestamp) {
+    function _decodeIntent(Intent calldata intent)
+        internal
+        pure
+        returns (uint128 minBlockNumber, uint128 maxBlockNumber)
+    {
         return abi.decode(intent.data, (uint128, uint128));
     }
 }

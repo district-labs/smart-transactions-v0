@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.19;
+pragma solidity >=0.8.19 <0.9.0;
 
 import { IUniswapV3Pool } from "uniswap-v3-core/interfaces/IUniswapV3Pool.sol";
 import { TickMath } from "uniswap-v3-core/libraries/TickMath.sol";
@@ -7,11 +7,12 @@ import { FixedPoint96 } from "uniswap-v3-core/libraries/FixedPoint96.sol";
 import { FullMath } from "uniswap-v3-core/libraries/FullMath.sol";
 import { UniswapV3TwapOracle } from "../periphery/Axiom/UniswapV3TwapOracle.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
+import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
 
 /// @title Uniswap V3 Historical Time Weighted Average Price Intent
 /// @notice An intent that checks block windows and percentage differences based on Uniswap v3 TWAP data. If the price
 /// difference percentage is not within the given range or the provided data is invalid, the intent will revert.
-contract UniswapV3HistoricalTwapIntent {
+contract UniswapV3HistoricalTwapIntent is IntentWithHookAbstract {
     /*//////////////////////////////////////////////////////////////////////////
                                 TYPE DECLARATIONS
     //////////////////////////////////////////////////////////////////////////*/
@@ -25,7 +26,7 @@ contract UniswapV3HistoricalTwapIntent {
     }
 
     /*//////////////////////////////////////////////////////////////////////////
-                                PUBLIC STORAGE
+                                INTERNAL STORAGE
     //////////////////////////////////////////////////////////////////////////*/
 
     UniswapV3TwapOracle internal _uniswapV3TwapOracle;
@@ -33,12 +34,6 @@ contract UniswapV3HistoricalTwapIntent {
     /*//////////////////////////////////////////////////////////////////////////
                                 CUSTOM ERRORS
     //////////////////////////////////////////////////////////////////////////*/
-
-    /// @dev Intent root must be the msg sender.
-    error InvalidRoot();
-
-    /// @dev Intent target must be this contract.
-    error InvalidTarget();
 
     /// @dev Reference block offset must be less than the current block.
     error InvalidReferenceBlockOffset();
@@ -69,6 +64,25 @@ contract UniswapV3HistoricalTwapIntent {
                                 READ FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
+    /// @notice Helper function to encode hook instruction parameters into a byte array.
+    /// @param numeratorStartBlock The start block for the numerator.
+    /// @param numeratorEndBlock The end block for the numerator.
+    /// @param denominatorStartBlock The start block for the denominator.
+    /// @param denominatorEndBlock The end block for the denominator.
+    /// @return data The encoded data.
+    function encodeHookInstructions(
+        uint256 numeratorStartBlock,
+        uint256 numeratorEndBlock,
+        uint256 denominatorStartBlock,
+        uint256 denominatorEndBlock
+    )
+        external
+        pure
+        returns (bytes memory data)
+    {
+        data = abi.encode(numeratorStartBlock, numeratorEndBlock, denominatorStartBlock, denominatorEndBlock);
+    }
+
     /// @notice Helper function to encode provided parameters into a byte array.
     /// @param uniswapV3Pool Address of the UniswapV3Pool.
     /// @param numeratorReferenceBlockOffset Number of blocks previous to the current block
@@ -79,7 +93,8 @@ contract UniswapV3HistoricalTwapIntent {
     /// @param denominatorBlockWindowTolerance Tolerance window for denominator.
     /// @param minPercentageDifference Minimum allowed percentage difference.
     /// @param maxPercentageDifference Maximum allowed percentage difference.
-    function encode(
+    /// @return data The encoded parameters.
+    function encodeIntent(
         address uniswapV3Pool,
         uint256 numeratorReferenceBlockOffset,
         uint256 numeratorBlockWindow,
@@ -111,14 +126,18 @@ contract UniswapV3HistoricalTwapIntent {
                                    WRITE FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Function to execute the intent and hook.
-    /// @param intent Contains data related to intent.
-    /// @param hook Contains data related to hook.
-    /// @return true if the intent is valid, reverts otherwise.
-    function execute(Intent calldata intent, Hook calldata hook) external view returns (bool) {
-        if (intent.root != msg.sender) revert InvalidRoot();
-        if (intent.target != address(this)) revert InvalidTarget();
-
+    /// @inheritdoc IntentWithHookAbstract
+    function execute(
+        Intent calldata intent,
+        Hook calldata hook
+    )
+        external
+        view
+        override
+        validIntentRoot(intent)
+        validIntentTarget(intent)
+        returns (bool)
+    {
         (
             ,
             uint256 numeratorReferenceBlockOffset,
@@ -128,33 +147,32 @@ contract UniswapV3HistoricalTwapIntent {
             uint256 denominatorBlockWindow,
             uint256 denominatorBlockWindowTolerance,
             ,
-        ) = abi.decode(intent.data, (address, uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256));
+        ) = _decodeIntent(intent);
 
         (
             uint256 numeratorStartBlock,
             uint256 numeratorEndBlock,
             uint256 denominatorStartBlock,
             uint256 denominatorEndBlock
-        ) = abi.decode(hook.data, (uint256, uint256, uint256, uint256));
+        ) = _decodeHookInstructions(hook);
 
-        BlockData memory numerator = BlockData({
-            referenceBlockOffset: numeratorReferenceBlockOffset,
-            blockWindow: numeratorBlockWindow,
-            blockWindowTolerance: numeratorBlockWindowTolerance,
-            startBlock: numeratorStartBlock,
-            endBlock: numeratorEndBlock
-        });
-
-        BlockData memory denominator = BlockData({
-            referenceBlockOffset: denominatorReferenceBlockOffset,
-            blockWindow: denominatorBlockWindow,
-            blockWindowTolerance: denominatorBlockWindowTolerance,
-            startBlock: denominatorStartBlock,
-            endBlock: denominatorEndBlock
-        });
-
-        _checkBlocksRange(numerator, denominator);
-        _checkPercentageDifference(intent.data, hook.data);
+        _checkBlocksRange(
+            BlockData({
+                referenceBlockOffset: numeratorReferenceBlockOffset,
+                blockWindow: numeratorBlockWindow,
+                blockWindowTolerance: numeratorBlockWindowTolerance,
+                startBlock: numeratorStartBlock,
+                endBlock: numeratorEndBlock
+            }),
+            BlockData({
+                referenceBlockOffset: denominatorReferenceBlockOffset,
+                blockWindow: denominatorBlockWindow,
+                blockWindowTolerance: denominatorBlockWindowTolerance,
+                startBlock: denominatorStartBlock,
+                endBlock: denominatorEndBlock
+            })
+        );
+        _checkPercentageDifference(intent, hook);
 
         return true;
     }
@@ -201,18 +219,18 @@ contract UniswapV3HistoricalTwapIntent {
     /// is within the allowed range. This function determines the TWAP (Time Weighted Average Price)
     /// for the numerator and denominator using the Uniswap V3 TWAP Oracle. It then computes the
     /// percentage difference between them and ensures it's within the given min and max limits.
-    /// @param intentData Encoded intent data.
-    /// @param hookData Encoded hook data.
-    function _checkPercentageDifference(bytes memory intentData, bytes memory hookData) internal view {
+    /// @param intent Intent data.
+    /// @param hook Hook data.
+    function _checkPercentageDifference(Intent calldata intent, Hook calldata hook) internal view {
         (address uniswapV3Pool,,,,,,, uint256 minPercentageDifference, uint256 maxPercentageDifference) =
-            abi.decode(intentData, (address, uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256));
+            _decodeIntent(intent);
 
         (
             uint256 numeratorStartBlock,
             uint256 numeratorEndBlock,
             uint256 denominatorStartBlock,
             uint256 denominatorEndBlock
-        ) = abi.decode(hookData, (uint256, uint256, uint256, uint256));
+        ) = _decodeHookInstructions(hook);
 
         (int24 numeratorTwaTick,,) =
             _uniswapV3TwapOracle.getTwaTick(uniswapV3Pool, numeratorStartBlock, numeratorEndBlock);
@@ -231,5 +249,54 @@ contract UniswapV3HistoricalTwapIntent {
 
         if (percentageDifference < minPercentageDifference) revert LowPercentageDifference();
         if (percentageDifference > maxPercentageDifference) revert HighPercentageDifference();
+    }
+
+    /// @notice Helper function to decode hook instructions parameters from a byte array.
+    /// @param hook The hook to be decoded.
+    /// @return numeratorStartBlock The start block for the numerator.
+    /// @return numeratorEndBlock The end block for the numerator.
+    /// @return denominatorStartBlock The start block for the denominator.
+    /// @return denominatorEndBlock The end block for the denominator.
+    function _decodeHookInstructions(Hook calldata hook)
+        internal
+        pure
+        returns (
+            uint256 numeratorStartBlock,
+            uint256 numeratorEndBlock,
+            uint256 denominatorStartBlock,
+            uint256 denominatorEndBlock
+        )
+    {
+        return abi.decode(hook.instructions, (uint256, uint256, uint256, uint256));
+    }
+
+    /// @notice Helper function to decode intent parameters from a byte array.
+    /// @param intent The intent.
+    /// @return uniswapV3Pool The address of the Uniswap V3 pool.
+    /// @return numeratorReferenceBlockOffset Number of blocks previous to the current block
+    /// @return numeratorBlockWindow Block window for numerator.
+    /// @return numeratorBlockWindowTolerance Tolerance window for numerator.
+    /// @return denominatorReferenceBlockOffset Number of blocks previous to the current block
+    /// @return denominatorBlockWindow Block window for denominator.
+    /// @return denominatorBlockWindowTolerance Tolerance window for denominator.
+    /// @return minPercentageDifference Minimum allowed percentage difference.
+    /// @return maxPercentageDifference Maximum allowed percentage difference.
+    function _decodeIntent(Intent calldata intent)
+        internal
+        pure
+        returns (
+            address uniswapV3Pool,
+            uint256 numeratorReferenceBlockOffset,
+            uint256 numeratorBlockWindow,
+            uint256 numeratorBlockWindowTolerance,
+            uint256 denominatorReferenceBlockOffset,
+            uint256 denominatorBlockWindow,
+            uint256 denominatorBlockWindowTolerance,
+            uint256 minPercentageDifference,
+            uint256 maxPercentageDifference
+        )
+    {
+        return
+            abi.decode(intent.data, (address, uint256, uint256, uint256, uint256, uint256, uint256, uint256, uint256));
     }
 }
