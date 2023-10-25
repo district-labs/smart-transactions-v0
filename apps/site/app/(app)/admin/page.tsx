@@ -1,6 +1,6 @@
 "use client"
 
-import { useIntentBatchAdminGetAll } from "@/actions/admin/use-intent-batch-admin-get-all"
+import { useIntentBatchAdminGetAll } from "@/hooks/intent-batch/admin/use-intent-batch-admin-get-all"
 
 import { IntentBatchTable } from "../../../components/admin/intent-batch-table"
 

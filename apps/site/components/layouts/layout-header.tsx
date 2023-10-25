@@ -26,7 +26,7 @@ export default function Header() {
       )}
     >
       <div className=" flex h-16 items-center justify-between px-10 sm:flex-row">
-        <div className="sm:flex flex-1 hidden justify-end sm:justify-start">
+        <div className="hidden flex-1 justify-end sm:flex sm:justify-start">
           <NavigationCore />
         </div>
         <Link href="/" className="flex flex-1 items-center space-x-2">
@@ -38,7 +38,7 @@ export default function Header() {
           />
         </Link>
         <div className="justify-end space-x-2 sm:flex">
-          {/* <NavigationAccount /> */}
+          <NavigationAccount />
           <NavigationPanel />
         </div>
       </div>

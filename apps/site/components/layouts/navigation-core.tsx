@@ -2,8 +2,8 @@
 
 import React from "react"
 import Link from "next/link"
+import { CircleDollarSign } from "lucide-react"
 
-import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import {
   NavigationMenu,
@@ -21,7 +21,7 @@ export function NavigationCore() {
           <NavigationMenuItem>
             <Link href={"/"} legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Strategies
+                <CircleDollarSign size={16} className="mr-1" /> Strategies
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>

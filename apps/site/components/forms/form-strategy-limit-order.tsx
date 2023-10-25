@@ -1,7 +1,6 @@
 "use client"
 
 import { useCallback } from "react"
-import { useActionIntentBatchCreate } from "@/actions/user/use-intent-batch-create"
 import { intentBatchFactory } from "@/core/intent-batch-factory"
 import tokenListGoerli from "@/data/token-list-district-goerli.json"
 import {
@@ -14,11 +13,14 @@ import { StrategyLimitOrder } from "@district-labs/intentify-strategy-react"
 import { Button } from "@district-labs/ui-react"
 import { useAccount, useChainId, useSignTypedData } from "wagmi"
 
-export type FormErc20LimitOrder = React.HTMLAttributes<HTMLElement> & {
+import { useActionIntentBatchCreate } from "@/hooks/intent-batch/user/use-intent-batch-create"
+import { ButtonSetupSmartWalletBeforeSigningIntent } from "./button-setup-smart-wallet-before-signing-intents"
+
+export type FormStrategyLimitOrder = React.HTMLAttributes<HTMLElement> & {
   strategyId: string
 }
 
-export function FormErc20LimitOrder({ strategyId }: FormErc20LimitOrder) {
+export function FormStrategyLimitOrder({ strategyId }: FormStrategyLimitOrder) {
   const { address } = useAccount()
   const chainId = useChainId()
   const intentifyAddress = useGetIntentifyModuleAddress(chainId)
@@ -59,6 +61,16 @@ export function FormErc20LimitOrder({ strategyId }: FormErc20LimitOrder) {
       onIntentBatchGenerated={onIntentBatchGenerated}
       intentBatchFactory={intentBatchFactory}
       config={{
+        nonce: {
+          dimensional: {
+            label: "Queue",
+            labelTrigger: "Advanced Nonce Settings",
+            classNameLabel: "text-muted-background",
+            classNameTrigger:
+              "text-muted-background text-xs text-center my-1 cursor-pointer",
+            defaultQueue: 343,
+          },
+        },
         minTimestamp: {
           label: "Execute After",
           className: "text-muted",
@@ -82,7 +94,7 @@ export function FormErc20LimitOrder({ strategyId }: FormErc20LimitOrder) {
       }: {
         handleGenerateIntentBatch: () => void
       }) => (
-        <>
+        <ButtonSetupSmartWalletBeforeSigningIntent>
           {isSuccess && <Button className="w-full">Intent Saved</Button>}
           {isSignatureRequested && (
             <Button className="w-full">Requesting Signature</Button>
@@ -92,10 +104,10 @@ export function FormErc20LimitOrder({ strategyId }: FormErc20LimitOrder) {
               Save Intent
             </Button>
           )}
-        </>
+        </ButtonSetupSmartWalletBeforeSigningIntent>
       )}
     </StrategyLimitOrder>
   )
 }
 
-export default FormErc20LimitOrder
+export default FormStrategyLimitOrder

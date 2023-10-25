@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Icons } from "@/components/icons"
+
 import { WalletConnect } from "../blockchain/wallet-connect"
 import { IsWalletConnected } from "../shared/is-wallet-connected"
 
@@ -44,21 +45,21 @@ export function NavigationPanel() {
         </div>
         <div className="flex flex-col pl-1 pr-7">
           <Link
-            href={'/account'}
+            href={"/account"}
             className="w-full border-b py-4 text-sm font-medium"
             onClick={() => setOpen(false)}
           >
             Account
           </Link>
           <Link
-            href={'/'}
+            href={"/"}
             className="w-full border-b py-4 text-sm font-medium"
             onClick={() => setOpen(false)}
           >
             Strategies
           </Link>
           <Link
-            href={'/data-hub'}
+            href={"/data-hub"}
             className="w-full border-b py-4 text-sm font-medium"
             onClick={() => setOpen(false)}
           >

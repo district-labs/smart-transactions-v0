@@ -17,7 +17,5 @@ export function useIsSafeMaterialized(watch = true) {
     watch: watch,
   });
   
-  console.log(data, 'data')
-
   return data;
 }

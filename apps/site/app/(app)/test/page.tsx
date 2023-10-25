@@ -1,6 +1,6 @@
 "use client"
 
-import FormErc20LimitOrder from "@/components/forms/form-erc20-limit-order"
+import FormStrategyLimitOrder from "@/components/forms/form-strategy-limit-order"
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
           euismod sed nunc. In in magna lacus.
         </p>
         <div className="py-2"></div>
-        <FormErc20LimitOrder />
+        <FormStrategyLimitOrder />
       </div>
       <section className="bg-neutral-100 p-10"></section>
     </div>

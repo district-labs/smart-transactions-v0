@@ -6,6 +6,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
 } from "@district-labs/ui-react"
 
 export type NonceManager = {
@@ -15,9 +18,6 @@ export type NonceManager = {
   }
 }
 
-interface NonceManagerFieldConfig {
-  label: string
-}
 
 export const nonceManager = {
   nonce: {
@@ -50,22 +50,33 @@ export const nonceManagerFields = {
       </Select>
     </div>
   ),
-  NonceDimensional: (setIntentBatch: any) => (
+  NonceDimensional: (intentBatch: any, setIntentBatch: any, config?: {
+    label: string
+    labelTrigger: string
+    classNameLabel?: string
+    classNameTrigger?: string
+  }) => (
     <div className="">
-      <Label htmlFor="supply" className="text-muted-foreground">
-        Queue
-      </Label>
-      <Input
-        type="number"
-        onChange={(event: any) =>
-          setIntentBatch((draft: any) => {
-            draft["nonce"]["args"][0] = (event.target as HTMLInputElement).value
-          })
-        }
-      />
+      <Collapsible>
+        <CollapsibleTrigger asChild><p className={config?.classNameTrigger}>{config?.labelTrigger || "Advanced Settings"}</p></CollapsibleTrigger>
+        <CollapsibleContent>
+        <Label htmlFor="supply" className={config?.classNameLabel}>
+          {config?.label || "Queue"}
+        </Label>
+          <Input
+            type="number"
+            value={intentBatch.nonce.args[0]}
+            onChange={(event: any) =>
+              setIntentBatch((draft: any) => {
+                draft["nonce"]["args"][0] = (event.target as HTMLInputElement).value
+              })
+            }
+          />
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   ),
-  NonceTime: (setIntentBatch: any) => (
+  NonceTime: (intentBatch: any, setIntentBatch: any) => (
     <div className="flex justify-between gap-x-4">
       <div className="flex-1">
         <Label htmlFor="supply" className="text-muted-foreground">
@@ -73,6 +84,7 @@ export const nonceManagerFields = {
         </Label>
         <Input
           type="number"
+          value={intentBatch.nonce.args[0] || 0}
           onChange={(event: any) =>
             setIntentBatch((draft: any) => {
               draft["nonce"]["args"][0] = (

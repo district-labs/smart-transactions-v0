@@ -1,7 +1,6 @@
 "use client"
 
 import { useCallback } from "react"
-import { useActionIntentBatchCreate } from "@/actions/user/use-intent-batch-create"
 import { intentBatchFactory } from "@/core/intent-batch-factory"
 import tokenListGoerli from "@/data/token-list-district-goerli.json"
 import {
@@ -14,13 +13,17 @@ import { StrategyLeverageLong } from "@district-labs/intentify-strategy-react"
 import { Button } from "@district-labs/ui-react"
 import { useAccount, useChainId, useSignTypedData } from "wagmi"
 
-console.log(StrategyLeverageLong, 'StrategyLeverageLongStrategyLeverageLong')
+import { useActionIntentBatchCreate } from "@/hooks/intent-batch/user/use-intent-batch-create"
+
+console.log(StrategyLeverageLong, "StrategyLeverageLongStrategyLeverageLong")
 
 export type FormStrategyLeverageLong = React.HTMLAttributes<HTMLElement> & {
   strategyId: string
 }
 
-export function FormStrategyLeverageLong({ strategyId }: FormStrategyLeverageLong) {
+export function FormStrategyLeverageLong({
+  strategyId,
+}: FormStrategyLeverageLong) {
   const { address } = useAccount()
   const chainId = useChainId()
   const intentifyAddress = useGetIntentifyModuleAddress(chainId)
@@ -62,11 +65,12 @@ export function FormStrategyLeverageLong({ strategyId }: FormStrategyLeverageLon
       intentBatchFactory={intentBatchFactory}
       config={{
         minHealthFactor: {
-            label: "Minimum Health Factor",
-            classNameLabel: 'text-muted-background',
-            classNameValue: 'pl-2 text-lg text-muted-background w-[36px] block text-right'
-          },
-        }}
+          label: "Minimum Health Factor",
+          classNameLabel: "text-muted-background",
+          classNameValue:
+            "pl-2 text-lg text-muted-background w-[36px] block text-right",
+        },
+      }}
     >
       {({
         handleGenerateIntentBatch,

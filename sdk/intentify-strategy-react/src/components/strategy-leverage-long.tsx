@@ -11,6 +11,7 @@ import {
 import { Card, CardContent, CardFooter } from "@district-labs/ui-react"
 import { useImmer } from "use-immer"
 import { useIntentifySafeModuleGetStandardNonce, useIntentifySafeModuleGetDimensionalNonce } from '@district-labs/intentify-core-react' 
+import { NonceManager } from "./nonce-manager"
 
 export type StrategyLeverageLong = {
   intentifySafeModuleAddress?: `0x${string}`
@@ -99,27 +100,7 @@ export function StrategyLeverageLong({
   return (
     <Card>
       <CardContent className="grid gap-6 pt-4">
-        {/* ----- Nonce Manager ----- */}
-        <div>
-          {
-            nonceManagerFields.NonceType(
-              intentBatch,
-              setIntentBatch,
-            )
-          }
-          {
-            intentBatch?.nonce.type === "dimensional" &&
-            nonceManagerFields.NonceDimensional(
-              setIntentBatch,
-            )
-          }
-          {
-            intentBatch?.nonce.type === "time" &&
-            nonceManagerFields.NonceTime(
-              setIntentBatch,
-            )
-          }
-        </div>
+      <NonceManager intentBatch={intentBatch} setIntentBatch={setIntentBatch} /> 
         {/* ----- Interest Rate Mode ----- */}
         <div className=''>
           {intentAaveLeverageLongFields.InterestRateMode(

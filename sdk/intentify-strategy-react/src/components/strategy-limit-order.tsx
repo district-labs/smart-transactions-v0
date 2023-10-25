@@ -1,5 +1,5 @@
 "use client"
-
+import { useEffect } from 'react' 
 import { IntentBatch, type TokenList } from "@district-labs/intentify-core"
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
@@ -13,6 +13,7 @@ import {
 import { Card, CardContent, CardFooter } from "@district-labs/ui-react"
 import { useImmer } from "use-immer"
 import { useIntentifySafeModuleGetStandardNonce, useIntentifySafeModuleGetDimensionalNonce } from '@district-labs/intentify-core-react' 
+import { type NonceConfig, NonceManager } from "./nonce-manager"
 
 export type StrategyLimitOrder = {
   intentifySafeModuleAddress?: `0x${string}`
@@ -21,6 +22,7 @@ export type StrategyLimitOrder = {
   tokenList: TokenList
   intentBatchFactory?: IntentBatchFactory
   config: {
+    nonce?: NonceConfig,
     minTimestamp: {
         label: string
         classNameLabel?: string
@@ -76,6 +78,14 @@ export function StrategyLimitOrder({
     enabled: intentBatch.nonce.type === "dimensional",
   })
 
+  useEffect( () => { 
+    if(intentBatch.nonce.type === "dimensional" && config?.nonce?.dimensional?.defaultQueue) {
+      setIntentBatch((draft:any) => {
+        draft["nonce"]["args"][0] = config?.nonce?.dimensional?.defaultQueue
+      })
+    }
+  }, [intentBatch.nonce.type])
+
   const handleGenerateIntentBatch = async () => {
     if (!intentBatchFactory) return
     if (!chainId) return
@@ -119,26 +129,7 @@ export function StrategyLimitOrder({
   return (
     <Card>
       <CardContent className="grid gap-6 pt-4">
-        <div>
-          {
-            nonceManagerFields.NonceType(
-              intentBatch,
-              setIntentBatch,
-            )
-          }
-          {
-            intentBatch?.nonce.type === "dimensional" &&
-            nonceManagerFields.NonceDimensional(
-              setIntentBatch,
-            )
-          }
-          {
-            intentBatch?.nonce.type === "time" &&
-            nonceManagerFields.NonceTime(
-              setIntentBatch,
-            )
-          }
-        </div>
+        <NonceManager intentBatch={intentBatch} setIntentBatch={setIntentBatch} nonceConfig={config.nonce} /> 
         <div className='grid grid-cols-2 gap-x-4'>
           {intentTimestampRangeFields.minTimestamp(setIntentBatch, config.minTimestamp)}
           {intentTimestampRangeFields.maxTimestamp(setIntentBatch, config.maxTimestamp)}

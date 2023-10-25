@@ -1,9 +1,9 @@
 import { transformLimitOrderIntentQueryToLimitOrderData } from "@/lib/transformations/transform-limit-order-intent-query-to-limit-order-data"
-import { FormErc20LimitOrder } from "@/components/forms/form-erc20-limit-order"
-import { UserLimitOrdersTable } from "@/components/user/user-limit-order-table"
+import FormStrategyLeverageLong from "@/components/forms/form-strategy-leverage-long"
+import { FormStrategyLimitOrder } from "@/components/forms/form-strategy-limit-order"
+import { StrategyTable } from "@/components/tables/strategy-table"
 
 import { limitOrderTableColumns } from "./tables/limit-order"
-import FormStrategyLeverageLong from "@/components/forms/form-strategy-leverage-long"
 
 export const strategies = {
   "0xeb177b2ff21772a31e2134748222bc3fe03647fd2a302adcbfcd81c75f08755e": {
@@ -22,8 +22,8 @@ export const strategies = {
         intents: ["TimestampRange", "Erc20LimitOrder"],
       },
     ],
-    IntentForm: FormErc20LimitOrder,
-    IntentTable: UserLimitOrdersTable,
+    IntentForm: FormStrategyLimitOrder,
+    IntentTable: StrategyTable,
     transformData: transformLimitOrderIntentQueryToLimitOrderData,
     tableColumns: limitOrderTableColumns,
   },
@@ -31,7 +31,8 @@ export const strategies = {
     id: "0x2",
     name: "Leverage Long",
     alias: "leveraged-long",
-    description: "Leverage long an asset by borrowing and buying more of it. You can set the leverage amount and the supply token.",
+    description:
+      "Leverage long an asset by borrowing and buying more of it. You can set the leverage amount and the supply token.",
     createdBy: {
       name: "District Finance",
       pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
@@ -43,7 +44,7 @@ export const strategies = {
       },
     ],
     IntentForm: FormStrategyLeverageLong,
-    IntentTable: UserLimitOrdersTable,
+    IntentTable: StrategyTable,
     transformData: transformLimitOrderIntentQueryToLimitOrderData,
     tableColumns: limitOrderTableColumns,
   },

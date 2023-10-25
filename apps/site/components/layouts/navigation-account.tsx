@@ -2,6 +2,7 @@
 
 import React from "react"
 import Link from "next/link"
+import { Wallet2 } from "lucide-react"
 
 import {
   NavigationMenu,
@@ -17,9 +18,9 @@ export function NavigationAccount() {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
-            <Link href={"/account"} legacyBehavior passHref>
+            <Link href={"/smart-wallet"} legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Account
+                <Wallet2 size={16} className="mr-1" /> Smart Wallet
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
