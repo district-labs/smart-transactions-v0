@@ -27,7 +27,7 @@ contract SaveIntent is Script, StdCheats {
     using Surl for *;
 
     TimestampIntent _timestampIntent = new TimestampIntent();
-    Hook EMPTY_HOOK = Hook({ target: address(0), data: bytes("") });
+    Hook EMPTY_HOOK = Hook({ target: address(0), data: bytes(""), instructions: bytes("") });
 
     // Deterministicaly deploted in TestnetDeploy.s.sol
     IntentifySafeModule internal _intentifySafeModule = IntentifySafeModule(0x5FbDB2315678afecb367f032d93F642f64180aa3);
@@ -73,7 +73,7 @@ contract SaveIntent is Script, StdCheats {
             root: address(_safe),
             value: 0,
             target: address(_timestampIntent),
-            data: _timestampIntent.encode(type(uint128).min, uint128(block.timestamp + 100))
+            data: _timestampIntent.encodeIntent(type(uint128).min, uint128(block.timestamp + 100))
         });
 
         IntentBatch memory intentBatch = IntentBatch({ root: address(_safe), nonce: nonceStandard, intents: intents });

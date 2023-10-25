@@ -7,13 +7,27 @@ import { Safe } from "safe-contracts/Safe.sol";
 import { SafeProxy } from "safe-contracts/proxies/SafeProxy.sol";
 import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
-import { BaseTest } from "./Base.t.sol";
+import { BaseTest } from "../Base.t.sol";
+import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
+import { Hook, Intent, IntentBatch, IntentBatchExecution, Signature } from "../../src/TypesAndDecoders.sol";
 
 contract SafeTestingUtils is BaseTest {
     Safe internal _safe;
     SafeProxyFactory internal _safeProxyFactory;
+    Safe internal _safeCreated;
+    IntentifySafeModule internal _intentifySafeModule;
 
     bytes32 private constant SAFE_MSG_TYPEHASH = 0x60b3cbf8b4a223d68d641b3b6ddf9a298e7f33710cf3d3a9d1146b5a6150fbca;
+    Hook internal EMPTY_HOOK = Hook({ target: address(0x00), data: bytes(""), instructions: bytes("") });
+    Signature internal EMPTY_SIGNATURE = Signature({ r: bytes32(0x00), s: bytes32(0x00), v: uint8(0x00) });
+
+    function initializeSafeBase() public {
+        _intentifySafeModule = new IntentifySafeModule();
+        _safe = new Safe();
+        _safeProxyFactory = new SafeProxyFactory();
+        _safeCreated = _setupSafe(signer);
+        _enableIntentifyModule(SIGNER, _safeCreated, address(_intentifySafeModule));
+    }
 
     function _combineRSV(bytes32 r, bytes32 s, uint8 v) internal pure returns (bytes memory) {
         bytes memory signature = new bytes(65);
@@ -33,6 +47,22 @@ contract SafeTestingUtils is BaseTest {
     function _getMessageHash(Safe _safe, bytes memory message) internal view returns (bytes32) {
         bytes32 safeMessageHash = keccak256(abi.encode(SAFE_MSG_TYPEHASH, keccak256(message)));
         return keccak256(abi.encodePacked(bytes1(0x19), bytes1(0x01), _safe.domainSeparator(), safeMessageHash));
+    }
+
+    function _generateIntentBatchExecution(
+        Intent[] memory intents,
+        Hook[] memory hooks
+    )
+        internal
+        view
+        returns (IntentBatchExecution memory batchExecution)
+    {
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
+
+        batchExecution =
+            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
     }
 
     function _setupSafe(address owner) internal returns (Safe safe) {
