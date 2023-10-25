@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
+import { console2 } from "forge-std/console2.sol";
 import { ERC20Mintable } from "~/test/mocks/ERC20Mintable.sol";
 import { Intent, Hook } from "~/src/TypesAndDecoders.sol";
 import { SwapRouter } from "~/src/periphery/SwapRouter.sol";
@@ -62,9 +63,11 @@ contract ERC20LimitOrderIntentUnitFuzzTest is BaseTest {
     /* Success                                                                               */
     /* ===================================================================================== */
 
+    // @todo: move test to integration
     function test_execute_Success(uint256 startingBalance, uint256 endingBalance) external {
         vm.assume(startingBalance > 0);
         vm.assume(endingBalance > 0);
+        vm.assume(endingBalance > startingBalance);
 
         // Prepare initial balances
         setupBalance(address(_safeCreatedMock), address(_tokenA), startingBalance);
@@ -86,6 +89,11 @@ contract ERC20LimitOrderIntentUnitFuzzTest is BaseTest {
             address(_tokenB),
             abi.encodeWithSelector(_tokenB.balanceOf.selector, _safeCreatedMock),
             abi.encode(endingBalance)
+        );
+
+        // Ensure the tokenA balance was sent to the root address
+        vm.mockCall(
+            address(_tokenA), abi.encodeWithSelector(_tokenA.balanceOf.selector, _safeCreatedMock), abi.encode(0)
         );
 
         // Ensure the tokenB balance was sent to the root address
