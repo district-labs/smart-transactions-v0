@@ -171,7 +171,8 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Rever
     function executeTransactionFromIntentModule(
         address target,
         uint256 value,
-        bytes calldata data
+        bytes calldata data,
+        Enum.Operation operation
     )
         external
         returns (bool success)
@@ -182,7 +183,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Rever
             target, // to
             value, // value
             data, // calldata
-            Enum.Operation.Call // operation
+            operation // operation
         );
         _handleTransactionCallback(success, errorMessage);
     }

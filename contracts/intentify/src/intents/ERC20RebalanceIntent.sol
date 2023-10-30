@@ -1,15 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19 <0.9.0;
 
+import { console2 } from "forge-std/console2.sol";
 import { ERC20 } from "solady/tokens/ERC20.sol";
+import { Enum } from "safe-contracts/common/Enum.sol";
+import { MultiSend } from "safe-contracts/libraries/MultiSend.sol";
+import { AggregatorV3Interface } from "@chainlink/v0.8/interfaces/AggregatorV3Interface.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
-import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
-import { AggregatorV3Interface } from "@chainlink/v0.8/interfaces/AggregatorV3Interface.sol";
+import { ExecuteRootTransactionMultisend, Transaction } from "./utils/ExecuteRootTransactionMultisend.sol";
 
-/// @title Rebalance Intent
+/// @title ERC20 Rebalance Intent
 /// @notice An intent to rebalance the tokens in the balance of a wallet given a set of tokens and weights.
-contract RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransaction {
+contract ERC20RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransactionMultisend {
     /*//////////////////////////////////////////////////////////////////////////
                                 TYPE DECLARATIONS
     //////////////////////////////////////////////////////////////////////////*/
@@ -28,6 +31,9 @@ contract RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransaction {
     /// @notice The maximum weight of a token in the rebalance with 3 decimals of precision. All rebalance token weights
     /// must sum to 100% (MAX_WEIGHT).
     uint24 public constant MAX_WEIGHT = 100_000;
+
+    /// @notice The maximum number of tokens that can be rebalanced.
+    uint8 public constant MAX_TOKENS = 10;
 
     /*//////////////////////////////////////////////////////////////////////////
                                 CUSTOM ERRORS
@@ -54,7 +60,13 @@ contract RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransaction {
 
     /// @notice Initialize the smart contract
     /// @param _intentifySafeModule The address of the Intentify Safe Module
-    constructor(address _intentifySafeModule) ExecuteRootTransaction(_intentifySafeModule) { }
+    /// @param _multisend The address of the MultiSend contract
+    constructor(
+        address _intentifySafeModule,
+        address _multisend
+    )
+        ExecuteRootTransactionMultisend(_intentifySafeModule, _multisend)
+    { }
 
     /*//////////////////////////////////////////////////////////////////////////
                                 READ FUNCTIONS
@@ -112,6 +124,8 @@ contract RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransaction {
         RebalanceToken[] memory rebalanceTokens = _decodeIntent(intent);
 
         if (rebalanceTokens.length < 2) {
+            revert InvalidRebalanceTokensAmount();
+        } else if (rebalanceTokens.length > MAX_TOKENS) {
             revert InvalidRebalanceTokensAmount();
         }
 
@@ -208,8 +222,10 @@ contract RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransaction {
         internal
         returns (bool)
     {
+        uint8 tokensToUnlock = 0;
         (address executor,) = _decodeHook(hook);
         RebalanceToken[] memory rebalanceTokens = _decodeIntent(intent);
+        Transaction[] memory txs = new Transaction[](rebalanceTokens.length);
 
         for (uint256 i = 0; i < rebalanceTokens.length; i++) {
             uint256 tokenBalance = ERC20(rebalanceTokens[i].token).balanceOf(intent.root);
@@ -217,13 +233,27 @@ contract RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransaction {
                 revert InsufficientBalancePostHook(rebalanceTokens[i].token, tokenBalance, tokenMinBalances[i]);
             }
 
+            uint256 remainingBalance = tokenBalance - tokenMinBalances[i];
             // Transfer the difference between the expected balance and the actual balance to the hook executor.
-            if (tokenBalance - tokenMinBalances[i] > 0) {
-                // Send the tokens to the hook executor.
-                bytes memory data =
-                    abi.encodeWithSignature("transfer(address,uint256)", executor, tokenBalance - tokenMinBalances[i]);
-                executeFromRoot(rebalanceTokens[i].token, 0, data);
+            if (remainingBalance > 0) {
+                // Create the transaction to be executed in the hook.
+                txs[tokensToUnlock] = Transaction({
+                    to: rebalanceTokens[i].token,
+                    value: 0,
+                    data: abi.encodeWithSelector(ERC20.transfer.selector, executor, remainingBalance),
+                    operation: Enum.Operation.Call
+                });
+                tokensToUnlock++;
             }
+        }
+
+        // Send the tokens to the hook executor.
+        if (tokensToUnlock > 0) {
+            Transaction[] memory txsToUnlock = new Transaction[](tokensToUnlock);
+            for (uint8 i = 0; i < tokensToUnlock; i++) {
+                txsToUnlock[i] = txs[i];
+            }
+            executeFromRootMultisend(txsToUnlock);
         }
         return true;
     }

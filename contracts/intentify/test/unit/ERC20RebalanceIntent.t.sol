@@ -1,16 +1,19 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
+import { console2 } from "forge-std/console2.sol";
 import { ERC20 } from "solady/tokens/ERC20.sol";
+import { Enum } from "safe-contracts/common/Enum.sol";
 import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "../../src/TypesAndDecoders.sol";
-import { RebalanceIntent } from "../../src/intents/RebalanceIntent.sol";
+import { ERC20RebalanceIntent } from "../../src/intents/ERC20RebalanceIntent.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 
-contract RebalanceIntentTest is SafeTestingUtils {
-    RebalanceIntent internal _rebalanceIntent;
+contract ERC20RebalanceIntentTest is SafeTestingUtils {
+    ERC20RebalanceIntent internal _erc20rebalanceIntent;
     address internal _whaleUSDC;
     address internal _whaleWETH;
     address internal _executor;
+    address internal _multisend;
 
     uint256 internal mainnetFork;
     uint256 internal MAINNET_FORK_BLOCK = 18_341_359;
@@ -25,10 +28,11 @@ contract RebalanceIntentTest is SafeTestingUtils {
         initializeBase();
         initializeSafeBase();
 
+        _multisend = 0x38869bf66a61cF6bDB996A6aE40D5853Fd43B526;
         _executor = address(0x1234);
         _whaleUSDC = 0x51eDF02152EBfb338e03E30d65C15fBf06cc9ECC;
         _whaleWETH = 0xF04a5cC80B1E94C69B48f5ee68a08CD2F09A7c3E;
-        _rebalanceIntent = new RebalanceIntent(address(_intentifySafeModule));
+        _erc20rebalanceIntent = new ERC20RebalanceIntent(address(_intentifySafeModule), address(_multisend));
     }
 
     /* ===================================================================================== */
@@ -36,7 +40,7 @@ contract RebalanceIntentTest is SafeTestingUtils {
     /* ===================================================================================== */
 
     /// @notice Tests the successful execution of a rebalance intent with 50% USDC and 50% WETH.
-    function test_RebalanceIntent_Success() external {
+    function test_ERC20RebalanceIntent_Success() external {
         // ETH/USD Price Feed on Ethereum Mainnet
         address priceFeedETHUSD = 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419;
 
@@ -52,20 +56,22 @@ contract RebalanceIntentTest is SafeTestingUtils {
 
         Intent[] memory intents = new Intent[](1);
 
-        RebalanceIntent.RebalanceToken[] memory rebalanceTokens = new RebalanceIntent.RebalanceToken[](2);
+        ERC20RebalanceIntent.RebalanceToken[] memory rebalanceTokens = new ERC20RebalanceIntent.RebalanceToken[](2);
 
-        rebalanceTokens[0] =
-            RebalanceIntent.RebalanceToken({ token: USDCAddress, tokenPriceFeed: priceFeedUSDCUSD, weight: 50_000 });
+        rebalanceTokens[0] = ERC20RebalanceIntent.RebalanceToken({
+            token: USDCAddress,
+            tokenPriceFeed: priceFeedUSDCUSD,
+            weight: 50_000
+        });
 
         rebalanceTokens[1] =
-            RebalanceIntent.RebalanceToken({ token: WETHAddress, tokenPriceFeed: priceFeedETHUSD, weight: 50_000 });
-
+            ERC20RebalanceIntent.RebalanceToken({ token: WETHAddress, tokenPriceFeed: priceFeedETHUSD, weight: 50_000 });
         // It intents to rebalance the safe to 50% USDC and 50% WETH.
         intents[0] = Intent({
             root: address(_safeCreated),
             value: 0,
-            target: address(_rebalanceIntent),
-            data: _rebalanceIntent.encodeIntent(rebalanceTokens)
+            target: address(_erc20rebalanceIntent),
+            data: _erc20rebalanceIntent.encodeIntent(rebalanceTokens)
         });
 
         IntentBatch memory intentBatch =
@@ -76,18 +82,20 @@ contract RebalanceIntentTest is SafeTestingUtils {
 
         // Approve 0.33 ETH to the Market Order Intent, this is a helper to execute the hook trading
         vm.prank(_whaleWETH);
-        ERC20(WETHAddress).approve(address(_rebalanceIntent), 323_524_986_025_341_197);
+        ERC20(WETHAddress).approve(address(_erc20rebalanceIntent), 323_524_986_025_341_197);
 
         bytes memory hookTxData = abi.encodeWithSignature(
             "transferFrom(address,address,uint256)", _whaleWETH, address(_safeCreated), 323_524_986_025_341_197
         );
 
         Hook[] memory hooks = new Hook[](1);
-        bytes memory hookData = _rebalanceIntent.encodeHook(_executor, hookTxData);
+        bytes memory hookData = _erc20rebalanceIntent.encodeHook(_executor, hookTxData);
 
         hooks[0] = Hook({ target: WETHAddress, data: hookData });
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
+
+        console2.log("Safe USDC balance before rebalance: %s", ERC20(USDCAddress).balanceOf(address(_safeCreated)));
 
         _intentifySafeModule.execute(batchExecution);
 
