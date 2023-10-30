@@ -3,16 +3,20 @@ pragma solidity >=0.8.19 <0.9.0;
 
 import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "../../src/TypesAndDecoders.sol";
 
-import { UniswapV3HistoricalTwapIntent } from "../../src/intents/UniswapV3HistoricalTwapIntent.sol";
+import { UniswapV3HistoricalTwapPercentageChangeIntent } from
+    "../../src/intents/UniswapV3HistoricalTwapPercentageChangeIntent.sol";
 import {
     UniswapV3TwapOracle, IAxiomV1Query, AxiomResponseStruct
 } from "../../src/periphery/Axiom/UniswapV3TwapOracle.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
 
-contract UniswapV3HistoricalTwapIntentHarness is UniswapV3HistoricalTwapIntent {
-    constructor(address uniswapV3TwapOracle) UniswapV3HistoricalTwapIntent(uniswapV3TwapOracle) { }
+contract UniswapV3HistoricalTwapPercentageChangeIntentHarness is UniswapV3HistoricalTwapPercentageChangeIntent {
+    constructor(address uniswapV3TwapOracle) UniswapV3HistoricalTwapPercentageChangeIntent(uniswapV3TwapOracle) { }
 
-    function exposed_checkBlockWindow(UniswapV3HistoricalTwapIntent.BlockData memory blockData) external view {
+    function exposed_checkBlockWindow(UniswapV3HistoricalTwapPercentageChangeIntent.BlockData memory blockData)
+        external
+        view
+    {
         _checkBlockWindow(blockData);
     }
 
@@ -25,9 +29,9 @@ contract UniswapV3HistoricalTwapIntentHarness is UniswapV3HistoricalTwapIntent {
     }
 }
 
-contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
+contract UniswapV3HistoricalTwapPercentageChangeIntentTest is SafeTestingUtils {
     UniswapV3TwapOracle internal _uniswapV3TwapOracle;
-    UniswapV3HistoricalTwapIntentHarness internal _uniswapV3HistoricalTwapIntentHarness;
+    UniswapV3HistoricalTwapPercentageChangeIntentHarness internal _uniswapV3HistoricalTwapPercentageChangeIntentHarness;
 
     address public constant AXIOM_V1_QUERY_GOERLI_ADDR = 0x4Fb202140c5319106F15706b1A69E441c9536306;
 
@@ -46,8 +50,8 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
 
         _uniswapV3TwapOracle = new UniswapV3TwapOracle(AXIOM_V1_QUERY_GOERLI_ADDR);
         storeAxiomResposeToOracle();
-        _uniswapV3HistoricalTwapIntentHarness = new
-    UniswapV3HistoricalTwapIntentHarness(address(_uniswapV3TwapOracle));
+        _uniswapV3HistoricalTwapPercentageChangeIntentHarness =
+            new UniswapV3HistoricalTwapPercentageChangeIntentHarness(address(_uniswapV3TwapOracle));
     }
 
     function storeAxiomResposeToOracle() public returns (AxiomResponseStruct memory axiomResponse) {
@@ -157,8 +161,8 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
         intents[0] = Intent({
             root: address(_safeCreated),
             value: 0,
-            target: address(_uniswapV3HistoricalTwapIntentHarness),
-            data: _uniswapV3HistoricalTwapIntentHarness.encodeIntent(
+            target: address(_uniswapV3HistoricalTwapPercentageChangeIntentHarness),
+            data: _uniswapV3HistoricalTwapPercentageChangeIntentHarness.encodeIntent(
                 uniswapV3Pool, 37_590, 89_220, 40, 37_590, 49_950, 40, 105_000, 110_000
                 )
         });
@@ -169,12 +173,13 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
         bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, digest);
 
-        bytes memory hookInstructions =
-            _uniswapV3HistoricalTwapIntentHarness.encodeHookInstructions(9_759_424, 9_848_630, 9_798_709, 9_848_630);
+        bytes memory hookInstructions = _uniswapV3HistoricalTwapPercentageChangeIntentHarness.encodeHookInstructions(
+            9_759_424, 9_848_630, 9_798_709, 9_848_630
+        );
 
         Hook[] memory hooks = new Hook[](1);
         hooks[0] = Hook({
-            target: address(_uniswapV3HistoricalTwapIntentHarness),
+            target: address(_uniswapV3HistoricalTwapPercentageChangeIntentHarness),
             data: bytes(""),
             instructions: hookInstructions
         });
@@ -186,7 +191,8 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
     }
 
     function test_CheckBlockWindow_Success() external view {
-        UniswapV3HistoricalTwapIntent.BlockData memory blockData = UniswapV3HistoricalTwapIntent.BlockData({
+        UniswapV3HistoricalTwapPercentageChangeIntent.BlockData memory blockData =
+        UniswapV3HistoricalTwapPercentageChangeIntent.BlockData({
             referenceBlockOffset: 37_590,
             blockWindow: 89_220,
             blockWindowTolerance: 40,
@@ -194,11 +200,12 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
             endBlock: 9_848_630
         });
 
-        _uniswapV3HistoricalTwapIntentHarness.exposed_checkBlockWindow(blockData);
+        _uniswapV3HistoricalTwapPercentageChangeIntentHarness.exposed_checkBlockWindow(blockData);
     }
 
     function test_CheckBlocksRange_Success() external view {
-        UniswapV3HistoricalTwapIntent.BlockData memory numerator = UniswapV3HistoricalTwapIntent.BlockData({
+        UniswapV3HistoricalTwapPercentageChangeIntent.BlockData memory numerator =
+        UniswapV3HistoricalTwapPercentageChangeIntent.BlockData({
             referenceBlockOffset: 37_590,
             blockWindow: 89_220,
             blockWindowTolerance: 40,
@@ -206,7 +213,8 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
             endBlock: 9_848_630
         });
 
-        UniswapV3HistoricalTwapIntent.BlockData memory denominator = UniswapV3HistoricalTwapIntent.BlockData({
+        UniswapV3HistoricalTwapPercentageChangeIntent.BlockData memory denominator =
+        UniswapV3HistoricalTwapPercentageChangeIntent.BlockData({
             referenceBlockOffset: 37_590,
             blockWindow: 49_950,
             blockWindowTolerance: 40,
@@ -214,7 +222,7 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
             endBlock: 9_848_630
         });
 
-        _uniswapV3HistoricalTwapIntentHarness.exposed_checkBlocksRange(numerator, denominator);
+        _uniswapV3HistoricalTwapPercentageChangeIntentHarness.exposed_checkBlocksRange(numerator, denominator);
     }
 
     function test_CheckPercentageDifference_Success() external view {
@@ -222,21 +230,22 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
         Intent memory intent = Intent({
             root: address(_safeCreated),
             value: 0,
-            target: address(_uniswapV3HistoricalTwapIntentHarness),
-            data: _uniswapV3HistoricalTwapIntentHarness.encodeIntent(
+            target: address(_uniswapV3HistoricalTwapPercentageChangeIntentHarness),
+            data: _uniswapV3HistoricalTwapPercentageChangeIntentHarness.encodeIntent(
                 uniswapV3Pool, 37_590, 89_220, 40, 37_590, 49_950, 40, 105_000, 110_000
                 )
         });
 
-        bytes memory hookInstructions =
-            _uniswapV3HistoricalTwapIntentHarness.encodeHookInstructions(9_759_424, 9_848_630, 9_798_709, 9_848_630);
+        bytes memory hookInstructions = _uniswapV3HistoricalTwapPercentageChangeIntentHarness.encodeHookInstructions(
+            9_759_424, 9_848_630, 9_798_709, 9_848_630
+        );
         Hook memory hook = Hook({
-            target: address(_uniswapV3HistoricalTwapIntentHarness),
+            target: address(_uniswapV3HistoricalTwapPercentageChangeIntentHarness),
             data: bytes(""),
             instructions: hookInstructions
         });
 
-        _uniswapV3HistoricalTwapIntentHarness.exposed_checkPercentageDifference(intent, hook);
+        _uniswapV3HistoricalTwapPercentageChangeIntentHarness.exposed_checkPercentageDifference(intent, hook);
     }
 
     // /* ===================================================================================== */
@@ -244,7 +253,8 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
     // /* ===================================================================================== */
 
     function test_CheckBlockWindow_RevertWhen_OutOfTolerance() external {
-        UniswapV3HistoricalTwapIntent.BlockData memory blockData = UniswapV3HistoricalTwapIntent.BlockData({
+        UniswapV3HistoricalTwapPercentageChangeIntent.BlockData memory blockData =
+        UniswapV3HistoricalTwapPercentageChangeIntent.BlockData({
             referenceBlockOffset: 37_590,
             blockWindow: 89_220,
             blockWindowTolerance: 40,
@@ -253,21 +263,26 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
         });
 
         vm.expectRevert(
-            abi.encodeWithSelector(UniswapV3HistoricalTwapIntent.InvalidStartBlockWindow.selector, blockData.startBlock)
+            abi.encodeWithSelector(
+                UniswapV3HistoricalTwapPercentageChangeIntent.InvalidStartBlockWindow.selector, blockData.startBlock
+            )
         );
-        _uniswapV3HistoricalTwapIntentHarness.exposed_checkBlockWindow(blockData);
+        _uniswapV3HistoricalTwapPercentageChangeIntentHarness.exposed_checkBlockWindow(blockData);
 
         blockData.startBlock = 9_759_424;
         blockData.endBlock = 9_848_500;
 
         vm.expectRevert(
-            abi.encodeWithSelector(UniswapV3HistoricalTwapIntent.InvalidEndBlockWindow.selector, blockData.endBlock)
+            abi.encodeWithSelector(
+                UniswapV3HistoricalTwapPercentageChangeIntent.InvalidEndBlockWindow.selector, blockData.endBlock
+            )
         );
-        _uniswapV3HistoricalTwapIntentHarness.exposed_checkBlockWindow(blockData);
+        _uniswapV3HistoricalTwapPercentageChangeIntentHarness.exposed_checkBlockWindow(blockData);
     }
 
     function test_CheckBlocksRange_RevertWhen_InvalidWindow() external {
-        UniswapV3HistoricalTwapIntent.BlockData memory numerator = UniswapV3HistoricalTwapIntent.BlockData({
+        UniswapV3HistoricalTwapPercentageChangeIntent.BlockData memory numerator =
+        UniswapV3HistoricalTwapPercentageChangeIntent.BlockData({
             referenceBlockOffset: 37_590,
             blockWindow: 89_220,
             blockWindowTolerance: 40,
@@ -275,7 +290,8 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
             endBlock: 9_848_630
         });
 
-        UniswapV3HistoricalTwapIntent.BlockData memory denominator = UniswapV3HistoricalTwapIntent.BlockData({
+        UniswapV3HistoricalTwapPercentageChangeIntent.BlockData memory denominator =
+        UniswapV3HistoricalTwapPercentageChangeIntent.BlockData({
             referenceBlockOffset: 37_590,
             blockWindow: 49_950,
             blockWindowTolerance: 40,
@@ -284,35 +300,41 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
         });
 
         vm.expectRevert(
-            abi.encodeWithSelector(UniswapV3HistoricalTwapIntent.InvalidStartBlockWindow.selector, numerator.startBlock)
+            abi.encodeWithSelector(
+                UniswapV3HistoricalTwapPercentageChangeIntent.InvalidStartBlockWindow.selector, numerator.startBlock
+            )
         );
-        _uniswapV3HistoricalTwapIntentHarness.exposed_checkBlocksRange(numerator, denominator);
+        _uniswapV3HistoricalTwapPercentageChangeIntentHarness.exposed_checkBlocksRange(numerator, denominator);
 
         numerator.startBlock = 9_759_424;
         numerator.endBlock = 9_848_500;
 
         vm.expectRevert(
-            abi.encodeWithSelector(UniswapV3HistoricalTwapIntent.InvalidEndBlockWindow.selector, numerator.endBlock)
+            abi.encodeWithSelector(
+                UniswapV3HistoricalTwapPercentageChangeIntent.InvalidEndBlockWindow.selector, numerator.endBlock
+            )
         );
-        _uniswapV3HistoricalTwapIntentHarness.exposed_checkBlocksRange(numerator, denominator);
+        _uniswapV3HistoricalTwapPercentageChangeIntentHarness.exposed_checkBlocksRange(numerator, denominator);
 
         numerator.endBlock = 9_848_630;
         denominator.startBlock = 9_798_609;
 
         vm.expectRevert(
             abi.encodeWithSelector(
-                UniswapV3HistoricalTwapIntent.InvalidStartBlockWindow.selector, denominator.startBlock
+                UniswapV3HistoricalTwapPercentageChangeIntent.InvalidStartBlockWindow.selector, denominator.startBlock
             )
         );
-        _uniswapV3HistoricalTwapIntentHarness.exposed_checkBlocksRange(numerator, denominator);
+        _uniswapV3HistoricalTwapPercentageChangeIntentHarness.exposed_checkBlocksRange(numerator, denominator);
 
         denominator.startBlock = 9_798_709;
         denominator.endBlock = 9_848_500;
 
         vm.expectRevert(
-            abi.encodeWithSelector(UniswapV3HistoricalTwapIntent.InvalidEndBlockWindow.selector, denominator.endBlock)
+            abi.encodeWithSelector(
+                UniswapV3HistoricalTwapPercentageChangeIntent.InvalidEndBlockWindow.selector, denominator.endBlock
+            )
         );
-        _uniswapV3HistoricalTwapIntentHarness.exposed_checkBlocksRange(numerator, denominator);
+        _uniswapV3HistoricalTwapPercentageChangeIntentHarness.exposed_checkBlocksRange(numerator, denominator);
     }
 
     function test_CheckPercentageDifference_RevertWhen_OutOfRange() external {
@@ -320,8 +342,8 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
         Intent memory intentHigh = Intent({
             root: address(_safeCreated),
             value: 0,
-            target: address(_uniswapV3HistoricalTwapIntentHarness),
-            data: _uniswapV3HistoricalTwapIntentHarness.encodeIntent(
+            target: address(_uniswapV3HistoricalTwapPercentageChangeIntentHarness),
+            data: _uniswapV3HistoricalTwapPercentageChangeIntentHarness.encodeIntent(
                 uniswapV3Pool, 37_590, 89_220, 40, 37_590, 49_950, 40, 105_000, 108_000
                 )
         });
@@ -329,25 +351,26 @@ contract UniswapV3HistoricalTwapIntentTest is SafeTestingUtils {
         Intent memory intentLow = Intent({
             root: address(_safeCreated),
             value: 0,
-            target: address(_uniswapV3HistoricalTwapIntentHarness),
-            data: _uniswapV3HistoricalTwapIntentHarness.encodeIntent(
+            target: address(_uniswapV3HistoricalTwapPercentageChangeIntentHarness),
+            data: _uniswapV3HistoricalTwapPercentageChangeIntentHarness.encodeIntent(
                 uniswapV3Pool, 37_590, 89_220, 40, 37_590, 49_950, 40, 110_000, 115_000
                 )
         });
 
-        bytes memory hookInstructions =
-            _uniswapV3HistoricalTwapIntentHarness.encodeHookInstructions(9_759_424, 9_848_630, 9_798_709, 9_848_630);
+        bytes memory hookInstructions = _uniswapV3HistoricalTwapPercentageChangeIntentHarness.encodeHookInstructions(
+            9_759_424, 9_848_630, 9_798_709, 9_848_630
+        );
 
         Hook memory hook = Hook({
-            target: address(_uniswapV3HistoricalTwapIntentHarness),
+            target: address(_uniswapV3HistoricalTwapPercentageChangeIntentHarness),
             data: bytes(""),
             instructions: hookInstructions
         });
 
-        vm.expectRevert(UniswapV3HistoricalTwapIntent.HighPercentageDifference.selector);
-        _uniswapV3HistoricalTwapIntentHarness.exposed_checkPercentageDifference(intentHigh, hook);
+        vm.expectRevert(UniswapV3HistoricalTwapPercentageChangeIntent.HighPercentageDifference.selector);
+        _uniswapV3HistoricalTwapPercentageChangeIntentHarness.exposed_checkPercentageDifference(intentHigh, hook);
 
-        vm.expectRevert(UniswapV3HistoricalTwapIntent.LowPercentageDifference.selector);
-        _uniswapV3HistoricalTwapIntentHarness.exposed_checkPercentageDifference(intentLow, hook);
+        vm.expectRevert(UniswapV3HistoricalTwapPercentageChangeIntent.LowPercentageDifference.selector);
+        _uniswapV3HistoricalTwapPercentageChangeIntentHarness.exposed_checkPercentageDifference(intentLow, hook);
     }
 }
