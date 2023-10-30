@@ -8,7 +8,6 @@ import {
 
 test("should query all intent batches", async () => {
   const query = await selectAllIntentBatchQuery.execute()
-  console.log(query, "query")
   expect(query.length).toBeGreaterThan(0)
 })
 

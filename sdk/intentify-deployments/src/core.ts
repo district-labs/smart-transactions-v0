@@ -23,6 +23,10 @@ export const WalletFactoryTestnet: ChainToAddress = {
   31337: "0x000000000000000000000000000000000000dEaD",
 };
 
+export const EngineHub: ChainToAddress = {
+  5: '0x18A4eA31d487A20E5eb7fE1521256D41e03B485c'
+}
+
 // ----------------------------------------------
 // Safe
 // ----------------------------------------------
