@@ -9,7 +9,7 @@ import { SafeProxyFactory } from "safe-contracts/proxies/SafeProxyFactory.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 import { BaseTest } from "./Base.t.sol";
 import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
-import { Hook, Signature } from "../../src/TypesAndDecoders.sol";
+import { Hook, Intent, IntentBatch, IntentBatchExecution, Signature } from "../../src/TypesAndDecoders.sol";
 
 contract SafeTestingUtils is BaseTest {
     Safe internal _safe;
@@ -38,6 +38,21 @@ contract SafeTestingUtils is BaseTest {
         }
 
         return signature;
+    }
+
+    function _generateIntentBatchExecution(
+        Intent[] memory intents,
+        Hook[] memory hooks
+    )
+        internal
+        view
+        returns (IntentBatchExecution memory intentBatchExecution)
+    {
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(_safeCreated), nonce: abi.encodePacked(uint256(0)), intents: intents });
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(SIGNER, _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch));
+        intentBatchExecution =
+            IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
     }
 
     function _generateIntentifyModuleEnableData(address module) internal pure returns (bytes memory) {
