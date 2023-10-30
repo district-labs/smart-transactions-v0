@@ -3,6 +3,8 @@ import { createPublicClient, createWalletClient, http } from "viem"
 import { privateKeyToAccount } from "viem/accounts"
 import { foundry, goerli, mainnet } from "viem/chains"
 
+console.log("process.env", process.env)
+
 export const accountShared = privateKeyToAccount(
   (process.env.PRIVATE_KEY as `0x{string}`) || "0x00"
 )
