@@ -8,6 +8,9 @@
     },
     "lint": {},
     "check-types": {},
+    "start": {
+      "dependsOn": ["^start"]
+    },
     "test": {
       "dependsOn": ["^test"]
     },
