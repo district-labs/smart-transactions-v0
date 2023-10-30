@@ -15,8 +15,9 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 // CORS configuration
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN,  // replace with your frontend domain
-  credentials: true,                          // Allow sending of credentials
+  origin: process.env.CORS_ORIGIN, 
+  credentials: true,
+  secure: true,
 };
 
 // Use the CORS middleware with the defined options

@@ -16,7 +16,8 @@ declare module "iron-session" {
 export const ironOptions: IronSessionOptions = {
   cookieName: `${process.env.AUTH_NAME} session`,
   password: process.env.AUTH_SECRET_KEY as string,
-  // cookieOptions: {
-  //   secure: process.env.NODE_ENV == "production",
-  // },
+  cookieOptions: {
+    sameSite: "none",
+    secure: process.env.NODE_ENV == "production",
+  },
 }
