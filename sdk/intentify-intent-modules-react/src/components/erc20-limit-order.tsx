@@ -1,33 +1,24 @@
 import type { Token, TokenList } from "@district-labs/intentify-core"
-import { Label } from "@district-labs/ui-react"
 
-import { TokenInputAmount } from "./fields/token-input-amount"
+import { TokenSelectAndAmount } from "./fields/token-select-and-amount"
 
-const defaultToken = {
-  chainId: 5,
-  address: "0x27326DeB3c3dc9EEf9C5769e7C2960C465B50156",
-  name: "Test Wrapped ETH",
-  symbol: "testWETH",
-  decimals: 18,
-  logoURI:
-    "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
-}
-
-export const intentErc20LimitOrder = {
+export type IntentErc20LimitOrder = {
   erc20LimitOrder: {
-    tokenOut: defaultToken,
-    tokenIn: defaultToken,
-    amountOut: "0",
-    amountIn: "1",
-  },
-} as {
-  erc20LimitOrder: {
-    tokenOut: Token
-    tokenIn: Token
+    tokenOut: Token | undefined
+    tokenIn: Token | undefined
     amountOut: string
     amountIn: string
   }
 }
+
+export const intentErc20LimitOrder = {
+  erc20LimitOrder: {
+    tokenOut: undefined,
+    tokenIn: undefined,
+    amountOut: "0",
+    amountIn: "0",
+  },
+} as IntentErc20LimitOrder
 
 export const intentErc20LimitOrderFields = {
   tokenOutAndAmount: (
@@ -35,63 +26,41 @@ export const intentErc20LimitOrderFields = {
     setIntentBatch: any,
     tokenList: TokenList,
     config: {
+      className: string
       label: string
       classNameLabel?: string
+      description?: string
+      classNameDescription?: string
     }
   ) => (
-    <>
-      {config.label && (
-        <Label htmlFor="tokenOut" className={config.classNameLabel}>
-          {config.label}
-        </Label>
-      )}
-      <TokenInputAmount
-        tokenList={tokenList}
-        amount={intentBatch["erc20LimitOrder"]["amountOut"]}
-        setAmount={(newAmount) =>
-          setIntentBatch((draft: any) => {
-            draft["erc20LimitOrder"]["amountOut"] = newAmount
-          })
-        }
-        selectedToken={intentBatch["erc20LimitOrder"]["tokenOut"]}
-        setSelectedToken={(newToken) =>
-          setIntentBatch((draft: any) => {
-            draft["erc20LimitOrder"]["tokenOut"] = newToken
-          })
-        }
-      />
-    </>
+    <TokenSelectAndAmount
+      intentBatch={intentBatch}
+      config={config}
+      setIntentBatch={setIntentBatch}
+      tokenList={tokenList}
+      pathAmount={["erc20LimitOrder", "amountOut"]}
+      pathToken={["erc20LimitOrder", "tokenOut"]}
+    />
   ),
   tokenInAndAmount: (
     intentBatch: any,
     setIntentBatch: any,
     tokenList: TokenList,
     config: {
+      className: string
       label: string
       classNameLabel?: string
+      description?: string
+      classNameDescription?: string
     }
   ) => (
-    <>
-      {config.label && (
-        <Label htmlFor="tokenOut" className={config.classNameLabel}>
-          {config.label}
-        </Label>
-      )}
-      <TokenInputAmount
-        tokenList={tokenList}
-        amount={intentBatch["erc20LimitOrder"]["amountIn"]}
-        setAmount={(newAmount) =>
-          setIntentBatch((draft: any) => {
-            draft["erc20LimitOrder"]["amountIn"] = newAmount
-          })
-        }
-        selectedToken={intentBatch["erc20LimitOrder"]["tokenIn"]}
-        setSelectedToken={(newToken) =>
-          setIntentBatch((draft: any) => {
-            draft["erc20LimitOrder"]["tokenIn"] = newToken
-          })
-        }
-      />
-    </>
+    <TokenSelectAndAmount
+      intentBatch={intentBatch}
+      config={config}
+      setIntentBatch={setIntentBatch}
+      tokenList={tokenList}
+      pathAmount={["erc20LimitOrder", "amountIn"]}
+      pathToken={["erc20LimitOrder", "tokenIn"]}
+    />
   ),
 }

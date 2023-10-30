@@ -1,5 +1,7 @@
 "use client"
 
+import { IsSignedIn } from "@/integrations/siwe/components/is-signed-in"
+import { IsSignedOut } from "@/integrations/siwe/components/is-signed-out"
 import { ADDRESS_ZERO } from "@district-labs/intentify-core"
 import {
   useGetSafeAddress,
@@ -14,10 +16,15 @@ import {
   CardHeader,
 } from "@district-labs/ui-react"
 
+import { userStrategyUserActiveFind } from "@/hooks/strategy/user/use-strategy-user-active-find"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Address } from "@/components/blockchain/address"
 import { BlockieSmartWallet } from "@/components/blockchain/blockie-smart-wallet"
+import { WalletConnectAndAuthenticatePrompt } from "@/components/blockchain/wallet-connect-and-authenticate-prompt"
+import { Erc20CardTokenOverview } from "@/components/erc20/erc20-card-token-overview"
 import { LinkComponent } from "@/components/shared/link-component"
+import { SkeletonCardStrategyActive } from "@/components/skeleton/skeleton-card-strategy-active"
+import { CardStrategyActive } from "@/components/strategies/card-strategy-active"
 
 export default function SmartWalletPage() {
   const classesTabTrigger =
@@ -25,7 +32,8 @@ export default function SmartWalletPage() {
   const address = useGetSafeAddress()
   return (
     <>
-      <Tabs className="w-full" defaultValue="overview">
+      <WalletConnectAndAuthenticatePrompt />
+      <Tabs className="w-full" defaultValue="active-strategies">
         <section className="section border-b-2">
           <div className="container max-w-6xl">
             <div className="grid gap-x-6 lg:grid-cols-2">
@@ -49,47 +57,70 @@ export default function SmartWalletPage() {
               </div>
             </div>
             <TabsList className="mb-1 mt-10 bg-transparent p-0">
+              <TabsTrigger
+                className={classesTabTrigger}
+                value="active-strategies"
+              >
+                Active Strategies
+              </TabsTrigger>
+              <TabsTrigger className={classesTabTrigger} value="token-balances">
+                Token Balances
+              </TabsTrigger>
               <TabsTrigger className={classesTabTrigger} value="overview">
                 Overview
-              </TabsTrigger>
-              <TabsTrigger className={classesTabTrigger} value="wallet">
-                Token Balances
               </TabsTrigger>
             </TabsList>
           </div>
         </section>
         <section className="section py-10">
-          <div className="container max-w-6xl">
-            <TabsContent value="overview">
-              <SmartWalletInformation />
-              <SmartWalletDeployStatus />
-              <SmartWalletModuleStatus />
-            </TabsContent>
-            <TabsContent value="wallet" className=" grid grid-cols-5">
-              <div className="col-span-3">
-                <h2 className="mb-4 text-lg font-semibold">Status</h2>
-                <p className="text-gray-500">
-                  This is the content for the Wallet tab.
-                </p>
-              </div>
-              <div className="col-span-2 rounded-md bg-neutral-50 shadow-sm">
-                <div className="p-6">
-                  <h2 className="mb-4 text-lg font-semibold">Smart Wallet</h2>
-                  <p className="text-gray-500">
-                    Type: <span className="font-semibold">Safe</span>
-                  </p>
-                </div>
-              </div>
-            </TabsContent>
-          </div>
+          <IsSignedOut>
+            <div className="container max-w-6xl">
+              <SkeletonCardStrategyActive />
+            </div>
+          </IsSignedOut>
+          <IsSignedIn>
+            <div className="container max-w-6xl">
+              <TabsContent value="active-strategies" className="">
+                <StrategiesActive />
+              </TabsContent>
+              <TabsContent value="overview">
+                <SmartWalletInformation />
+                <SmartWalletDeployStatus />
+                <SmartWalletModuleStatus />
+              </TabsContent>
+              <TabsContent value="token-balances" className=" grid gap-y-6">
+                <Erc20CardTokenOverview symbol="WETH" />
+                <Erc20CardTokenOverview symbol="USDC" />
+              </TabsContent>
+            </div>
+          </IsSignedIn>
         </section>
       </Tabs>
     </>
   )
 }
 
+const StrategiesActive = () => {
+  const address = useGetSafeAddress()
+  const { data } = userStrategyUserActiveFind({
+    filters: {
+      root: address as `0x${string}`,
+    },
+  })
+
+  if (!data?.length || !Array.isArray(data))
+    return <div className="">No active strategies</div>
+
+  return (
+    <div className="grid gap-y-10">
+      {data.map((strategy: any, idx: number) => (
+        <CardStrategyActive key={idx} {...strategy} />
+      ))}
+    </div>
+  )
+}
+
 const SmartWalletInformation = () => {
-  const isSmartWalletDeployed = useIsSafeMaterialized()
   return (
     <Card>
       <CardHeader>
@@ -109,13 +140,15 @@ const SmartWalletInformation = () => {
           <span className="font-bold">control of your funds</span>.
         </p>
         <p className="mt-4">
-          You're Smart Wallet can be used to interact with any application
+          You&apos;re Smart Wallet can be used to interact with any application
           that supports the Safe protocol.
         </p>
       </CardContent>
-      <CardFooter className="bg-neutral-50 py-4">
+      <CardFooter className="bg-card-footer py-4">
         <LinkComponent href="https://safe.global/">
-          <Button variant="default" className="btn">Learn More</Button>
+          <Button variant="default" className="btn">
+            Learn More
+          </Button>
         </LinkComponent>
       </CardFooter>
     </Card>
@@ -134,14 +167,19 @@ const SmartWalletDeployStatus = () => {
         </p>
       </CardHeader>
       <CardContent className="content">
-        <p className=''>
-          The Safe Smart Wallet address is deterministically generated. <span className='italic'>You can send funds to your Smart Wallet even before it's deployed.</span>
+        <p className="">
+          The Safe Smart Wallet address is deterministically generated.{" "}
+          <span className="italic">
+            You can send funds to your Smart Wallet even before it&apos;s
+            deployed.
+          </span>
         </p>
-        <p className='mt-4'>
-          Smart Wallet Address: <Address address={address || ADDRESS_ZERO} className="font-medium" />
+        <p className="mt-4">
+          Smart Wallet Address:{" "}
+          <Address address={address || ADDRESS_ZERO} className="font-medium" />
         </p>
       </CardContent>
-      <CardFooter className="bg-neutral-50 py-4">
+      <CardFooter className="bg-card-footer py-4">
         {isSmartWalletDeployed && (
           <Button className="btn">Wallet Deployed</Button>
         )}
@@ -160,10 +198,11 @@ const SmartWalletModuleStatus = () => {
       <CardHeader>
         <h3 className="text-2xl font-bold">Module Status</h3>
         <p className="text-sm">
-          The Safe Smart Wallet requires the District Finance module to be enabled.
+          The Safe Smart Wallet requires the District Finance module to be
+          enabled.
         </p>
       </CardHeader>
-      <CardFooter className="bg-neutral-50 py-4">
+      <CardFooter className="bg-card-footer py-4">
         {isSmartWalletModuleEnabled && (
           <Button className="btn">Module Enabled</Button>
         )}

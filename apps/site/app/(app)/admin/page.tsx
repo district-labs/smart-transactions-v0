@@ -1,23 +1,44 @@
 "use client"
 
 import { useIntentBatchAdminGetAll } from "@/hooks/intent-batch/admin/use-intent-batch-admin-get-all"
-
-import { IntentBatchTable } from "../../../components/admin/intent-batch-table"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { IntentBatchTable } from "@/components/admin/intent-batch-table"
+import { WalletConnectAndAuthenticatePrompt } from "@/components/blockchain/wallet-connect-and-authenticate-prompt"
+import { FormAdminGenerateStrategyId } from "@/components/forms/form-admin-generate-strategy-id"
 
 export default function AdminPage() {
   const intentBatch = useIntentBatchAdminGetAll()
+  const classesTabTrigger =
+    "border-neutral-700 data-[state=active]:border-b-2 rounded-none justify-start text-lg p-0 mr-8 pb-4"
+
   return (
     <>
-      <div className="container pt-10 lg:pt-20">
-        <div className="flex justify-between">
-          <h3 className="text-3xl font-extrabold">Admin</h3>
-          <div className=""></div>
-        </div>
-      </div>
-      <div className="container rounded-lg border-gray-100 bg-white p-10 shadow-sm lg:pb-14">
-        <h3 className="mb-5 text-2xl font-semibold">Intent Batches</h3>
-        <IntentBatchTable data={intentBatch.data} />
-      </div>
+      <WalletConnectAndAuthenticatePrompt />
+      <Tabs className="w-full" defaultValue="overview">
+        <section className="section border-b-2">
+          <div className="container max-w-6xl">
+            <h1 className="text-4xl font-bold">Admin</h1>
+            <TabsList className="mb-1 mt-10 bg-transparent p-0">
+              <TabsTrigger className={classesTabTrigger} value="overview">
+                Overview
+              </TabsTrigger>
+              <TabsTrigger className={classesTabTrigger} value="utilities">
+                Utilities
+              </TabsTrigger>
+            </TabsList>
+          </div>
+        </section>
+        <section className="section py-10">
+          <div className="container max-w-6xl">
+            <TabsContent value="overview">
+              <IntentBatchTable data={intentBatch.data} />
+            </TabsContent>
+            <TabsContent value="utilities">
+              <FormAdminGenerateStrategyId />
+            </TabsContent>
+          </div>
+        </section>
+      </Tabs>
     </>
   )
 }

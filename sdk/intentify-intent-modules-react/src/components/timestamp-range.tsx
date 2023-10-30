@@ -1,72 +1,56 @@
 import { Input, Label } from "@district-labs/ui-react"
 
-interface TimestampRangeFieldConfig {
-  label: string
-}
+import { DateTimeLocal } from "./fields/datetime-local"
 
-export type TimestampRange = {
+export type IntentTimestampRange = {
   timestampRange: {
-    minTimestamp: number
-    maxTimestamp: number
+    minTimestamp: string | undefined
+    maxTimestamp: string | undefined
   }
 }
 
 export const intentTimestampRange = {
   timestampRange: {
-    minTimestamp: 0,
-    maxTimestamp: 0,
+    minTimestamp: undefined,
+    maxTimestamp: undefined,
   },
-} as TimestampRange
+} as IntentTimestampRange
 
 export const intentTimestampRangeFields = {
   minTimestamp: (
+    intentBatch: any,
     setIntentBatch: any,
     config: {
+      className?: string
       label: string
       classNameLabel?: string
+      description?: string
+      classNameDescription?: string
     }
   ) => (
-    <div>
-      {config.label && (
-        <Label htmlFor="minTimestamp" className={config.classNameLabel}>
-          {config.label}
-        </Label>
-      )}
-      <Input
-        type="datetime-local"
-        onChange={(event: any) => {
-          const date = new Date(event.target.value)
-          const epoch = Math.floor(date.getTime() / 1000)
-          setIntentBatch((draft: any) => {
-            draft["timestampRange"]["minTimestamp"] = epoch
-          })
-        }}
-      />
-    </div>
+    <DateTimeLocal
+      config={config}
+      intentBatch={intentBatch}
+      setIntentBatch={setIntentBatch}
+      path={["timestampRange", "minTimestamp"]}
+    />
   ),
   maxTimestamp: (
+    intentBatch: any,
     setIntentBatch: any,
     config: {
+      className?: string
       label: string
       classNameLabel?: string
+      description?: string
+      classNameDescription?: string
     }
   ) => (
-    <div>
-      {config.label && (
-        <Label htmlFor="minTimestamp" className={config.classNameLabel}>
-          {config.label}
-        </Label>
-      )}
-      <Input
-        type="datetime-local"
-        onChange={(event: any) => {
-          const date = new Date(event.target.value)
-          const epoch = Math.floor(date.getTime() / 1000)
-          setIntentBatch((draft: any) => {
-            draft["timestampRange"]["maxTimestamp"] = epoch
-          })
-        }}
-      />
-    </div>
+    <DateTimeLocal
+      config={config}
+      intentBatch={intentBatch}
+      setIntentBatch={setIntentBatch}
+      path={["timestampRange", "maxTimestamp"]}
+    />
   ),
 }

@@ -1,6 +1,8 @@
 # Setup Local Environment
 forge script script/deploy/SafeDeploy.s.sol:SafeDeploy --rpc-url http://localhost:8545 --broadcast
 forge script script/deploy/CoreDeploy.s.sol:CoreDeploy --rpc-url http://localhost:8545 --broadcast
+forge script script/deploy/ERC20TestDeploy.s.sol:ERC20TestDeploy --rpc-url http://localhost:8545 --broadcast
+
 
 # E2E Testing
 forge script script/e2e/TestnetDeploy.s.sol:TestnetDeploy --rpc-url http://localhost:8545 --broadcast

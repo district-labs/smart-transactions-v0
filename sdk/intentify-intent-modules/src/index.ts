@@ -6,4 +6,3 @@ export * from "./eth20-swap-spot-price"
 export * from "./timestamp-range"
 export * from "./uniswapv3-historical-twap-intent"
 export * from "./uniswapv3-twap-intent"
-

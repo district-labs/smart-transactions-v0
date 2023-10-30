@@ -56,7 +56,7 @@ export const intentBatch = mysqlTable("intent_batch", {
   executedAt: timestamp("executed_at"),
   cancelledTxHash: charHash("cancelled_tx_hash").unique(),
   cancelledAt: timestamp("cancelled_at"),
-  strategyId: text("strategy_id").notNull(),
+  strategyId: charHash("strategy_id").notNull(),
   userId: charAddress("user_id").notNull(),
 })
 

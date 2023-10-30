@@ -2,18 +2,24 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { ButtonSIWELogout } from "@/integrations/siwe/components/button-siwe-logout"
+import { ButtonSiweSignIn } from "@/integrations/siwe/components/button-siwe-sign-in"
+import { ButtonSiweSignOut } from "@/integrations/siwe/components/button-siwe-sign-out"
 import { IsSignedIn } from "@/integrations/siwe/components/is-signed-in"
-import { type MainNavItem } from "@/types"
+import { IsSignedOut } from "@/integrations/siwe/components/is-signed-out"
+import { DiscordLogoIcon } from "@radix-ui/react-icons"
+import {
+  CircleDollarSign,
+  FileText,
+  PersonStanding,
+  UserCircle2,
+  Wallet2,
+} from "lucide-react"
 
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Icons } from "@/components/icons"
-
-import { WalletConnect } from "../blockchain/wallet-connect"
-import { IsWalletConnected } from "../shared/is-wallet-connected"
 
 export function NavigationPanel() {
   const [open, setOpen] = useState(false)
@@ -46,38 +52,48 @@ export function NavigationPanel() {
         <div className="flex flex-col pl-1 pr-7">
           <Link
             href={"/account"}
-            className="w-full border-b py-4 text-sm font-medium"
+            className="flex w-full items-center border-b py-4 text-sm font-medium"
             onClick={() => setOpen(false)}
           >
+            <UserCircle2 size={16} className="mr-1" />
             Account
           </Link>
           <Link
-            href={"/"}
-            className="w-full border-b py-4 text-sm font-medium"
+            href={"/account"}
+            className="flex w-full items-center border-b py-4 text-sm font-medium"
             onClick={() => setOpen(false)}
           >
-            Strategies
+            <Wallet2 size={16} className="mr-1" />
+            Smart Wallet
+          </Link>
+          <Link
+            href={"/"}
+            className="flex w-full items-center border-b py-4 text-sm font-medium"
+            onClick={() => setOpen(false)}
+          >
+            <CircleDollarSign size={16} className="mr-1" /> Strategies
           </Link>
           <Link
             href={"/data-hub"}
-            className="w-full border-b py-4 text-sm font-medium"
+            className="flex w-full items-center border-b py-4 text-sm font-medium"
             onClick={() => setOpen(false)}
           >
-            Data Hub
+            <FileText size={16} className="mr-1" /> Data Hub
           </Link>
           <Link
             href={siteConfig.links.discord}
-            className="w-full border-b py-4 text-sm font-medium"
+            className="flex w-full items-center border-b py-4 text-sm font-medium"
             onClick={() => setOpen(false)}
           >
+            <DiscordLogoIcon className="mr-1" />
             Discord
           </Link>
         </div>
-        {/* <IsWalletConnected>
-          <WalletConnect />
-        </IsWalletConnected> */}
+        <IsSignedOut>
+          <ButtonSiweSignIn className="mt-4 w-full" />
+        </IsSignedOut>
         <IsSignedIn>
-          <ButtonSIWELogout className="mt-4" />
+          <ButtonSiweSignOut className="mt-4 w-full" />
         </IsSignedIn>
       </SheetContent>
     </Sheet>

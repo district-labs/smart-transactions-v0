@@ -27,6 +27,10 @@ module.exports = {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
         },
+        "card-footer": {
+          DEFAULT: "hsl(var(--card-footer))",
+          foreground: "hsl(var(--card-footer-foreground))",
+        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",

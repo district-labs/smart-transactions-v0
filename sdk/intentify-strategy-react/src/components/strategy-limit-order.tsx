@@ -1,6 +1,11 @@
 "use client"
-import { useEffect } from 'react' 
+
+import { useEffect } from "react"
 import { IntentBatch, type TokenList } from "@district-labs/intentify-core"
+import {
+  useIntentifySafeModuleGetDimensionalNonce,
+  useIntentifySafeModuleGetStandardNonce,
+} from "@district-labs/intentify-core-react"
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
   intentErc20LimitOrder,
@@ -8,102 +13,122 @@ import {
   intentTimestampRange,
   intentTimestampRangeFields,
   nonceManager,
-  nonceManagerFields,
 } from "@district-labs/intentify-intent-modules-react"
 import { Card, CardContent, CardFooter } from "@district-labs/ui-react"
 import { useImmer } from "use-immer"
-import { useIntentifySafeModuleGetStandardNonce, useIntentifySafeModuleGetDimensionalNonce } from '@district-labs/intentify-core-react' 
-import { type NonceConfig, NonceManager } from "./nonce-manager"
+
+import { StrategyChildrenCallback } from "../types"
+import { convertDateStringToEpoch, deepMerge } from "../utils"
+import { NonceManager, type NonceConfig } from "./nonce-manager"
 
 export type StrategyLimitOrder = {
+  defaultValues: any
   intentifySafeModuleAddress?: `0x${string}`
   root?: `0x${string}`
   chainId?: number
   tokenList: TokenList
   intentBatchFactory?: IntentBatchFactory
   config: {
-    nonce?: NonceConfig,
+    nonce?: NonceConfig
     minTimestamp: {
-        label: string
-        classNameLabel?: string
+      className: string
+      label: string
+      classNameLabel?: string
+      description?: string
+      classNameDescription?: string
     }
     maxTimestamp: {
-        label: string
-        classNameLabel?: string
+      className: string
+      label: string
+      classNameLabel?: string
+      description?: string
+      classNameDescription?: string
     }
     tokenOutAndAmount: {
-        label: string
-        classNameLabel?: string
+      className: string
+      label: string
+      classNameLabel?: string
+      description?: string
+      classNameDescription?: string
     }
     tokenInAndAmount: {
-        label: string
-        classNameLabel?: string
+      className: string
+      label: string
+      classNameLabel?: string
+      description?: string
+      classNameDescription?: string
     }
   }
-  onIntentBatchGenerated: (
-    intentBatchEIP712: IntentBatch
-  ) => void
-  children: (props: {
-    handleGenerateIntentBatch: () => Promise<void>
-  }) => React.ReactNode
+  onIntentBatchGenerated: (intentBatchEIP712: IntentBatch) => void
+  children: (props: StrategyChildrenCallback) => React.ReactNode
 }
 
 export function StrategyLimitOrder({
+  config,
+  defaultValues,
   children,
   intentifySafeModuleAddress,
   root,
   chainId,
   tokenList,
-  config,
   intentBatchFactory,
   onIntentBatchGenerated,
 }: StrategyLimitOrder) {
-  const [intentBatch, setIntentBatch] = useImmer({
-    ...nonceManager,
-    ...intentTimestampRange,
-    ...intentErc20LimitOrder,
-  })
+  const startingState = deepMerge(
+    {
+      ...nonceManager,
+      ...intentTimestampRange,
+      ...intentErc20LimitOrder,
+    },
+    defaultValues
+  )
 
-  const {data: nonceStandardData, error: nonceStandardError} = useIntentifySafeModuleGetStandardNonce({
-    address: intentifySafeModuleAddress,
-    chainId: chainId,
-    args: [root],
-    enabled: intentBatch.nonce.type === "standard",
-  })
-  
-  const {data: nonceDimensionalData, error: nonceDimensionalError} = useIntentifySafeModuleGetDimensionalNonce({
-    address: intentifySafeModuleAddress,
-    chainId: chainId,
-    args: [root, intentBatch.nonce.args[0]],
-    enabled: intentBatch.nonce.type === "dimensional",
-  })
+  const [intentBatch, setIntentBatch] = useImmer(startingState)
 
-  useEffect( () => { 
-    if(intentBatch.nonce.type === "dimensional" && config?.nonce?.dimensional?.defaultQueue) {
-      setIntentBatch((draft:any) => {
+  const { data: nonceStandardData, error: nonceStandardError } =
+    useIntentifySafeModuleGetStandardNonce({
+      address: intentifySafeModuleAddress,
+      chainId: chainId,
+      args: [root],
+      enabled: intentBatch.nonce.type === "standard",
+    })
+
+  const { data: nonceDimensionalData, error: nonceDimensionalError } =
+    useIntentifySafeModuleGetDimensionalNonce({
+      address: intentifySafeModuleAddress,
+      chainId: chainId,
+      args: [root, intentBatch.nonce.args[0]],
+      enabled: intentBatch.nonce.type === "dimensional",
+    })
+
+  useEffect(() => {
+    if (
+      intentBatch.nonce.type === "dimensional" &&
+      config?.nonce?.dimensional?.defaultQueue
+    ) {
+      setIntentBatch((draft: any) => {
         draft["nonce"]["args"][0] = config?.nonce?.dimensional?.defaultQueue
       })
     }
   }, [intentBatch.nonce.type])
 
   const handleGenerateIntentBatch = async () => {
-    if (!intentBatchFactory) return
-    if (!chainId) return
+    if (!intentBatchFactory)
+      throw new Error("Intent Batch Factory not initialized")
+    if (!chainId) throw new Error("ChainId unavailable")
     const intentBatchManager = intentBatchFactory?.create(chainId, root)
 
-    if(intentBatch.nonce.type === "standard") {
-      intentBatchManager.nonce("standard", [
-        nonceStandardData,
-      ])
+    if (intentBatch.nonce.type === "standard") {
+      intentBatchManager.nonce("standard", [nonceStandardData])
     }
 
-    if(intentBatch.nonce.type === "dimensional") {
+    if (intentBatch.nonce.type === "dimensional") {
       intentBatchManager.nonce("dimensional", [
         intentBatch.nonce.args[0],
-        nonceDimensionalData
+        nonceDimensionalData,
       ])
     }
-    if(intentBatch.nonce.type === "time") {
+    if (intentBatch.nonce.type === "time") {
       intentBatchManager.nonce("time", [
         intentBatch.nonce.args[0],
         intentBatch.nonce.args[1],
@@ -112,8 +137,8 @@ export function StrategyLimitOrder({
     }
 
     intentBatchManager.add("TimestampRange", [
-      String(intentBatch.timestampRange.minTimestamp),
-      String(intentBatch.timestampRange.maxTimestamp),
+      convertDateStringToEpoch(intentBatch.timestampRange.minTimestamp),
+      convertDateStringToEpoch(intentBatch.timestampRange.maxTimestamp),
     ])
     intentBatchManager.add("Erc20LimitOrder", [
       intentBatch.erc20LimitOrder.tokenIn.address,
@@ -121,38 +146,50 @@ export function StrategyLimitOrder({
       intentBatch.erc20LimitOrder.amountIn,
       intentBatch.erc20LimitOrder.amountOut,
     ])
-    const intentBatchStruct =
-      intentBatchManager.generate()
+    const intentBatchStruct = intentBatchManager.generate()
     onIntentBatchGenerated?.(intentBatchStruct)
   }
 
   return (
     <Card>
       <CardContent className="grid gap-6 pt-4">
-        <NonceManager intentBatch={intentBatch} setIntentBatch={setIntentBatch} nonceConfig={config.nonce} /> 
-        <div className='grid grid-cols-2 gap-x-4'>
-          {intentTimestampRangeFields.minTimestamp(setIntentBatch, config.minTimestamp)}
-          {intentTimestampRangeFields.maxTimestamp(setIntentBatch, config.maxTimestamp)}
+        <NonceManager
+          intentBatch={intentBatch}
+          setIntentBatch={setIntentBatch}
+          nonceConfig={config?.nonce}
+        />
+        <div className="grid grid-cols-2 gap-x-4">
+          {intentTimestampRangeFields.minTimestamp(
+            intentBatch,
+            setIntentBatch,
+            config?.minTimestamp
+          )}
+          {intentTimestampRangeFields.maxTimestamp(
+            intentBatch,
+            setIntentBatch,
+            config?.maxTimestamp
+          )}
         </div>
-        <div className=''>
+        <div className="">
           {intentErc20LimitOrderFields.tokenOutAndAmount(
             intentBatch,
             setIntentBatch,
             tokenList,
-            config.tokenOutAndAmount
+            config?.tokenOutAndAmount
           )}
         </div>
-        <div className=''>
+        <div className="">
           {intentErc20LimitOrderFields.tokenInAndAmount(
             intentBatch,
             setIntentBatch,
             tokenList,
-            config.tokenInAndAmount
+            config?.tokenInAndAmount
           )}
         </div>
       </CardContent>
       <CardFooter className="flex flex-col gap-y-3">
         {children({
+          intentBatch,
           handleGenerateIntentBatch,
         })}
       </CardFooter>

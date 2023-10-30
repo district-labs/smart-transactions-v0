@@ -1,17 +1,17 @@
 import { relations } from "drizzle-orm"
-import { mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core"
+import { mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core"
 
 import { emailPreferences, strategies } from "."
 import { charAddress } from "../utils/schema"
 
 export const users = mysqlTable("users", {
   address: charAddress("address").primaryKey(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").onUpdateNow(),
   firstName: varchar("first_name", { length: 255 }),
   lastName: varchar("last_name", { length: 255 }),
   email: varchar("email", { length: 255 }),
-  safeAddress: charAddress("safe_address"),
-  about: text("about"),
-  createdAt: timestamp("created_at").defaultNow(),
+  safeAddress: charAddress("safe_address")
 })
 
 export type User = typeof users.$inferSelect

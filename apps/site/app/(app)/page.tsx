@@ -1,25 +1,13 @@
 "use client"
 
 import { strategies } from "@/data/strategies"
-import { ButtonSIWELogin } from "@/integrations/siwe/components/button-siwe-login"
-import { IsSignedIn } from "@/integrations/siwe/components/is-signed-in"
-import { IsSignedOut } from "@/integrations/siwe/components/is-signed-out"
-import {
-  IsSafeIntentModuleDisabled,
-  IsSafeIntentModuleEnabled,
-} from "@district-labs/intentify-core-react"
 import Balancer from "react-wrap-balancer"
 
-import WalletConnectCustom from "@/components/blockchain/wallet-connect-custom"
-import { SheetSafeSetup } from "@/components/safe/sheet-safe-setup"
-import { IsWalletConnected } from "@/components/shared/is-wallet-connected"
-import { IsWalletDisconnected } from "@/components/shared/is-wallet-disconnected"
-import { LinkComponent } from "@/components/shared/link-component"
 import { CardStrategyPreview } from "@/components/strategies/card-strategy-preview"
 
 export default function Home() {
   return (
-    <div className="relative space-y-4 overflow-hidden">
+    <div className="relative space-y-4 overflow-hidden pb-20">
       <section
         id="hero"
         aria-labelledby="hero-heading"
@@ -35,24 +23,23 @@ export default function Home() {
           </span>
         </Balancer>
       </section>
-        <section className="h-full px-10 lg:px-20">
+      <section className="h-full px-10 lg:px-20">
         <div className="max-w-screen-3xl mx-auto grid gap-10 text-left lg:grid-cols-3">
-              {Object.values(strategies).map((strategy) => {
-                const { name, description, image, id, alias, createdBy } =
-                  strategy
-                return (
-                  <CardStrategyPreview
-                    key={id}
-                    id={id}
-                    alias={alias}
-                    name={name}
-                    description={description}
-                    createdBy={createdBy}
-                  />
-                )
-              })}
-            </div>
-        </section>
+          {Object.values(strategies).map((strategy) => {
+            const { name, description, id, alias, createdBy } = strategy
+            return (
+              <CardStrategyPreview
+                key={id}
+                id={id}
+                alias={alias}
+                name={name}
+                description={description}
+                createdBy={createdBy}
+              />
+            )
+          })}
+        </div>
+      </section>
     </div>
   )
 }

@@ -86,26 +86,44 @@ export class IntentBatchFactory {
 
   /**
    * @description Returns the intent batch ID for a given intent batch.
-   * @param intentBatch 
+   * @param intentBatch
    * @returns id - A deterministic ID for the intent batch.
    */
   getIntentBatchId(intentBatch: IntentBatch) {
-    const moduleNames = intentBatch.intents.map((intent) => {
-      const module = this.getModuleByAddress(intent.target)
-      return module.name
-    }).sort()
+    const moduleNames = intentBatch.intents
+      .map((intent) => {
+        const module = this.getModuleByAddress(intent.target)
+        return module.name
+      })
+      .sort()
     return keccak256(encodePacked(["string[]"], [moduleNames]))
   }
 
   /**
    * @description Returns the strategy ID for a given array of intent batches.
-   * @param intentBatches 
+   * @param intentBatches
    * @returns id - A deterministic ID for the strategy.
    */
   getStrategyId(intentBatches: IntentBatch[]) {
-    const intentBatchIds = intentBatches.map((intentBatch) => {
-      return this.getIntentBatchId(intentBatch)
-    }).sort()
+    const intentBatchIds = intentBatches
+      .map((intentBatch) => {
+        return this.getIntentBatchId(intentBatch)
+      })
+      .sort()
     return keccak256(encodePacked(["bytes32[]"], [intentBatchIds]))
+  }
+
+  generateIntentBatchId(intentBatchIds: string[]) {
+    const intentBatchIdsSorted = intentBatchIds.sort()
+    return keccak256(encodePacked(["string[]"], [intentBatchIdsSorted]))
+  }
+
+  generateStrategyId(intentBatchIds: string[][]) {
+    const intentBatchIdsSorted = intentBatchIds
+      .map((intentBatch) => {
+        return this.generateIntentBatchId(intentBatch)
+      })
+      .sort()
+    return keccak256(encodePacked(["bytes32[]"], [intentBatchIdsSorted]))
   }
 }

@@ -3,16 +3,12 @@
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ButtonSIWELogout } from "@/integrations/siwe/components/button-siwe-logout"
-import { IsSignedIn } from "@/integrations/siwe/components/is-signed-in"
 
 import { cn } from "@/lib/utils"
 import useScroll from "@/hooks/use-scroll"
 import { NavigationCore } from "@/components/layouts/navigation-core"
 import { NavigationPanel } from "@/components/layouts/navigation-panel"
 
-import { WalletConnect } from "../blockchain/wallet-connect"
-import { IsWalletConnected } from "../shared/is-wallet-connected"
 import { NavigationAccount } from "./navigation-account"
 
 export default function Header() {

@@ -12,6 +12,7 @@ module.exports = {
     "plugin:tailwindcss/recommended",
   ],
   rules: {
+    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/consistent-type-imports": [
       "warn",
       {

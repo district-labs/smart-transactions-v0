@@ -37,7 +37,7 @@ export const CardStrategyPreview = ({
             <p className="mt-3">{description}</p>
           </div>
         </CardHeader>
-        <CardFooter className="flex justify-between gap-x-4 bg-neutral-50 pb-5 pt-4">
+        <CardFooter className="flex justify-between gap-x-4 bg-card-footer pb-5 pt-4">
           <div className="text-right">
             <span className="text-xs font-bold">Created By</span>
           </div>

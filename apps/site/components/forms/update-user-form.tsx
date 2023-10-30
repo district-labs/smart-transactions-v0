@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form"
 import { useAccount } from "wagmi"
 import { type z } from "zod"
 
-import { siteConfig } from "@/config/site"
 import { userSchema } from "@/lib/validations/user"
 
 import { Icons } from "../icons"
@@ -25,7 +24,6 @@ import { toast } from "../ui/use-toast"
 type UserInput = z.infer<typeof userSchema>
 
 export function UpdateUserForm() {
-  const router = useRouter()
   const { address } = useAccount()
 
   const form = useForm<UserInput>({
@@ -46,7 +44,6 @@ export function UpdateUserForm() {
       })
     },
     onSuccess: () => {
-      router.push(siteConfig.onboardingSteps[1].href)
       toast({
         description: "User info updated successfully.",
       })

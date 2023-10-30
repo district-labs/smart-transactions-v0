@@ -1,29 +1,52 @@
-import type { Token, TokenList } from "@district-labs/intentify-core"
+import { getValueFromPath, setValueFromPath } from "@/src/utils"
+import { Label } from "@district-labs/ui-react"
 
-import { TokenSelector } from "./token-selector"
+import { TokenSelect as TokenSelectCore } from "./core/token-select"
 
-interface TokenSelect {
-  selectedToken: Token
-  setSelectedToken: (token: Token) => void
-  tokenList: TokenList
+export type TokenSelectConfig = {
+  className: string
+  label: string
+  classNameLabel?: string
+  description?: string
+  classNameDescription?: string
 }
 
-export function TokenSelect({
-  selectedToken,
-  setSelectedToken,
+type TokenSelect = {
+  path: string[]
+  intentBatch: any
+  setIntentBatch: any
+  tokenList: any
+  config: TokenSelectConfig
+}
+
+export const TokenSelect = ({
+  path,
   tokenList,
-}: TokenSelect) {
+  intentBatch,
+  setIntentBatch,
+  config,
+}: TokenSelect) => {
   return (
-    <div className="group relative flex items-center justify-between gap-2 rounded-md border p-2">
-      <TokenSelector
+    <div className={config?.className}>
+      {config?.label && (
+        <Label htmlFor={path.toString()} className={config?.classNameLabel}>
+          {config?.label}
+        </Label>
+      )}
+      <TokenSelectCore
         tokenList={tokenList}
-        selectedToken={selectedToken}
-        setSelectedToken={setSelectedToken}
-        className="mr-2"
+        selectedToken={getValueFromPath(intentBatch, path)}
+        setSelectedToken={(value) =>
+          setIntentBatch((draft: any) => {
+            setValueFromPath(draft, path, value)
+          })
+        }
       />
-      <span className="text-sm font-medium">
-        {selectedToken.name} ({selectedToken.symbol})
-      </span>
+      {config?.description && (
+        <span className={config?.classNameDescription}>
+          {config?.description}
+        </span>
+      )}
     </div>
   )
 }

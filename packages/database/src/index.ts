@@ -7,7 +7,8 @@ const connection = connect({
 })
 
 export * from "drizzle-orm";
+export * from "./schema/emailPreferences"
 export * from "./schema/intents"
-// export * from "./queries/intent-batch"
-// export * from "./queries/intent-batch-execution"
+export * from "./schema/strategies"
+export * from "./schema/users"
 export const db = drizzle(connection, { schema, logger: true })

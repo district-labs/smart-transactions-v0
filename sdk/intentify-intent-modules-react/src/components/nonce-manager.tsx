@@ -1,4 +1,7 @@
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
   Input,
   Label,
   Select,
@@ -6,9 +9,6 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
 } from "@district-labs/ui-react"
 
 export type NonceManager = {
@@ -17,7 +17,6 @@ export type NonceManager = {
     args: any[]
   }
 }
-
 
 export const nonceManager = {
   nonce: {
@@ -50,25 +49,35 @@ export const nonceManagerFields = {
       </Select>
     </div>
   ),
-  NonceDimensional: (intentBatch: any, setIntentBatch: any, config?: {
-    label: string
-    labelTrigger: string
-    classNameLabel?: string
-    classNameTrigger?: string
-  }) => (
+  NonceDimensional: (
+    intentBatch: any,
+    setIntentBatch: any,
+    config?: {
+      label: string
+      labelTrigger: string
+      classNameLabel?: string
+      classNameTrigger?: string
+    }
+  ) => (
     <div className="">
       <Collapsible>
-        <CollapsibleTrigger asChild><p className={config?.classNameTrigger}>{config?.labelTrigger || "Advanced Settings"}</p></CollapsibleTrigger>
+        <CollapsibleTrigger asChild>
+          <p className={config?.classNameTrigger}>
+            {config?.labelTrigger || "Advanced Settings"}
+          </p>
+        </CollapsibleTrigger>
         <CollapsibleContent>
-        <Label htmlFor="supply" className={config?.classNameLabel}>
-          {config?.label || "Queue"}
-        </Label>
+          <Label htmlFor="supply" className={config?.classNameLabel}>
+            {config?.label || "Queue"}
+          </Label>
           <Input
             type="number"
             value={intentBatch.nonce.args[0]}
             onChange={(event: any) =>
               setIntentBatch((draft: any) => {
-                draft["nonce"]["args"][0] = (event.target as HTMLInputElement).value
+                draft["nonce"]["args"][0] = (
+                  event.target as HTMLInputElement
+                ).value
               })
             }
           />

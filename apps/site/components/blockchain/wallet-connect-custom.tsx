@@ -13,6 +13,9 @@ interface WalletConnectCustomProps extends HTMLAttributes<HTMLDivElement> {
 
 export const WalletConnectCustom = ({
   className,
+  classNameConnect,
+  classNameConnected,
+  classNameWrongNetwork,
   labelConnect = "Connect Wallet",
   labelWrongNetwork = "Wrong Network",
   ...props
@@ -37,7 +40,11 @@ export const WalletConnectCustom = ({
               if (!connected) {
                 return (
                   <>
-                    <Button variant="default" onClick={openConnectModal}>
+                    <Button
+                      variant="default"
+                      className={classNameConnect}
+                      onClick={openConnectModal}
+                    >
                       {labelConnect}
                     </Button>
                   </>
@@ -46,7 +53,11 @@ export const WalletConnectCustom = ({
 
               if (chain.unsupported) {
                 return (
-                  <Button variant="destructive" onClick={openChainModal}>
+                  <Button
+                    variant="destructive"
+                    className={classNameWrongNetwork}
+                    onClick={openChainModal}
+                  >
                     {labelWrongNetwork}
                   </Button>
                 )
@@ -54,7 +65,11 @@ export const WalletConnectCustom = ({
 
               return (
                 <div>
-                  <Button variant="default" onClick={openChainModal}>
+                  <Button
+                    variant="default"
+                    className={classNameConnected}
+                    onClick={openChainModal}
+                  >
                     {chain.hasIcon && (
                       <div
                         style={{

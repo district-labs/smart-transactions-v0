@@ -1,7 +1,5 @@
 import "dotenv/config"
-
 import { sql } from "drizzle-orm"
-
 import { db } from "../.."
 import {
   emailPreferences,
@@ -10,7 +8,8 @@ import {
   strategies,
   users,
 } from "../schema"
-import { INTENT_BATCH_DATA, SEED_USER_ADDRESS, STRATEGY_ID } from "./data"
+import { INTENT_BATCH_DATA, SEED_USER_ADDRESS } from "./data"
+import { strategiesBeta } from "./strategies"
 
 async function main() {
   await db.transaction(async (tx) => {
@@ -19,10 +18,10 @@ async function main() {
       .insert(users)
       .values({
         address: SEED_USER_ADDRESS,
-        firstName: "John",
-        lastName: "Doe",
-        email: "johndoe@email.com",
-        about: "Admin",
+        firstName: "District",
+        lastName: "Finance",
+        email: "admin@districtfinance.com",
+        safeAddress: '0x000000000000000000000000000000000000dEaD'
       })
       .onDuplicateKeyUpdate({ set: { address: sql`address` } })
 
@@ -37,45 +36,48 @@ async function main() {
       })
       .onDuplicateKeyUpdate({ set: { id: sql`id` } })
 
-    // Ensure Strategy id 1 is created if it doesn't exist
-    await tx
-      .insert(strategies)
-      .values({
-        id: STRATEGY_ID,
-        managerId: SEED_USER_ADDRESS,
-        name: `Strategy ${STRATEGY_ID}`,
-        description: `Test Strategy ${STRATEGY_ID}`,
+    strategiesBeta.map(async strategy => {
+        await tx
+        .insert(strategies)
+        .values({
+          id: strategy.id,
+          alias: strategy.alias,
+          name: strategy.name,
+          description: strategy.description,
+          managerId: SEED_USER_ADDRESS,
+        })
+        // .onDuplicateKeyUpdate({ set: { id: sql`id` } })
       })
-      .onDuplicateKeyUpdate({ set: { id: sql`id` } })
 
-    const {
-      nonce,
-      intentBatchHash,
-      chainId,
-      intents: intentsData,
-      root,
-      signature,
-    } = INTENT_BATCH_DATA
-    const intentBatchResult = await tx.insert(intentBatch).values({
-      intentBatchHash,
-      nonce,
-      chainId,
-      root,
-      signature,
-      strategyId: STRATEGY_ID,
-      userId: SEED_USER_ADDRESS,
-    })
+    // const {
+    //   nonce,
+    //   intentBatchHash,
+    //   chainId,
+    //   intents: intentsData,
+    //   root,
+    //   signature,
+    // } = INTENT_BATCH_DATA
+    
+    // await tx.insert(intentBatch).values({
+    //   intentBatchHash,
+    //   nonce,
+    //   chainId,
+    //   root,
+    //   signature,
+    //   strategyId: limitOrderStrategy.id,
+    //   userId: SEED_USER_ADDRESS,
+    // })
 
-    await tx.insert(intents).values(
-      intentsData.map((intent) => ({
-        intentId: intent.intentId,
-        intentArgs: intent.intentArgs,
-        root: intent.root,
-        target: intent.target,
-        data: intent.data,
-        intentBatchId: intentBatchHash,
-      }))
-    )
+    // await tx.insert(intents).values(
+    //   intentsData.map((intent) => ({
+    //     intentId: intent.intentId,
+    //     intentArgs: intent.intentArgs,
+    //     root: intent.root,
+    //     target: intent.target,
+    //     data: intent.data,
+    //     intentBatchId: intentBatchHash,
+    //   }))
+    // )
   })
 }
 

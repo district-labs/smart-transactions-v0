@@ -1,29 +1,26 @@
 import { relations } from "drizzle-orm"
 import {
-  mysqlEnum,
   mysqlTable,
-  serial,
   text,
   timestamp,
   varchar,
 } from "drizzle-orm/mysql-core"
 
 import { intentBatch, users } from "."
-import { charAddress } from "../utils/schema"
+import { charAddress, charHash } from "../utils/schema"
 
 export const strategies = mysqlTable("strategies", {
-  id: serial("id").primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  description: text("description"),
-  category: mysqlEnum("category", ["strategy", "portfolio"])
-    .notNull()
-    .default("strategy"),
+  id: charHash("id").primaryKey(),
   createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").onUpdateNow(),
+  name: varchar("name", { length: 255 }).notNull(),
+  alias: varchar("alias", { length: 255 }).notNull(),
+  description: text("description"),
   managerId: charAddress("manager_id").notNull(),
 })
 
-export type Strategy = typeof strategies.$inferSelect
-export type NewStrategy = typeof strategies.$inferInsert
+export type DbStrategy = typeof strategies.$inferSelect
+export type DbNewStrategy = typeof strategies.$inferInsert
 
 export const strategiesRelations = relations(strategies, ({ one, many }) => ({
   manager: one(users, {
