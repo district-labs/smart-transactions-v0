@@ -1,9 +1,7 @@
+import { EngineHub } from '@district-labs/intentify-deployments' 
 import {
   ADDRESS_ZERO,
   engineHubABI,
-  EngineHubAddressList,
-  tokenRouterReleaseIntentABI,
-  TokenRouterReleaseIntentAddressList,
   type Hook,
 } from "@district-labs/intentify-core"
 import { encodeFunctionData } from "viem"
@@ -34,21 +32,7 @@ export async function generateHooksForLimitOrderBasic({
   amountOut,
   recipient,
 }: GenerateHooksForLimitOrderBasicParams): Promise<Hook[]> {
-  const engineHubAddress = EngineHubAddressList[chainId]
-  const tokenRouterReleaseIntentAddress =
-    TokenRouterReleaseIntentAddressList[chainId]
-
-  // Token Release claim
-  const tokenRouterReleaseClaimData = encodeFunctionData({
-    abi: tokenRouterReleaseIntentABI,
-    functionName: "claim",
-    args: [
-      recipient,
-      engineHubAddress,
-      inputToken.address,
-      BigInt(amountInMax),
-    ],
-  })
+  const engineHubAddress = EngineHub[chainId]
 
   // Uniswap V3 routing
   const route = await routeSwapExactOutput({
@@ -77,10 +61,6 @@ export async function generateHooksForLimitOrderBasic({
     functionName: "multiCall",
     args: [
       [
-        {
-          target: tokenRouterReleaseIntentAddress,
-          callData: tokenRouterReleaseClaimData,
-        },
         {
           target: inputToken.address,
           callData: approveInputTokenData,
