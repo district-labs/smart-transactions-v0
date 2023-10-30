@@ -9,7 +9,7 @@ import {
   useSafeGetTransactionHash,
   useSafeNonce,
 } from "../blockchain";
-import { ADDRESS_ZERO } from "../data";
+import { ADDRESS_ZERO } from "@district-labs/intentify-core";
 import { useGetIntentifyModuleAddress } from "../hooks/use-get-intentify-module-address";
 import { cn } from "../utils";
 

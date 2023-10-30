@@ -2,7 +2,7 @@ import { useAccount, useChainId } from "wagmi";
 import {
   useWalletFactoryGetDeterministicWalletAddress
 } from "../blockchain";
-import { ADDRESS_ZERO, DEFAULT_SALT } from "../data";
+import { ADDRESS_ZERO, DEFAULT_SALT } from "@district-labs/intentify-core";;
 import { useGetSafeProxyAddress } from "./use-get-safe-proxy-address";
 import { useGetWalletFactoryAddress } from "./use-get-wallet-factory-address";
 

@@ -1,6 +1,5 @@
-import { WalletFactoryAddressList } from "@district-labs/intentify-core";
-
+import { WalletFactory } from "@district-labs/intentify-deployments";
 
 export function useGetWalletFactoryAddress(chainId: number) {
-  return WalletFactoryAddressList[chainId];
+  return WalletFactory[chainId];
 }

@@ -5,7 +5,7 @@ import {
   usePrepareWalletFactoryCreateDeterministicWallet,
   useWalletFactoryGetDeterministicWalletAddress
 } from "../blockchain";
-import { DEFAULT_SALT } from "../data";
+import { DEFAULT_SALT } from "@district-labs/intentify-core";
 import { useGetSafeProxyAddress } from "../hooks/use-get-safe-proxy-address";
 import { useGetWalletFactoryAddress } from "../hooks/use-get-wallet-factory-address";
 import { cn } from "../utils";
