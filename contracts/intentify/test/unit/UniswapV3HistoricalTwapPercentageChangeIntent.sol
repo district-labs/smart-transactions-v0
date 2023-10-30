@@ -155,7 +155,7 @@ contract UniswapV3HistoricalTwapPercentageChangeIntentTest is SafeTestingUtils {
     /* Success                                                                               */
     /* ===================================================================================== */
 
-    function test_UniswapV3HistoricalTwapIntent_Success() external {
+    function test_UniswapV3HistoricalTwapPercentageChangeIntent_Success() external {
         address uniswapV3Pool = 0x5c33044BdBbE55dAb3d526CE70F908aAF6990373;
         Intent[] memory intents = new Intent[](1);
         intents[0] = Intent({
