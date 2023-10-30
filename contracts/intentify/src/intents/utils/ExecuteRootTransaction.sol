@@ -5,6 +5,8 @@ import { Enum } from "safe-contracts/common/Enum.sol";
 import { IntentifySafeModule } from "../../module/IntentifySafeModule.sol";
 import { RevertMessageReasonHelper } from "../../helpers/RevertMessageReasonHelper.sol";
 
+/// @title Execute Root Transaction
+/// @notice Execute a transaction from the root of the calling safe using the Intentify Safe Module
 contract ExecuteRootTransaction is RevertMessageReasonHelper {
     /*//////////////////////////////////////////////////////////////////////////
                                 PUBLIC STORAGE

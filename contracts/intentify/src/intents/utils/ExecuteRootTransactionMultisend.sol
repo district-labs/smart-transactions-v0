@@ -5,17 +5,38 @@ import { Enum } from "safe-contracts/common/Enum.sol";
 import { IntentifySafeModule } from "../../module/IntentifySafeModule.sol";
 import { ExecuteRootTransaction } from "./ExecuteRootTransaction.sol";
 
-struct Transaction {
-    address to;
-    uint256 value;
-    bytes data;
-    Enum.Operation operation;
-}
-
+/// @title Execute Root Transaction Multisend
+/// @notice Execute a multisend transaction from the root of the calling safe using the Intentify Safe Module.
 contract ExecuteRootTransactionMultisend is ExecuteRootTransaction {
+    /*//////////////////////////////////////////////////////////////////////////
+                                TYPE DECLARATIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @dev Transaction structure to be used in safe multisend encode helper.
+    struct Transaction {
+        address to;
+        uint256 value;
+        bytes data;
+        Enum.Operation operation;
+    }
+
+    /*//////////////////////////////////////////////////////////////////////////
+                                INTERNAL STORAGE
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice The address of the multisend contract
     address internal _multisend;
 
+    /*//////////////////////////////////////////////////////////////////////////
+                                CUSTOM ERRORS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @dev No transactions provided for multisend.
     error NoTransactionsProvided();
+
+    /*//////////////////////////////////////////////////////////////////////////
+                                CONSTRUCTOR
+    //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice Initialize the smart contract
     /// @param _intentifySafeModule The address of the Intentify Safe Module
@@ -23,6 +44,13 @@ contract ExecuteRootTransactionMultisend is ExecuteRootTransaction {
         _multisend = __multisend;
     }
 
+    /*//////////////////////////////////////////////////////////////////////////
+                                   WRITE FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice Execute a multisend transaction from the root of the Intentify Safe Module
+    /// @param txs The transactions to execute
+    /// @return success The success of the transaction
     function executeFromRootMultisend(Transaction[] memory txs) public returns (bool) {
         (address to, uint256 value, bytes memory data, Enum.Operation operation) = _encodeMultiSend(txs);
 
@@ -37,6 +65,17 @@ contract ExecuteRootTransactionMultisend is ExecuteRootTransaction {
         return success;
     }
 
+    /*//////////////////////////////////////////////////////////////////////////
+                                   INTERNAL READ FUNCTIONS
+    //////////////////////////////////////////////////////////////////////////*/
+
+    /// @notice Encode a multisend transaction
+    /// @dev Helper function to encode meta transactions for multisend.
+    /// @param txs The transactions to encode
+    /// @return to The address of the multisend contract
+    /// @return value The amount of ETH to send with the transaction
+    /// @return data The data to send with the transaction
+    /// @return operation The operation to use with the transaction
     function _encodeMultiSend(Transaction[] memory txs)
         internal
         view

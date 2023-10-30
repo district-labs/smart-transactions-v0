@@ -8,7 +8,7 @@ import { MultiSend } from "safe-contracts/libraries/MultiSend.sol";
 import { AggregatorV3Interface } from "@chainlink/v0.8/interfaces/AggregatorV3Interface.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
-import { ExecuteRootTransactionMultisend, Transaction } from "./utils/ExecuteRootTransactionMultisend.sol";
+import { ExecuteRootTransactionMultisend } from "./utils/ExecuteRootTransactionMultisend.sol";
 
 /// @title ERC20 Rebalance Intent
 /// @notice An intent to rebalance the tokens in the balance of a wallet given a set of tokens and weights.
@@ -223,7 +223,8 @@ contract ERC20RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransactionM
         uint8 tokensToUnlock = 0;
         address executor = _decodeHookInstructions(hook);
         RebalanceToken[] memory rebalanceTokens = _decodeIntent(intent);
-        Transaction[] memory txs = new Transaction[](rebalanceTokens.length);
+        ExecuteRootTransactionMultisend.Transaction[] memory txs =
+            new ExecuteRootTransactionMultisend.Transaction[](rebalanceTokens.length);
 
         for (uint256 i = 0; i < rebalanceTokens.length; i++) {
             uint256 tokenBalance = ERC20(rebalanceTokens[i].token).balanceOf(intent.root);
@@ -247,7 +248,8 @@ contract ERC20RebalanceIntent is IntentWithHookAbstract, ExecuteRootTransactionM
 
         // Send the tokens to the hook executor.
         if (tokensToUnlock > 0) {
-            Transaction[] memory txsToUnlock = new Transaction[](tokensToUnlock);
+            ExecuteRootTransactionMultisend.Transaction[] memory txsToUnlock =
+                new ExecuteRootTransactionMultisend.Transaction[](tokensToUnlock);
             for (uint8 i = 0; i < tokensToUnlock; i++) {
                 txsToUnlock[i] = txs[i];
             }
