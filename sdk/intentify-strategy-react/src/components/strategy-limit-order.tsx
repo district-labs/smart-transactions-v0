@@ -1,11 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
 import { IntentBatch, type TokenList } from "@district-labs/intentify-core"
-import {
-  useIntentifySafeModuleGetDimensionalNonce,
-  useIntentifySafeModuleGetStandardNonce,
-} from "@district-labs/intentify-core-react"
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
   intentErc20LimitOrder,
@@ -20,6 +15,8 @@ import { useImmer } from "use-immer"
 import { StrategyChildrenCallback } from "../types"
 import { convertDateStringToEpoch, deepMerge } from "../utils"
 import { NonceManager, type NonceConfig } from "./nonce-manager"
+import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
+import { useDynamicNonce } from "./use-dynamic-nonce"
 
 export type StrategyLimitOrder = {
   defaultValues: any
@@ -85,32 +82,14 @@ export function StrategyLimitOrder({
 
   const [intentBatch, setIntentBatch] = useImmer(startingState)
 
-  const { data: nonceStandardData, error: nonceStandardError } =
-    useIntentifySafeModuleGetStandardNonce({
-      address: intentifySafeModuleAddress,
-      chainId: chainId,
-      args: [root],
-      enabled: intentBatch.nonce.type === "standard",
-    })
-
-  const { data: nonceDimensionalData, error: nonceDimensionalError } =
-    useIntentifySafeModuleGetDimensionalNonce({
-      address: intentifySafeModuleAddress,
-      chainId: chainId,
-      args: [root, intentBatch.nonce.args[0]],
-      enabled: intentBatch.nonce.type === "dimensional",
-    })
-
-  useEffect(() => {
-    if (
-      intentBatch.nonce.type === "dimensional" &&
-      config?.nonce?.dimensional?.defaultQueue
-    ) {
-      setIntentBatch((draft: any) => {
-        draft["nonce"]["args"][0] = config?.nonce?.dimensional?.defaultQueue
-      })
-    }
-  }, [intentBatch.nonce.type])
+  const nonceData = useDynamicNonce({
+    address: intentifySafeModuleAddress,
+    chainId,
+    intentBatch,
+    root,
+    setIntentBatch,
+    config
+  })
 
   const handleGenerateIntentBatch = async () => {
     if (!intentBatchFactory)
@@ -118,27 +97,14 @@ export function StrategyLimitOrder({
     if (!chainId) throw new Error("ChainId unavailable")
     const intentBatchManager = intentBatchFactory?.create(chainId, root)
 
-    if (intentBatch.nonce.type === "standard") {
-      intentBatchManager.nonce("standard", [nonceStandardData])
-    }
-
-    if (intentBatch.nonce.type === "dimensional") {
-      intentBatchManager.nonce("dimensional", [
-        intentBatch.nonce.args[0],
-        nonceDimensionalData,
-      ])
-    }
-    if (intentBatch.nonce.type === "time") {
-      intentBatchManager.nonce("time", [
-        intentBatch.nonce.args[0],
-        intentBatch.nonce.args[1],
-        intentBatch.nonce.args[2],
-      ])
-    }
+    setIntentBatchManagerNonce(intentBatchManager, intentBatch, {
+      standard: nonceData.standard,
+      dimensional: nonceData.dimensional
+    })
 
     intentBatchManager.add("TimestampRange", [
-      convertDateStringToEpoch(intentBatch.timestampRange.minTimestamp),
-      convertDateStringToEpoch(intentBatch.timestampRange.maxTimestamp),
+      convertDateStringToEpoch(intentBatch.timestampRange.minTimestamp).toString(),
+      convertDateStringToEpoch(intentBatch.timestampRange.maxTimestamp).toString(),
     ])
     intentBatchManager.add("Erc20LimitOrder", [
       intentBatch.erc20LimitOrder.tokenIn.address,

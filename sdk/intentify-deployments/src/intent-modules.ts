@@ -45,7 +45,7 @@ export const UniswapV3TwapIntentIntent: ChainToAddress = {
   31337: "0x000000000000000000000000000000000000dEaD",
 };
 
-export const UniswapV3HistoricalTwapIntent: ChainToAddress = {
+export const UniswapV3HistoricalTwapPercentageChangeIntent: ChainToAddress = {
   5: "0x000000000000000000000000000000000000dEaD",
   31337: "0x000000000000000000000000000000000000dEaD",
 };

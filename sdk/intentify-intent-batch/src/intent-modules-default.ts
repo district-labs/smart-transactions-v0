@@ -5,7 +5,7 @@ import {
   erc20SwapSpotPrice,
   ethTip,
   timestampRange,
-  uniswapv3HistoricalTwapIntent,
+  uniswapV3HistoricalTwapPercentageChangeIntent,
   uniswapv3TwapIntent,
 } from "./modules"
 
@@ -16,6 +16,6 @@ export const intentModulesDefault = [
   erc20LimitOrder,
   erc20SwapSpotPrice,
   timestampRange,
-  uniswapv3HistoricalTwapIntent,
+  uniswapV3HistoricalTwapPercentageChangeIntent,
   uniswapv3TwapIntent,
 ]

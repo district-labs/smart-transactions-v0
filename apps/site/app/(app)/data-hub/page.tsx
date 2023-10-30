@@ -64,10 +64,7 @@ export default function DataHubPage() {
             </TabsContent>
             <TabsContent value="upcoming">
               <div className="">
-                <h2 className="mb-4 text-lg font-semibold">Feedback Content</h2>
-                <p className="text-gray-500">
-                  This is the content for the Feedback tab.
-                </p>
+                <h2 className="mb-4 text-lg font-semibold">Upcoming blocks</h2>
               </div>
             </TabsContent>
           </div>

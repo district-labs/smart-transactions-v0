@@ -1,10 +1,7 @@
 "use client"
 
 import { IntentBatch, type TokenList } from "@district-labs/intentify-core"
-import {
-  useIntentifySafeModuleGetDimensionalNonce,
-  useIntentifySafeModuleGetStandardNonce,
-} from "@district-labs/intentify-core-react"
+
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
   intentAaveLeverageLong,
@@ -16,8 +13,10 @@ import { useImmer } from "use-immer"
 import { parseUnits } from "viem"
 
 import { StrategyChildrenCallback } from "../types"
-import { decimalToBigInt, deepMerge } from "../utils"
 import { NonceManager } from "./nonce-manager"
+import { useDynamicNonce } from "./use-dynamic-nonce"
+import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
+import { decimalToBigInt, deepMerge } from "../utils"
 
 export type StrategyLeverageLong = {
   defaultValues: any
@@ -31,35 +30,35 @@ export type StrategyLeverageLong = {
       label: string
       classNameLabel?: string
       description: string
-      classNameDesription?: string
+      classNameDescription?: string
       classNameValue?: string
     }
     borrowAsset: {
       label: string
       classNameLabel?: string
       description: string
-      classNameDesription?: string
+      classNameDescription?: string
       classNameValue?: string
     }
     interestRateMode: {
       label: string
       classNameLabel?: string
       description: string
-      classNameDesription?: string
+      classNameDescription?: string
       classNameValue?: string
     }
     minHealthFactor: {
       label: string
       classNameLabel?: string
       description: string
-      classNameDesription?: string
+      classNameDescription?: string
       classNameValue?: string
     }
     fee: {
       label: string
       classNameLabel?: string
       description: string
-      classNameDesription?: string
+      classNameDescription?: string
       classNameValue?: string
     }
   }
@@ -85,23 +84,16 @@ export function StrategyLeverageLong({
     },
     defaultValues
   )
-
   const [intentBatch, setIntentBatch] = useImmer(startingState)
 
-  const { data: nonceStandardData } = useIntentifySafeModuleGetStandardNonce({
+  const nonceData = useDynamicNonce({
     address: intentifySafeModuleAddress,
-    chainId: chainId,
-    args: [root],
-    enabled: intentBatch.nonce.type === "standard",
+    chainId,
+    intentBatch,
+    root,
+    setIntentBatch,
+    config
   })
-
-  const { data: nonceDimensionalData } =
-    useIntentifySafeModuleGetDimensionalNonce({
-      address: intentifySafeModuleAddress,
-      chainId: chainId,
-      args: [root, intentBatch.nonce.args[0]],
-      enabled: intentBatch.nonce.type === "dimensional",
-    })
 
   const handleGenerateIntentBatch = async () => {
     if (!intentBatchFactory)
@@ -109,23 +101,11 @@ export function StrategyLeverageLong({
     if (!chainId) throw new Error("ChainId unavailable")
     const intentBatchManager = intentBatchFactory?.create(chainId, root)
 
-    if (intentBatch.nonce.type === "standard") {
-      intentBatchManager.nonce("standard", [nonceStandardData])
-    }
+    setIntentBatchManagerNonce(intentBatchManager, intentBatch, {
+      standard: nonceData.standard,
+      dimensional: nonceData.dimensional
+    })
 
-    if (intentBatch.nonce.type === "dimensional") {
-      intentBatchManager.nonce("dimensional", [
-        intentBatch.nonce.args[0],
-        nonceDimensionalData,
-      ])
-    }
-    if (intentBatch.nonce.type === "time") {
-      intentBatchManager.nonce("time", [
-        intentBatch.nonce.args[0],
-        intentBatch.nonce.args[1],
-        intentBatch.nonce.args[2],
-      ])
-    }
     intentBatchManager.add("AaveLeverageLong", [
       intentBatch?.aaveLeverageLong?.supplyAsset.address,
       intentBatch?.aaveLeverageLong?.borrowAsset.address,

@@ -57,12 +57,12 @@ export default function Page({ params }: any) {
                   <WalletConnectCustom className="mx-auto inline-block w-full" />
                 </IsWalletDisconnected>
               </div>
-              <div className="rounded-xl bg-white p-4 shadow-md">
+              <div className="rounded-xl bg-background p-4 shadow-md">
                 <SkeletonTable />
               </div>
             </IsSignedOut>
             <IsSignedIn>
-              <div className="rounded-xl bg-white p-4 shadow-md">
+              <div className="rounded-xl bg-background p-4 shadow-md">
                 <StrategyTable
                   pageCount={10}
                   strategyId={id}

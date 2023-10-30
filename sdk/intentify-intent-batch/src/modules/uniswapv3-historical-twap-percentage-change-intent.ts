@@ -1,8 +1,8 @@
-import { UniswapV3HistoricalTwapIntent } from "@district-labs/intentify-deployments"
+import { UniswapV3HistoricalTwapPercentageChangeIntent } from "@district-labs/intentify-deployments"
 
-export const uniswapv3HistoricalTwapIntent = {
-  name: "UniswapHistoricalV3Twap",
-  deployed: UniswapV3HistoricalTwapIntent,
+export const uniswapV3HistoricalTwapPercentageChangeIntent = {
+  name: "UniswapHistoricalV3TwapPercentageChange",
+  deployed: UniswapV3HistoricalTwapPercentageChangeIntent,
   args: [
     {
       name: "uniswapV3Pool",
@@ -43,4 +43,4 @@ export const uniswapv3HistoricalTwapIntent = {
   ],
 }
 
-export default uniswapv3HistoricalTwapIntent
+export default uniswapV3HistoricalTwapPercentageChangeIntent

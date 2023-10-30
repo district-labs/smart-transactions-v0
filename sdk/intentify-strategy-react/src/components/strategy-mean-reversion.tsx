@@ -1,11 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
 import { IntentBatch, type TokenList } from "@district-labs/intentify-core"
-import {
-  useIntentifySafeModuleGetDimensionalNonce,
-  useIntentifySafeModuleGetStandardNonce,
-} from "@district-labs/intentify-core-react"
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
   intentErc20SwapSpotPrice,
@@ -25,8 +20,13 @@ import {
 import { useImmer } from "use-immer"
 
 import { StrategyChildrenCallback } from "../types"
-import { deepMerge } from "../utils"
+import { decimalToBigInt, deepMerge } from "../utils"
 import { NonceManager, type NonceConfig } from "./nonce-manager"
+import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
+import { useDynamicNonce } from "./use-dynamic-nonce"
+import { tokenToChainLinkFeed } from "../token-to-chainlink-feed"
+
+
 
 export type StrategyMeanReversion = {
   defaultValues: any
@@ -172,32 +172,14 @@ export function StrategyMeanReversion({
 
   const [intentBatch, setIntentBatch] = useImmer(startingState)
 
-  const { data: nonceStandardData, error: nonceStandardError } =
-    useIntentifySafeModuleGetStandardNonce({
-      address: intentifySafeModuleAddress,
-      chainId: chainId,
-      args: [root],
-      enabled: intentBatch.nonce.type === "standard",
-    })
-
-  const { data: nonceDimensionalData, error: nonceDimensionalError } =
-    useIntentifySafeModuleGetDimensionalNonce({
-      address: intentifySafeModuleAddress,
-      chainId: chainId,
-      args: [root, intentBatch.nonce.args[0]],
-      enabled: intentBatch.nonce.type === "dimensional",
-    })
-
-  useEffect(() => {
-    if (
-      intentBatch.nonce.type === "dimensional" &&
-      config?.nonce?.dimensional?.defaultQueue
-    ) {
-      setIntentBatch((draft: any) => {
-        draft["nonce"]["args"][0] = config?.nonce?.dimensional?.defaultQueue
-      })
-    }
-  }, [intentBatch.nonce.type])
+  const nonceData = useDynamicNonce({
+    address: intentifySafeModuleAddress,
+    chainId,
+    intentBatch,
+    root,
+    setIntentBatch,
+    config
+  })
 
   const handleGenerateIntentBatch = async () => {
     if (!intentBatchFactory)
@@ -205,29 +187,32 @@ export function StrategyMeanReversion({
     if (!chainId) throw new Error("ChainId unavailable")
     const intentBatchManager = intentBatchFactory?.create(chainId, root)
 
-    if (intentBatch.nonce.type === "standard") {
-      intentBatchManager.nonce("standard", [nonceStandardData])
-    }
+    setIntentBatchManagerNonce(intentBatchManager, intentBatch, {
+      standard: nonceData.standard,
+      dimensional: nonceData.dimensional
+    })
 
-    if (intentBatch.nonce.type === "dimensional") {
-      intentBatchManager.nonce("dimensional", [
-        intentBatch.nonce.args[0],
-        nonceDimensionalData,
-      ])
-    }
-    if (intentBatch.nonce.type === "time") {
-      intentBatchManager.nonce("time", [
-        intentBatch.nonce.args[0],
-        intentBatch.nonce.args[1],
-        intentBatch.nonce.args[2],
-      ])
-    }
+    console.log(intentBatch?.erc20SwapSpotPrice?.isBuy, 'intentBatch?.erc20SwapSpotPrice?.isBuy')
 
-    intentBatchManager.add("Erc20LimitOrder", [
-      intentBatch.erc20LimitOrder.tokenIn.address,
-      intentBatch.erc20LimitOrder.tokenOut.address,
-      intentBatch.erc20LimitOrder.amountIn,
-      intentBatch.erc20LimitOrder.amountOut,
+    intentBatchManager.add("Erc20SwapSpotPrice", [
+      intentBatch?.erc20SwapSpotPrice?.tokenOut?.address,
+      intentBatch?.erc20SwapSpotPrice?.tokenIn?.address,
+      tokenToChainLinkFeed(chainId, intentBatch?.erc20SwapSpotPrice?.tokenOut?.address),
+      tokenToChainLinkFeed(chainId, intentBatch?.erc20SwapSpotPrice?.tokenIn?.address),
+      intentBatch?.erc20SwapSpotPrice?.tokenAmountExpected,
+      intentBatch?.erc20SwapSpotPrice?.thresholdSeconds,
+      intentBatch?.erc20SwapSpotPrice?.isBuy == 'buy' ? '0x1' : '0x0',
+    ])
+    intentBatchManager.add("UniswapHistoricalV3TwapPercentageChange", [
+      intentBatch?.uniswapV3HistoricalTwapPercentageChange?.uniswapV3Pool,
+      intentBatch?.uniswapV3HistoricalTwapPercentageChange?.numeratorReferenceBlockOffset,
+      intentBatch?.uniswapV3HistoricalTwapPercentageChange?.numeratorBlockWindow,
+      intentBatch?.uniswapV3HistoricalTwapPercentageChange?.numeratorBlockWindowTolerance,
+      intentBatch?.uniswapV3HistoricalTwapPercentageChange?.denominatorReferenceBlockOffset,
+      intentBatch?.uniswapV3HistoricalTwapPercentageChange?.denominatorBlockWindow,
+      intentBatch?.uniswapV3HistoricalTwapPercentageChange?.denominatorBlockWindowTolerance,
+      decimalToBigInt(intentBatch?.uniswapV3HistoricalTwapPercentageChange?.minPercentageDifference,2 ), 
+      decimalToBigInt(intentBatch?.uniswapV3HistoricalTwapPercentageChange?.maxPercentageDifference,2)
     ])
     const intentBatchStruct = intentBatchManager.generate()
     onIntentBatchGenerated?.(intentBatchStruct)
