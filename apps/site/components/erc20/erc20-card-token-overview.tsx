@@ -10,6 +10,7 @@ import { useChainId } from "wagmi"
 import { cn } from "@/lib/utils"
 
 import { Erc20MintTestnet } from "./erc20-mint-testnet"
+import { Card } from "@district-labs/ui-react"
 
 type Erc20CardTokenOverview = React.HTMLAttributes<HTMLElement> & {
   symbol: string
@@ -21,14 +22,14 @@ export const Erc20CardTokenOverview = ({
 }: Erc20CardTokenOverview) => {
   const classes = cn(
     className,
-    "grid grid-cols-12 gap-x-5 w-full p-4 bg-white rounded-lg shadow-sm"
+    "grid grid-cols-12 gap-x-5 w-full p-4 rounded-lg shadow-sm"
   )
   const chainId = useChainId()
   const token = useFindTokenFromList(tokenList, symbol, chainId)
 
   if (!token) return null
   return (
-    <div className={classes}>
+    <Card className={classes}>
       <div className="col-span-4 flex items-center">
         <img className="h-10 w-10 rounded-full" src={token?.logoURI} />
         <div className="ml-4">
@@ -65,6 +66,6 @@ export const Erc20CardTokenOverview = ({
           symbol={token.symbol}
         />
       </div>
-    </div>
+    </Card>
   )
 }

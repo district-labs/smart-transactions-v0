@@ -31,7 +31,7 @@ export const CardStrategyPreview = ({
   return (
     <LinkComponent href={`/strategy/${id}`}>
       <Card className={classes}>
-        <CardHeader className="relative overflow-hidden text-neutral-700 lg:pt-10">
+        <CardHeader className="relative overflow-hidden lg:pt-10">
           <div className="z-10">
             <h3 className="text-3xl font-bold">{name}</h3>
             <p className="mt-3">{description}</p>

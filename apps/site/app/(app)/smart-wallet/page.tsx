@@ -39,7 +39,7 @@ export default function SmartWalletPage() {
             <div className="grid gap-x-6 lg:grid-cols-2">
               <div className="">
                 <h1 className="text-4xl font-bold">Smart Wallet</h1>
-                <p className="text-gray-500">
+                <p>
                   Manage your smart wallet and transactions.
                 </p>
               </div>
@@ -47,7 +47,6 @@ export default function SmartWalletPage() {
                 <div className="order-2 ml-2 lg:order-1 lg:mr-2 lg:text-right">
                   <Address
                     address={address || ADDRESS_ZERO}
-                    className="text-gray-500"
                   />
                   <p className="text-xs text-foreground">
                     Smart Wallet Address (Safe)
