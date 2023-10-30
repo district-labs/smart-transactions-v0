@@ -25,6 +25,7 @@ export const authSiweSignIn = async (
   next: NextFunction
 ) => {
   try {
+    console.log(ironOptions, 'ironOptions')
     const session = await getIronSession(request, response, ironOptions)
     const { message, signature } = verifySchema.parse(await request.body)
     const siweMessage = new SiweMessage(message)

@@ -1,8 +1,6 @@
 import { type User } from "@district-labs/intentify-database"
 import type { SiweMessage } from "siwe"
 import {
-    unsealData,
-    type IronSessionData,
     type IronSessionOptions,
 } from "iron-session/edge"
 
@@ -18,7 +16,7 @@ declare module "iron-session" {
 export const ironOptions: IronSessionOptions = {
   cookieName: `${process.env.AUTH_NAME} session`,
   password: process.env.AUTH_SECRET_KEY as string,
-  cookieOptions: {
-    secure: process.env.NODE_ENV == "production",
-  },
+  // cookieOptions: {
+  //   secure: process.env.NODE_ENV == "production",
+  // },
 }
