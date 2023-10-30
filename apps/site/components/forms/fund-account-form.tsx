@@ -7,7 +7,7 @@ import {
   useGetSafeAddress,
   useIsSafeIntentModuleEnabled,
   useIsSafeMaterialized,
-} from "@district-labs/intentify-react"
+} from "@district-labs/intentify-core-react"
 import { useMutation } from "@tanstack/react-query"
 import { useAccount } from "wagmi"
 

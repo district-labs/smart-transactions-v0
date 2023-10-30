@@ -1,6 +1,8 @@
-import { getRelayerByChainId } from "@/lib/openzeppelin-defender/relayer"
 import { encodeFunctionData, type Address } from "viem"
-import { UNI_V3_POOL_ADDR, ax, chainId } from ".."
+
+import { getRelayerByChainId } from "@/lib/openzeppelin-defender/relayer"
+
+import { ax, chainId, UNI_V3_POOL_ADDR } from ".."
 import { axiomV1QueryABI } from "../abis"
 
 export async function GET() {
@@ -14,7 +16,7 @@ export async function GET() {
 
     const { keccakQueryResponse, queryHash, query } = await qb.build()
 
-    const {relayer } = getRelayerByChainId(chainId)
+    const { relayer } = getRelayerByChainId(chainId)
     const relayerAddress = (await relayer.getRelayer()).address as Address
     const axiomV1QueryAddress = ax.getAxiomQueryAddress() as Address
 

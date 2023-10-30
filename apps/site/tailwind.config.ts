@@ -12,9 +12,10 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
-        'limit-order': "url('/images/story/limit-order.png')",
-        'saving': "url('/images/story/savings.png')",
-        'rebalance': "url('/images/story/reblance.png')",
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "limit-order": "url('/images/story/limit-order.png')",
+        saving: "url('/images/story/savings.png')",
+        rebalance: "url('/images/story/reblance.png')",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -25,6 +26,10 @@ module.exports = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+        },
+        "card-footer": {
+          DEFAULT: "hsl(var(--card-footer))",
+          foreground: "hsl(var(--card-footer-foreground))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

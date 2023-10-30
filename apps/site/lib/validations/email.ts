@@ -13,7 +13,7 @@ export const subscribeToNewsletterSchema = z.object({
 })
 
 export const updateEmailPreferencesSchema = z.object({
-  token: z.string(),
+  token: z.string().optional(),
   newsletter: z.boolean().default(false).optional(),
   marketing: z.boolean().default(false).optional(),
   transactional: z.boolean().default(true).optional(),

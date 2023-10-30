@@ -1,10 +1,12 @@
 import { eq } from "drizzle-orm"
 
 import { db } from ".."
-import type { DbIntentBatchExecution, } from "../schema"
+import type { DbIntentBatchExecution } from "../schema"
 import { hooks, intentBatchExecution } from "../schema"
 
-export function newIntentExecutionBatch(intentBatchExecutionNew: DbIntentBatchExecution) {
+export function newIntentExecutionBatch(
+  intentBatchExecutionNew: DbIntentBatchExecution
+) {
   return db.insert(intentBatchExecution).values(intentBatchExecutionNew)
 }
 
@@ -38,19 +40,19 @@ interface CreateIntentExecutionBatchWithHooksParams {
 export async function createIntentExecutionBatchWithHooks({
   intentBatchHash,
   executor,
-  hooksNew
-}:CreateIntentExecutionBatchWithHooksParams) {
+  hooksNew,
+}: CreateIntentExecutionBatchWithHooksParams) {
   await db.transaction(async (tx) => {
     const intentBatchResult = await tx.insert(intentBatchExecution).values({
       intentBatchId: intentBatchHash,
-      executor
+      executor,
     })
 
     await tx.insert(hooks).values(
       hooksNew.map((hook) => ({
         target: hook.target,
         data: hook.data,
-        intentBatchExecutionId: Number(intentBatchResult.insertId)
+        intentBatchExecutionId: Number(intentBatchResult.insertId),
       }))
     )
   })
@@ -60,10 +62,9 @@ export async function createIntentExecutionBatchWithHooks({
 // Intent Batch Delete All
 // ----------------------------------------------
 export function dbDeleteAllDbIntentBatchExecutions() {
-  return db
-    .delete(intentBatchExecution)
+  return db.delete(intentBatchExecution)
 }
 
 export type DBDeleteAllDbIntentBatchExecutions = Awaited<
-ReturnType<typeof dbDeleteAllDbIntentBatchExecutions>
+  ReturnType<typeof dbDeleteAllDbIntentBatchExecutions>
 >

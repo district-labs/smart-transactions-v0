@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { env } from "@/env.mjs"
-import { SignJWT, jwtVerify, type JWTPayload } from "jose"
+import { jwtVerify, SignJWT, type JWTPayload } from "jose"
 
 const alg = "HS256"
 export const roles = ["ENGINE", "CACHE", "ADMIN"]

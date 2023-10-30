@@ -1,48 +1,50 @@
 "use client"
+
 import "@rainbow-me/rainbowkit/styles.css"
+
+import { env } from "@/env.mjs"
 import {
   connectorsForWallets,
   darkTheme,
   lightTheme,
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit"
-import { useTheme } from "next-themes"
-import { createConfig, WagmiConfig } from "wagmi"
 import {
   coinbaseWallet,
   injectedWallet,
   metaMaskWallet,
   rainbowWallet,
-  walletConnectWallet
+  walletConnectWallet,
 } from "@rainbow-me/rainbowkit/wallets"
+import { useTheme } from "next-themes"
+import { createConfig, WagmiConfig } from "wagmi"
 
+import { chains, publicClient, webSocketPublicClient } from "@/config/networks"
 import { siteConfig } from "@/config/site"
+import HandleWalletEvents from "@/components/blockchain/handle-wallet-events"
 
 interface Web3ProviderProps {
   children: React.ReactNode
 }
-
-import { chains, publicClient, webSocketPublicClient } from "@/config/networks"
-import HandleWalletEvents from "@/components/blockchain/handle-wallet-events"
-import { env } from "@/env.mjs"
 
 const connectors = connectorsForWallets([
   {
     groupName: "Recommended",
     wallets: [
       injectedWallet({ chains }),
-      metaMaskWallet({ 
-        projectId: env.NEXT_PUBLIC_WALLET_CONNECT_ID,
-        chains 
-      }),
-      rainbowWallet({ 
+      metaMaskWallet({
         projectId: env.NEXT_PUBLIC_WALLET_CONNECT_ID,
         chains,
-       }),
-      coinbaseWallet({ chains, appName: siteConfig.name }),
-      walletConnectWallet({ 
+      }),
+      rainbowWallet({
         projectId: env.NEXT_PUBLIC_WALLET_CONNECT_ID,
-        chains }),
+        chains,
+      }),
+      coinbaseWallet({ chains, appName: siteConfig.name }),
+      walletConnectWallet({
+        projectId: env.NEXT_PUBLIC_WALLET_CONNECT_ID,
+        chains,
+      }),
     ],
   },
 ])
@@ -72,10 +74,7 @@ export default function Web3Provider({ children }: Web3ProviderProps) {
               })
         }
       >
-        <HandleWalletEvents>
-
-        {children}
-        </HandleWalletEvents>
+        <HandleWalletEvents>{children}</HandleWalletEvents>
       </RainbowKitProvider>
     </WagmiConfig>
   )

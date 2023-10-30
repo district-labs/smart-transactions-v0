@@ -8,6 +8,7 @@ export default defineConfig({
     foundry({
       project: '../../contracts/intentify',
       include: [
+        'ERC20.json',
         'Intentify.json',
         'IntentifySafeModule.json',
         'IntentifySafeModuleBundler.json',

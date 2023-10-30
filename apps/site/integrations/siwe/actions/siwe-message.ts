@@ -1,3 +1,4 @@
+import { env } from "@/env.mjs"
 import { SiweMessage } from "siwe"
 import type { Address } from "wagmi"
 import { SignMessageArgs } from "wagmi/dist/actions"
@@ -23,7 +24,9 @@ export const siweMessage = async ({
   signMessageAsync,
 }: SiweMessageOptions) => {
   // 1. Get random nonce from API
-  const nonceRes = await fetch("/api/nonce")
+  const nonceRes = await fetch(`${env.NEXT_PUBLIC_API_URL}/auth/nonce`, {
+    credentials: "include",
+  })
   const nonce = await nonceRes.text()
 
   // 2. Create SIWE message with pre-fetched nonce and sign with wallet

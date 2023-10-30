@@ -1,0 +1,1 @@
+ALTER TABLE `intent_batch` MODIFY COLUMN `strategy_id` char(66) NOT NULL;

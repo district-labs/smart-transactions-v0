@@ -10,7 +10,7 @@ import {
   IsSafeMaterialized,
   SafeDeterministicAddress,
   SignIntentBundle,
-} from "@district-labs/intentify-react"
+} from "@district-labs/intentify-core-react"
 import { constants } from "ethers"
 
 import { Button } from "@/components/ui/button"

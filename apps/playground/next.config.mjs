@@ -36,7 +36,7 @@ const nextConfig = {
     })
     return config
   },
-  transpilePackages: ["@district-labs/intentify-react"],
+  transpilePackages: ["@district-labs/intentify-core-react"],
   ...withPWA({
     dest: "public",
     register: true,
