@@ -1,5 +1,5 @@
-import { IntentifyModuleAddressList } from "@district-labs/intentify-core";
+import { IntentifySafeModule } from "@district-labs/intentify-deployments";
 
 export function useGetIntentifyModuleAddress(chainId: number) {
-  return IntentifyModuleAddressList[chainId];
+  return IntentifySafeModule[chainId];
 }

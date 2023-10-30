@@ -1,0 +1,3 @@
+export const ADDRESS_ZERO =
+  "0x0000000000000000000000000000000000000000" as `0x${string}`;
+export const DEFAULT_SALT = BigInt(0);

@@ -1,5 +1,5 @@
-import { SafeMultiCallAddressList } from "@district-labs/intentify-core";
+import { SafeMultiCall } from "@district-labs/intentify-deployments";
 
 export function useGetSafeMultiCallAddress(chainId: number) {
-  return SafeMultiCallAddressList[chainId];
+  return SafeMultiCall[chainId];
 }

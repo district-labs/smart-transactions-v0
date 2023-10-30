@@ -11,7 +11,6 @@ import {
   useSafeGetTransactionHash,
   useSafeNonce,
 } from "../blockchain";
-import { ADDRESS_ZERO } from "../data";
 import { cn } from "../utils";
 
 type CancelIntentBundle = React.HTMLAttributes<HTMLElement> & {

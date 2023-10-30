@@ -1,6 +1,5 @@
-import { SafeProxyAddressList } from "@district-labs/intentify-core";
-
+import { SafeProxy } from "@district-labs/intentify-deployments";
 
 export function useGetSafeProxyAddress(chainId: number) {
-  return SafeProxyAddressList[chainId];
+  return SafeProxy[chainId];
 }
