@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 "use client"
 
 import { useGetSafeAddress } from "@district-labs/intentify-core-react"
@@ -33,7 +34,7 @@ export function StrategyTable({
       data={
         !isSuccess
           ? []
-          : // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          :
             (data.map(transformData) as unknown as LimitOrderIntent[])
       }
       pageCount={pageCount}
