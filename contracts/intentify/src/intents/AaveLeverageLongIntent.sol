@@ -66,22 +66,19 @@ contract AaveLeverageLongIntent is IntentWithHookAbstract, ExecuteRootTransactio
                                     READ FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Helper function to encode hook parameters into a byte array.
-    /// calculate these values before encoding.
+    /// @notice Helper function to encode hook instruction parameters into a byte array.
     /// @param supplyAmount Amount being supplied to Aave
     /// @param borrowAmount Amount being borrowed from Aave
-    /// @param hookTxData The transaction data to be executed in the hook.
-    /// @return data The encoded data.
-    function encodeHook(
+    /// @return instructions The encoded instructions.
+    function encodeHookInstructions(
         uint256 supplyAmount,
-        uint256 borrowAmount,
-        bytes calldata hookTxData
+        uint256 borrowAmount
     )
         external
         pure
-        returns (bytes memory data)
+        returns (bytes memory instructions)
     {
-        return abi.encode(supplyAmount, borrowAmount, hookTxData);
+        return abi.encode(supplyAmount, borrowAmount);
     }
 
     /// @notice Helper function to encode provided parameters into a byte array.
@@ -179,7 +176,7 @@ contract AaveLeverageLongIntent is IntentWithHookAbstract, ExecuteRootTransactio
         view
         returns (uint256 amountRepay)
     {
-        (uint256 supplyAmount, uint256 borrowAmount,) = _decodeHook(hook);
+        (uint256 supplyAmount, uint256 borrowAmount) = _decodeHookInstructions(hook);
         uint256 supplyAmountWithFee = supplyAmount + (supplyAmount * fee / 100_000);
         int256 derivedPrice = _getDerivedPrice(supplyAsset, borrowAsset);
         uint256 outAmount = _calculateTokenInAmount(
@@ -197,17 +194,16 @@ contract AaveLeverageLongIntent is IntentWithHookAbstract, ExecuteRootTransactio
         return outAmount;
     }
 
-    /// @notice Helper function to decode hook parameters from a byte array.
+    /// @notice Helper function to decode hook instructions parameters from a byte array.
     /// @param hook The hook to be decoded.
     /// @return supplyAmount The amount of the supplied asset.
     /// @return borrowAmount The amount of the borrowed asset.
-    /// @return hookTxData The transaction data to be executed in the hook.
-    function _decodeHook(Hook calldata hook)
+    function _decodeHookInstructions(Hook calldata hook)
         internal
         pure
-        returns (uint256 supplyAmount, uint256 borrowAmount, bytes memory hookTxData)
+        returns (uint256 supplyAmount, uint256 borrowAmount)
     {
-        return abi.decode(hook.data, (uint256, uint256, bytes));
+        return abi.decode(hook.instructions, (uint256, uint256));
     }
 
     /// @notice Helper function to decode intent parameters from a byte array.
@@ -278,8 +274,7 @@ contract AaveLeverageLongIntent is IntentWithHookAbstract, ExecuteRootTransactio
     /// @return success Transaction execution status
     function _hook(Hook calldata hook) internal returns (bool success) {
         bytes memory errorMessage;
-        (,, bytes memory hookData) = _decodeHook(hook);
-        (success, errorMessage) = address(hook.target).call(hookData);
+        (success, errorMessage) = address(hook.target).call(hook.data);
         if (!success) {
             if (errorMessage.length > 0) {
                 _revertMessageReason(errorMessage);
@@ -297,7 +292,7 @@ contract AaveLeverageLongIntent is IntentWithHookAbstract, ExecuteRootTransactio
         (address supplyAsset, address borrowAsset, uint256 interestRateMode,,) = _decodeIntent(intent);
 
         // Hook Instructions
-        (uint256 supplyAmount, uint256 borrowAmount,) = abi.decode(hook.data, (uint256, uint256, bytes));
+        (uint256 supplyAmount, uint256 borrowAmount) = _decodeHookInstructions(hook);
 
         _supply(supplyAsset, supplyAmount, intent.root);
         _borrow(borrowAsset, borrowAmount, interestRateMode, intent.root);

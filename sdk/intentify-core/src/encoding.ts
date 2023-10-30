@@ -25,8 +25,8 @@ const INTENTBATCH_TYPEHASH = keccak256(
 export function getEIP712DomainPacketHash(domain: EIP712Domain): `0x${string}` {
   return keccak256(
     encodeAbiParameters(
-      parseAbiParameters('bytes32 domain, string name, string version, uint256 chainId, address verifyingContract'),
-      [EIP712DOMAIN_TYPEHASH, domain.name, domain.version, domain.chainId, domain.verifyingContract]
+      parseAbiParameters('string name, string version, uint256 chainId, address verifyingContract'),
+      [EIP712DOMAIN_TYPEHASH, domain.version, domain.chainId, domain.verifyingContract]
     )
   );
 }

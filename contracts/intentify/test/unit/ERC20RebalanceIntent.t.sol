@@ -84,14 +84,14 @@ contract ERC20RebalanceIntentTest is SafeTestingUtils {
         vm.prank(_whaleWETH);
         ERC20(WETHAddress).approve(address(_erc20rebalanceIntent), 323_524_986_025_341_197);
 
-        bytes memory hookTxData = abi.encodeWithSignature(
+        Hook[] memory hooks = new Hook[](1);
+        bytes memory hookData = abi.encodeWithSignature(
             "transferFrom(address,address,uint256)", _whaleWETH, address(_safeCreated), 323_524_986_025_341_197
         );
 
-        Hook[] memory hooks = new Hook[](1);
-        bytes memory hookData = _erc20rebalanceIntent.encodeHook(_executor, hookTxData);
+        bytes memory hookInstructions = _erc20rebalanceIntent.encodeHookInstructions(_executor);
 
-        hooks[0] = Hook({ target: WETHAddress, data: hookData });
+        hooks[0] = Hook({ target: WETHAddress, data: hookData, instructions: hookInstructions });
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
 

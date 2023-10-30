@@ -13,10 +13,10 @@ Welcome to the [Sign-In with Ethereum](https://login.xyz/) TurboETH Integration!
 
 ### Actions
 
-`siweLogin()`
+`siweSignIn()`
 Initiates the SIWE login process, creating and signing a SIWE message and then verifying it through a backend service.
 
-`siweLogout()`
+`signSignOut()`
 Logs out the user by sending a request to the backend logout service.
 
 `siweMessage()`
@@ -30,10 +30,10 @@ A React component that conditionally renders its children if the user is signed 
 `IsSignedOut()`
 A React component that conditionally renders its children if the user is signed out.
 
-`ButtonSIWELogin()`
+`ButtonSiweSignIn()`
 A button that initiates the SIWE login process when clicked.
 
-`ButtonSIWELogout()`
+`ButtonSiweSignOut()`
 A button that initiates the SIWE logout process when clicked.
 
 ## File Structure

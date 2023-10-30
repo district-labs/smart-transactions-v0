@@ -5,7 +5,8 @@ import "forge-std/Script.sol";
 import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
 import { IntentifySafeModuleBundler } from "../../src/module/IntentifySafeModuleBundler.sol";
 import { WalletFactory } from "../../src/WalletFactory.sol";
-import { LimitOrderIntent } from "../../src/intents/LimitOrderIntent.sol";
+import { ERC20LimitOrderIntent } from "../../src/intents/ERC20LimitOrderIntent.sol";
+import { BlockNumberIntent } from "../../src/intents/BlockNumberIntent.sol";
 import { TimestampIntent } from "../../src/intents/TimestampIntent.sol";
 import { UniswapV3TwapIntent } from "../../src/intents/UniswapV3TwapIntent.sol";
 
@@ -21,7 +22,8 @@ contract CoreDeploy is Script {
         new IntentifySafeModuleBundler();
 
         // Intent Modules Contracts
-        new LimitOrderIntent(intentifySafeModule);
+        new ERC20LimitOrderIntent(intentifySafeModule);
+        new BlockNumberIntent();
         new TimestampIntent();
         new UniswapV3TwapIntent();
         vm.stopBroadcast();

@@ -2,10 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+.content p {
+  @apply text-base leading-7 text-secondary-foreground mt-4;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
+
+    --card-footer: 0 5% 95%;
+    --card-footer-foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -13,7 +20,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 145 94% 24%;
+    --primary: 0 0% 12%;
     --primary-foreground: 0 0% 98%;
 
     --secondary: 145 32% 93%;
@@ -36,11 +43,15 @@
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 0 0% 10%;
     --foreground: 0 0% 98%;
 
-    --card: 240 10% 3.9%;
+
+    --card: 0 2% 15%;
     --card-foreground: 0 0% 98%;
+
+    --card-footer: 0 0% 17%;
+    --card-footer-foreground: 240 10% 3.9%;
 
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;

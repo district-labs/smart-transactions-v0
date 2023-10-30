@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 interface LinkComponentProps extends HTMLAttributes<HTMLAnchorElement> {
   href: string
   isExternal?: boolean
+  linkStyle?: boolean
   target?: string
 }
 
@@ -18,12 +19,14 @@ export function LinkComponent({
   isExternal,
   className,
   target = "_blank",
+  linkStyle,
   ...props
 }: LinkComponentProps) {
   const pathname = usePathname()
   const classes = cn(className, {
     active: pathname === href,
-  }, 'text-blue-500 hover:text-blue-600')
+    "text-blue-500 hover:text-blue-600": linkStyle,
+  })
   const isExternalEnabled =
     href.match(/^([a-z0-9]*:|.{0})\/\/.*$/) || isExternal
 

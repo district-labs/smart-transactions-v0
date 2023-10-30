@@ -1,3 +1,4 @@
+import { type ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
 import { type User } from "@/db/schema"
 import { env } from "@/env.mjs"
 import {
@@ -5,7 +6,6 @@ import {
   type IronSessionData,
   type IronSessionOptions,
 } from "iron-session/edge"
-import { type ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
 import type { SiweMessage } from "siwe"
 
 import { siteConfig } from "@/config/site"

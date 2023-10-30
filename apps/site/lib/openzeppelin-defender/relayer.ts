@@ -1,9 +1,9 @@
-import { env } from "@/env.mjs";
-import { Relayer } from "@openzeppelin/defender-relay-client";
+import { env } from "@/env.mjs"
+import { Relayer } from "@openzeppelin/defender-relay-client"
 import {
   DefenderRelayProvider,
   DefenderRelaySigner,
-} from "@openzeppelin/defender-relay-client/lib/ethers";
+} from "@openzeppelin/defender-relay-client/lib/ethers"
 
 const credentialsList: Record<number, { apiKey: string; apiSecret: string }> = {
   1: {

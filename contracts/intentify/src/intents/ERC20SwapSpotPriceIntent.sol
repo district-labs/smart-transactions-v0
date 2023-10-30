@@ -36,12 +36,11 @@ contract ERC20SwapSpotPriceIntent is IntentWithHookAbstract, ExecuteRootTransact
                                 READ FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Helper function to encode hook parameters into a byte array.
+    /// @notice Helper function to encode hook instruction parameters into a byte array.
     /// @param executor The address of the hook executor.
-    /// @param hookTxData The transaction data to be executed in the hook.
     /// @return data The encoded data.
-    function encodeHook(address executor, bytes memory hookTxData) external pure returns (bytes memory data) {
-        data = abi.encode(executor, hookTxData);
+    function encodeHookInstructions(address executor) external pure returns (bytes memory data) {
+        data = abi.encode(executor);
     }
 
     /// @notice Helper function to encode provided parameters into a byte array.
@@ -165,12 +164,11 @@ contract ERC20SwapSpotPriceIntent is IntentWithHookAbstract, ExecuteRootTransact
                               INTERNAL READ FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Helper function to decode hook parameters from a byte array.
+    /// @notice Helper function to decode hook instructions parameters from a byte array.
     /// @param hook The hook to be decoded.
     /// @return executor The address of the hook executor.
-    /// @return hookTxData The transaction data to be executed in the hook.
-    function _decodeHook(Hook calldata hook) internal pure returns (address executor, bytes memory hookTxData) {
-        return abi.decode(hook.data, (address, bytes));
+    function _decodeHookInstructions(Hook calldata hook) internal pure returns (address executor) {
+        return abi.decode(hook.instructions, (address));
     }
 
     /// @notice Helper function to decode intent parameters from a byte array.
@@ -206,9 +204,8 @@ contract ERC20SwapSpotPriceIntent is IntentWithHookAbstract, ExecuteRootTransact
     /// @notice Execute the hook that sends the tokenIn to the user.
     /// @param hook Contains data related to hook.
     function _hook(Hook calldata hook) internal returns (bool success) {
-        (, bytes memory hookTxData) = _decodeHook(hook);
         bytes memory errorMessage;
-        (success, errorMessage) = address(hook.target).call{ value: 0 }(hookTxData);
+        (success, errorMessage) = address(hook.target).call{ value: 0 }(hook.data);
 
         if (!success) {
             if (errorMessage.length > 0) {
@@ -235,7 +232,7 @@ contract ERC20SwapSpotPriceIntent is IntentWithHookAbstract, ExecuteRootTransact
     {
         (address tokenOut, address tokenIn,,, uint256 tokenAmountExpected,, bool isBuy) = _decodeIntent(intent);
 
-        (address executor,) = _decodeHook(hook);
+        address executor = _decodeHookInstructions(hook);
 
         uint256 tokenInBalanceDelta = ERC20(tokenIn).balanceOf(intent.root) - initialTokenInBalance;
         uint256 tokenAmountFromRoot;

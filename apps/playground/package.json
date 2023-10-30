@@ -9,8 +9,8 @@
     }
   ],
   "scripts": {
-    "dev": "next dev --port 3002",
-    "build": "next build",
+    "dev": "next dev --port 3001",
+    "create": "next build",
     "export": "next export",
     "start": "next start",
     "lint": "eslint '**/*.{ts,tsx}'",
@@ -37,7 +37,7 @@
   },
   "packageManager": "pnpm@7.1.8",
   "dependencies": {
-    "@district-labs/intentify-react": "workspace:*",
+    "@district-labs/intentify-core-react": "workspace:*",
     "@district-labs/intentify-core": "workspace:*",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@hookform/resolvers": "^3.1.1",

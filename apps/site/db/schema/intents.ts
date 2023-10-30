@@ -5,8 +5,9 @@ import {
   mysqlTable,
   serial,
   text,
-  timestamp
+  timestamp,
 } from "drizzle-orm/mysql-core"
+
 import { strategies, users } from "."
 import { charAddress, charHash } from "../utils/schema"
 
@@ -72,7 +73,6 @@ export const intentBatchRelations = relations(intentBatch, ({ one, many }) => ({
   intentBatchExecution: one(intentBatchExecution, {
     fields: [intentBatch.intentBatchHash],
     references: [intentBatchExecution.intentBatchId],
-    
   }),
 }))
 

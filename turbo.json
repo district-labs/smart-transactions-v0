@@ -8,8 +8,14 @@
     },
     "lint": {},
     "check-types": {},
+    "start": {
+      "dependsOn": ["^start"]
+    },
     "test": {
       "dependsOn": ["^test"]
+    },
+    "format:write": {
+      "dependsOn": ["^format:write"]
     },
     "dev": {
       "cache": false,

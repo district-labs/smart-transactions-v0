@@ -1,13 +1,8 @@
 import { relations } from "drizzle-orm"
-import {
-  mysqlTable,
-  text,
-  timestamp,
-  varchar
-} from "drizzle-orm/mysql-core"
-import { charAddress } from "../utils/schema"
+import { mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core"
 
 import { emailPreferences, strategies } from "."
+import { charAddress } from "../utils/schema"
 
 export const users = mysqlTable("users", {
   address: charAddress("address").primaryKey(),

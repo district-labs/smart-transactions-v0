@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { env } from "@/env.mjs"
 import { useQuery } from "@tanstack/react-query"
 
 interface User {
@@ -12,7 +13,10 @@ interface User {
 
 export function useUser({ redirectTo = "", redirectIfFound = false } = {}) {
   const { data: user, refetch: mutateUser } = useQuery<User>(["user"], {
-    queryFn: () => fetch("/api/user").then((res) => res.json()),
+    queryFn: () =>
+      fetch(`${env.NEXT_PUBLIC_API_URL}/user`, {
+        credentials: "include",
+      }).then((res) => res.json()),
   })
 
   const Router = useRouter()

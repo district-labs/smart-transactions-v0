@@ -1,0 +1,41 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1697978549596,
+      "tag": "0000_known_blonde_phantom",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1698079758298,
+      "tag": "0001_rapid_leper_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1698080174647,
+      "tag": "0002_yellow_toad",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1698247424500,
+      "tag": "0003_illegal_wrecker",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1698248066680,
+      "tag": "0004_yellow_photon",
+      "breakpoints": true
+    }
+  ]
+}
