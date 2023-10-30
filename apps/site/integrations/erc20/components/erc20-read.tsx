@@ -86,6 +86,7 @@ export function ERC20TotalSupply({
   const { data } = useErc20TotalSupply({
     address,
     chainId,
+    watch: true,
   })
   return (
     <span className={className} {...props}>
@@ -119,23 +120,22 @@ export function ERC20Balance({
   ...props
 }: ERC20ChainIdProps) {
   const { address: accountAddress } = useAccount()
-  const { data: decimals } = useErc20Decimals({
+  const { data: decimals, isSuccess: isSuccessDecimals } = useErc20Decimals({
     address,
     chainId,
   })
-  const { data } = useErc20BalanceOf({
+  const { data, isSuccess } = useErc20BalanceOf({
     chainId,
     address,
     args: accountAddress ? [accountAddress] : undefined,
     watch: true,
   })
 
-  if (!data || !decimals) return null
+  if (!isSuccess || !isSuccessDecimals) return null
 
   return (
     <span className={className} {...props}>
-      {" "}
-      {Number(formatUnits(data, decimals)).toLocaleString()}
+      {Number(formatUnits(BigInt(data || 0), decimals || 18)).toLocaleString()}
     </span>
   )
 }

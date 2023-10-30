@@ -1,13 +1,14 @@
-import type { ApiIntentBatch } from "@/lib/validations/api/intent-batch";
-import { useGetSafeAddress } from "@district-labs/intentify-react";
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useGetSafeAddress } from "@district-labs/intentify-core-react"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+
+import type { ApiIntentBatch } from "@/lib/validations/api/intent-batch"
 
 export function useIntentBatchCreate() {
   const queryClient = useQueryClient()
-  const address = useGetSafeAddress();
+  const address = useGetSafeAddress()
 
   const mutationFn = async (intentBatch: ApiIntentBatch) => {
-    if(!intentBatch) throw new Error("No intent batch provided")
+    if (!intentBatch) throw new Error("No intent batch provided")
     const response = await fetch("/api/intent-batch/create", {
       method: "POST",
       body: JSON.stringify(intentBatch),
@@ -28,15 +29,12 @@ export function useIntentBatchCreate() {
     throw new Error(data)
   }
 
-  const mutationResult = useMutation(
-    ["intent-batch-create"],
-    {
-      mutationFn,
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(["intent-batch", "all", address])
-      },
-    }
-  )
+  const mutationResult = useMutation(["intent-batch-create"], {
+    mutationFn,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["intent-batch", "all", address])
+    },
+  })
 
   return mutationResult
 }

@@ -1,13 +1,12 @@
-import { defineConfig, Options } from "tsup";
+import { defineConfig } from "tsup";
 
-export default defineConfig((options: Options) => ({
-  treeshake: true,
+export default defineConfig({
+  entry: ["src/index.ts"],
+  shims: true,
   splitting: true,
-  entry: ["src/**/*.tsx"],
-  format: ["esm"],
-  dts: true,
-  minify: true,
+  sourcemap: true,
   clean: true,
-  external: ["react"],
-  ...options,
-}));
+  format: ["cjs", "esm"],
+  outDir: "dist",
+  dts: true,
+});

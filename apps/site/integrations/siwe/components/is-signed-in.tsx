@@ -1,13 +1,10 @@
 "use client"
 
 import { useUser } from "@/hooks/use-user"
-import { ReactNode } from "react"
 
-interface IsSignedInProps {
-  children: ReactNode
-}
+type IsSignedIn = React.HTMLAttributes<HTMLElement>
 
-export const IsSignedIn = ({ children }: IsSignedInProps) => {
+export const IsSignedIn = ({ children }: IsSignedIn) => {
   const { user } = useUser()
   if (user?.isLoggedIn) return <>{children}</>
 

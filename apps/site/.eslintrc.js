@@ -12,6 +12,7 @@ module.exports = {
     "plugin:tailwindcss/recommended",
   ],
   rules: {
+    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/consistent-type-imports": [
       "warn",
       {
@@ -20,6 +21,7 @@ module.exports = {
       },
     ],
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+    "@typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/no-unsafe-member-access": "off",
