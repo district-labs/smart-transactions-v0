@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19 <0.9.0;
 
+import { Enum } from "safe-contracts/common/Enum.sol";
+import { IntentifySafeModule } from "../../module/IntentifySafeModule.sol";
 import { RevertMessageReasonHelper } from "../../helpers/RevertMessageReasonHelper.sol";
 
+/// @title Execute Root Transaction
+/// @notice Execute a transaction from the root of the calling safe using the Intentify Safe Module
 contract ExecuteRootTransaction is RevertMessageReasonHelper {
     /*//////////////////////////////////////////////////////////////////////////
                                 PUBLIC STORAGE
@@ -38,7 +42,13 @@ contract ExecuteRootTransaction is RevertMessageReasonHelper {
     /// @return success The success of the transaction
     function executeFromRoot(address target, uint256 value, bytes memory data) public returns (bool) {
         (bool success, bytes memory errorMessage) = intentifySafeModule.call(
-            abi.encodeWithSignature("executeTransactionFromIntentModule(address,uint256,bytes)", target, value, data)
+            abi.encodeWithSelector(
+                IntentifySafeModule.executeTransactionFromIntentModule.selector,
+                target,
+                value,
+                data,
+                Enum.Operation.Call
+            )
         );
         if (!success) {
             _revertMessageReason(errorMessage);
