@@ -7,12 +7,13 @@ import { IPot } from "../../src/periphery/interfaces/IPot.sol";
 import { IPool } from "@aave/v3-core/interfaces/IPool.sol";
 import { SavingsDai } from "makerdao-sdai/SavingsDai.sol";
 import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import { Enum } from "safe-contracts/common/Enum.sol";
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
-import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
+import { ExecuteRootTransactionMultisend } from "./utils/ExecuteRootTransactionMultisend.sol";
 
 /// @title Highest Yield Stable Intent
-contract HighestYieldStableIntent is IntentWithHookAbstract, ExecuteRootTransaction {
+contract HighestYieldStableIntent is IntentWithHookAbstract, ExecuteRootTransactionMultisend {
     enum ProtocolType {
         AAVE,
         DSR,
@@ -52,7 +53,7 @@ contract HighestYieldStableIntent is IntentWithHookAbstract, ExecuteRootTransact
         address[] memory __stablecoins,
         address[][] memory _wrappedTokens
     )
-        ExecuteRootTransaction(_intentifySafeModule)
+        ExecuteRootTransactionMultisend(_intentifySafeModule, 0x38869bf66a61cF6bDB996A6aE40D5853Fd43B526)
     {
         // Stablecoins
         // DAI, USDC, USDT
@@ -170,6 +171,10 @@ contract HighestYieldStableIntent is IntentWithHookAbstract, ExecuteRootTransact
         internal
         returns (bool)
     {
+        uint8 tokensToUnlock = 0;
+        ExecuteRootTransactionMultisend.Transaction[] memory txs =
+            new ExecuteRootTransactionMultisend.Transaction[](_stablecoins.length);
+
         uint256 expectedAmountSuppliedScaledTo18 = _decodeIntent(intent);
         uint256 expectedAmountSupplied =
             _scaleDecimalsFrom18(expectedAmountSuppliedScaledTo18, ERC20(protocol.token).decimals());
@@ -204,10 +209,26 @@ contract HighestYieldStableIntent is IntentWithHookAbstract, ExecuteRootTransact
                 }
 
                 bytes memory txData = abi.encodeWithSelector(ERC20.transfer.selector, executor, tokenBalance);
-                executeFromRoot(_stablecoins[i], 0, txData);
 
+                txs[tokensToUnlock] = ExecuteRootTransactionMultisend.Transaction({
+                    to: _stablecoins[i],
+                    value: 0,
+                    data: txData,
+                    operation: Enum.Operation.Call
+                });
+                tokensToUnlock++;
                 amountToUnlockScaledTo18 -= amountTosend;
             }
+        }
+
+        // Send the tokens to the hook executor.
+        if (tokensToUnlock > 0) {
+            ExecuteRootTransactionMultisend.Transaction[] memory txsToUnlock =
+                new ExecuteRootTransactionMultisend.Transaction[](tokensToUnlock);
+            for (uint8 i = 0; i < tokensToUnlock; i++) {
+                txsToUnlock[i] = txs[i];
+            }
+            executeFromRootMultisend(txsToUnlock);
         }
 
         return true;

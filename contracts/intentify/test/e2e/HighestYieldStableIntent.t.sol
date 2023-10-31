@@ -123,12 +123,12 @@ contract HighestYieldStableIntentTest is SafeTestingUtils {
             root: address(_safeCreated),
             value: 0,
             target: address(_highestYieldStableIntent),
-            data: _highestYieldStableIntent.encodeIntent(755e18)
+            data: _highestYieldStableIntent.encodeIntent(3000e18)
         });
 
         Hook[] memory hooks = new Hook[](1);
 
-        uint256 hookAmountUSDT = 600e6;
+        uint256 hookAmountUSDT = 3000e6;
         // Mints aUSDC to the whale account
         vm.startPrank(WHALE_ACCOUNT);
         console2.log("WHALE_ACCOUNT USDT balance: %s", ERC20(USDT_MAINNET).balanceOf(WHALE_ACCOUNT));
