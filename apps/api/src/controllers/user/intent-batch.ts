@@ -9,6 +9,8 @@ import { intentBatchFactory } from "../../intent-batch-factory";
 import { SUPPORTED_CHAINS } from "../../constants";
 import { getIntentBatchTypedDataHash, getEIP712DomainPacketHash } from '@district-labs/intentify-core' 
 import { IntentifySafeModule } from '@district-labs/intentify-deployments' 
+import { ironOptions } from "../../iron-session";
+import { getIronSession } from "iron-session";
 
 /**
  * Handle request to retrieve all users.
@@ -65,10 +67,12 @@ export const createIntentBatch = async (
   next: NextFunction
 ) => {
   try {
+    const session = await getIronSession(request, response, ironOptions)
     // Destructure and validate required fields from the request body
     const { intentBatch, signature, chainId, strategyId } = request.body;
 
     // Validate the signature
+    // TODO: Crytpgraphically verify the signature
     if (!signature || signature.length !== 132) {
       throw new CustomError("Invalid signature", 400);
     }
@@ -96,7 +100,7 @@ export const createIntentBatch = async (
       intentBatchHash: intentBatchHash as string,
       nonce: intentBatch.nonce,
       root: intentBatch.root,
-      userId: intentBatch.root,
+      userId: session.address,
       intentBatchNew: intentBatch, 
       signature,
       intentsDecoded: decodedIntentBatch,

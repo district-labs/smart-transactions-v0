@@ -24,7 +24,7 @@ export const userProfileGet = async (
   try {
     const session = await getIronSession(request, response, ironOptions)
     if(!session.address) {
-        throw new Error("User Session not found")
+        throw new Error("User session not found")
     }
     const user = await db.query.users.findFirst({
         where: eq(users.address, session.address),

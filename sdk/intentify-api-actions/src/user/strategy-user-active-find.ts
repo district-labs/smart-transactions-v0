@@ -10,6 +10,7 @@ export async function strategyUserActiveFind({filters}: StrategyUserActiveFindFi
     const params = new URLSearchParams(filters);
     const response = await fetch(`${API_URL}/strategy/active?${params.toString()}`, {
       method: "GET",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

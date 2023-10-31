@@ -56,19 +56,19 @@ export const strategies = {
     transformData: transformToLeverageLong,
     tableColumns: columnsLeverageLong,
   },
-  "0x4": {
-    id: "0x4",
-    name: "Automatic Savings Deposit",
-    alias: "automatic-savings-deposit",
-    description:
-      "Automatically deposit into a PoolTogether savings account for a chance to win prizes. Minimum token balance required.",
-    createdBy: {
-      name: "District Finance",
-      pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
-    },
-    IntentForm: FormStrategySavingsDeposit,
-    IntentTable: StrategyTable,
-    transformData: transformToLeverageLong,
-    tableColumns: columnsLeverageLong,
-  },
+  // "0x4": {
+  //   id: "0x4",
+  //   name: "Automatic Savings Deposit",
+  //   alias: "automatic-savings-deposit",
+  //   description:
+  //     "Automatically deposit into a PoolTogether savings account for a chance to win prizes. Minimum token balance required.",
+  //   createdBy: {
+  //     name: "District Finance",
+  //     pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
+  //   },
+  //   IntentForm: FormStrategySavingsDeposit,
+  //   IntentTable: StrategyTable,
+  //   transformData: transformToLeverageLong,
+  //   tableColumns: columnsLeverageLong,
+  // },
 }
