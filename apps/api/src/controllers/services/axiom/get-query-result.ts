@@ -16,67 +16,66 @@ const reqSchema = z.object({
       blockNumber: z.number(),
       address: z.string().optional(),
       slot: z.string().optional(),
-    })
+    }),
   ),
-})
+});
 
-export const getQueryResult = async (
-  request: Request,
-  response: Response,
-) => {
+export const getQueryResult = async (request: Request, response: Response) => {
   try {
-    const requestParsed = reqSchema.parse(await request.body)
-  
-      const ax = getAxiom(requestParsed.chainId)
+    const requestParsed = reqSchema.parse(await request.body);
 
-          const responseTree = await ax.query.getResponseTreeForKeccakQueryResponse(
-      requestParsed.keccakQueryResponse
-    )
+    const ax = getAxiom(requestParsed.chainId);
 
-        const keccakBlockResponse = responseTree.blockTree.getHexRoot()
-    const keccakAccountResponse = responseTree.accountTree.getHexRoot()
-    const keccakStorageResponse = responseTree.storageTree.getHexRoot()
+    const responseTree = await ax.query.getResponseTreeForKeccakQueryResponse(
+      requestParsed.keccakQueryResponse,
+    );
 
-     const blockResponses: SolidityBlockResponse[] = []
-    const accountResponses: SolidityAccountResponse[] = []
-    const storageResponses: SolidityStorageResponse[] = []
+    const keccakBlockResponse = responseTree.blockTree.getHexRoot();
+    const keccakAccountResponse = responseTree.accountTree.getHexRoot();
+    const keccakStorageResponse = responseTree.storageTree.getHexRoot();
 
-        requestParsed.queries.map(({ blockNumber, address, slot }) => {
+    const blockResponses: SolidityBlockResponse[] = [];
+    const accountResponses: SolidityAccountResponse[] = [];
+    const storageResponses: SolidityStorageResponse[] = [];
+
+    requestParsed.queries.map(({ blockNumber, address, slot }) => {
       const validationWitness = ax.query.getValidationWitness(
         responseTree,
         blockNumber,
         address,
-        slot
-      )
+        slot,
+      );
 
       if (!validationWitness) {
         throw new CustomError("Validation Witness not found", 400);
       }
       validationWitness.blockResponse
         ? blockResponses.push(validationWitness.blockResponse)
-        : null
+        : null;
       validationWitness.accountResponse
         ? accountResponses.push(validationWitness.accountResponse)
-        : null
+        : null;
       validationWitness.storageResponse
         ? storageResponses.push(validationWitness.storageResponse)
-        : null
+        : null;
 
-      return validationWitness.blockResponse
-    })
+      return validationWitness.blockResponse;
+    });
 
-        const responseData = {
+    const responseData = {
       keccakBlockResponse,
       keccakAccountResponse,
       keccakStorageResponse,
       blockResponses,
       accountResponses,
       storageResponses,
-    }
+    };
 
     return response.status(200).send({ success: true, responseData });
   } catch (error) {
-    console.error(error)
-    return response.status(500).send("An Error ocurred while sending the query")
+    console.error(error);
+    return response
+      .status(500)
+      .send("An Error ocurred while sending the query");
   }
 };

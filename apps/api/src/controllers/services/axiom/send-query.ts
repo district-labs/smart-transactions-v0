@@ -14,31 +14,28 @@ const reqSchema = z.object({
         blockNumber: z.number(),
         address: z.string().optional(),
         slot: z.string().optional(),
-      })
+      }),
     )
     .min(1),
-})
+});
 
-export const axiomSendQuery = async (
-  request: Request,
-  response: Response,
-) => {
+export const axiomSendQuery = async (request: Request, response: Response) => {
   try {
-    const requestParsed = reqSchema.parse(await request.body)
-    const ax = getAxiom(requestParsed.chainId)
-      const qb = ax.newQueryBuilder()
+    const requestParsed = reqSchema.parse(await request.body);
+    const ax = getAxiom(requestParsed.chainId);
+    const qb = ax.newQueryBuilder();
 
-          for (const query of requestParsed.queries) {
-      await qb.append(query)
+    for (const query of requestParsed.queries) {
+      await qb.append(query);
     }
 
-    const { keccakQueryResponse, queryHash, query } = await qb.build()
+    const { keccakQueryResponse, queryHash, query } = await qb.build();
 
-        const { relayer } = getRelayerByChainId(requestParsed.chainId)
-    const relayerAddress = (await relayer.getRelayer()).address as Address
-    const axiomV1QueryAddress = ax.getAxiomQueryAddress() as Address
+    const { relayer } = getRelayerByChainId(requestParsed.chainId);
+    const relayerAddress = (await relayer.getRelayer()).address as Address;
+    const axiomV1QueryAddress = ax.getAxiomQueryAddress() as Address;
 
-      const data = encodeFunctionData({
+    const data = encodeFunctionData({
       abi: axiomV1QueryABI,
       functionName: "sendQuery",
       args: [
@@ -46,7 +43,7 @@ export const axiomSendQuery = async (
         relayerAddress,
         query as `0x${string}`,
       ],
-    })
+    });
 
     const txReceipt = await relayer.sendTransaction({
       gasLimit: 500000,
@@ -55,13 +52,15 @@ export const axiomSendQuery = async (
       // 0.01 ETH
       value: "10000000000000000",
       data,
-    })
+    });
 
-    return response.status(200).send({ success: true,  keccakQueryResponse,
-        queryHash,
-        txReceipt });
+    return response
+      .status(200)
+      .send({ success: true, keccakQueryResponse, queryHash, txReceipt });
   } catch (error) {
-    console.error(error)
-    return response.status(500).send("An Error ocurred while sending the query")
+    console.error(error);
+    return response
+      .status(500)
+      .send("An Error ocurred while sending the query");
   }
 };
