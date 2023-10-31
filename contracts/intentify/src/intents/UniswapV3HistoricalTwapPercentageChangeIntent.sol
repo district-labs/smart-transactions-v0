@@ -9,10 +9,10 @@ import { UniswapV3TwapOracle } from "../periphery/Axiom/UniswapV3TwapOracle.sol"
 import { Intent, Hook } from "../TypesAndDecoders.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
 
-/// @title Uniswap V3 Historical Time Weighted Average Price Intent
-/// @notice An intent that checks block windows and percentage differences based on Uniswap v3 TWAP data. If the price
+/// @title Uniswap V3 Historical Time Weighted Average Price Percentage change Intent
+/// @notice An intent that checks the percentage change between two TWAPs (Time Weighted Average Price). If the price
 /// difference percentage is not within the given range or the provided data is invalid, the intent will revert.
-contract UniswapV3HistoricalTwapIntent is IntentWithHookAbstract {
+contract UniswapV3HistoricalTwapPercentageChangeIntent is IntentWithHookAbstract {
     /*//////////////////////////////////////////////////////////////////////////
                                 TYPE DECLARATIONS
     //////////////////////////////////////////////////////////////////////////*/
