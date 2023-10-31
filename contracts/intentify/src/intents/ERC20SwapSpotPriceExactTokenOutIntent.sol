@@ -7,15 +7,20 @@ import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol"
 import { ChainlinkDataFeedHelper } from "../helpers/ChainlinkDataFeedHelper.sol";
 import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
-/// @title ERC20 Swap Spot Price Intent
-/// @notice An intent to execute a buy or sell order at the market price at the time of execution.
-contract ERC20SwapSpotPriceIntent is IntentWithHookAbstract, ExecuteRootTransaction, ChainlinkDataFeedHelper {
+/// @title ERC20 Swap Spot Price Exact Token Out Intent
+/// @notice An intent to execute a swap of ERC20 tokens at the current spot price providing the exact amount of tokens
+/// to be soold.
+contract ERC20SwapSpotPriceExactTokenOutIntent is
+    IntentWithHookAbstract,
+    ExecuteRootTransaction,
+    ChainlinkDataFeedHelper
+{
     /*//////////////////////////////////////////////////////////////////////////
                                   CONSTANTS
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @notice The number of decimals returned by the derived price of Chainlink price feeds.
-    uint8 private constant CHAINLINK_DECIMALS = 8;
+    uint8 private constant _CHAINLINK_DECIMALS = 8;
 
     /*//////////////////////////////////////////////////////////////////////////
                                 CUSTOM ERRORS
@@ -48,26 +53,21 @@ contract ERC20SwapSpotPriceIntent is IntentWithHookAbstract, ExecuteRootTransact
     /// @param tokenIn The token to be purchased.
     /// @param tokenOutPriceFeed The Chainlink price feed for the token to be sold.
     /// @param tokenInPriceFeed The Chainlink price feed for the token to be purchased.
-    /// @param tokenAmountExpected The amount of tokens to be either sold or purchased depending on the `isBuy`
-    /// parameter. (purchased if true, sold if false)
+    /// @param tokenOutAmount The amount of tokens to be sold.
     /// @param thresholdSeconds The number of seconds of tolerance for freshness of the price feed.
-    /// @param isBuy Whether the order is a buy or sell order.
     function encodeIntent(
         address tokenOut,
         address tokenIn,
         address tokenOutPriceFeed,
         address tokenInPriceFeed,
-        uint256 tokenAmountExpected,
-        uint256 thresholdSeconds,
-        bool isBuy
+        uint256 tokenOutAmount,
+        uint256 thresholdSeconds
     )
         external
         pure
         returns (bytes memory data)
     {
-        data = abi.encode(
-            tokenOut, tokenIn, tokenOutPriceFeed, tokenInPriceFeed, tokenAmountExpected, thresholdSeconds, isBuy
-        );
+        data = abi.encode(tokenOut, tokenIn, tokenOutPriceFeed, tokenInPriceFeed, tokenOutAmount, thresholdSeconds);
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -90,38 +90,25 @@ contract ERC20SwapSpotPriceIntent is IntentWithHookAbstract, ExecuteRootTransact
             address tokenIn,
             address tokenOutPriceFeed,
             address tokenInPriceFeed,
-            uint256 tokenAmountExpected,
-            uint256 thresholdSeconds,
-            bool isBuy
+            uint256 tokenOutAmount,
+            uint256 thresholdSeconds
         ) = _decodeIntent(intent);
 
-        int256 derivedPrice;
-
-        if (isBuy) {
-            derivedPrice = _getDerivedPrice(
-                tokenInPriceFeed, // base
-                tokenOutPriceFeed, // quote
-                CHAINLINK_DECIMALS, // decimals response
-                thresholdSeconds
-            );
-        } else {
-            derivedPrice = _getDerivedPrice(
-                tokenOutPriceFeed, // base
-                tokenInPriceFeed, // quote
-                CHAINLINK_DECIMALS, // decimals response
-                thresholdSeconds
-            );
-        }
+        int256 derivedPrice = _getDerivedPrice(
+            tokenOutPriceFeed, // quote
+            tokenInPriceFeed, // base
+            _CHAINLINK_DECIMALS, // decimals response
+            thresholdSeconds
+        );
 
         uint256 initialTokenInBalance = ERC20(tokenIn).balanceOf(intent.root);
-        uint256 tokenAmountEstimated =
-            _calculateTokenInAmountEstimated(tokenOut, tokenIn, tokenAmountExpected, derivedPrice, isBuy);
+        uint256 tokenInAmount = _calculateTokenInAmount(tokenOut, tokenIn, tokenOutAmount, derivedPrice);
 
         _hook(hook);
         // The hook is expected to transfer the tokens to the intent root.
         // NOTICE: We can likely optimize by using the `transient storage` when available.
 
-        _unlock(intent, hook, tokenAmountEstimated, initialTokenInBalance);
+        _unlock(intent, hook, tokenInAmount, initialTokenInBalance);
 
         return true;
     }
@@ -130,34 +117,24 @@ contract ERC20SwapSpotPriceIntent is IntentWithHookAbstract, ExecuteRootTransact
                               INTERNAL READ FUNCTIONS
     //////////////////////////////////////////////////////////////////////////*/
 
-    /// @notice Calculate the estimated amount of tokens to be purchased or sold. Based on the price of the tokens.
+    /// @notice Calculate the estimated amount of tokens to be purchased. Based on the price of the tokens.
     /// @param tokenOut The token to be sold.
     /// @param tokenIn The token to be purchased.
-    /// @param tokenAmountExpected The amount of tokens to be either sold or purchased depending on the `isBuy`
-    /// parameter. (purchased if true, sold if false)
+    /// @param tokenOutAmount The amount of tokens to be sold.
     /// @param derivedPrice The derived price of the two tokens.
-    /// @param isBuy Whether the order is a buy or sell order.
-    function _calculateTokenInAmountEstimated(
+    /// @return tokenInAmount The estimated amount of tokens to be purchased.
+    function _calculateTokenInAmount(
         address tokenOut,
         address tokenIn,
-        uint256 tokenAmountExpected,
-        int256 derivedPrice,
-        bool isBuy
+        uint256 tokenOutAmount,
+        int256 derivedPrice
     )
         internal
         view
-        returns (uint256 tokenAmountEstimated)
+        returns (uint256 tokenInAmount)
     {
-        uint8 tokenOutDecimals = ERC20(tokenOut).decimals();
-        uint8 tokenInDecimals = ERC20(tokenIn).decimals();
-
-        if (isBuy) {
-            tokenAmountEstimated = (tokenAmountExpected * uint256(derivedPrice) * 10 ** uint256(tokenOutDecimals))
-                / (10 ** uint256(tokenInDecimals + CHAINLINK_DECIMALS));
-        } else {
-            tokenAmountEstimated = (tokenAmountExpected * uint256(derivedPrice) * 10 ** uint256(tokenInDecimals))
-                / (10 ** uint256(tokenOutDecimals + CHAINLINK_DECIMALS));
-        }
+        tokenInAmount = (tokenOutAmount * uint256(derivedPrice) * 10 ** uint256(ERC20(tokenIn).decimals()))
+            / (10 ** uint256(ERC20(tokenOut).decimals() + _CHAINLINK_DECIMALS));
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -177,10 +154,8 @@ contract ERC20SwapSpotPriceIntent is IntentWithHookAbstract, ExecuteRootTransact
     /// @return tokenIn The token to be purchased.
     /// @return tokenOutPriceFeed The Chainlink price feed for the token to be sold.
     /// @return tokenInPriceFeed The Chainlink price feed for the token to be purchased.
-    /// @return tokenAmountExpected The amount of tokens to be either sold or purchased depending on the `isBuy`
-    /// parameter. (purchased if true, sold if false)
+    /// @return tokenOutAmount The amount of tokens to be sold.
     /// @return thresholdSeconds The number of seconds of tolerance for freshness of the price feed.
-    /// @return isBuy Whether the order is a buy or sell order.
     function _decodeIntent(Intent calldata intent)
         internal
         pure
@@ -189,12 +164,11 @@ contract ERC20SwapSpotPriceIntent is IntentWithHookAbstract, ExecuteRootTransact
             address tokenIn,
             address tokenOutPriceFeed,
             address tokenInPriceFeed,
-            uint256 tokenAmountExpected,
-            uint256 thresholdSeconds,
-            bool isBuy
+            uint256 tokenOutAmount,
+            uint256 thresholdSeconds
         )
     {
-        return abi.decode(intent.data, (address, address, address, address, uint256, uint256, bool));
+        return abi.decode(intent.data, (address, address, address, address, uint256, uint256));
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -217,40 +191,31 @@ contract ERC20SwapSpotPriceIntent is IntentWithHookAbstract, ExecuteRootTransact
     }
 
     /// @notice Unlock the tokenOut to the hook executor if conditions are met
-    /// @param tokenAmountEstimated The estimated amount of tokens to be purchased or sold depending on the `isBuy`
-    /// parameter (purchased if true, sold if false).
     /// @param intent Contains data related to intent.
     /// @param hook Contains data related to hook.
+    /// @param tokenInAmount The estimated amount of tokens to be purchased.
+    /// parameter (purchased if true, sold if false).
+    /// @param initialTokenInBalance The initial balance of the tokenIn in the intent root.
+    /// @return success Whether the unlock was successful or not.
     function _unlock(
         Intent calldata intent,
         Hook calldata hook,
-        uint256 tokenAmountEstimated,
+        uint256 tokenInAmount,
         uint256 initialTokenInBalance
     )
         internal
         returns (bool)
     {
-        (address tokenOut, address tokenIn,,, uint256 tokenAmountExpected,, bool isBuy) = _decodeIntent(intent);
-
+        (address tokenOut, address tokenIn,,, uint256 tokenOutAmount,) = _decodeIntent(intent);
         address executor = _decodeHookInstructions(hook);
-
         uint256 tokenInBalanceDelta = ERC20(tokenIn).balanceOf(intent.root) - initialTokenInBalance;
-        uint256 tokenAmountFromRoot;
 
-        if (isBuy) {
-            tokenAmountFromRoot = tokenAmountEstimated;
-            if (tokenInBalanceDelta < tokenAmountExpected) {
-                revert InvalidTokenInTransfer(tokenInBalanceDelta, tokenAmountExpected);
-            }
-        } else {
-            tokenAmountFromRoot = tokenAmountExpected;
-            if (tokenInBalanceDelta < tokenAmountEstimated) {
-                revert InvalidTokenInTransfer(tokenInBalanceDelta, tokenAmountEstimated);
-            }
+        if (tokenInBalanceDelta < tokenInAmount) {
+            revert InvalidTokenInTransfer(tokenInBalanceDelta, tokenInAmount);
         }
 
         // Send the tokens to the hook executor.
-        bytes memory data = abi.encodeWithSignature("transfer(address,uint256)", executor, tokenAmountFromRoot);
+        bytes memory data = abi.encodeWithSignature("transfer(address,uint256)", executor, tokenOutAmount);
 
         return executeFromRoot(tokenOut, 0, data);
     }
