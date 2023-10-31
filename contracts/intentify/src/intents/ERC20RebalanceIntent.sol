@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19 <0.9.0;
 
-import { console2 } from "forge-std/console2.sol";
 import { ERC20 } from "solady/tokens/ERC20.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 import { MultiSend } from "safe-contracts/libraries/MultiSend.sol";

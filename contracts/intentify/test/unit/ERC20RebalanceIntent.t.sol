@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
-import { console2 } from "forge-std/console2.sol";
 import { ERC20 } from "solady/tokens/ERC20.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "../../src/TypesAndDecoders.sol";
@@ -94,8 +93,6 @@ contract ERC20RebalanceIntentTest is SafeTestingUtils {
         hooks[0] = Hook({ target: WETHAddress, data: hookData, instructions: hookInstructions });
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
-
-        console2.log("Safe USDC balance before rebalance: %s", ERC20(USDCAddress).balanceOf(address(_safeCreated)));
 
         _intentifySafeModule.execute(batchExecution);
 
