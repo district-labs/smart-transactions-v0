@@ -48,7 +48,6 @@ async function executeRelayerTransaction(
     gasLimit: 500000,
     speed: "fast",
   })
-  console.log("Transaction Receipt:", txReceipt.hash)
   await goerliPublicClient.waitForTransactionReceipt({
     hash: txReceipt.hash as `0x${string}`,
   })

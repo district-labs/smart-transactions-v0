@@ -3,6 +3,7 @@ import { API_URL } from "../constants"
 export async function intentBatchUserGetAll() {
     const response = await fetch(`${API_URL}/intent-batch`, {
       method: "GET",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

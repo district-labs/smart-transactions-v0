@@ -9,6 +9,7 @@ export function useActionIntentBatchCreate() {
   const mutationResult = useMutation(["intent-batch-create"], {
     mutationFn: intentBatchCreate,
     onSuccess: async () => {
+      await queryClient.invalidateQueries(["intent-batch", "all"])
       await queryClient.invalidateQueries(["intent-batch", "all", address])
     },
   })

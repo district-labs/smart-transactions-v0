@@ -30,7 +30,6 @@ export function FormAdminGenerateStrategyId() {
   const [strategyId, setStrategyId] = useState<string>("0x00")
   function onSubmit({ intentModuleIds }: any) {
     const parsedIntentModuleIds = JSON.parse(intentModuleIds)
-    console.log(parsedIntentModuleIds, "parsedIntentModuleIds")
     const strategyId = intentBatchFactory.generateStrategyId(
       parsedIntentModuleIds
     )

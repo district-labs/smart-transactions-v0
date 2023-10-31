@@ -22,7 +22,6 @@ export const ButtonCopyIntentBatchState = ({
     if (intentBatchData) {
       const current = new URLSearchParams(Array.from(searchParams.entries())) // -> has to use this form
       current.set("intentBatchData", toHex(JSON.stringify(intentBatchData)))
-      console.log(intentBatchData, "intentBatchData111")
       const search = current.toString()
       const url = `${pathname}?${search}`
       setUrl(window.location.origin + url)

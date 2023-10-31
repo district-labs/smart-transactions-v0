@@ -48,7 +48,6 @@ export function FormStrategyLimitOrder({ strategyId }: FormStrategyLimitOrder) {
     },
   })
 
-  console.log(defaultValues, "defaultValues")
 
   const { isLoading: isSignatureRequested, signTypedDataAsync } =
     useSignTypedData()
