@@ -14,6 +14,24 @@ export const selectAllIntentBatchQuery = db.query.intentBatch.findMany({
   },
 })
 
+// ----------------------------------------
+// Select All Valid Intent Batch Query
+// ----------------------------------------
+export const selectAllValidIntentBatchQuery = db.query.intentBatch.findMany({
+  with: {
+    intents: {
+      where(fields, {eq}) {
+        return eq(fields.isInvalid, false)
+      },
+    },
+    intentBatchExecution: {
+      with: {
+        hooks: true,
+      },
+    },
+  },
+})
+
 export type IntentBatchQuery = Awaited<
   ReturnType<typeof selectAllIntentBatchQuery.execute>
 >[number]
