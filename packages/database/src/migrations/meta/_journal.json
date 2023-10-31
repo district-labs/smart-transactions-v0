@@ -43,6 +43,13 @@
       "when": 1698788006795,
       "tag": "0005_jittery_gertrude_yorkes",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1698789497590,
+      "tag": "0006_skinny_black_widow",
+      "breakpoints": true
     }
   ]
 }

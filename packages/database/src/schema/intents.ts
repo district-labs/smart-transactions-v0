@@ -87,6 +87,7 @@ export const hooks = mysqlTable("hooks", {
   id: serial("id").primaryKey(),
   target: charAddress("target").notNull(),
   data: text("data"),
+  instructions: text("instructions"),
   intentBatchExecutionId: int("intent_batch_execution_id").notNull(),
 })
 

@@ -1,8 +1,7 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
-  createIntentBatchInDB,
   getIntentBatchFromDB,
-  getIntentBatchesFromDB
+  getValidIntentBatchesFromDB
 } from "../../models/intent-batch";
 import CustomError from "../../utils/customError";
 
@@ -17,7 +16,7 @@ export const getIntentBatches = async (
 ) => {
   try {
     const filters = request.query;
-    const intentBatches = await getIntentBatchesFromDB(filters);
+    const intentBatches = await getValidIntentBatchesFromDB(filters);
 
     return response.status(200).json({ data: intentBatches });
   } catch (error) {
