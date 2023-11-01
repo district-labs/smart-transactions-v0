@@ -1340,4 +1340,4 @@ export const axiomV1QueryABI = [
     stateMutability: "nonpayable",
     type: "function",
   },
-] as const
+] as const;
