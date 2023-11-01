@@ -1,1 +1,0 @@
-ALTER TABLE `users` ADD `safeAddress` char(42);

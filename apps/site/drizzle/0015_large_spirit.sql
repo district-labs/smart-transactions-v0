@@ -1,1 +1,0 @@
-ALTER TABLE `hooks` ADD `intent_batch_execution_id` int NOT NULL;

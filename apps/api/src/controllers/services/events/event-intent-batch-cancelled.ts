@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import { updateIntentBatchCancelled } from '../../../database/writes/intent-batch'
+import { db, updateIntentBatchCancelled } from "@district-labs/intentify-database";
+import { NextFunction, Request, Response } from "express";
 import CustomError from "../../../utils/customError";
 
 export const eventIntentBatchCancelled = async (
@@ -14,7 +14,7 @@ export const eventIntentBatchCancelled = async (
       throw new CustomError("Missing Event Parameters", 400);
     }
 
-    await updateIntentBatchCancelled(intentBatchId, {
+    await updateIntentBatchCancelled(db,intentBatchId, {
       chainId: Number(chainId),
       cancelledTxHash: transactionHash,
       cancelledAt: new Date(), // TODO: Use the timestamp from the event/transaction

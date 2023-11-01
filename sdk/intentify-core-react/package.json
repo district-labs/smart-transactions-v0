@@ -35,14 +35,16 @@
     "@district-labs/intentify-deployments": "workspace:*",
     "@ethersproject/abstract-signer": "^5.7.0",
     "@ethersproject/constants": "^5.7.0",
-    "@wagmi/cli": "^1.5.1",
+    "@tanstack/query-core": "^5.4.3",
+    "@wagmi/cli": "^1.5.2",
+    "@wagmi/core": "^1.4.5",
     "clsx": "^2.0.0",
     "ethers": "^5.6.9",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tailwind-merge": "^1.14.0",
-    "viem": "^1.0.0",
-    "wagmi": "1.3.2",
+    "viem": "^1.18.2",
+    "wagmi": "1.4.5",
     "zod": "^3.22.2"
   }
 }

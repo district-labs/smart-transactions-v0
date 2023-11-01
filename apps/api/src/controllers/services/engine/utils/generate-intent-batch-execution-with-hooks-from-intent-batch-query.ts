@@ -1,9 +1,9 @@
 
 import type { Hook, IntentBatchExecution } from "@district-labs/intentify-core"
 
+import { DBIntentBatchActiveItem } from "@district-labs/intentify-database"
 import { generateHooksForLimitOrderBasic } from "./intent-hooks/generate-hooks-for-limit-order-basic"
 import { splitSignature } from "./split-signature"
-import { DBIntentBatchActiveItem } from "../../../../database/queries/intent-batch"
 import { getTokenDecimals } from "./token-decimals"
 
 interface LimitOrderIntentArgs {

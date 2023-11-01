@@ -1,16 +1,16 @@
-import { Request, Response, NextFunction } from "express";
+import { getEIP712DomainPacketHash, getIntentBatchTypedDataHash } from '@district-labs/intentify-core';
+import { IntentifySafeModule } from '@district-labs/intentify-deployments';
+import { NextFunction, Request, Response } from "express";
+import { getIronSession } from "iron-session";
+import { SUPPORTED_CHAINS } from "../../constants";
+import { intentBatchFactory } from "../../intent-batch-factory";
+import { ironOptions } from "../../iron-session";
 import {
   createIntentBatchInDB,
   getIntentBatchFromDB,
   getIntentBatchesFromDB
 } from "../../models/intent-batch";
 import CustomError from "../../utils/customError";
-import { intentBatchFactory } from "../../intent-batch-factory";
-import { SUPPORTED_CHAINS } from "../../constants";
-import { getIntentBatchTypedDataHash, getEIP712DomainPacketHash } from '@district-labs/intentify-core' 
-import { IntentifySafeModule } from '@district-labs/intentify-deployments' 
-import { ironOptions } from "../../iron-session";
-import { getIronSession } from "iron-session";
 
 /**
  * Handle request to retrieve all users.

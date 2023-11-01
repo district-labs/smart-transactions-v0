@@ -1,1 +1,0 @@
-ALTER TABLE `strategies` ADD `coins` json;

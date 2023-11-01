@@ -1,6 +1,5 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
-  createIntentBatchInDB,
   getIntentBatchFromDB,
   getIntentBatchesFromDB
 } from "../../models/intent-batch";
