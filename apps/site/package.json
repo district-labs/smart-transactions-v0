@@ -29,7 +29,6 @@
     "@headlessui/tailwindcss": "^0.2.0",
     "@hookform/resolvers": "^3.3.1",
     "@openzeppelin/defender-relay-client": "^1.48.0",
-    "@planetscale/database": "^1.11.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.2",
     "@radix-ui/react-avatar": "^1.0.3",

@@ -15,8 +15,7 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "dev": "tsc --watch",
-    "build": "tsc",
+    "build": "tsup",
     "db:generate": "drizzle-kit generate:mysql",
     "db:push": "drizzle-kit push:mysql",
     "db:migrate": "drizzle-kit generate:mysql",
