@@ -1,9 +1,11 @@
 import { TimestampRangeIntent } from "@district-labs/intentify-deployments"
+import { validateTimestampRange } from "./validators"
 
 export const timestampRange = {
   name: "TimestampRange",
   deployed: TimestampRangeIntent,
-  args: [
+  validate: validateTimestampRange,
+  abi: [
     {
       name: "start",
       type: "uint128",

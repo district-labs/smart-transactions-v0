@@ -3,7 +3,7 @@ import { UniswapV3HistoricalTwapIntent } from "@district-labs/intentify-deployme
 export const uniswapv3HistoricalTwapIntent = {
   name: "UniswapHistoricalV3Twap",
   deployed: UniswapV3HistoricalTwapIntent,
-  args: [
+  abi: [
     {
       name: "uniswapV3Pool",
       type: "address",

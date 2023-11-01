@@ -3,7 +3,7 @@ import { UniswapV3HistoricalTwapPercentageChangeIntent } from "@district-labs/in
 export const uniswapV3HistoricalTwapPercentageChangeIntent = {
   name: "UniswapHistoricalV3TwapPercentageChange",
   deployed: UniswapV3HistoricalTwapPercentageChangeIntent,
-  args: [
+  abi: [
     {
       name: "uniswapV3Pool",
       type: "address",

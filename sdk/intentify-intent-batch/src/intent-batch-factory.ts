@@ -7,13 +7,15 @@ import {
 } from "viem"
 
 import { IntentBatchManager } from "./intent-batch-manager"
-import { IntentModule } from "./types"
+import { ChainToPublicClient, IntentModule } from "./types"
 
 export class IntentBatchFactory {
   modules: IntentModule[]
+  clients: ChainToPublicClient | undefined
 
-  constructor(modules: IntentModule[]) {
+  constructor(modules: IntentModule[], clients?: ChainToPublicClient) {
     this.modules = modules
+    this.clients = clients
   }
 
   getModule(name: string) {
@@ -56,27 +58,69 @@ export class IntentBatchFactory {
       throw new Error(`Module not found: ${name}`)
     }
 
-    return encodeAbiParameters(module.args, args)
+    return encodeAbiParameters(module.abi, args)
   }
 
   decode(args: any[], data: `0x${string}`) {
     return decodeAbiParameters(args, data)
   }
+  
+  async validate(intentBatch: IntentBatch, chainId: number, validationArgs?: {
+    name: string,
+    args: any
+  }[]) {
+    const results = intentBatch.intents.map(async (intent) => {
+      const module = this.getModuleByAddress(intent.target)
+      if(module.validate) {
+        let validationArguments = {}
+        const intentToValidate = validationArgs?.find(args => args.name == module.name)
+        if(this.clients) {
+          const publicClient = this?.clients[chainId]
+         if(!publicClient && !intentToValidate)  {
+          throw new Error(`Provide publicClient or validation arguments for ${module.name}`)
+         }
+          validationArguments = {
+            ...intentToValidate?.args,
+            publicClient
+          }
+        } else {
+          if(!intentToValidate)  {
+            throw new Error(`Provide validation arguments for ${module.name}`)
+          }
+          validationArguments = {
+            ...intentToValidate?.args
+          }
+        }
+        const validation = await module.validate(module.abi, intent.data, validationArguments)
+        return {
+          name: module.name,
+          results: validation
+        }
+      } else {
+        return {
+          name: module.name,
+          results: undefined
+        }
+      }
+    })
+    return Promise.all(results)
+  }
 
   decodeIntentBatch(intentBatch: IntentBatch) {
     return intentBatch.intents.map((intent) => {
       const module = this.getModuleByAddress(intent.target)
-      const decoded = this.decode(module.args, intent.data)
+      const decoded = this.decode(module.abi, intent.data)
       return {
         intentId: keccak256(
           encodePacked(["string", "uint"], [module.name, BigInt(1)])
         ), // TODO: Update to use dynamic module version.
         name: module.name,
         intentArgs: decoded.map((arg: any, i: number) => ({
-          name: module.args[i].name,
-          type: module.args[i].type,
+          name: module.abi[i].name,
+          type: module.abi[i].type,
           value: String(arg),
         })),
+        data: intent.data,
         target: intent.target,
         root: intent.root,
         value: intent.value,

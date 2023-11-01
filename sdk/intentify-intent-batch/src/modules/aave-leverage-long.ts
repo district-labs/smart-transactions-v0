@@ -1,9 +1,11 @@
 import { AaveLeverageLongIntent } from "@district-labs/intentify-deployments"
+import { validateAaveLeverageLong } from "./validators"
 
 export const aaveLeverageLong = {
   name: "AaveLeverageLong",
   deployed: AaveLeverageLongIntent,
-  args: [
+  validate: validateAaveLeverageLong,
+  abi: [
     {
       name: "supplyAsset",
       type: "address",

@@ -1,5 +1,5 @@
 {
-  "name": "@district-labs/intentify-intent-batch",
+  "name": "@district-labs/intentify-abi-external",
   "version": "0.0.0",
   "license": "MIT",
   "author": "Kames Geraghty",
@@ -16,31 +16,25 @@
   "scripts": {
     "lint": "eslint .",
     "build": "tsup",
-    "clean": "rimraf node_modules",
     "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",
-    "dev": "tsup --watch",
-    "generate": "wagmi generate",
-    "test": "vitest"
+    "watch": "tsup --watch",
+    "generate": "wagmi generate"
   },
   "devDependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
     "@types/node": "^20.5.2",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "eslint-config-custom": "workspace:*",
-    "eslint-config-prettier": "^9.0.0",
+    "react": "^18.2.0",
     "rimraf": "^5.0.5",
     "tsconfig": "workspace:*",
     "tsup": "^6.1.3",
-    "typescript": "5.0.4",
-    "vitest": "^0.34.5"
+    "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@district-labs/intentify-abi-external": "workspace:*",
-    "@district-labs/intentify-core": "workspace:*",
-    "@district-labs/intentify-deployments": "workspace:*",
-    "abitype": "^0.10.2",
+    "@aave/core-v3": "^1.18.0",
+    "@wagmi/cli": "1.1.0",
     "viem": "^1.12.1"
   }
 }
