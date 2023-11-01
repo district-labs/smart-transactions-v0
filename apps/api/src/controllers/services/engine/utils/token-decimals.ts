@@ -29,7 +29,12 @@ export async function getTokenDecimals({
       address: tokenAddress,
       abi: erc20ABI,
       functionName: "decimals",
-    })
+    }) as  number | undefined
+
+    
+    if(!tokenDecimals) {
+      throw new Error(`No token decimals found for chainId ${chainId} and tokenAddress ${tokenAddress}`)
+    }
 
     return tokenDecimals
   }

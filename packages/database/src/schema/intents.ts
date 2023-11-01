@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm"
 import {
+  boolean,
   int,
   json,
   mysqlTable,
@@ -30,6 +31,7 @@ export const intents = mysqlTable("intents", {
   target: charAddress("target").notNull(),
   data: text("data"),
   value: int("value").default(0),
+  isInvalid: boolean("isInvalid").default(false),
 })
 
 export const intentsRelations = relations(intents, ({ one }) => ({
@@ -85,6 +87,7 @@ export const hooks = mysqlTable("hooks", {
   id: serial("id").primaryKey(),
   target: charAddress("target").notNull(),
   data: text("data"),
+  instructions: text("instructions"),
   intentBatchExecutionId: int("intent_batch_execution_id").notNull(),
 })
 
