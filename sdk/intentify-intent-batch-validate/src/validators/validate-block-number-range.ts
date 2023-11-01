@@ -1,18 +1,17 @@
-import { timestampRange } from "@district-labs/intentify-intent-batch"
+import { blockNumberRange } from "@district-labs/intentify-intent-batch"
 import { decodeAbiParameters } from "viem"
 
 import { ValidationResponse } from "../types"
 
-export type ValidateTimestampRangeArgs = {
+export type ValidateBlockNumberRangeArgs = {
   currentTimestamp: bigint
 }
 
-export function validateTimestampRange(
+export function validateBlockNumberRange(
   data: `0x${string}`,
-  args: ValidateTimestampRangeArgs
+  args: ValidateBlockNumberRangeArgs
 ): ValidationResponse {
-  const decodedData = decodeAbiParameters(timestampRange.args, data) as bigint[]
-
+  const decodedData = decodeAbiParameters(blockNumberRange.args, data) as bigint[]
   if (
     decodedData[0] <= args.currentTimestamp &&
     decodedData[1] >= args.currentTimestamp
@@ -26,13 +25,13 @@ export function validateTimestampRange(
   if (decodedData[0] > args.currentTimestamp) {
     reasons.push({
       index: 0,
-      msg: `minTimestamp is ${decodedData[0]} but current timestamp is ${args.currentTimestamp}`,
+      msg: `minBlockNumber is ${decodedData[0]} but current blockNumber is ${args.currentTimestamp}`,
     })
   }
   if (decodedData[1] < args.currentTimestamp) {
     reasons.push({
       index: 1,
-      msg: `maxTimestamp is ${decodedData[1]} but current timestamp is ${args.currentTimestamp}`,
+      msg: `maxBlockNumber is ${decodedData[1]} but current blockNumber is ${args.currentTimestamp}`,
     })
   }
 
@@ -42,4 +41,4 @@ export function validateTimestampRange(
   }
 }
 
-export { timestampRange }
+export { blockNumberRange }

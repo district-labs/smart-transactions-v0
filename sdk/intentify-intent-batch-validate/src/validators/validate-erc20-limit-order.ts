@@ -1,4 +1,4 @@
-import { erc20ABI } from "@district-labs/intentify-core"
+import { erc20ABI } from "@district-labs/intentify-abi-external"
 import { erc20LimitOrder } from "@district-labs/intentify-intent-batch"
 import { decodeAbiParameters, type Address, type PublicClient } from "viem"
 
@@ -13,7 +13,7 @@ export async function validateErc20LimitOrder(
   args: ValidateErc20LimitOrderArgs,
   publicClient: PublicClient
 ): Promise<ValidationResponse> {
-  const decodedData = decodeAbiParameters(erc20LimitOrder.args, data)
+  const decodedData = decodeAbiParameters(erc20LimitOrder.args, data) as [`0x${string}`, `0x${string}`, bigint, bigint]
 
   const dataBalanceTokenOut = await publicClient.readContract({
     address: decodedData[0],

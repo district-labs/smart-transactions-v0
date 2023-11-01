@@ -1,14 +1,10 @@
 {
-  "extends": "tsconfig/base.json",
+  "extends": "tsconfig/react-library.json",
   "include": ["."],
   "exclude": ["dist", "build", "node_modules"],
   "compilerOptions": {
-    "lib": ["dom"],
     "declaration": true,
     "preserveSymlinks": true,
-    "useUnknownInCatchVariables": false,
-    "paths": {
-      "@/*": ["./*"]
-    },
+    "resolveJsonModule": true,
   }
 }
