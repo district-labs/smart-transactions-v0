@@ -3,7 +3,7 @@ import { Erc20SwapSpotPriceIntent } from "@district-labs/intentify-deployments"
 export const erc20SwapSpotPrice = {
   name: "Erc20SwapSpotPrice",
   deployed: Erc20SwapSpotPriceIntent,
-  args: [
+  abi: [
     {
       name: "tokenOut",
       type: "address",

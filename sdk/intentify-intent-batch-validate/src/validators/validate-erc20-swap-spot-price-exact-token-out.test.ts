@@ -1,10 +1,9 @@
-import { erc20ABI } from "@district-labs/intentify-core"
+import { erc20ABI } from "@district-labs/intentify-abi-external"
 import { createPublicClient, encodeAbiParameters, http } from "viem"
 import { mainnet } from "viem/chains"
 import { expect, test } from "vitest"
-
+import { erc20SwapSpotPriceExactTokenOut } from '@district-labs/intentify-intent-batch' 
 import {
-  erc20SwapSpotPriceExactTokenOut,
   validateErc20SwapSpotPriceExactTokenOut,
 } from "./validate-erc20-swap-spot-price-exact-token-out"
 
@@ -15,7 +14,7 @@ const client = createPublicClient({
 
 test("valid erc20SwapSpotPriceExactTokenOutIntent arguments", async () => {
   const args = {
-    root: "0x000000000000000000000000000000000000dEaD",
+    root: "0x000000000000000000000000000000000000dEaD" as `0x${string}`,
   }
   const TOKEN_OUT = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" // USDC
   const TOKEN_IN = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" // WETH
@@ -30,7 +29,7 @@ test("valid erc20SwapSpotPriceExactTokenOutIntent arguments", async () => {
   const AMOUNT_OUT = dataBalanceTokenOut
   const AMOUNT_IN = 0
 
-  const data = encodeAbiParameters(erc20SwapSpotPriceExactTokenOut.args, [
+  const data = encodeAbiParameters(erc20SwapSpotPriceExactTokenOut.abi, [
     TOKEN_OUT,
     TOKEN_IN,
     CHAINLINK_FEED,
@@ -39,6 +38,7 @@ test("valid erc20SwapSpotPriceExactTokenOutIntent arguments", async () => {
     AMOUNT_IN,
   ])
   const result = await validateErc20SwapSpotPriceExactTokenOut(
+    erc20SwapSpotPriceExactTokenOut.abi,
     data,
     args,
     client
@@ -48,7 +48,7 @@ test("valid erc20SwapSpotPriceExactTokenOutIntent arguments", async () => {
 
 test("invalid erc20SwapSpotPriceExactTokenOutIntent arguments", async () => {
   const args = {
-    root: "0x000000000000000000000000000000000000dEaD",
+    root: "0x000000000000000000000000000000000000dEaD" as `0x${string}`,
   }
   const TOKEN_OUT = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" // USDC
   const TOKEN_IN = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" // WETH
@@ -62,7 +62,7 @@ test("invalid erc20SwapSpotPriceExactTokenOutIntent arguments", async () => {
   const AMOUNT_OUT = BigInt(dataBalanceTokenOut as bigint) + BigInt(1)
   const AMOUNT_IN = 0
 
-  const data = encodeAbiParameters(erc20SwapSpotPriceExactTokenOut.args, [
+  const data = encodeAbiParameters(erc20SwapSpotPriceExactTokenOut.abi, [
     TOKEN_OUT,
     TOKEN_IN,
     CHAINLINK_FEED,
@@ -71,6 +71,7 @@ test("invalid erc20SwapSpotPriceExactTokenOutIntent arguments", async () => {
     AMOUNT_IN,
   ])
   const result = await validateErc20SwapSpotPriceExactTokenOut(
+    erc20SwapSpotPriceExactTokenOut.abi,
     data,
     args,
     client

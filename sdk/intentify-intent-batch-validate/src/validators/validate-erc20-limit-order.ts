@@ -1,26 +1,26 @@
 import { erc20ABI } from "@district-labs/intentify-abi-external"
-import { erc20LimitOrder } from "@district-labs/intentify-intent-batch"
 import { decodeAbiParameters, type Address, type PublicClient } from "viem"
-
+import { type AbiParameter } from 'abitype'
 import { ValidationResponse } from "../types"
 
 export type ValidateErc20LimitOrderArgs = {
   root: Address
+  publicClient: PublicClient
 }
 
 export async function validateErc20LimitOrder(
+  abi: AbiParameter[],
   data: `0x${string}`,
   args: ValidateErc20LimitOrderArgs,
-  publicClient: PublicClient
 ): Promise<ValidationResponse> {
-  const decodedData = decodeAbiParameters(erc20LimitOrder.args, data) as [
+  const decodedData = decodeAbiParameters(abi, data) as [
     `0x${string}`,
     `0x${string}`,
     bigint,
     bigint,
   ]
 
-  const dataBalanceTokenOut = (await publicClient.readContract({
+  const dataBalanceTokenOut = (await args?.publicClient.readContract({
     address: decodedData[0],
     abi: erc20ABI,
     functionName: "balanceOf",
@@ -58,5 +58,3 @@ export async function validateErc20LimitOrder(
     errors: reasons,
   }
 }
-
-export { erc20LimitOrder }

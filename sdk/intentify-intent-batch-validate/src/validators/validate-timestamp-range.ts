@@ -1,4 +1,4 @@
-import { timestampRange } from "@district-labs/intentify-intent-batch"
+import { type AbiParameter } from 'abitype'
 import { decodeAbiParameters } from "viem"
 
 import { ValidationResponse } from "../types"
@@ -8,11 +8,11 @@ export type ValidateTimestampRangeArgs = {
 }
 
 export function validateTimestampRange(
+  abi: AbiParameter[],
   data: `0x${string}`,
   args: ValidateTimestampRangeArgs
 ): ValidationResponse {
-  const decodedData = decodeAbiParameters(timestampRange.args, data) as bigint[]
-
+  const decodedData = decodeAbiParameters(abi, data) as bigint[]
   if (
     decodedData[0] <= args.currentTimestamp &&
     decodedData[1] >= args.currentTimestamp
@@ -41,5 +41,3 @@ export function validateTimestampRange(
     errors: reasons,
   }
 }
-
-export { timestampRange }

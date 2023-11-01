@@ -6,7 +6,7 @@ intentBatchFactory = new IntentBatchFactory([
     {
         name: 'TimestampRange',
         
-        args: [
+        abi: [
             {
                 name: 'start',
                 type: 'uint128',

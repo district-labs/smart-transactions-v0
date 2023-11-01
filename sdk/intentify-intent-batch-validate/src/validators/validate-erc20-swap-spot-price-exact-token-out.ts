@@ -1,20 +1,21 @@
 import { erc20ABI } from "@district-labs/intentify-abi-external"
-import { erc20SwapSpotPriceExactTokenOut } from "@district-labs/intentify-intent-batch"
+import { type AbiParameter } from 'abitype'
 import { decodeAbiParameters, type Address, type PublicClient } from "viem"
 
 import { ValidationResponse } from "../types"
 
 export type ValidateErc20SwapSpotPriceExactTokenOutArgs = {
   root: Address
+  publicClient: PublicClient
 }
 
 export async function validateErc20SwapSpotPriceExactTokenOut(
+  abi: AbiParameter[],
   data: `0x${string}`,
   args: ValidateErc20SwapSpotPriceExactTokenOutArgs,
-  publicClient: PublicClient
 ): Promise<ValidationResponse> {
   const decodedData = decodeAbiParameters(
-    erc20SwapSpotPriceExactTokenOut.args,
+    abi,
     data
   ) as [
     `0x${string}`,
@@ -25,7 +26,7 @@ export async function validateErc20SwapSpotPriceExactTokenOut(
     bigint,
   ]
 
-  const dataBalanceTokenOut = (await publicClient.readContract({
+  const dataBalanceTokenOut = (await args?.publicClient.readContract({
     address: decodedData[0],
     abi: erc20ABI,
     functionName: "balanceOf",
@@ -63,5 +64,3 @@ export async function validateErc20SwapSpotPriceExactTokenOut(
     errors: reasons,
   }
 }
-
-export { erc20SwapSpotPriceExactTokenOut }

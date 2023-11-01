@@ -1286,16 +1286,22 @@ importers:
 
   sdk/intentify-intent-batch:
     dependencies:
-      viem:
-        specifier: ^1.12.1
-        version: 1.16.6(typescript@5.0.4)(zod@3.22.4)
-    devDependencies:
       '@district-labs/intentify-core':
         specifier: workspace:*
         version: link:../intentify-core
       '@district-labs/intentify-deployments':
         specifier: workspace:*
         version: link:../intentify-deployments
+      '@district-labs/intentify-intent-batch-validate':
+        specifier: workspace:*
+        version: link:../intentify-intent-batch-validate
+      abitype:
+        specifier: ^0.10.2
+        version: 0.10.2(typescript@5.0.4)
+      viem:
+        specifier: ^1.12.1
+        version: 1.16.6(typescript@5.0.4)(zod@3.22.4)
+    devDependencies:
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.1.0
         version: 4.1.1(prettier@3.0.3)
@@ -1332,19 +1338,16 @@ importers:
 
   sdk/intentify-intent-batch-validate:
     dependencies:
+      '@district-labs/intentify-abi-external':
+        specifier: workspace:*
+        version: link:../intentify-abi-external
+      abitype:
+        specifier: ^0.10.2
+        version: 0.10.2(typescript@5.0.4)
       viem:
         specifier: ^1.12.1
         version: 1.16.6(typescript@5.0.4)(zod@3.22.4)
     devDependencies:
-      '@district-labs/intentify-abi-external':
-        specifier: workspace:*
-        version: link:../intentify-abi-external
-      '@district-labs/intentify-core':
-        specifier: workspace:*
-        version: link:../intentify-core
-      '@district-labs/intentify-deployments':
-        specifier: workspace:*
-        version: link:../intentify-deployments
       '@district-labs/intentify-intent-batch':
         specifier: workspace:*
         version: link:../intentify-intent-batch
@@ -13586,6 +13589,20 @@ packages:
   /abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
     dev: true
+
+  /abitype@0.10.2(typescript@5.0.4):
+    resolution: {integrity: sha512-1XndI+RKFWK4+TXCNv1683MRyX5NGmlHXCvqzjOqhSS3PQrxT2QYRZq1bMPPRNjn89B3eVaM2w7y3jVj/OIUzA==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+      zod: ^3 >=3.22.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      zod:
+        optional: true
+    dependencies:
+      typescript: 5.0.4
+    dev: false
 
   /abitype@0.8.11(typescript@5.2.2):
     resolution: {integrity: sha512-bM4v2dKvX08sZ9IU38IN5BKmN+ZkOSd2oI4a9f0ejHYZQYV6cDr7j+d95ga0z2XHG36Y4jzoG5Z7qDqxp7fi/A==}

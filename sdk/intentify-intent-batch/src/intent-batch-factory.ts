@@ -56,27 +56,51 @@ export class IntentBatchFactory {
       throw new Error(`Module not found: ${name}`)
     }
 
-    return encodeAbiParameters(module.args, args)
+    return encodeAbiParameters(module.abi, args)
   }
 
   decode(args: any[], data: `0x${string}`) {
     return decodeAbiParameters(args, data)
   }
+  
+  validate(intentBatch: IntentBatch, validationArgs: {
+    name: string,
+    args: any
+  }[]) {
+    return intentBatch.intents.map((intent) => {
+      const module = this.getModuleByAddress(intent.target)
+      if(module.validate) {
+        const intentToValidate = validationArgs.find(args => args.name == module.name)
+        console.log(intentToValidate, 'args')
+        const validation = module.validate(module.abi, intent.data, intentToValidate?.args)
+        return {
+          name: module.name,
+          results: validation
+        }
+      } else {
+        return {
+          name: module.name,
+          results: undefined
+        }
+      }
+    })
+  }
 
   decodeIntentBatch(intentBatch: IntentBatch) {
     return intentBatch.intents.map((intent) => {
       const module = this.getModuleByAddress(intent.target)
-      const decoded = this.decode(module.args, intent.data)
+      const decoded = this.decode(module.abi, intent.data)
       return {
         intentId: keccak256(
           encodePacked(["string", "uint"], [module.name, BigInt(1)])
         ), // TODO: Update to use dynamic module version.
         name: module.name,
         intentArgs: decoded.map((arg: any, i: number) => ({
-          name: module.args[i].name,
-          type: module.args[i].type,
+          name: module.abi[i].name,
+          type: module.abi[i].type,
           value: String(arg),
         })),
+        data: intent.data,
         target: intent.target,
         root: intent.root,
         value: intent.value,

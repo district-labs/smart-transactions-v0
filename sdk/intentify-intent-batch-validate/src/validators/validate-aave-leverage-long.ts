@@ -1,20 +1,21 @@
 import { aaveV3PoolABI } from "@district-labs/intentify-abi-external"
-import { aaveLeverageLong } from "@district-labs/intentify-intent-batch"
 import { decodeAbiParameters, type Address, type PublicClient } from "viem"
+import { type AbiParameter } from 'abitype'
 
 import { ValidationResponse } from "../types"
 
 export type ValidateAaveLeverageLongArgs = {
   root: Address
   aaveV3Pool: Address
+  publicClient: PublicClient
 }
 
 export async function validateAaveLeverageLong(
+  abi: AbiParameter[],
   data: `0x${string}`,
   args: ValidateAaveLeverageLongArgs,
-  publicClient: PublicClient
 ): Promise<ValidationResponse> {
-  const decodedData = decodeAbiParameters(aaveLeverageLong.args, data) as [
+  const decodedData = decodeAbiParameters(abi, data) as [
     `0x${string}`,
     `0x${string}`,
     bigint,
@@ -22,7 +23,7 @@ export async function validateAaveLeverageLong(
     bigint,
   ]
 
-  const dataUserAccountData = (await publicClient.readContract({
+  const dataUserAccountData = (await args.publicClient.readContract({
     address: args.aaveV3Pool,
     abi: aaveV3PoolABI,
     functionName: "getUserAccountData",
@@ -81,5 +82,3 @@ export async function validateAaveLeverageLong(
     errors: reasons,
   }
 }
-
-export { aaveLeverageLong }

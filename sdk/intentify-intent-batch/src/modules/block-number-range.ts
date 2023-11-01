@@ -1,9 +1,11 @@
 import { BlockNumberIntent } from "@district-labs/intentify-deployments"
+import {validateBlockNumberRange} from '@district-labs/intentify-intent-batch-validate'
 
 export const blockNumberRange = {
   name: "BlockNumberRange",
   deployed: BlockNumberIntent,
-  args: [
+  validate: validateBlockNumberRange,
+  abi: [
     {
       name: "start",
       type: "uint128",

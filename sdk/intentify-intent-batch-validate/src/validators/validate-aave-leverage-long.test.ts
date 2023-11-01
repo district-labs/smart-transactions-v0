@@ -1,10 +1,10 @@
-import { erc20ABI } from "@district-labs/intentify-core"
+import { erc20ABI } from "@district-labs/intentify-abi-external"
 import { createPublicClient, encodeAbiParameters, http } from "viem"
 import { mainnet } from "viem/chains"
 import { expect, test } from "vitest"
+import { aaveLeverageLong } from '@district-labs/intentify-intent-batch' 
 
 import {
-  aaveLeverageLong,
   validateAaveLeverageLong,
 } from "./validate-aave-leverage-long"
 
@@ -15,8 +15,8 @@ const client = createPublicClient({
 
 test("valid aaveLeverageLong arguments", async () => {
   const args = {
-    root: "0x122e2cD153a58BA06c79EF0384D6A696a93D0ab6",
-    aaveV3Pool: "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2",
+    root: "0x122e2cD153a58BA06c79EF0384D6A696a93D0ab6" as `0x${string}`,
+    aaveV3Pool: "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2" as `0x${string}`,
   }
   const TOKEN_OUT = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" // USDC
   const TOKEN_IN = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" // WETH
@@ -31,21 +31,21 @@ test("valid aaveLeverageLong arguments", async () => {
   const MIN_HEALTH_FACTOR = 1e18
   const FEE = 0
 
-  const data = encodeAbiParameters(aaveLeverageLong.args, [
+  const data = encodeAbiParameters(aaveLeverageLong.abi, [
     TOKEN_OUT,
     TOKEN_IN,
     INTEREST_RATE_MODE,
     MIN_HEALTH_FACTOR,
     FEE,
   ])
-  const result = await validateAaveLeverageLong(data, args, client)
+  const result = await validateAaveLeverageLong(aaveLeverageLong.abi, data, args, client)
   expect(result.status).toBe(true)
 })
 
 test("invalid aaveLeverageLong arguments", async () => {
   const args = {
-    root: "0x000000000000000000000000000000000000dEaD",
-    aaveV3Pool: "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2",
+    root: "0x000000000000000000000000000000000000dEaD" as `0x${string}`,
+    aaveV3Pool: "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2" as `0x${string}`,
   }
   const TOKEN_OUT = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" // USDC
   const TOKEN_IN = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2" // WETH
@@ -60,14 +60,14 @@ test("invalid aaveLeverageLong arguments", async () => {
   const MIN_HEALTH_FACTOR = 0
   const FEE = 0
 
-  const data = encodeAbiParameters(aaveLeverageLong.args, [
+  const data = encodeAbiParameters(aaveLeverageLong.abi, [
     TOKEN_OUT,
     TOKEN_IN,
     INTEREST_RATE_MODE,
     MIN_HEALTH_FACTOR,
     FEE,
   ])
-  const result = await validateAaveLeverageLong(data, args, client)
+  const result = await validateAaveLeverageLong(aaveLeverageLong.abi, data, args, client)
 
   expect(result.status).toBe(false)
   expect(result.errors).toStrictEqual([

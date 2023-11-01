@@ -1,26 +1,25 @@
 import { encodeAbiParameters } from "viem"
 import { expect, test } from "vitest"
-
+import { timestampRange } from '@district-labs/intentify-intent-batch' 
 import {
-  timestampRange,
   validateTimestampRange,
 } from "./validate-timestamp-range"
 
 test("valid timestamp range", () => {
-  const data = encodeAbiParameters(timestampRange.args, [1, 10])
+  const data = encodeAbiParameters(timestampRange.abi, [1, 10])
   const args = {
     currentTimestamp: BigInt(5),
   }
-  const result = validateTimestampRange(data, args)
+  const result = validateTimestampRange(timestampRange.abi, data, args)
   expect(result.status).toBe(true)
 })
 
 test("invalid minTimestamp", () => {
-  const data = encodeAbiParameters(timestampRange.args, [2, 10])
+  const data = encodeAbiParameters(timestampRange.abi, [2, 10])
   const args = {
     currentTimestamp: BigInt(1),
   }
-  const result = validateTimestampRange(data, args)
+  const result = validateTimestampRange(timestampRange.abi, data, args)
   expect(result.status).toBe(false)
   expect(result.errors).toEqual([
     {
@@ -31,11 +30,11 @@ test("invalid minTimestamp", () => {
 })
 
 test("invalid maxTimestamp", () => {
-  const data = encodeAbiParameters(timestampRange.args, [2, 10])
+  const data = encodeAbiParameters(timestampRange.abi, [2, 10])
   const args = {
     currentTimestamp: BigInt(12),
   }
-  const result = validateTimestampRange(data, args)
+  const result = validateTimestampRange(timestampRange.abi, data, args)
   expect(result.status).toBe(false)
   expect(result.errors).toEqual([
     {

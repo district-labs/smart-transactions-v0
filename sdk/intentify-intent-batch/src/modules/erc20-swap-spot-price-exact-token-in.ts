@@ -3,7 +3,7 @@ import { Erc20SwapSpotPriceExactTokenInIntent } from "@district-labs/intentify-d
 export const erc20SwapSpotPriceExactTokenIn = {
   name: "Erc20SwapSpotPriceExactTokenIn",
   deployed: Erc20SwapSpotPriceExactTokenInIntent,
-  args: [
+  abi: [
     {
       name: "tokenOut",
       type: "address",

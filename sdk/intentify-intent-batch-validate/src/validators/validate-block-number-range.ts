@@ -1,6 +1,5 @@
-import { blockNumberRange } from "@district-labs/intentify-intent-batch"
 import { decodeAbiParameters } from "viem"
-
+import { type AbiParameter } from 'abitype'
 import { ValidationResponse } from "../types"
 
 export type ValidateBlockNumberRangeArgs = {
@@ -8,11 +7,12 @@ export type ValidateBlockNumberRangeArgs = {
 }
 
 export function validateBlockNumberRange(
+  abi: AbiParameter[],
   data: `0x${string}`,
   args: ValidateBlockNumberRangeArgs
 ): ValidationResponse {
   const decodedData = decodeAbiParameters(
-    blockNumberRange.args,
+    abi,
     data
   ) as bigint[]
   if (
@@ -43,5 +43,3 @@ export function validateBlockNumberRange(
     errors: reasons,
   }
 }
-
-export { blockNumberRange }

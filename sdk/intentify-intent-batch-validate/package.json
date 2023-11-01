@@ -24,10 +24,7 @@
     "test": "vitest"
   },
   "devDependencies": {
-    "@district-labs/intentify-abi-external": "workspace:*",
     "@district-labs/intentify-intent-batch": "workspace:*",
-    "@district-labs/intentify-core": "workspace:*",
-    "@district-labs/intentify-deployments": "workspace:*",
     "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
     "@types/node": "^20.5.2",
     "@types/react": "^18.2.0",
@@ -41,6 +38,8 @@
     "vitest": "^0.34.5"
   },
   "dependencies": {
+    "@district-labs/intentify-abi-external": "workspace:*",
+    "abitype": "^0.10.2",
     "viem": "^1.12.1"
   }
 }
