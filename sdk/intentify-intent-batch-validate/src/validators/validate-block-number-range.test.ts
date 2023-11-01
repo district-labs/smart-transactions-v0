@@ -9,7 +9,7 @@ import {
 test("valid blockNumberRange", () => {
   const data = encodeAbiParameters(blockNumberRange.args, [1, 10])
   const args = {
-    currentTimestamp: BigInt(5),
+    currentBlockNumber: BigInt(5),
   }
   const result = validateBlockNumberRange(data, args)
   expect(result.status).toBe(true)
@@ -18,7 +18,7 @@ test("valid blockNumberRange", () => {
 test("invalid minBlockNumber", () => {
   const data = encodeAbiParameters(blockNumberRange.args, [2, 10])
   const args = {
-    currentTimestamp: BigInt(1),
+    currentBlockNumber: BigInt(1),
   }
   const result = validateBlockNumberRange(data, args)
   expect(result.status).toBe(false)
@@ -33,7 +33,7 @@ test("invalid minBlockNumber", () => {
 test("invalid maxBlockNumber", () => {
   const data = encodeAbiParameters(blockNumberRange.args, [2, 10])
   const args = {
-    currentTimestamp: BigInt(12),
+    currentBlockNumber: BigInt(12),
   }
   const result = validateBlockNumberRange(data, args)
   expect(result.status).toBe(false)

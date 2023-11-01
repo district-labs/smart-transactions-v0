@@ -1,19 +1,24 @@
 import { erc20ABI } from "@district-labs/intentify-abi-external"
-import { erc20LimitOrder } from "@district-labs/intentify-intent-batch"
+import { erc20SwapSpotPriceExactTokenOut } from "@district-labs/intentify-intent-batch"
 import { decodeAbiParameters, type Address, type PublicClient } from "viem"
 
 import { ValidationResponse } from "../types"
 
-export type ValidateErc20LimitOrderArgs = {
+export type ValidateErc20SwapSpotPriceExactTokenOutArgs = {
   root: Address
 }
 
-export async function validateErc20LimitOrder(
+export async function validateErc20SwapSpotPriceExactTokenOut(
   data: `0x${string}`,
-  args: ValidateErc20LimitOrderArgs,
+  args: ValidateErc20SwapSpotPriceExactTokenOutArgs,
   publicClient: PublicClient
 ): Promise<ValidationResponse> {
-  const decodedData = decodeAbiParameters(erc20LimitOrder.args, data) as [
+  const decodedData = decodeAbiParameters(
+    erc20SwapSpotPriceExactTokenOut.args,
+    data
+  ) as [
+    `0x${string}`,
+    `0x${string}`,
     `0x${string}`,
     `0x${string}`,
     bigint,
@@ -39,17 +44,17 @@ export async function validateErc20LimitOrder(
     }
   }
 
-  if (decodedData[2] <= dataBalanceTokenOut) {
+  if (decodedData[4] <= dataBalanceTokenOut) {
     return {
       status: true,
     }
   }
 
   let reasons = []
-  if (decodedData[2] > dataBalanceTokenOut) {
+  if (decodedData[4] > dataBalanceTokenOut) {
     reasons.push({
       index: 2,
-      msg: `amountOut is ${decodedData[2]} but balanceOf is ${dataBalanceTokenOut}`,
+      msg: `amountOut is ${decodedData[4]} but balanceOf is ${dataBalanceTokenOut}`,
     })
   }
 
@@ -59,4 +64,4 @@ export async function validateErc20LimitOrder(
   }
 }
 
-export { erc20LimitOrder }
+export { erc20SwapSpotPriceExactTokenOut }
