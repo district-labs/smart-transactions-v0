@@ -1,8 +1,9 @@
 import { and, eq } from 'drizzle-orm';
+import type { PlanetScaleDatabase } from "drizzle-orm/planetscale-serverless";
+import { intentBatch, type DbIntentBatch } from "../";
+import * as schema from "../schema";
 
-import { db, intentBatch, type DbIntentBatch } from "../";
-
-export function newIntentBatch(intentBatchNew: DbIntentBatch) {
+export function newIntentBatch(db: PlanetScaleDatabase<typeof schema>, intentBatchNew: DbIntentBatch) {
   return db.insert(intentBatch).values(intentBatchNew)
 }
 
@@ -12,6 +13,7 @@ export type IntentBatchNew = Awaited<ReturnType<typeof newIntentBatch>>
 // Intent Batch Executed
 // ----------------------------------------------
 export function updateIntentBatchExecuted(
+  db: PlanetScaleDatabase<typeof schema>,
   intentBatchHash: string,
   {
     executedAt,
@@ -40,6 +42,7 @@ export type IntentBatchUpdateExecuted = Awaited<
 // Intent Batch Cancelled
 // ----------------------------------------------
 export function updateIntentBatchCancelled(
+  db: PlanetScaleDatabase<typeof schema>,
   intentBatchHash: string,
   {
     cancelledAt,
@@ -67,7 +70,7 @@ export type IntentBatchUpdateCancelled = Awaited<
 // ----------------------------------------------
 // Intent Batch Delete All
 // ----------------------------------------------
-export function dbDeleteAllIntentBatches() {
+export function dbDeleteAllIntentBatches(db: PlanetScaleDatabase<typeof schema>) {
   return db.delete(intentBatch)
 }
 

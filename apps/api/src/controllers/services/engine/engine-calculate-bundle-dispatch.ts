@@ -1,8 +1,8 @@
 import type { IntentBatchExecution } from "@district-labs/intentify-core";
+import { DBIntentBatchActiveItem, db, getSelectIntentBatchActiveQuery } from "@district-labs/intentify-database";
 import { NextFunction, Request, Response } from "express";
 import { BaseError, ContractFunctionRevertedError } from "viem";
 import { SUPPORTED_CHAINS } from "../../../constants";
-import { DBIntentBatchActiveItem, selectIntentBatchActiveQuery } from "../../../database/queries/intent-batch";
 import CustomError from "../../../utils/customError";
 import { convertIntentBigIntToNumber } from "./utils/convert-intent-bigint-to-number";
 import { generateIntentBatchExecutionWithHooksFromIntentBatchQuery } from "./utils/generate-intent-batch-execution-with-hooks-from-intent-batch-query";
@@ -37,7 +37,7 @@ export const engineCalculateAndDispatch = async (
 
 
 async function calculateAndDispatch(chainId: number) {
-    const intentBatchExecutionQuery = await selectIntentBatchActiveQuery.execute()
+    const intentBatchExecutionQuery = await getSelectIntentBatchActiveQuery(db).execute()
     if (intentBatchExecutionQuery.length === 0) return
   
     const intentBatchExecutionObjects = intentBatchExecutionQuery.map(

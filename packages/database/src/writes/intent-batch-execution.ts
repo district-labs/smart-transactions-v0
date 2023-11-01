@@ -1,7 +1,11 @@
 import { eq } from 'drizzle-orm';
-import { db, hooks, intentBatchExecution, type DbIntentBatchExecution } from "..";
+import type { PlanetScaleDatabase } from "drizzle-orm/planetscale-serverless";
+import { hooks, intentBatchExecution, type DbIntentBatchExecution } from "..";
+import * as schema from "../schema";
+
 
 export function newIntentExecutionBatch(
+  db: PlanetScaleDatabase<typeof schema>,
   intentBatchExecutionNew: DbIntentBatchExecution
 ) {
   return db.insert(intentBatchExecution).values(intentBatchExecutionNew)
@@ -12,6 +16,7 @@ export type IntentExecutionBatchNew = Awaited<
 >
 
 export function updateIntentExecutionBatch(
+  db: PlanetScaleDatabase<typeof schema>,
   id: number,
   ieb: DbIntentBatchExecution
 ) {
@@ -26,6 +31,7 @@ export type IntentExecutionBatchUpdate = Awaited<
 >
 
 interface CreateIntentExecutionBatchWithHooksParams {
+  db: PlanetScaleDatabase<typeof schema>,
   intentBatchHash: string
   executor: string
   hooksNew: {
@@ -35,6 +41,7 @@ interface CreateIntentExecutionBatchWithHooksParams {
 }
 
 export async function createIntentExecutionBatchWithHooks({
+  db,
   intentBatchHash,
   executor,
   hooksNew,
@@ -58,7 +65,7 @@ export async function createIntentExecutionBatchWithHooks({
 // ----------------------------------------------
 // Intent Batch Delete All
 // ----------------------------------------------
-export function dbDeleteAllDbIntentBatchExecutions() {
+export function dbDeleteAllDbIntentBatchExecutions(db: PlanetScaleDatabase<typeof schema>,) {
   return db.delete(intentBatchExecution)
 }
 
