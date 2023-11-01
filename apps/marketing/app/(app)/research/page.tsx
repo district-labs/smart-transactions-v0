@@ -4,7 +4,7 @@ export default function ResearchPage() {
       <div className="content container max-w-screen-md pt-10 lg:pt-20">
         <h3 className="text-3xl font-extrabold">Research</h3>
         <p className="">
-         How the District Finance Protocol works.
+          Coming Soon...
         </p>
       </div>
     </>
