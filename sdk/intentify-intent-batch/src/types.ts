@@ -1,5 +1,10 @@
+import {type PublicClient} from 'viem' 
 import { AbiParameter } from 'abitype' 
 import { ChainToAddress } from "@district-labs/intentify-deployments"
+
+export type ChainToPublicClient = {
+  [key: number]: PublicClient
+}
 
 export type IntentModuleAbi = {
   name: string

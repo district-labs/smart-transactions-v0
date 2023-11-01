@@ -5,21 +5,21 @@ import {
   validateTimestampRange,
 } from "./validate-timestamp-range"
 
-test("valid timestamp range", () => {
+test("valid timestamp range", async () => {
   const data = encodeAbiParameters(timestampRange.abi, [1, 10])
   const args = {
     currentTimestamp: BigInt(5),
   }
-  const result = validateTimestampRange(timestampRange.abi, data, args)
+  const result = await validateTimestampRange(timestampRange.abi, data, args)
   expect(result.status).toBe(true)
 })
 
-test("invalid minTimestamp", () => {
+test("invalid minTimestamp", async () => {
   const data = encodeAbiParameters(timestampRange.abi, [2, 10])
   const args = {
     currentTimestamp: BigInt(1),
   }
-  const result = validateTimestampRange(timestampRange.abi, data, args)
+  const result = await validateTimestampRange(timestampRange.abi, data, args)
   expect(result.status).toBe(false)
   expect(result.errors).toEqual([
     {
@@ -29,12 +29,12 @@ test("invalid minTimestamp", () => {
   ])
 })
 
-test("invalid maxTimestamp", () => {
+test("invalid maxTimestamp", async () => {
   const data = encodeAbiParameters(timestampRange.abi, [2, 10])
   const args = {
     currentTimestamp: BigInt(12),
   }
-  const result = validateTimestampRange(timestampRange.abi, data, args)
+  const result = await validateTimestampRange(timestampRange.abi, data, args)
   expect(result.status).toBe(false)
   expect(result.errors).toEqual([
     {

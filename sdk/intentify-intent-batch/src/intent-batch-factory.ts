@@ -7,13 +7,15 @@ import {
 } from "viem"
 
 import { IntentBatchManager } from "./intent-batch-manager"
-import { IntentModule } from "./types"
+import { ChainToPublicClient, IntentModule } from "./types"
 
 export class IntentBatchFactory {
   modules: IntentModule[]
+  clients: ChainToPublicClient | undefined
 
-  constructor(modules: IntentModule[]) {
+  constructor(modules: IntentModule[], clients?: ChainToPublicClient) {
     this.modules = modules
+    this.clients = clients
   }
 
   getModule(name: string) {
@@ -63,16 +65,33 @@ export class IntentBatchFactory {
     return decodeAbiParameters(args, data)
   }
   
-  validate(intentBatch: IntentBatch, validationArgs: {
+  async validate(intentBatch: IntentBatch, chainId: number, validationArgs?: {
     name: string,
     args: any
   }[]) {
-    return intentBatch.intents.map((intent) => {
+    const results = intentBatch.intents.map(async (intent) => {
       const module = this.getModuleByAddress(intent.target)
       if(module.validate) {
-        const intentToValidate = validationArgs.find(args => args.name == module.name)
-        console.log(intentToValidate, 'args')
-        const validation = module.validate(module.abi, intent.data, intentToValidate?.args)
+        let validationArguments = {}
+        const intentToValidate = validationArgs?.find(args => args.name == module.name)
+        if(this.clients) {
+          const publicClient = this?.clients[chainId]
+         if(!publicClient && !intentToValidate)  {
+          throw new Error(`Provide publicClient or validation arguments for ${module.name}`)
+         }
+          validationArguments = {
+            ...intentToValidate?.args,
+            publicClient
+          }
+        } else {
+          if(!intentToValidate)  {
+            throw new Error(`Provide validation arguments for ${module.name}`)
+          }
+          validationArguments = {
+            ...intentToValidate?.args
+          }
+        }
+        const validation = await module.validate(module.abi, intent.data, validationArguments)
         return {
           name: module.name,
           results: validation
@@ -84,6 +103,7 @@ export class IntentBatchFactory {
         }
       }
     })
+    return Promise.all(results)
   }
 
   decodeIntentBatch(intentBatch: IntentBatch) {
