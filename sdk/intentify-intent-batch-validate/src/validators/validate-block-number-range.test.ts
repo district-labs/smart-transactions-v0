@@ -1,25 +1,35 @@
 import { encodeAbiParameters } from "viem"
 import { expect, test } from "vitest"
-import { blockNumberRange } from '@district-labs/intentify-intent-batch' 
 import {
   validateBlockNumberRange,
 } from "./validate-block-number-range"
 
-test("valid blockNumberRange", () => {
-  const data = encodeAbiParameters(blockNumberRange.abi, [1, 10])
+const abi = [
+  {
+    name: "start",
+    type: "uint128",
+  },
+  {
+    name: "end",
+    type: "uint128",
+  },
+]
+
+test("valid blockNumberRange", async () => {
+  const data = encodeAbiParameters(abi, [1, 10])
   const args = {
     currentBlockNumber: BigInt(5),
   }
-  const result = validateBlockNumberRange(blockNumberRange.abi, data, args)
+  const result = await validateBlockNumberRange(abi, data, args)
   expect(result.status).toBe(true)
 })
 
-test("invalid minBlockNumber", () => {
-  const data = encodeAbiParameters(blockNumberRange.abi, [2, 10])
+test("invalid minBlockNumber", async () => {
+  const data = encodeAbiParameters(abi, [2, 10])
   const args = {
     currentBlockNumber: BigInt(1),
   }
-  const result = validateBlockNumberRange(blockNumberRange.abi, data, args)
+  const result = await validateBlockNumberRange(abi, data, args)
   expect(result.status).toBe(false)
   expect(result.errors).toEqual([
     {
@@ -29,12 +39,12 @@ test("invalid minBlockNumber", () => {
   ])
 })
 
-test("invalid maxBlockNumber", () => {
-  const data = encodeAbiParameters(blockNumberRange.abi, [2, 10])
+test("invalid maxBlockNumber", async () => {
+  const data = encodeAbiParameters(abi, [2, 10])
   const args = {
     currentBlockNumber: BigInt(12),
   }
-  const result = validateBlockNumberRange(blockNumberRange.abi, data, args)
+  const result = await validateBlockNumberRange(abi, data, args)
   expect(result.status).toBe(false)
   expect(result.errors).toEqual([
     {

@@ -1348,9 +1348,6 @@ importers:
         specifier: ^1.12.1
         version: 1.16.6(typescript@5.0.4)(zod@3.22.4)
     devDependencies:
-      '@district-labs/intentify-intent-batch':
-        specifier: workspace:*
-        version: link:../intentify-intent-batch
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.1.0
         version: 4.1.1(prettier@3.0.3)
