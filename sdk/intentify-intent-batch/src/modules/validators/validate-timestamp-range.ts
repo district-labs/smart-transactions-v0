@@ -1,7 +1,7 @@
 import { type AbiParameter } from 'abitype'
 import { decodeAbiParameters, type PublicClient } from "viem"
 
-import { ValidationResponse } from "../types"
+import { ValidationResponse } from "../../types"
 
 export type ValidateTimestampRangeArgs = {
   publicClient?: PublicClient

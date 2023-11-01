@@ -1,5 +1,6 @@
 import { TimestampRangeIntent } from "@district-labs/intentify-deployments"
-import {validateTimestampRange} from '@district-labs/intentify-intent-batch-validate' 
+import { validateTimestampRange } from "./validators"
+
 export const timestampRange = {
   name: "TimestampRange",
   deployed: TimestampRangeIntent,

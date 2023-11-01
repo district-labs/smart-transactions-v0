@@ -1,5 +1,5 @@
 import { Erc20SwapSpotPriceExactTokenOutIntent } from "@district-labs/intentify-deployments"
-import { validateErc20SwapSpotPriceExactTokenOut } from '@district-labs/intentify-intent-batch-validate' 
+import { validateErc20SwapSpotPriceExactTokenOut } from "./validators"
 export const erc20SwapSpotPriceExactTokenOut = {
   name: "Erc20SwapSpotPriceExactTokenOut",
   deployed: Erc20SwapSpotPriceExactTokenOutIntent,

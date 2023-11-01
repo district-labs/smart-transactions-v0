@@ -1,6 +1,6 @@
 import { decodeAbiParameters, type PublicClient } from "viem"
 import { type AbiParameter } from 'abitype'
-import { ValidationResponse } from "../types"
+import { ValidationResponse } from "../../types"
 
 export type ValidateBlockNumberRangeArgs = {
   currentBlockNumber?: bigint

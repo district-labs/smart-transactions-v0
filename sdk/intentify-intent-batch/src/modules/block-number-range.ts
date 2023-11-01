@@ -1,5 +1,5 @@
 import { BlockNumberIntent } from "@district-labs/intentify-deployments"
-import {validateBlockNumberRange} from '@district-labs/intentify-intent-batch-validate'
+import { validateBlockNumberRange } from "./validators"
 
 export const blockNumberRange = {
   name: "BlockNumberRange",

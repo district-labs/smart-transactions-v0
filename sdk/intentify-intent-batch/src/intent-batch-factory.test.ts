@@ -1,8 +1,6 @@
-import { TimestampRangeIntent } from "@district-labs/intentify-deployments"
 import { expect, test } from "vitest"
 import { mainnet } from "viem/chains"
 import { IntentBatchFactory } from "./intent-batch-factory"
-import { IntentModule } from "./types"
 import { intentModulesDefault } from "./intent-modules-default"
 import { createPublicClient, http } from "viem"
 
@@ -10,23 +8,6 @@ const client = createPublicClient({
   chain: mainnet,
   transport: http(),
 })
-
-const modules: IntentModule[] = [
-  {
-    name: "TimestampRange",
-    deployed: TimestampRangeIntent,
-    abi: [
-      {
-        name: "start",
-        type: "uint128",
-      },
-      {
-        name: "end",
-        type: "uint128",
-      },
-    ],
-  },
-]
 
 test("encode module arguments from intent batch factory", () => {
   const intentBatchFactory = new IntentBatchFactory(intentModulesDefault)

@@ -1,5 +1,5 @@
 import { AaveLeverageLongIntent } from "@district-labs/intentify-deployments"
-import {validateAaveLeverageLong} from '@district-labs/intentify-intent-batch-validate' 
+import { validateAaveLeverageLong } from "./validators"
 
 export const aaveLeverageLong = {
   name: "AaveLeverageLong",

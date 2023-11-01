@@ -1,5 +1,6 @@
 import { Erc20LimitOrderIntent } from "@district-labs/intentify-deployments"
-import { validateErc20LimitOrder } from '@district-labs/intentify-intent-batch-validate' 
+import { validateErc20LimitOrder } from "./validators"
+
 export const erc20LimitOrder = {
   name: "Erc20LimitOrder",
   deployed: Erc20LimitOrderIntent,

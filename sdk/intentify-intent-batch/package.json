@@ -37,9 +37,9 @@
     "vitest": "^0.34.5"
   },
   "dependencies": {
+    "@district-labs/intentify-abi-external": "workspace:*",
     "@district-labs/intentify-core": "workspace:*",
     "@district-labs/intentify-deployments": "workspace:*",
-    "@district-labs/intentify-intent-batch-validate": "workspace:*",
     "abitype": "^0.10.2",
     "viem": "^1.12.1"
   }

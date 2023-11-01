@@ -18,3 +18,11 @@ export type IntentModule = {
   validate?: (abi: AbiParameter[], data: `0x${string}`, args: any) => any
   abi: IntentModuleAbi[]
 }
+
+export type ValidationResponse = {
+  status: boolean
+  errors?: {
+    index: number
+    msg: string
+  }[]
+}

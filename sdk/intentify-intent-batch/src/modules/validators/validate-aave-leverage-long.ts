@@ -2,7 +2,7 @@ import { aaveV3PoolABI } from "@district-labs/intentify-abi-external"
 import { decodeAbiParameters, type Address, type PublicClient } from "viem"
 import { type AbiParameter } from 'abitype'
 
-import { ValidationResponse } from "../types"
+import { ValidationResponse } from "../../types"
 
 export type ValidateAaveLeverageLongArgs = {
   root: Address

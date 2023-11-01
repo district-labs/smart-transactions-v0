@@ -1,25 +1,19 @@
 import { erc20ABI } from "@district-labs/intentify-abi-external"
-import { type AbiParameter } from 'abitype'
 import { decodeAbiParameters, type Address, type PublicClient } from "viem"
+import { type AbiParameter } from 'abitype'
+import { ValidationResponse } from "../../types"
 
-import { ValidationResponse } from "../types"
-
-export type ValidateErc20SwapSpotPriceExactTokenOutArgs = {
+export type ValidateErc20LimitOrderArgs = {
   root: Address
   publicClient: PublicClient
 }
 
-export async function validateErc20SwapSpotPriceExactTokenOut(
+export async function validateErc20LimitOrder(
   abi: AbiParameter[],
   data: `0x${string}`,
-  args: ValidateErc20SwapSpotPriceExactTokenOutArgs,
+  args: ValidateErc20LimitOrderArgs,
 ): Promise<ValidationResponse> {
-  const decodedData = decodeAbiParameters(
-    abi,
-    data
-  ) as [
-    `0x${string}`,
-    `0x${string}`,
+  const decodedData = decodeAbiParameters(abi, data) as [
     `0x${string}`,
     `0x${string}`,
     bigint,
@@ -45,17 +39,17 @@ export async function validateErc20SwapSpotPriceExactTokenOut(
     }
   }
 
-  if (decodedData[4] <= dataBalanceTokenOut) {
+  if (decodedData[2] <= dataBalanceTokenOut) {
     return {
       status: true,
     }
   }
 
   let reasons = []
-  if (decodedData[4] > dataBalanceTokenOut) {
+  if (decodedData[2] > dataBalanceTokenOut) {
     reasons.push({
       index: 2,
-      msg: `amountOut is ${decodedData[4]} but balanceOf is ${dataBalanceTokenOut}`,
+      msg: `amountOut is ${decodedData[2]} but balanceOf is ${dataBalanceTokenOut}`,
     })
   }
 
