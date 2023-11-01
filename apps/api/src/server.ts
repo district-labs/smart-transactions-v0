@@ -1,15 +1,16 @@
-import 'dotenv/config'
-import express from "express";
 import cors from "cors";
-import authRoutes from "./routes/auth";
-import profileUserRoutes from "./routes/user/profile";
+import 'dotenv/config';
+import express from "express";
+import { errorHandler } from "./middleware/errorHandler";
 import intentBatchAdminRoutes from "./routes/admin/intent-batch";
-import intentBatchUserRoutes from "./routes/user/intent-batch";
-import strategyUserRoutes from "./routes/user/strategy";
+import authRoutes from "./routes/auth";
+import serviceAxiomRoutes from "./routes/services/axiom";
 import serviceEngineRoutes from "./routes/services/engine";
 import serviceEventsRoutes from "./routes/services/events";
 import serviceExecuteRoutes from "./routes/services/execution";
-import { errorHandler } from "./middleware/errorHandler";
+import intentBatchUserRoutes from "./routes/user/intent-batch";
+import profileUserRoutes from "./routes/user/profile";
+import strategyUserRoutes from "./routes/user/strategy";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -35,6 +36,7 @@ app.use("/admin/intent-batch", intentBatchAdminRoutes);
 app.use("/service", serviceEngineRoutes);
 app.use("/service", serviceEventsRoutes);
 app.use("/service", serviceExecuteRoutes);
+app.use("/service", serviceAxiomRoutes);
 
 // API documentation endpoint
 app.get("/docs", (req, res) => {
