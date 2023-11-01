@@ -1,4 +1,3 @@
-import { strategies } from "@/db/schema"
 import { z } from "zod"
 
 export const strategySchema = z.object({
@@ -6,9 +5,6 @@ export const strategySchema = z.object({
     message: "Strategy name must be at least 3 characters.",
   }),
   description: z.string().optional(),
-  category: z.enum(strategies.category.enumValues, {
-    required_error: "Must be a valid category",
-  }),
   assets: z.number(),
   performanceFee: z.number(),
   platformFee: z.number(),

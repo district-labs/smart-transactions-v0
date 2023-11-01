@@ -1,8 +1,5 @@
-import { eq } from "drizzle-orm"
-
-import { db } from ".."
-import type { DbIntentBatchExecution } from "../schema"
-import { hooks, intentBatchExecution } from "../schema"
+import { eq } from 'drizzle-orm';
+import { db, hooks, intentBatchExecution, type DbIntentBatchExecution } from "..";
 
 export function newIntentExecutionBatch(
   intentBatchExecutionNew: DbIntentBatchExecution

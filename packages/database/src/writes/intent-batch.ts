@@ -1,32 +1,12 @@
-import { eq } from "drizzle-orm"
+import { and, eq } from 'drizzle-orm';
 
-import { db } from ".."
-import type { DbIntentBatch } from "../schema"
-import { intentBatch } from "../schema"
+import { db, intentBatch, type DbIntentBatch } from "../";
 
 export function newIntentBatch(intentBatchNew: DbIntentBatch) {
   return db.insert(intentBatch).values(intentBatchNew)
 }
 
 export type IntentBatchNew = Awaited<ReturnType<typeof newIntentBatch>>
-
-// ----------------------------------------------
-// Update Intent Batch from ID
-// ----------------------------------------------
-
-export function updateIntentBatchFromDbId(
-  intentBatchHash: string,
-  intentBatchNew: DbIntentBatch
-) {
-  return db
-    .update(intentBatch)
-    .set(intentBatchNew)
-    .where(eq(intentBatch.intentBatchHash, intentBatchHash))
-}
-
-export type IntentBatchUpdateFromDbId = Awaited<
-  ReturnType<typeof updateIntentBatchFromDbId>
->
 
 // ----------------------------------------------
 // Intent Batch Executed
@@ -36,9 +16,11 @@ export function updateIntentBatchExecuted(
   {
     executedAt,
     executedTxHash,
+    chainId,
   }: {
     executedAt: Date
     executedTxHash: string
+    chainId: number
   }
 ) {
   return db
@@ -47,7 +29,7 @@ export function updateIntentBatchExecuted(
       executedAt,
       executedTxHash,
     })
-    .where(eq(intentBatch.intentBatchHash, intentBatchHash))
+    .where(and(eq(intentBatch.intentBatchHash, intentBatchHash), eq(intentBatch.chainId, chainId)))
 }
 
 export type IntentBatchUpdateExecuted = Awaited<
@@ -62,9 +44,11 @@ export function updateIntentBatchCancelled(
   {
     cancelledAt,
     cancelledTxHash,
+    chainId,
   }: {
     cancelledAt: Date
     cancelledTxHash: string
+    chainId: number
   }
 ) {
   return db
@@ -73,7 +57,7 @@ export function updateIntentBatchCancelled(
       cancelledAt,
       cancelledTxHash,
     })
-    .where(eq(intentBatch.intentBatchHash, intentBatchHash))
+    .where(and(eq(intentBatch.intentBatchHash, intentBatchHash), eq(intentBatch.chainId, chainId)))
 }
 
 export type IntentBatchUpdateCancelled = Awaited<

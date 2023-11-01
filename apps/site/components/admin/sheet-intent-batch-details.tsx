@@ -1,5 +1,4 @@
-import * as React from "react"
-import type { IntentBatchQuery } from "@/db/queries/intent-batch"
+import type { IntentBatchQuery } from "@district-labs/intentify-database"
 
 import {
   Sheet,

@@ -1,5 +1,6 @@
-import type { DBIntentBatchActiveItem } from "@/db/queries/intent-batch"
+import type { DBIntentBatchActiveItem } from "@district-labs/intentify-database"
 
+import { TimeFromDate } from "@/components/shared/time-from-date"
 import {
   Table,
   TableBody,
@@ -8,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { TimeFromDate } from "@/components/shared/time-from-date"
 
 import { Address } from "../blockchain/address"
 import { SheetIntentBatchDetails } from "./sheet-intent-batch-details"

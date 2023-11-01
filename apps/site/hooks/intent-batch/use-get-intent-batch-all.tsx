@@ -1,5 +1,5 @@
-import type { IntentBatchQuery } from "@/db/queries/intent-batch"
 import { useGetSafeAddress } from "@district-labs/intentify-core-react"
+import type { IntentBatchQuery } from "@district-labs/intentify-database"
 import { useQuery } from "@tanstack/react-query"
 
 export function useGetIntentBatchFind() {

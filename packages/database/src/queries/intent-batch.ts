@@ -1,4 +1,4 @@
-import { db } from "@district-labs/intentify-database"
+import { db } from ".."
 
 // ----------------------------------------
 // Select All Intent Batch Query
@@ -6,6 +6,24 @@ import { db } from "@district-labs/intentify-database"
 export const selectAllIntentBatchQuery = db.query.intentBatch.findMany({
   with: {
     intents: true,
+    intentBatchExecution: {
+      with: {
+        hooks: true,
+      },
+    },
+  },
+})
+
+// ----------------------------------------
+// Select All Valid Intent Batch Query
+// ----------------------------------------
+export const selectAllValidIntentBatchQuery = db.query.intentBatch.findMany({
+  with: {
+    intents: {
+      where(fields, {eq}) {
+        return eq(fields.isInvalid, false)
+      },
+    },
     intentBatchExecution: {
       with: {
         hooks: true,
