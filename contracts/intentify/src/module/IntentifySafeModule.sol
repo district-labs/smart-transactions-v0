@@ -9,7 +9,7 @@ import {
     EIP712DOMAIN_TYPEHASH,
     TypesAndDecoders
 } from "../TypesAndDecoders.sol";
-import {console2} from "forge-std/console2.sol";
+import { console2 } from "forge-std/console2.sol";
 import { SafeMinimal, Enum } from "../interfaces/SafeMinimal.sol";
 import { IntentAbstract } from "../abstracts/IntentAbstract.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
@@ -121,7 +121,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Rever
     /// @param intentBatch The intent batch to be cancelled.
     function cancelIntentBatch(IntentBatch memory intentBatch) external nonReentrant(intentBatch.root) {
         // The signer must be the intent batch root
-        if(msg.sender != intentBatch.root) revert OnlyIntentBatchRootCanCancel();
+        if (msg.sender != intentBatch.root) revert OnlyIntentBatchRootCanCancel();
 
         bytes32 digest = getIntentBatchTypedDataHash(intentBatch);
         if (cancelledIntentBundles[msg.sender][digest]) revert IntentAlreadyCancelled();
