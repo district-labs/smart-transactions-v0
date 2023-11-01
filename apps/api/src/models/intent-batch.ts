@@ -1,38 +1,63 @@
 import type { DbIntentBatch } from "@district-labs/intentify-database";
-import { and, db, eq, intentBatch, intents } from "@district-labs/intentify-database";
+import {
+  and,
+  db,
+  eq,
+  intentBatch,
+  intents,
+} from "@district-labs/intentify-database";
+
+interface GetIntentBatchesFromDBFilter
+  extends Partial<Omit<DbIntentBatch, "id" | "updatedAt">> {
+  intentBatchesValidity?: "valid" | "invalid" | "all";
+}
 
 /**
- * Fetches valid IntentBatches from the database based on the provided filters.
+ * Fetches IntentBatches from the database based on the provided filters.
  * @param filters - Optional filters to apply to the query.
  * @returns - Array of IntentBatch matching the filters.
  */
-export const getValidIntentBatchesFromDB = async (
-  filters: Partial<Omit<DbIntentBatch, "id" | "updatedAt">>
+export const getIntentBatchesFromDB = async (
+  filters: GetIntentBatchesFromDBFilter,
 ): Promise<DbIntentBatch[]> => {
+  const { root, strategyId, intentBatchesValidity } = filters;
 
-  let filtersToApply: any = []
-  if(filters.root) {
-    filtersToApply.push(eq(intentBatch.root, filters.root))
+  let filtersToApply: any = [];
+  if (root) {
+    filtersToApply.push(eq(intentBatch.root, root));
   }
-  if(filters.strategyId) {
-    filtersToApply.push(eq(intentBatch.strategyId, filters.strategyId))
+  if (strategyId) {
+    filtersToApply.push(eq(intentBatch.strategyId, strategyId));
   }
+
 
   return db.query.intentBatch.findMany({
     where: !filtersToApply ? undefined : () => and(...filtersToApply),
     with: {
-      intents: {
-        where(fields, {eq}) {
-          return eq(fields.isInvalid, false)
-        },
-      },
+      intents:
+        // Retrieve all intents if no filter of "all" is provided
+        intentBatchesValidity === "all" || intentBatchesValidity === undefined
+          ? true
+          : // Retrieve only intent batches with valid intents
+          intentBatchesValidity === "valid"
+          ? {
+              where(fields, { eq }) {
+                return eq(fields.isInvalid, false);
+              },
+            }
+          : // Retrieve only intent batches with at least one invalid intent
+            {
+              where(fields, { eq }) {
+                return eq(fields.isInvalid, true);
+              },
+            },
       intentBatchExecution: {
         with: {
           hooks: true,
         },
       },
     },
-  })
+  });
 };
 
 /**
@@ -40,8 +65,13 @@ export const getValidIntentBatchesFromDB = async (
  * @param userId - The ID of the IntentBatch to fetch.
  * @returns - IntentBatch matching the provided ID.
  */
-export const getIntentBatchFromDB = async (intentBatchId: string): Promise<DbIntentBatch[]> => {
-  return await db.select().from(intentBatch).where(eq(intentBatch.intentBatchHash, intentBatchId));
+export const getIntentBatchFromDB = async (
+  intentBatchId: string,
+): Promise<DbIntentBatch[]> => {
+  return await db
+    .select()
+    .from(intentBatch)
+    .where(eq(intentBatch.intentBatchHash, intentBatchId));
 };
 
 /**
@@ -69,7 +99,6 @@ export const createIntentBatchInDB = async ({
   intentsDecoded: any;
   strategyId: string;
 }): Promise<Response> => {
-
   await db.transaction(async (tx: any) => {
     // Insert the intent batch into the database
     await tx.insert(intentBatch).values({
@@ -81,8 +110,8 @@ export const createIntentBatchInDB = async ({
       // TODO: Make this dynamic
       strategyId: strategyId,
       userId: userId,
-    })
-    
+    });
+
     // Insert the decoded intents into the database
     await tx.insert(intents).values(
       intentsDecoded.map((intentNew: any) => ({
@@ -92,10 +121,9 @@ export const createIntentBatchInDB = async ({
         target: intentNew.target,
         data: intentNew.data,
         intentBatchId: intentBatchHash,
-      }))
-    )
-  })
+      })),
+    );
+  });
 
-  return new Response(JSON.stringify({ ok: true }))
+  return new Response(JSON.stringify({ ok: true }));
 };
-

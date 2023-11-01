@@ -8,7 +8,7 @@ import { ironOptions } from "../../iron-session";
 import {
   createIntentBatchInDB,
   getIntentBatchFromDB,
-  getValidIntentBatchesFromDB
+  getIntentBatchesFromDB
 } from "../../models/intent-batch";
 import CustomError from "../../utils/customError";
 
@@ -28,7 +28,7 @@ export const getIntentBatches = async (
       return response.status(400).json({ error: "Missing root parameter" });
     }
     
-    const intentBatches = await getValidIntentBatchesFromDB(filters);
+    const intentBatches = await getIntentBatchesFromDB(filters);
 
     return response.status(200).json({ data: intentBatches });
   } catch (error) {
