@@ -2,15 +2,15 @@
 
 import React from "react"
 
+import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import useScroll from "@/hooks/use-scroll"
 import { NavigationCore } from "@/components/layouts/navigation-core"
 import { NavigationPanel } from "@/components/layouts/navigation-panel"
 
-import { NavigationAccount } from "./navigation-account"
 import { Icons } from "../icons"
-import { siteConfig } from "@/config/site"
 import { LinkComponent } from "../shared/link-component"
+import { NavigationAccount } from "./navigation-account"
 
 export default function Header() {
   const scrolled = useScroll(0)
@@ -25,10 +25,10 @@ export default function Header() {
       <div className=" flex h-16 items-center justify-between px-10 sm:flex-row">
         <div className=" flex-1 justify-end sm:flex sm:justify-start">
           <LinkComponent href="/" className="flex items-center">
-              <Icons.logo className="mr-2 h-8 w-8" />
-              <span className="font-bold">{siteConfig.name}</span>
+            <Icons.logo className="mr-2 h-8 w-8" />
+            <span className="font-bold">{siteConfig.name}</span>
           </LinkComponent>
-          <div className='hidden md:inline-block md:ml-6'>
+          <div className="hidden md:ml-6 md:inline-block">
             <NavigationCore />
           </div>
         </div>

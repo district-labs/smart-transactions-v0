@@ -7,7 +7,6 @@ import { Provider as BalancerProvider } from "react-wrap-balancer"
 
 import { TooltipProvider } from "@/components/ui/tooltip"
 
-
 interface RootProviderProps {
   children: React.ReactNode
 }
@@ -24,9 +23,7 @@ export default function RootProvider({ children }: RootProviderProps) {
     >
       <QueryClientProvider client={queryClient}>
         <BalancerProvider>
-          <TooltipProvider>
-            {children}
-          </TooltipProvider>
+          <TooltipProvider>{children}</TooltipProvider>
         </BalancerProvider>
         <ReactQueryDevtools />
       </QueryClientProvider>

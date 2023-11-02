@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@district-labs/ui-react"
 import { Wallet2 } from "lucide-react"
 
+import { siteConfig } from "@/config/site"
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -12,7 +13,6 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import { siteConfig } from "@/config/site"
 
 export function NavigationAccount() {
   return (
