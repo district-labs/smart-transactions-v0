@@ -40,3 +40,9 @@
 [submodule "contracts/intentify/lib/chainlink"]
 	path = contracts/intentify/lib/chainlink
 	url = https://github.com/smartcontractkit/chainlink
+[submodule "contracts/intentify/lib/makerdao/sdai"]
+	path = contracts/intentify/lib/makerdao/sdai
+	url = https://github.com/makerdao/sdai
+[submodule "contracts/intentify/lib/compound-finance"]
+	path = contracts/intentify/lib/compound-finance
+	url = https://github.com/compound-finance/comet
