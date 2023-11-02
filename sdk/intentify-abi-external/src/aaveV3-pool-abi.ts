@@ -1718,4 +1718,4 @@ export const aaveV3PoolABI = [
     stateMutability: "nonpayable",
     type: "function",
   },
-];
+] as const;

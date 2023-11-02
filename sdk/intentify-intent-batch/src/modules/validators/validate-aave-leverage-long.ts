@@ -1,8 +1,8 @@
 import { aaveV3PoolABI } from "@district-labs/intentify-abi-external"
 import { decodeAbiParameters, type Address, type PublicClient } from "viem"
-import { type AbiParameter } from 'abitype'
 
 import { ValidationResponse } from "../../types"
+import type { AaveLeverageLongIntentEncodeABI } from "../aave-leverage-long"
 
 export type ValidateAaveLeverageLongArgs = {
   root: Address
@@ -11,24 +11,18 @@ export type ValidateAaveLeverageLongArgs = {
 }
 
 export async function validateAaveLeverageLong(
-  abi: AbiParameter[],
+  abi: AaveLeverageLongIntentEncodeABI,
   data: `0x${string}`,
-  args: ValidateAaveLeverageLongArgs,
+  args: ValidateAaveLeverageLongArgs
 ): Promise<ValidationResponse> {
-  const decodedData = decodeAbiParameters(abi, data) as [
-    `0x${string}`,
-    `0x${string}`,
-    bigint,
-    bigint,
-    bigint,
-  ]
+  const decodedData = decodeAbiParameters(abi, data)
 
-  const dataUserAccountData = (await args.publicClient.readContract({
+  const dataUserAccountData = await args.publicClient.readContract({
     address: args.aaveV3Pool,
     abi: aaveV3PoolABI,
     functionName: "getUserAccountData",
     args: [args.root],
-  })) as bigint[]
+  })
 
   const dataMinHealthFactor = dataUserAccountData[5]
 

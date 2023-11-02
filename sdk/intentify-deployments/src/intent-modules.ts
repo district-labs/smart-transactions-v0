@@ -33,7 +33,7 @@ export const Erc20SwapSpotPriceExactTokenOutIntent: ChainToAddress = {
   31337: "0x400000000000000000000000000000000000dEaD",
 };
 
-export const Erc20TipPriceIntent: ChainToAddress = {
+export const Erc20TipIntent: ChainToAddress = {
   5: "0x500000000000000000000000000000000000dEaD",
   31337: "0x500000000000000000000000000000000000dEaD",
 };
@@ -41,6 +41,11 @@ export const Erc20TipPriceIntent: ChainToAddress = {
 export const Erc20LimitOrderIntent: ChainToAddress = {
   5: "0x600000000000000000000000000000000000dEaD",
   31337: "0x600000000000000000000000000000000000dEaD",
+};
+
+export const Erc20RebalanceIntent: ChainToAddress = {
+  5: "0x000000000000000000000000000000000000dEaD",
+  31337: "0x000000000000000000000000000000000000dEaD",
 };
 
 

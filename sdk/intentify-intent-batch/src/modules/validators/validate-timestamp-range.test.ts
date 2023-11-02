@@ -1,23 +1,17 @@
 import { encodeAbiParameters } from "viem"
 import { expect, test } from "vitest"
+
+import { timestampRange } from "../timestamp-range"
 import {
   validateTimestampRange,
+  type ValidateTimestampRangeArgs,
 } from "./validate-timestamp-range"
 
-const abi  = [
-  {
-    name: "start",
-    type: "uint128",
-  },
-  {
-    name: "end",
-    type: "uint128",
-  },
-]
+const abi = timestampRange.abi
 
 test("valid timestamp range", async () => {
-  const data = encodeAbiParameters(abi, [1, 10])
-  const args = {
+  const data = encodeAbiParameters(abi, [BigInt(1), BigInt(10)])
+  const args: ValidateTimestampRangeArgs = {
     currentTimestamp: BigInt(5),
   }
   const result = await validateTimestampRange(abi, data, args)
@@ -25,8 +19,8 @@ test("valid timestamp range", async () => {
 })
 
 test("invalid minTimestamp", async () => {
-  const data = encodeAbiParameters(abi, [2, 10])
-  const args = {
+  const data = encodeAbiParameters(abi, [BigInt(2), BigInt(10)])
+  const args: ValidateTimestampRangeArgs = {
     currentTimestamp: BigInt(1),
   }
   const result = await validateTimestampRange(abi, data, args)
@@ -40,8 +34,8 @@ test("invalid minTimestamp", async () => {
 })
 
 test("invalid maxTimestamp", async () => {
-  const data = encodeAbiParameters(abi, [2, 10])
-  const args = {
+  const data = encodeAbiParameters(abi, [BigInt(2), BigInt(10)])
+  const args: ValidateTimestampRangeArgs = {
     currentTimestamp: BigInt(12),
   }
   const result = await validateTimestampRange(abi, data, args)
