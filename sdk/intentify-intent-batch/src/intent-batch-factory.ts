@@ -64,42 +64,54 @@ export class IntentBatchFactory {
   decode(args: any[], data: `0x${string}`) {
     return decodeAbiParameters(args, data)
   }
-  
-  async validate(intentBatch: IntentBatch, chainId: number, validationArgs?: {
-    name: string,
-    args: any
-  }[]) {
+
+  async validate(
+    intentBatch: IntentBatch,
+    chainId: number,
+    validationArgs?: {
+      name: string
+      args: any
+    }[]
+  ) {
     const results = intentBatch.intents.map(async (intent) => {
       const module = this.getModuleByAddress(intent.target)
-      if(module.validate) {
+      if (module.validate) {
         let validationArguments = {}
-        const intentToValidate = validationArgs?.find(args => args.name == module.name)
-        if(this.clients) {
+        const intentToValidate = validationArgs?.find(
+          (args) => args.name == module.name
+        )
+        if (this.clients) {
           const publicClient = this?.clients[chainId]
-         if(!publicClient && !intentToValidate)  {
-          throw new Error(`Provide publicClient or validation arguments for ${module.name}`)
-         }
+          if (!publicClient && !intentToValidate) {
+            throw new Error(
+              `Provide publicClient or validation arguments for ${module.name}`
+            )
+          }
           validationArguments = {
             ...intentToValidate?.args,
-            publicClient
+            publicClient,
           }
         } else {
-          if(!intentToValidate)  {
+          if (!intentToValidate) {
             throw new Error(`Provide validation arguments for ${module.name}`)
           }
           validationArguments = {
-            ...intentToValidate?.args
+            ...intentToValidate?.args,
           }
         }
-        const validation = await module.validate(module.abi, intent.data, validationArguments)
+        const validation = await module.validate(
+          module.abi,
+          intent.data,
+          validationArguments
+        )
         return {
           name: module.name,
-          results: validation
+          results: validation,
         }
       } else {
         return {
           name: module.name,
-          results: undefined
+          results: undefined,
         }
       }
     })

@@ -1,6 +1,6 @@
-import {type PublicClient} from 'viem' 
-import { AbiParameter } from 'abitype' 
 import { ChainToAddress } from "@district-labs/intentify-deployments"
+import { AbiParameter } from "abitype"
+import { type PublicClient } from "viem"
 
 export type ChainToPublicClient = {
   [key: number]: PublicClient

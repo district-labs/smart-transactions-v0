@@ -1,6 +1,7 @@
 import { decodeAbiParameters, type PublicClient } from "viem"
-import { type AbiParameter } from 'abitype'
+
 import { ValidationResponse } from "../../types"
+import type { BlockNumberRangeIntentEncodeABI } from "../block-number-range"
 
 export type ValidateBlockNumberRangeArgs = {
   currentBlockNumber?: bigint
@@ -8,25 +9,21 @@ export type ValidateBlockNumberRangeArgs = {
 }
 
 export async function validateBlockNumberRange(
-  abi: AbiParameter[],
+  abi: BlockNumberRangeIntentEncodeABI,
   data: `0x${string}`,
   args: ValidateBlockNumberRangeArgs
 ): Promise<ValidationResponse> {
-
-  let currentBlockNumber;
-  if(args.currentBlockNumber) {
+  let currentBlockNumber
+  if (args.currentBlockNumber) {
     currentBlockNumber = args.currentBlockNumber
-  } else if(args.publicClient) {
-    const blockNumber = (await args.publicClient.getBlockNumber())
+  } else if (args.publicClient) {
+    const blockNumber = await args.publicClient.getBlockNumber()
     currentBlockNumber = BigInt(blockNumber)
   } else {
     throw new Error("Must provide either currentTimestamp or publicClient")
   }
 
-  const decodedData = decodeAbiParameters(
-    abi,
-    data
-  ) as bigint[]
+  const decodedData = decodeAbiParameters(abi, data)
   if (
     decodedData[0] <= currentBlockNumber &&
     decodedData[1] >= currentBlockNumber
