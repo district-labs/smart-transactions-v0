@@ -64,8 +64,8 @@ export class IntentBatchFactory {
   decode(args: any[], data: `0x${string}`) {
     return decodeAbiParameters(args, data)
   }
-  
-  async validate(intentBatch: IntentBatch, chainId: number, validationArgs?: {
+
+   async validate(intentBatch: IntentBatch, chainId: number, validationArgs?: {
     name: string,
     args: any
   }[]) {

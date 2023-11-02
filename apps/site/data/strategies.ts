@@ -46,7 +46,7 @@ export const strategies = {
     name: "Mean Reversion",
     alias: "mean-reversion",
     description:
-      "Buy/Sell an asset when it's price is above/below a certain threshold. Generally higher returns than holding or dollar cost averaging.",
+    "Buy/Sell an asset when it's price is above/below a certain threshold. Uses historical UniswapV3 token prices via zero-knowledge storage proof.",
     createdBy: {
       name: "District Finance",
       pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
