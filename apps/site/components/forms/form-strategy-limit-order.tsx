@@ -1,5 +1,6 @@
 "use client"
 
+import { useCallback, useState } from "react"
 import { intentBatchFactory } from "@/core/intent-batch-factory"
 import tokenListGoerli from "@/data/token-list-district-goerli.json"
 import { functionTokenListByChainId } from "@/integrations/erc20/utils/filter-token-list-by-chain-id"
@@ -15,7 +16,6 @@ import { type IntentModule } from "@district-labs/intentify-intent-batch"
 import { StrategyLimitOrder } from "@district-labs/intentify-strategy-react"
 import { Button } from "@district-labs/ui-react"
 import { Loader2 } from "lucide-react"
-import { useCallback, useState } from "react"
 import { useChainId, useSignTypedData } from "wagmi"
 
 import { useActionIntentBatchCreate } from "@/hooks/intent-batch/user/use-intent-batch-create"
@@ -27,9 +27,13 @@ import { StrategyActionBar } from "./strategy-action-bar"
 
 export type FormStrategyLimitOrder = React.HTMLAttributes<HTMLElement> & {
   strategyId: string
+  overrideValues?: any
 }
 
-export function FormStrategyLimitOrder({ strategyId }: FormStrategyLimitOrder) {
+export function FormStrategyLimitOrder({
+  strategyId,
+  overrideValues,
+}: FormStrategyLimitOrder) {
   const chainId = useChainId()
   const address = useGetSafeAddress()
   const intentifyAddress = useGetIntentifyModuleAddress(chainId)
@@ -37,17 +41,8 @@ export function FormStrategyLimitOrder({ strategyId }: FormStrategyLimitOrder) {
     useActionIntentBatchCreate()
 
   const [currentValues, setCurrentValues] = useState<any>(null)
-  const defaultValues = useFormStrategySetDefaultValues({
-    erc20LimitOrder: {
-      tokenOut: tokenListGoerli.tokens[0],
-      tokenIn: tokenListGoerli.tokens[1],
-    },
-    timestampRange: {
-      minTimestamp: "2023-10-28T07:00",
-      maxTimestamp: "2023-10-28T07:00",
-    },
-  })
-
+  // const defaultValues ={}
+  const defaultValues = useFormStrategySetDefaultValues(overrideValues)
 
   const { isLoading: isSignatureRequested, signTypedDataAsync } =
     useSignTypedData()

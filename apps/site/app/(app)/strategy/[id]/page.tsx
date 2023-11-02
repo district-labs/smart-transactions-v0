@@ -32,7 +32,10 @@ export default function Page({ params }: any) {
             <h3 className="text-4xl font-extrabold">{name}</h3>
             <p className="mt-2 text-sm">{description}</p>
             <div className="mt-4">
-              <IntentForm strategyId={id} />
+              <IntentForm
+                strategyId={id}
+                overrideValues={selectedStrategy?.overrideValues}
+              />
             </div>
           </div>
         </section>
