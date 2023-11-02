@@ -1,5 +1,4 @@
 import { ChainToAddress } from "@district-labs/intentify-deployments"
-import { AbiParameter } from "abitype"
 import { type PublicClient } from "viem"
 
 export type ChainToPublicClient = {
@@ -9,14 +8,14 @@ export type ChainToPublicClient = {
 export type IntentModuleAbi = {
   name: string
   type: string
-  indexed?: boolean
+  internalType?: string
 }
 
 export type IntentModule = {
   name: string
   deployed: ChainToAddress
-  validate?: (abi: AbiParameter[], data: `0x${string}`, args: any) => any
-  abi: IntentModuleAbi[]
+  validate?: (abi: any, data: `0x${string}`, args: any) => any
+  abi: any
 }
 
 export type ValidationResponse = {
