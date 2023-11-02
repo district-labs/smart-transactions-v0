@@ -34,8 +34,7 @@ export function StrategyTable({
       data={
         !isSuccess
           ? []
-          :
-            (data.map(transformData) as unknown as LimitOrderIntent[])
+          : (data.map(transformData) as unknown as LimitOrderIntent[])
       }
       pageCount={pageCount}
     />

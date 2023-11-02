@@ -1,3 +1,5 @@
+import tokenListGoerli from "@/data/token-list-district-goerli.json"
+
 import FormStrategyLeverageLong from "@/components/forms/form-strategy-leverage-long"
 import { FormStrategyLimitOrder } from "@/components/forms/form-strategy-limit-order"
 import FormStrategyMeanReversion from "@/components/forms/form-strategy-mean-reversion"
@@ -20,7 +22,16 @@ export const strategies = {
       name: "District Finance",
       pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
     },
-
+    overrideValues: {
+      erc20LimitOrder: {
+        tokenOut: tokenListGoerli.tokens[0],
+        tokenIn: tokenListGoerli.tokens[2],
+      },
+      timestampRange: {
+        minTimestamp: "2023-10-28T07:00",
+        maxTimestamp: "2023-10-28T07:00",
+      },
+    },
     IntentForm: FormStrategyLimitOrder,
     IntentTable: StrategyTable,
     transformData: transformToLimitOrder,
@@ -36,6 +47,7 @@ export const strategies = {
       name: "District Finance",
       pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
     },
+    overrideValues: {},
     IntentForm: FormStrategyLeverageLong,
     IntentTable: StrategyTable,
     transformData: transformToLeverageLong,
@@ -46,11 +58,12 @@ export const strategies = {
     name: "Mean Reversion",
     alias: "mean-reversion",
     description:
-    "Buy/Sell an asset when it's price is above/below a certain threshold. Uses historical UniswapV3 token prices via zero-knowledge storage proof.",
+      "Buy or sell token when it's price is above/below a certain threshold. Measures historical onchain price data.",
     createdBy: {
       name: "District Finance",
       pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
     },
+    overrideValues: {},
     IntentForm: FormStrategyMeanReversion,
     IntentTable: StrategyTable,
     transformData: transformToLeverageLong,

@@ -1,5 +1,6 @@
 "use client"
 
+import { useCallback, useState } from "react"
 import { intentBatchFactory } from "@/core/intent-batch-factory"
 import tokenListGoerli from "@/data/token-list-district-goerli.json"
 import {
@@ -14,7 +15,6 @@ import type { IntentModule } from "@district-labs/intentify-intent-batch"
 import { StrategySavingsDeposit } from "@district-labs/intentify-strategy-react"
 import { Button } from "@district-labs/ui-react"
 import { Loader2 } from "lucide-react"
-import { useCallback, useState } from "react"
 import { useChainId, useSignTypedData } from "wagmi"
 
 import { useActionIntentBatchCreate } from "@/hooks/intent-batch/user/use-intent-batch-create"
