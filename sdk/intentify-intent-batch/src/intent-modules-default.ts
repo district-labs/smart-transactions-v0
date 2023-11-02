@@ -1,8 +1,8 @@
 import {
   aaveLeverageLong,
   blockNumberRange,
+  chainlinkDataFeed,
   erc20LimitOrder,
-  erc20SwapSpotPrice,
   erc20SwapSpotPriceExactTokenIn,
   erc20SwapSpotPriceExactTokenOut,
   ethTip,
@@ -14,11 +14,11 @@ import {
 export const intentModulesDefault = [
   aaveLeverageLong,
   blockNumberRange,
+  chainlinkDataFeed,
   ethTip,
   erc20LimitOrder,
   erc20SwapSpotPriceExactTokenIn,
   erc20SwapSpotPriceExactTokenOut,
-  erc20SwapSpotPrice,
   timestampRange,
   uniswapV3HistoricalTwapPercentageChangeIntent,
   uniswapv3TwapIntent,
