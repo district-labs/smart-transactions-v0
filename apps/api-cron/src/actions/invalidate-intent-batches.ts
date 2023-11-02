@@ -1,10 +1,10 @@
 export async function invalidateIntentBatches() {
     try {
-        const response = await fetch(`${process.env.API_URL}/infra/invalidate`, {
+        await fetch(`${process.env.API_URL}/infra/intents/invalidate`, {
             method: 'GET',
         });
     } catch (error) {
         console.log(error)
-        return 0;
+        return error;
     }
 }

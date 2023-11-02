@@ -1,6 +1,7 @@
 import {
   IntentBatchFactory,
-  intentModulesDefault
+  timestampRange,
+  blockNumberRange
 } from "@district-labs/intentify-intent-batch"
 import { createPublicClient, http } from "viem"
 import { goerli, hardhat, mainnet } from "viem/chains"
@@ -19,7 +20,8 @@ const clientLocal = createPublicClient({
   transport: http(),
 })
 
-export const intentBatchFactory = new IntentBatchFactory(intentModulesDefault, {
+export const intentBatchFactoryForValidation = new IntentBatchFactory([timestampRange,
+  blockNumberRange], {
   1: clientMainnet,
   5: clientGoerli,
   31337: clientLocal,

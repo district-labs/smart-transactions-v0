@@ -2,10 +2,13 @@ import 'dotenv/config';
 import { CronJob } from 'cron';
 import { invalidateIntentBatches } from './actions/invalidate-intent-batches';
 
-const job = new CronJob(
-	'1-59 * * * * *', // cronTime
+/**
+ * Cron job to invalidate intents every 5 minutes
+ */
+const jobInvalidateIntents = new CronJob(
+	'0 */5 * * * *', // cronTime
 	async function () {
-		console.log('You will see this message every second');
+		console.log('Invalidating intents');
     await invalidateIntentBatches();
 	}, // onTick
 	null, // onComplete
@@ -13,4 +16,4 @@ const job = new CronJob(
 	'America/Los_Angeles' // timeZone
 );
 
-job.start();
+jobInvalidateIntents.start();

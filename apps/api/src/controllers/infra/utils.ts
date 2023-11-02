@@ -7,14 +7,15 @@ import { INTENT_INVALIDATION_RULES } from "../../constants";
 export type IntentBatchValidationStruct = {
   original: DbIntentBatchWithRelations
   raw: IntentBatch
-  invalidations: IntentValidation[]
+  invalidations: Array<IntentValidation | undefined>
 }
 
 export function invalidateIntentBatch(intentBatch: IntentBatchValidationStruct) {
   return intentBatch.invalidations.map((invalidation) => {
+    if(!invalidation) return null
     const intentCanBeInvalidated = matchInvalidation(invalidation)
     if(!intentCanBeInvalidated) return null
-    const intent = intentBatch?.original?.intents?.find((intent: DbIntent) => intent.intentId === generateIntentId(invalidation.name))
+    const intent = intentBatch?.original?.intents?.find((intent: DbIntent) => intent.intentId === generateIntentId(invalidation?.name))
     if(!intent) return null
     return {
       intent: intent,
@@ -25,7 +26,7 @@ export function invalidateIntentBatch(intentBatch: IntentBatchValidationStruct) 
 
 function matchInvalidation(invalidation: IntentValidation) {
   return INTENT_INVALIDATION_RULES.filter((invalidationType) => {
-    if(invalidationType.name === invalidation.name) {
+    if(invalidationType?.name === invalidation?.name) {
       const isInvalidForever = invalidation?.results?.errors?.every((error: {
         index: number
         msg: string
