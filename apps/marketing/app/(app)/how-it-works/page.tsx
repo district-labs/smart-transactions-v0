@@ -111,7 +111,7 @@ export default function HowItWorksPage() {
           District Finance extends the Safe Multisig Wallet with the Intentify
           module.
         </p>
-        <div className="bg-neutral my-3 rounded-md bg-red-100 p-3">
+        <div className="bg-neutral my-3 rounded-md bg-red-200 dark:bg-red-800 p-4">
           <span className="">
             Do NOT install the Intentify module on existing Safe Multisig
             Wallet.{" "}
