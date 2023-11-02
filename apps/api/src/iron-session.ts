@@ -1,4 +1,4 @@
-import { type User } from "@district-labs/intentify-database"
+import { type DbUser } from "@district-labs/intentify-database"
 import type { SiweMessage } from "siwe"
 import {
     type IronSessionOptions,
@@ -8,7 +8,7 @@ declare module "iron-session" {
     interface IronSessionData {
       nonce: string
       siwe: SiweMessage
-      user: User
+      user: DbUser
       address: string
     }
   }

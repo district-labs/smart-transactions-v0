@@ -14,8 +14,8 @@ export const users = mysqlTable("users", {
   safeAddress: charAddress("safe_address")
 })
 
-export type User = typeof users.$inferSelect
-export type NewUser = typeof users.$inferInsert
+export type DbNewUser = typeof users.$inferInsert
+export type DbUser = typeof users.$inferSelect
 
 export const usersRelations = relations(users, ({ one, many }) => ({
   strategies: many(strategies),

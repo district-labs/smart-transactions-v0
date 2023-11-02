@@ -1,4 +1,4 @@
-import { IntentBatch } from "@district-labs/intentify-core"
+import { IntentBatch, generateIntentId } from "@district-labs/intentify-core"
 import {
   decodeAbiParameters,
   encodeAbiParameters,
@@ -111,9 +111,7 @@ export class IntentBatchFactory {
       const module = this.getModuleByAddress(intent.target)
       const decoded = this.decode(module.abi, intent.data)
       return {
-        intentId: keccak256(
-          encodePacked(["string", "uint"], [module.name, BigInt(1)])
-        ), // TODO: Update to use dynamic module version.
+        intentId: generateIntentId(module.name), // TODO: Update to use dynamic module version.
         name: module.name,
         intentArgs: decoded.map((arg: any, i: number) => ({
           name: module.abi[i].name,

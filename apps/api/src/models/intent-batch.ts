@@ -1,4 +1,4 @@
-import type { DbIntentBatch } from "@district-labs/intentify-database";
+import type { DbIntentBatchWithRelations, DbIntentBatch } from "@district-labs/intentify-database";
 import {
   and,
   db,
@@ -8,7 +8,7 @@ import {
 } from "@district-labs/intentify-database";
 
 interface GetIntentBatchesFromDBFilter
-  extends Partial<Omit<DbIntentBatch, "id" | "updatedAt">> {
+  extends Partial<Omit<DbIntentBatchWithRelations, "id" | "updatedAt">> {
   intentBatchesValidity?: "valid" | "invalid" | "all";
 }
 
@@ -19,7 +19,7 @@ interface GetIntentBatchesFromDBFilter
  */
 export const getIntentBatchesFromDB = async (
   filters: GetIntentBatchesFromDBFilter,
-): Promise<DbIntentBatch[]> => {
+): Promise<DbIntentBatchWithRelations[]> => {
   const { root, strategyId, intentBatchesValidity } = filters;
 
   let filtersToApply: any = [];

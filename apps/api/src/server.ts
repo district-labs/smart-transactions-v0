@@ -4,6 +4,7 @@ import express from "express";
 import { errorHandler } from "./middleware/errorHandler";
 import intentBatchAdminRoutes from "./routes/admin/intent-batch";
 import authRoutes from "./routes/auth";
+import infraIntentBatchRoutes from "./routes/infra/intent-batch";
 import serviceAxiomRoutes from "./routes/services/axiom";
 import serviceEngineRoutes from "./routes/services/engine";
 import serviceEventsRoutes from "./routes/services/events";
@@ -37,6 +38,7 @@ app.use("/service", serviceEngineRoutes);
 app.use("/service", serviceEventsRoutes);
 app.use("/service", serviceExecuteRoutes);
 app.use("/service", serviceAxiomRoutes);
+app.use("/infra", infraIntentBatchRoutes);
 
 // API documentation endpoint
 app.get("/docs", (req, res) => {

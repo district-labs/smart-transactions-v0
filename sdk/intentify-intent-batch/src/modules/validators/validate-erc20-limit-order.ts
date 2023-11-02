@@ -13,6 +13,9 @@ export async function validateErc20LimitOrder(
   data: `0x${string}`,
   args: ValidateErc20LimitOrderArgs,
 ): Promise<ValidationResponse> {
+  console.log(data, 'data')
+
+
   const decodedData = decodeAbiParameters(abi, data) as [
     `0x${string}`,
     `0x${string}`,
