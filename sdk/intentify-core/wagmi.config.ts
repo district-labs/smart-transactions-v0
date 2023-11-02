@@ -18,6 +18,7 @@ export default defineConfig({
         'BlockNumberIntent.json',
         'ChainlinkDataFeedIntent.json',
         'ERC20LimitOrderIntent.json',
+        'ERC20TransferIntent.json',
         'ERC20RebalanceIntent.json',
         'ERC20SwapSpotPriceExactTokenInIntent.json',
         'ERC20SwapSpotPriceExactTokenOutIntent.json',
