@@ -1,17 +1,15 @@
-import { type DbUser } from "@district-labs/intentify-database"
-import type { SiweMessage } from "siwe"
-import {
-    type IronSessionOptions,
-} from "iron-session/edge"
+import { type DbUser } from "@district-labs/intentify-database";
+import type { SiweMessage } from "siwe";
+import { type IronSessionOptions } from "iron-session/edge";
 
 declare module "iron-session" {
-    interface IronSessionData {
-      nonce: string
-      siwe: SiweMessage
-      user: DbUser
-      address: string
-    }
+  interface IronSessionData {
+    nonce: string;
+    siwe: SiweMessage;
+    user: DbUser;
+    address: string;
   }
+}
 
 export const ironOptions: IronSessionOptions = {
   cookieName: `${process.env.AUTH_NAME} session`,
@@ -20,4 +18,4 @@ export const ironOptions: IronSessionOptions = {
     sameSite: "none",
     secure: process.env.NODE_ENV == "production",
   },
-}
+};

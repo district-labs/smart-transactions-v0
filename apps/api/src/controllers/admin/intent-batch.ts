@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import {
   getIntentBatchFromDB,
-  getIntentBatchesFromDB
+  getIntentBatchesFromDB,
 } from "../../models/intent-batch";
 import CustomError from "../../utils/customError";
 
@@ -12,7 +12,7 @@ import CustomError from "../../utils/customError";
 export const getIntentBatches = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const filters = request.query;
@@ -30,7 +30,7 @@ export const getIntentBatches = async (
 export const getIntentBatchById = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const intentBatchId = request.params.id;

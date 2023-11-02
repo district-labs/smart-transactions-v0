@@ -1,13 +1,14 @@
-import { IntentBatch } from "@district-labs/intentify-core"
+import { IntentBatch } from "@district-labs/intentify-core";
 import type { DbIntentBatchWithRelations } from "@district-labs/intentify-database";
-import { DbIntent } from "@district-labs/intentify-database"
+import { DbIntent } from "@district-labs/intentify-database";
 
 export function transformIntentBatchQueryToStruct(
-  intentBatch: DbIntentBatchWithRelations
+  intentBatch: DbIntentBatchWithRelations,
 ) {
-  const { intents } = intentBatch
+  const { intents } = intentBatch;
   // TODO: check if the intent is a limit order intent by using the ID
-  if(!intentBatch.root || !intentBatch.nonce) throw new Error('Invalid intent batch')
+  if (!intentBatch.root || !intentBatch.nonce)
+    throw new Error("Invalid intent batch");
   return {
     chainId: intentBatch.chainId,
     original: intentBatch,
@@ -20,8 +21,8 @@ export function transformIntentBatchQueryToStruct(
           data: intent.data as `0x${string}`,
           target: intent.target as `0x${string}`,
           value: intent.value ? BigInt(intent.value) : BigInt(0),
-        }
+        };
       }),
-    }
-  }
+    },
+  };
 }

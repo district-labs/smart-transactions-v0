@@ -1,6 +1,6 @@
-import { z } from "zod"
+import { z } from "zod";
 
-const hexStringPattern = /^0x[a-fA-F0-9]+$/
+const hexStringPattern = /^0x[a-fA-F0-9]+$/;
 
 const ApiIntentBatch = z.object({
   intentBatchHash: z.string(),
@@ -20,9 +20,9 @@ const ApiIntentBatch = z.object({
       }),
       value: z.number(),
       data: z.string().nullable(),
-    })
+    }),
   ),
-})
+});
 
 export const hookSchema = z.object({
   target: z.string().refine((value) => hexStringPattern.test(value), {
@@ -31,7 +31,7 @@ export const hookSchema = z.object({
   data: z.string().refine((value) => hexStringPattern.test(value), {
     message: "root must be a hex string prefixed with '0x'",
   }),
-})
+});
 
 export const ApiIntentBatchExecution = z.object({
   batch: ApiIntentBatch,
@@ -41,20 +41,20 @@ export const ApiIntentBatchExecution = z.object({
     s: z.string(),
   }),
   hooks: z.array(hookSchema),
-})
+});
 
 export const ApiIntentBatchExecutionSingle = z.object({
   chainId: z.number(),
   executableIntentBatch: ApiIntentBatchExecution,
-})
+});
 
 export const ApiIntentBatchExecutionBundle = z.object({
   chainId: z.number(),
   executableIntentBatchBundle: z.array(ApiIntentBatchExecution),
-})
+});
 
-export type ApiIntentBatchExecution = z.infer<typeof ApiIntentBatchExecution>
+export type ApiIntentBatchExecution = z.infer<typeof ApiIntentBatchExecution>;
 export type ApiIntentBatchExecutionBundle = z.infer<
   typeof ApiIntentBatchExecutionBundle
->
-export type ApiIntentBatch = z.infer<typeof ApiIntentBatch>
+>;
+export type ApiIntentBatch = z.infer<typeof ApiIntentBatch>;

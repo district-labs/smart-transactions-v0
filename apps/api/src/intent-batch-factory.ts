@@ -1,26 +1,15 @@
 import {
   IntentBatchFactory,
-  intentModulesDefault
-} from "@district-labs/intentify-intent-batch"
-import { createPublicClient, http } from "viem"
-import { goerli, hardhat, mainnet } from "viem/chains"
-
-const clientMainnet = createPublicClient({
-  chain: mainnet,
-  transport: http(),
-})
-
-const clientGoerli = createPublicClient({
-  chain: goerli,
-  transport: http(),
-})
-const clientLocal = createPublicClient({
-  chain: hardhat,
-  transport: http(),
-})
+  intentModulesDefault,
+} from "@district-labs/intentify-intent-batch";
+import {
+  goerliPublicClient,
+  localPublicClient,
+  mainnetPublicClient,
+} from "./blockchain-clients";
 
 export const intentBatchFactory = new IntentBatchFactory(intentModulesDefault, {
-  1: clientMainnet,
-  5: clientGoerli,
-  31337: clientLocal,
-})
+  1: mainnetPublicClient,
+  5: goerliPublicClient,
+  31337: localPublicClient,
+});

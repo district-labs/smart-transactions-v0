@@ -1,23 +1,18 @@
-import type { IntentBatchExecution } from "@district-labs/intentify-core"
-import {
-  intentifySafeModuleABI,
-} from "@district-labs/intentify-core"
-import {
-  IntentifySafeModule,
-} from "@district-labs/intentify-deployments"
-import { accountShared, publicClients } from "../../../../blockchain-clients"
-
+import type { IntentBatchExecution } from "@district-labs/intentify-core";
+import { intentifySafeModuleABI } from "@district-labs/intentify-core";
+import { IntentifySafeModule } from "@district-labs/intentify-deployments";
+import { accountShared, publicClients } from "../../../../blockchain-clients";
 
 export async function simulateIntentBatchExecution(
   chainId: number,
-  intentBatchExecution: IntentBatchExecution
+  intentBatchExecution: IntentBatchExecution,
 ) {
-  const publicClient = publicClients[chainId]
-  if (!publicClient) throw new Error(`No client for chainId ${chainId}`)
+  const publicClient = publicClients[chainId];
+  if (!publicClient) throw new Error(`No client for chainId ${chainId}`);
 
-  const address = IntentifySafeModule[chainId]
+  const address = IntentifySafeModule[chainId];
   if (!address)
-    throw new Error(`No IntentifyModuleAddress for chainId ${chainId}`)
+    throw new Error(`No IntentifyModuleAddress for chainId ${chainId}`);
 
   return await publicClient.simulateContract({
     address: address,
@@ -25,5 +20,5 @@ export async function simulateIntentBatchExecution(
     functionName: "execute",
     args: [intentBatchExecution],
     account: accountShared,
-  })
+  });
 }

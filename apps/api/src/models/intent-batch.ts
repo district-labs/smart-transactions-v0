@@ -1,4 +1,7 @@
-import type { DbIntentBatchWithRelations, DbIntentBatch } from "@district-labs/intentify-database";
+import type {
+  DbIntentBatchWithRelations,
+  DbIntentBatch,
+} from "@district-labs/intentify-database";
 import {
   and,
   db,
@@ -29,7 +32,6 @@ export const getIntentBatchesFromDB = async (
   if (strategyId) {
     filtersToApply.push(eq(intentBatch.strategyId, strategyId));
   }
-
 
   return db.query.intentBatch.findMany({
     where: !filtersToApply ? undefined : () => and(...filtersToApply),
