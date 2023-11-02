@@ -5,12 +5,12 @@ import {
   ERC20TotalSupply,
 } from "@/integrations/erc20/components/erc20-read"
 import { useFindTokenFromList } from "@/integrations/erc20/hooks/use-find-token-from-list"
+import { Card } from "@district-labs/ui-react"
 import { useChainId } from "wagmi"
 
 import { cn } from "@/lib/utils"
 
 import { Erc20MintTestnet } from "./erc20-mint-testnet"
-import { Card } from "@district-labs/ui-react"
 
 type Erc20CardTokenOverview = React.HTMLAttributes<HTMLElement> & {
   symbol: string

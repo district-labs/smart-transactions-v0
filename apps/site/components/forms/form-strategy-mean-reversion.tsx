@@ -1,5 +1,6 @@
 "use client"
 
+import { useCallback, useState } from "react"
 import { intentBatchFactory } from "@/core/intent-batch-factory"
 import tokenListGoerli from "@/data/token-list-district-goerli.json"
 import { functionTokenListByChainId } from "@/integrations/erc20/utils/filter-token-list-by-chain-id"
@@ -15,7 +16,6 @@ import type { IntentModule } from "@district-labs/intentify-intent-batch"
 import { StrategyMeanReversion } from "@district-labs/intentify-strategy-react"
 import { Button } from "@district-labs/ui-react"
 import { Loader2 } from "lucide-react"
-import { useCallback, useState } from "react"
 import { useChainId, useSignTypedData } from "wagmi"
 
 import { useActionIntentBatchCreate } from "@/hooks/intent-batch/user/use-intent-batch-create"
@@ -27,10 +27,12 @@ import { StrategyActionBar } from "./strategy-action-bar"
 
 export type FormStrategyMeanReversion = React.HTMLAttributes<HTMLElement> & {
   strategyId: string
+  overrideValues?: any
 }
 
 export function FormStrategyMeanReversion({
   strategyId,
+  overrideValues,
 }: FormStrategyMeanReversion) {
   const address = useGetSafeAddress()
   const chainId = useChainId()
@@ -39,12 +41,7 @@ export function FormStrategyMeanReversion({
     useActionIntentBatchCreate()
 
   const [currentValues, setCurrentValues] = useState<any>(null)
-  const defaultValues = useFormStrategySetDefaultValues({
-    aaveLeverageLong: {
-      supplyAsset: tokenListGoerli.tokens[0],
-      borrowAsset: tokenListGoerli.tokens[1],
-    },
-  })
+  const defaultValues = useFormStrategySetDefaultValues(overrideValues)
 
   const { isLoading: isSignatureRequested, signTypedDataAsync } =
     useSignTypedData()
