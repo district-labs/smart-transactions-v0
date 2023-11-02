@@ -4,5 +4,8 @@ const router = Router();
 router.get("/", strategiesUserController.userProfileIsSignedIn);
 router.get("/profile", strategiesUserController.userProfileGet);
 router.post("/profile", strategiesUserController.userProfileUpdate);
-router.post("/email-preferences", strategiesUserController.userEmailPreferencesUpdate);
+router.post(
+  "/email-preferences",
+  strategiesUserController.userEmailPreferencesUpdate,
+);
 export default router;

@@ -1,13 +1,14 @@
-import { defineConfig } from '@wagmi/cli';
-import { foundry } from '@wagmi/cli/plugins';
+import { defineConfig } from "@wagmi/cli";
+import { foundry } from "@wagmi/cli/plugins";
 
 export default defineConfig({
-  out: 'src/abis.ts',
+  out: "src/abis.ts",
   contracts: [],
   plugins: [
     foundry({
-      project: '../../contracts/intentify',
+      project: "../../contracts/intentify",
       include: [
+        "EngineHub.json",
         'ERC20.json',
         'Intentify.json',
         'EngineHub.json',

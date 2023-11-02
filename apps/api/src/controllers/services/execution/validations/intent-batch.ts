@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 export const ApiIntentBatch = z.object({
   intentBatch: z.object({
@@ -20,11 +20,11 @@ export const ApiIntentBatch = z.object({
             name: z.string(),
             type: z.string(),
             value: z.union([z.string(), z.number()]),
-          })
+          }),
         ),
-      })
+      }),
     ),
   }),
-})
+});
 
-export type ApiIntentBatch = z.infer<typeof ApiIntentBatch>
+export type ApiIntentBatch = z.infer<typeof ApiIntentBatch>;

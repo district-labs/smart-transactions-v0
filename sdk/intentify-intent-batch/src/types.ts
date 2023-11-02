@@ -18,6 +18,11 @@ export type IntentModule = {
   abi: any
 }
 
+export type IntentValidation = {
+  name: string
+  results: ValidationResponse
+}
+
 export type ValidationResponse = {
   status: boolean
   errors?: {

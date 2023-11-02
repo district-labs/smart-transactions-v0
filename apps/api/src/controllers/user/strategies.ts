@@ -4,11 +4,11 @@ import { getStrategiesActiveFromDB } from "../../models/strategies";
 export const getStrategiesActive = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const filters = request.query;
-    if(!filters.root) {
+    if (!filters.root) {
       return response.status(400).json({ error: "Missing root parameter" });
     }
     const strategies = await getStrategiesActiveFromDB(filters.root as string);
@@ -18,4 +18,3 @@ export const getStrategiesActive = async (
     next(error);
   }
 };
-
