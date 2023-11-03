@@ -2,8 +2,8 @@ import * as React from "react"
 import { useIsSignedIn } from "@/integrations/siwe/hooks/use-is-signed-in"
 import Balancer from "react-wrap-balancer"
 
-import { ConnectWalletAndAuthenticate } from "./connect-wallet-and-authenticate"
 import { Card } from "../ui/card"
+import { ConnectWalletAndAuthenticate } from "./connect-wallet-and-authenticate"
 
 export const WalletConnectAndAuthenticatePrompt = () => {
   const isSignedIn = useIsSignedIn()

@@ -1,6 +1,5 @@
 "use client"
 
-import { ERC20ConvertBalance } from "@/integrations/erc20/components/erc20-convert-balance"
 import {
   ERC20Name,
   ERC20Symbol,
@@ -10,7 +9,6 @@ import { formatUnits } from "viem"
 import { bigIntToDecimal } from "@/lib/utils/big-int-to-decimals"
 import { Address } from "@/components/blockchain/address"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
-import TimeFromEpoch from "@/components/shared/time-from-epoch"
 
 export const columnsLeverageLong = [
   {

@@ -1,8 +1,9 @@
-import { expect, test } from "vitest"
+import { createPublicClient, http } from "viem"
 import { mainnet } from "viem/chains"
+import { expect, test } from "vitest"
+
 import { IntentBatchFactory } from "./intent-batch-factory"
 import { intentModulesDefault } from "./intent-modules-default"
-import { createPublicClient, http } from "viem"
 
 const client = createPublicClient({
   chain: mainnet,
@@ -66,24 +67,30 @@ test("validate intent batch using override values", async () => {
     {
       name: "TimestampRange",
       args: {
-        currentTimestamp: 3
-      }
-    }
+        currentTimestamp: 3,
+      },
+    },
   ]
-  
+
   const intentBatchGenerated = intentBatch.generate()
-  const validation = await intentBatchFactory.validate(intentBatchGenerated, 1, validationArguments)
-  expect(validation).toEqual([{
-    "name": "TimestampRange",
-    "results": {
-      "status": true,
-    }
-  }])
+  const validation = await intentBatchFactory.validate(
+    intentBatchGenerated,
+    1,
+    validationArguments
+  )
+  expect(validation).toEqual([
+    {
+      name: "TimestampRange",
+      results: {
+        status: true,
+      },
+    },
+  ])
 })
 
 test("validate intent batch using live values", async () => {
   const intentBatchFactory = new IntentBatchFactory(intentModulesDefault, {
-    1: client
+    1: client,
   })
   const intentBatch = intentBatchFactory.create(
     5,
@@ -93,17 +100,19 @@ test("validate intent batch using live values", async () => {
   intentBatch.add("TimestampRange", ["1", "99999999999"])
   const intentBatchGenerated = intentBatch.generate()
   const validation = await intentBatchFactory.validate(intentBatchGenerated, 1)
-  expect(validation).toEqual([{
-    "name": "TimestampRange",
-    "results": {
-      "status": true,
-    }
-  }])
+  expect(validation).toEqual([
+    {
+      name: "TimestampRange",
+      results: {
+        status: true,
+      },
+    },
+  ])
 })
 
 test("invalidate intent batch using live values", async () => {
   const intentBatchFactory = new IntentBatchFactory(intentModulesDefault, {
-    1: client
+    1: client,
   })
   const intentBatch = intentBatchFactory.create(
     5,
@@ -112,7 +121,7 @@ test("invalidate intent batch using live values", async () => {
 
   intentBatch.nonce("standard", ["1"])
   intentBatch.add("TimestampRange", ["1", "10"])
-  
+
   const intentBatchGenerated = intentBatch.generate()
   const validation = await intentBatchFactory.validate(intentBatchGenerated, 1)
   expect(validation[0].results.status).toEqual(false)
@@ -132,24 +141,25 @@ test("generate and decode intent batch", () => {
     intentBatchFactory.decodeIntentBatch(intentBatchData)
   expect(decodedIntentBatch).toEqual([
     {
-      "intentArgs": [
+      intentArgs: [
         {
-          "name": "start",
-          "type": "uint128",
-          "value": "1",
+          name: "start",
+          type: "uint128",
+          value: "1",
         },
         {
-          "name": "end",
-          "type": "uint128",
-          "value": "2",
+          name: "end",
+          type: "uint128",
+          value: "2",
         },
       ],
-      "intentId": "0x3b91d3061a2a1688f16733114d74bb6f4a298f7f3d9da0207c2ff3036a8d0c0a",
-      "name": "TimestampRange",
-      "root": "0x000000000000000000000000000000000000dEaD",
-      "target": "0x200000000000000000000000000000000000dEaD",
-      "data": "0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000002",
-      "value": BigInt(0),
+      intentId:
+        "0x3b91d3061a2a1688f16733114d74bb6f4a298f7f3d9da0207c2ff3036a8d0c0a",
+      name: "TimestampRange",
+      root: "0x000000000000000000000000000000000000dEaD",
+      target: "0x200000000000000000000000000000000000dEaD",
+      data: "0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000002",
+      value: BigInt(0),
     },
   ])
 })

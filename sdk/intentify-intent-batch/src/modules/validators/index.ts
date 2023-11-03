@@ -1,5 +1,7 @@
 export * from "./validate-aave-leverage-long"
 export * from "./validate-block-number-range"
+export * from "./validate-chainlink-data-feed"
 export * from "./validate-erc20-limit-order"
+export * from "./validate-erc20-transfer"
 export * from "./validate-erc20-swap-spot-price-exact-token-out"
 export * from "./validate-timestamp-range"

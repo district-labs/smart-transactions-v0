@@ -1,4 +1,4 @@
-import { IntentBatch } from "@district-labs/intentify-core"
+import { IntentBatch, generateIntentId } from "@district-labs/intentify-core"
 import {
   decodeAbiParameters,
   encodeAbiParameters,
@@ -64,46 +64,54 @@ export class IntentBatchFactory {
   decode(args: any[], data: `0x${string}`) {
     return decodeAbiParameters(args, data)
   }
-  
-  async validate(intentBatch: IntentBatch, chainId: number, validationArgs?: {
+
+   async validate(intentBatch: IntentBatch, chainId: number, validationArgs?: {
     name: string,
     args: any
   }[]) {
     const results = intentBatch.intents.map(async (intent) => {
-      const module = this.getModuleByAddress(intent.target)
-      if(module.validate) {
-        let validationArguments = {}
-        const intentToValidate = validationArgs?.find(args => args.name == module.name)
-        if(this.clients) {
-          const publicClient = this?.clients[chainId]
-         if(!publicClient && !intentToValidate)  {
-          throw new Error(`Provide publicClient or validation arguments for ${module.name}`)
-         }
-          validationArguments = {
-            ...intentToValidate?.args,
-            publicClient
+      // We add a try/catch statement around validation because getModuleByAddress throws an error if a module is unavailable.
+      // There are instances where we want to ignore this error because we don't care about validating specific intents.
+      // For example the api/infra/invalidate endpoint only cares about TimestampRange and BlockNumberRange intents.
+      // The service might pass intents like Erc20LimitOrder even though it wants to ignore those validations.
+      try {
+        const module = this.getModuleByAddress(intent.target)
+        if(module.validate) {
+          let validationArguments = {}
+          const intentToValidate = validationArgs?.find(args => args.name == module.name)
+          if(this.clients) {
+            const publicClient = this?.clients[chainId]
+           if(!publicClient && !intentToValidate)  {
+            throw new Error(`Provide publicClient or validation arguments for ${module.name}`)
+           }
+            validationArguments = {
+              ...intentToValidate?.args,
+              publicClient
+            }
+          } else {
+            if(!intentToValidate)  {
+              throw new Error(`Provide validation arguments for ${module.name}`)
+            }
+            validationArguments = {
+              ...intentToValidate?.args
+            }
+          }
+          const validation = await module.validate(module.abi, intent.data, validationArguments)
+          return {
+            name: module.name,
+            results: validation
           }
         } else {
-          if(!intentToValidate)  {
-            throw new Error(`Provide validation arguments for ${module.name}`)
-          }
-          validationArguments = {
-            ...intentToValidate?.args
+          return {
+            name: module.name,
+            results: []
           }
         }
-        const validation = await module.validate(module.abi, intent.data, validationArguments)
-        return {
-          name: module.name,
-          results: validation
-        }
-      } else {
-        return {
-          name: module.name,
-          results: undefined
-        }
+      } catch (error) {
+        return undefined
       }
     })
-    return Promise.all(results)
+    return (await Promise.all(results)).filter((value) => value !== undefined)
   }
 
   decodeIntentBatch(intentBatch: IntentBatch) {
@@ -111,9 +119,7 @@ export class IntentBatchFactory {
       const module = this.getModuleByAddress(intent.target)
       const decoded = this.decode(module.abi, intent.data)
       return {
-        intentId: keccak256(
-          encodePacked(["string", "uint"], [module.name, BigInt(1)])
-        ), // TODO: Update to use dynamic module version.
+        intentId: generateIntentId(module.name), // TODO: Update to use dynamic module version.
         name: module.name,
         intentArgs: decoded.map((arg: any, i: number) => ({
           name: module.abi[i].name,

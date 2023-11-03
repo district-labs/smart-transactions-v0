@@ -40,3 +40,6 @@
 [submodule "contracts/intentify/lib/chainlink"]
 	path = contracts/intentify/lib/chainlink
 	url = https://github.com/smartcontractkit/chainlink
+[submodule "contracts/intentify/lib/balancer-labs"]
+	path = contracts/intentify/lib/balancer-labs
+	url = https://github.com/balancer/balancer-v2-monorepo/

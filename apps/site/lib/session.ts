@@ -1,11 +1,11 @@
+import { type ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
 import { env } from "@/env.mjs"
-import { type User } from "@district-labs/intentify-database"
+import { type DbUser } from "@district-labs/intentify-database"
 import {
   unsealData,
   type IronSessionData,
   type IronSessionOptions,
 } from "iron-session/edge"
-import { type ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
 import type { SiweMessage } from "siwe"
 
 import { siteConfig } from "@/config/site"
@@ -14,7 +14,7 @@ declare module "iron-session" {
   interface IronSessionData {
     nonce: string
     siwe: SiweMessage
-    user: User
+    user: DbUser
     address: string
   }
 }

@@ -1,5 +1,8 @@
-import { getEIP712DomainPacketHash, getIntentBatchTypedDataHash } from '@district-labs/intentify-core';
-import { IntentifySafeModule } from '@district-labs/intentify-deployments';
+import {
+  getEIP712DomainPacketHash,
+  getIntentBatchTypedDataHash,
+} from "@district-labs/intentify-core";
+import { IntentifySafeModule } from "@district-labs/intentify-deployments";
 import { NextFunction, Request, Response } from "express";
 import { getIronSession } from "iron-session";
 import { SUPPORTED_CHAINS } from "../../constants";
@@ -8,7 +11,7 @@ import { ironOptions } from "../../iron-session";
 import {
   createIntentBatchInDB,
   getIntentBatchFromDB,
-  getIntentBatchesFromDB
+  getIntentBatchesFromDB,
 } from "../../models/intent-batch";
 import CustomError from "../../utils/customError";
 
@@ -19,15 +22,15 @@ import CustomError from "../../utils/customError";
 export const getIntentBatches = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const filters = request.query;
 
-    if(!filters.root) {
+    if (!filters.root) {
       return response.status(400).json({ error: "Missing root parameter" });
     }
-    
+
     const intentBatches = await getIntentBatchesFromDB(filters);
 
     return response.status(200).json({ data: intentBatches });
@@ -42,7 +45,7 @@ export const getIntentBatches = async (
 export const getIntentBatchById = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const intentBatchId = request.params.id;
@@ -64,10 +67,10 @@ export const getIntentBatchById = async (
 export const createIntentBatch = async (
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
-    const session = await getIronSession(request, response, ironOptions)
+    const session = await getIronSession(request, response, ironOptions);
     // Destructure and validate required fields from the request body
     const { intentBatch, signature, chainId, strategyId } = request.body;
 
@@ -83,16 +86,20 @@ export const createIntentBatch = async (
     }
 
     // Decode the intent batch
-    const decodedIntentBatch = intentBatchFactory.decodeIntentBatch(intentBatch);
+    const decodedIntentBatch =
+      intentBatchFactory.decodeIntentBatch(intentBatch);
 
     const domainSeparator = getEIP712DomainPacketHash({
-      name: 'Intentify',
-      version: '1',
+      name: "Intentify",
+      version: "1",
       chainId: chainId,
-      verifyingContract: IntentifySafeModule[chainId]
-    })
+      verifyingContract: IntentifySafeModule[chainId],
+    });
 
-    const intentBatchHash = getIntentBatchTypedDataHash(domainSeparator, intentBatch)
+    const intentBatchHash = getIntentBatchTypedDataHash(
+      domainSeparator,
+      intentBatch,
+    );
 
     // Insert the new IntentBatch into the database
     const newIntentBatch = await createIntentBatchInDB({
@@ -101,7 +108,7 @@ export const createIntentBatch = async (
       nonce: intentBatch.nonce,
       root: intentBatch.root,
       userId: session.address,
-      intentBatchNew: intentBatch, 
+      intentBatchNew: intentBatch,
       signature,
       intentsDecoded: decodedIntentBatch,
       strategyId,

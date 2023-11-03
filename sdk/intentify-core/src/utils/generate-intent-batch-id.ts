@@ -1,20 +1,15 @@
-import { encodePacked, keccak256 } from 'viem';
+import { encodePacked, keccak256 } from "viem";
+import { generateIntentId } from "./generate-intent-id";
 
 type IntentModuleIdentifiers = {
   name: string;
-  version: string;
 };
 
 export function generateIntentBatchId(
-  intentModules: IntentModuleIdentifiers[]
+  intentModules: IntentModuleIdentifiers[],
 ): `0x${string}` {
   const intentModuleIds = intentModules.map((intentModule) => {
-    return keccak256(
-      encodePacked(
-        ['string', 'string'],
-        [intentModule.name, intentModule.version]
-      )
-    );
+    return generateIntentId(intentModule.name);
   });
-  return keccak256(encodePacked(['bytes32[]'], [intentModuleIds]));
+  return keccak256(encodePacked(["bytes32[]"], [intentModuleIds]));
 }

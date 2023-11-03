@@ -1,6 +1,7 @@
 export * from "./components/aave-leverage-long"
 export * from "./components/timestamp-range"
 export * from "./components/nonce-manager"
+export * from "./components/erc20-transfer"
 export * from "./components/erc20-limit-order"
 export * from "./components/erc20-swap-spot-price"
 export * from "./components/pooltogether-savings-deposit"

@@ -1,5 +1,6 @@
 "use client"
 
+import { useCallback, useState } from "react"
 import { intentBatchFactory } from "@/core/intent-batch-factory"
 import tokenListGoerli from "@/data/token-list-district-goerli.json"
 import { functionTokenListByChainId } from "@/integrations/erc20/utils/filter-token-list-by-chain-id"
@@ -15,7 +16,6 @@ import type { IntentModule } from "@district-labs/intentify-intent-batch"
 import { StrategyLeverageLong } from "@district-labs/intentify-strategy-react"
 import { Button } from "@district-labs/ui-react"
 import { Loader2 } from "lucide-react"
-import { useCallback, useState } from "react"
 import { useChainId, useSignTypedData } from "wagmi"
 
 import { useActionIntentBatchCreate } from "@/hooks/intent-batch/user/use-intent-batch-create"
@@ -27,10 +27,12 @@ import { StrategyActionBar } from "./strategy-action-bar"
 
 export type FormStrategyLeverageLong = React.HTMLAttributes<HTMLElement> & {
   strategyId: string
+  overrideValues?: any
 }
 
 export function FormStrategyLeverageLong({
   strategyId,
+  overrideValues,
 }: FormStrategyLeverageLong) {
   const address = useGetSafeAddress()
   const chainId = useChainId()
@@ -39,7 +41,7 @@ export function FormStrategyLeverageLong({
     useActionIntentBatchCreate()
 
   const [currentValues, setCurrentValues] = useState<any>(null)
-  const defaultValues = useFormStrategySetDefaultValues({})
+  const defaultValues = useFormStrategySetDefaultValues(overrideValues)
 
   const { isLoading: isSignatureRequested, signTypedDataAsync } =
     useSignTypedData()

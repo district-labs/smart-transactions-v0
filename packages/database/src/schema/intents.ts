@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm"
+import { InferSelectModel, relations } from "drizzle-orm"
 import {
   boolean,
   int,
@@ -9,7 +9,7 @@ import {
   timestamp,
 } from "drizzle-orm/mysql-core"
 
-import { strategies, users } from "."
+import { DbStrategy, DbUser, strategies, users } from "."
 import { charAddress, charHash } from "../utils/schema"
 
 // ------------------ INTENT ------------------ //
@@ -80,6 +80,12 @@ export const intentBatchRelations = relations(intentBatch, ({ one, many }) => ({
 
 export type DbIntentBatch = typeof intentBatch.$inferSelect
 export type DbNewIntentBatch = typeof intentBatch.$inferInsert
+export type DbIntentBatchWithRelations = InferSelectModel<typeof intentBatch> & {
+  user?: DbUser
+  intents?: DbIntent[]
+  strategy?: DbStrategy
+  intentBatchExecution?: DbIntentBatchExecution
+}
 
 // ------------------ HOOKS ------------------ //
 

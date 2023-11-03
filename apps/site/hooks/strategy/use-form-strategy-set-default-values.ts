@@ -3,11 +3,12 @@ import { useSearchParams } from "next/navigation"
 import { hexToString } from "viem"
 
 export function useFormStrategySetDefaultValues(defaultData: any) {
-  const searchParams = useSearchParams()
+  const { get } = useSearchParams()
 
   const [values, setValues] = useState()
   useEffect(() => {
-    const intentBatchData = searchParams.get("intentBatchData")
+    console.log("wtf")
+    const intentBatchData = get("intentBatchData")
     if (intentBatchData) {
       const shareData = JSON.parse(
         hexToString(intentBatchData as `0x${string}`)
@@ -16,7 +17,7 @@ export function useFormStrategySetDefaultValues(defaultData: any) {
     } else {
       setValues(defaultData)
     }
-  }, [defaultData, searchParams])
+  }, [])
 
   return values
 }

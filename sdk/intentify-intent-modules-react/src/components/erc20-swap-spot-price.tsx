@@ -27,7 +27,7 @@ export const intentErc20SwapSpotPrice = {
     tokenInPriceFeed: "0x",
     tokenAmountExpected: "0",
     thresholdSeconds: "0",
-    isBuy: 'buy',
+    isBuy: "buy",
   },
 } as IntentErc20SwapSpotPrice
 
