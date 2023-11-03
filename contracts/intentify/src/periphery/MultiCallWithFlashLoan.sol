@@ -6,9 +6,9 @@ import { IVault, IERC20 } from "balancer-v2-interfaces/vault/IVault.sol";
 import { Ownable } from "solady/auth/Ownable.sol";
 import { RevertMessageReasonHelper } from "../helpers/RevertMessageReasonHelper.sol";
 
-/// @title Balancer V2 Flash Loan Helper
+/// @title Multi Call With Flash Loan
 /// @notice A contract that can be used to execute either multiple calls in a single flash loan.
-contract BalancerV2FlashLoan is Ownable, IFlashLoanRecipient, RevertMessageReasonHelper {
+contract MultiCallWithFlashLoan is Ownable, IFlashLoanRecipient, RevertMessageReasonHelper {
     /*//////////////////////////////////////////////////////////////////////////
                                 TYPE DECLARATIONS
     //////////////////////////////////////////////////////////////////////////*/

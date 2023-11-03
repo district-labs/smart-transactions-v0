@@ -2,12 +2,12 @@
 pragma solidity >=0.8.19 <0.9.0;
 
 import { console2 } from "forge-std/console2.sol";
-import { BalancerV2FlashLoan, IERC20 } from "../../src/periphery/BalancerV2FlashLoan.sol";
+import { MultiCallWithFlashLoan, IERC20 } from "../../src/periphery/MultiCallWithFlashLoan.sol";
 
 import { BaseTest } from "../utils/Base.t.sol";
 
 contract BalancerV2FlashLoanTest is BaseTest {
-    BalancerV2FlashLoan internal _balancerV2Flashloan;
+    MultiCallWithFlashLoan internal _multicallWithFlashloan;
 
     // Balancer
     address public constant BALANCER_VAULT = 0xBA12222222228d8Ba445958a75a0704d566BF2C8;
@@ -31,14 +31,14 @@ contract BalancerV2FlashLoanTest is BaseTest {
 
         initializeBase();
 
-        _balancerV2Flashloan = new BalancerV2FlashLoan(SEARCHER, BALANCER_VAULT);
+        _multicallWithFlashloan = new MultiCallWithFlashLoan(SEARCHER, BALANCER_VAULT);
     }
 
     /* ===================================================================================== */
     /* Success Tests                                                                         */
     /* ===================================================================================== */
     function test_BalancerV2FlashLoan_Success() external {
-        vm.deal(address(_balancerV2Flashloan), 10e18);
+        vm.deal(address(_multicallWithFlashloan), 10e18);
 
         IERC20[] memory tokens = new IERC20[](3);
         tokens[0] = IERC20(WBTC);
@@ -50,13 +50,13 @@ contract BalancerV2FlashLoanTest is BaseTest {
         amounts[1] = 1e6;
         amounts[2] = 1e18;
 
-        BalancerV2FlashLoan.Call[] memory calls = new BalancerV2FlashLoan.Call[](1);
-        calls[0] = BalancerV2FlashLoan.Call(address(0), 2e18, bytes("0x"));
+        MultiCallWithFlashLoan.Call[] memory calls = new MultiCallWithFlashLoan.Call[](1);
+        calls[0] = MultiCallWithFlashLoan.Call(address(0), 2e18, bytes("0x"));
 
         bytes memory multiCallData = abi.encode(calls);
 
         vm.prank(SEARCHER);
-        _balancerV2Flashloan.flashLoan(tokens, amounts, multiCallData);
+        _multicallWithFlashloan.flashLoan(tokens, amounts, multiCallData);
     }
 
     /* ===================================================================================== */
