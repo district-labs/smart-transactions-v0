@@ -99,9 +99,6 @@ const SectionHowItWorks = () => {
               steps. Each step can be a trade, a transfer, or a call to a smart
               contract.
             </Balancer>
-            <div className="">
-              <Button className="mt-4">How It Works</Button>
-            </div>
           </div>
         </div>
         <div className="mt-48 grid gap-x-10 gap-y-32 lg:grid-cols-12">
@@ -122,9 +119,6 @@ const SectionHowItWorks = () => {
               met before the step can be executed. This allows users to create
               complex strategies that are flexible and customizable.
             </Balancer>
-            <div className="">
-              <Button className="mt-4">The Research</Button>
-            </div>
           </div>
         </div>
       </div>
