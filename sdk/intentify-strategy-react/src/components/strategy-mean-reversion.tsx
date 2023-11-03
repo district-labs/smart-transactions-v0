@@ -193,15 +193,26 @@ export function StrategyMeanReversion({
       dimensional: nonceData.dimensional
     })
 
-    intentBatchManager.add("Erc20SwapSpotPrice", [
-      intentBatch?.erc20SwapSpotPrice?.tokenOut?.address,
-      intentBatch?.erc20SwapSpotPrice?.tokenIn?.address,
-      tokenToChainLinkFeed(chainId, intentBatch?.erc20SwapSpotPrice?.tokenOut?.address),
-      tokenToChainLinkFeed(chainId, intentBatch?.erc20SwapSpotPrice?.tokenIn?.address),
-      parseUnits(String(intentBatch.erc20SwapSpotPrice?.tokenAmountExpected), intentBatch.erc20SwapSpotPrice.tokenOut.decimals),
-      intentBatch?.erc20SwapSpotPrice?.thresholdSeconds,
-      intentBatch?.erc20SwapSpotPrice?.isBuy == 'buy' ? '0x1' : '0x0',
-    ])
+    if(intentBatch?.erc20SwapSpotPrice?.isBuy == 'buy'){
+      intentBatchManager.add("Erc20SwapSpotPriceExactTokenOut", [
+        intentBatch?.erc20SwapSpotPrice?.tokenOut?.address,
+        intentBatch?.erc20SwapSpotPrice?.tokenIn?.address,
+        tokenToChainLinkFeed(chainId, intentBatch?.erc20SwapSpotPrice?.tokenOut?.address),
+        tokenToChainLinkFeed(chainId, intentBatch?.erc20SwapSpotPrice?.tokenIn?.address),
+        parseUnits(String(intentBatch.erc20SwapSpotPrice?.tokenAmountExpected), intentBatch.erc20SwapSpotPrice.tokenOut.decimals),
+        intentBatch?.erc20SwapSpotPrice?.thresholdSeconds
+      ])
+    }
+    if(intentBatch?.erc20SwapSpotPrice?.isBuy == 'sell'){
+      intentBatchManager.add("Erc20SwapSpotPriceExactTokenIn", [
+        intentBatch?.erc20SwapSpotPrice?.tokenOut?.address,
+        intentBatch?.erc20SwapSpotPrice?.tokenIn?.address,
+        tokenToChainLinkFeed(chainId, intentBatch?.erc20SwapSpotPrice?.tokenOut?.address),
+        tokenToChainLinkFeed(chainId, intentBatch?.erc20SwapSpotPrice?.tokenIn?.address),
+        parseUnits(String(intentBatch.erc20SwapSpotPrice?.tokenAmountExpected), intentBatch.erc20SwapSpotPrice.tokenOut.decimals),
+        intentBatch?.erc20SwapSpotPrice?.thresholdSeconds
+      ])
+    }
     intentBatchManager.add("UniswapHistoricalV3TwapPercentageChange", [
       intentBatch?.uniswapV3HistoricalTwapPercentageChange?.uniswapV3Pool,
       intentBatch?.uniswapV3HistoricalTwapPercentageChange?.numeratorReferenceBlockOffset,
