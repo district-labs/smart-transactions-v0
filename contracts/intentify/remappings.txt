@@ -3,6 +3,7 @@ forge-std/=lib/forge-std/src/
 solady/=lib/solady/src/
 uniswap-v3-periphery/=lib/@uniswap/v3-periphery/contracts/
 uniswap-v3-core/=lib/@uniswap/v3-core/contracts/
+balancer-v2-interfaces/=lib/balancer-labs/pkg/interfaces/contracts
 @openzeppelin/=lib/openzeppelin-contracts/
 safe-contracts/=lib/safe-contracts/contracts/
 surl/=lib/surl/src/
