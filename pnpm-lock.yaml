@@ -849,7 +849,7 @@ importers:
         specifier: ^4.17.39
         version: 4.17.39
       '@types/node':
-        specifier: ^20.8.6
+        specifier: ^20.8.7
         version: 20.8.7
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.7.5
@@ -872,6 +872,9 @@ importers:
       nodemon:
         specifier: ^3.0.1
         version: 3.0.1
+      prettier:
+        specifier: ^3.0.3
+        version: 3.0.3
       ts-node:
         specifier: ^10.9.1
         version: 10.9.1(@types/node@20.8.7)(typescript@5.2.2)
