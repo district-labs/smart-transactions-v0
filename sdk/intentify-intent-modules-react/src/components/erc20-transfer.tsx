@@ -1,7 +1,7 @@
 import type { Token, TokenList } from "@district-labs/intentify-core"
 
-import { TokenSelectAndAmount } from "./fields/token-select-and-amount"
 import { Input } from "./fields/input"
+import { TokenSelectAndAmount } from "./fields/token-select-and-amount"
 
 export type IntentErc20Transfer = {
   erc20Transfer: {
@@ -56,7 +56,7 @@ export const intentErc20TransferFields = {
       intentBatch={intentBatch}
       config={config}
       setIntentBatch={setIntentBatch}
-      path={["erc20Transfer", "tokenIn"]}
+      path={["erc20Transfer", "to"]}
     />
   ),
 }

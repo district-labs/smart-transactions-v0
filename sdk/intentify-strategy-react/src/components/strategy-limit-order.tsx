@@ -17,6 +17,7 @@ import { convertDateStringToEpoch, deepMerge } from "../utils"
 import { NonceManager, type NonceConfig } from "./nonce-manager"
 import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
 import { useDynamicNonce } from "./use-dynamic-nonce"
+import { parseUnits } from "viem"
 
 export type StrategyLimitOrder = {
   defaultValues: any
@@ -109,8 +110,8 @@ export function StrategyLimitOrder({
     intentBatchManager.add("Erc20LimitOrder", [
       intentBatch.erc20LimitOrder.tokenIn.address,
       intentBatch.erc20LimitOrder.tokenOut.address,
-      intentBatch.erc20LimitOrder.amountIn,
-      intentBatch.erc20LimitOrder.amountOut,
+      parseUnits(String(intentBatch.erc20LimitOrder.amountIn), intentBatch.erc20LimitOrder.tokenOut.decimals),
+      parseUnits(String(intentBatch.erc20LimitOrder.amountOut), intentBatch.erc20LimitOrder.tokenOut.decimals)
     ])
     const intentBatchStruct = intentBatchManager.generate()
     onIntentBatchGenerated?.(intentBatchStruct)

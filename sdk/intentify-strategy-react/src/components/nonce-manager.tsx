@@ -12,6 +12,10 @@ export type NonceConfig = {
     defaultQueue: number
   }
   time: {
+    label: string
+    labelTrigger: string
+    classNameLabel?: string
+    classNameTrigger?: string
     defaultId: number
     defaultDelta: number
     defaultCount: number
@@ -25,7 +29,6 @@ type NonceManager = React.HTMLAttributes<HTMLElement> & {
 }
 
 export const NonceManager = ({
-  className,
   intentBatch,
   setIntentBatch,
   nonceConfig,

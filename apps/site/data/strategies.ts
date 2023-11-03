@@ -10,6 +10,9 @@ import { columnsLeverageLong } from "./tables/columns-leverage-long"
 import { limitOrderTableColumns } from "./tables/limit-order"
 import { transformToLeverageLong } from "./transforms/transform-to-leverage-long"
 import { transformToLimitOrder } from "./transforms/transform-to-limit-order"
+import FormStrategyRecurringPayment from "@/components/forms/form-strategy-recurring-payment"
+import { transformToRecurringPayment } from "./transforms/transform-to-recurring-payment"
+import { columnsRecurringPayment } from "./tables/columns-recurring-payment"
 
 export const strategies = {
   "0x564369be27beaca3a73a1da91280164eaa81e9a66d5e43c2a180c78fef295505": {
@@ -69,8 +72,29 @@ export const strategies = {
     transformData: transformToLeverageLong,
     tableColumns: columnsLeverageLong,
   },
-  // "0x4": {
-  //   id: "0x4",
+  "0x4": {
+    id: "0x4",
+    name: "Recurring Transfer",
+    alias: "recurring-transfer",
+    description:
+      "Automatically transfer tokens to a specified address at a specified time interval. ",
+    createdBy: {
+      name: "District Finance",
+      pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
+    },
+    overrideValues: {
+      nonce: {
+        type: 'time',
+        args: [0, 6000, 7]
+      }
+    },
+    IntentForm: FormStrategyRecurringPayment,
+    IntentTable: StrategyTable,
+    transformData: transformToRecurringPayment,
+    tableColumns: columnsRecurringPayment,
+  },
+  // "0x5": {
+  //   id: "0x5",
   //   name: "Automatic Savings Deposit",
   //   alias: "automatic-savings-deposit",
   //   description:

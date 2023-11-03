@@ -15,8 +15,9 @@ import { deepMerge } from "../utils"
 import { NonceManager, type NonceConfig } from "./nonce-manager"
 import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
 import { useDynamicNonce } from "./use-dynamic-nonce"
+import { parseUnits } from "viem"
 
-export type StrategyLimitOrder = {
+export type StrategyRecurringPayment = {
   defaultValues: any
   intentifySafeModuleAddress?: `0x${string}`
   root?: `0x${string}`
@@ -44,7 +45,7 @@ export type StrategyLimitOrder = {
   children: (props: StrategyChildrenCallback) => React.ReactNode
 }
 
-export function StrategyLimitOrder({
+export function StrategyRecurringPayment({
   config,
   defaultValues,
   children,
@@ -54,7 +55,7 @@ export function StrategyLimitOrder({
   tokenList,
   intentBatchFactory,
   onIntentBatchGenerated,
-}: StrategyLimitOrder) {
+}: StrategyRecurringPayment) {
   const startingState = deepMerge(
     {
       ...nonceManager,
@@ -83,11 +84,11 @@ export function StrategyLimitOrder({
     setIntentBatchManagerNonce(intentBatchManager, intentBatch, {
       standard: nonceData.standard,
       dimensional: nonceData.dimensional
-    })
+    })  
 
     intentBatchManager.add("Erc20Transfer", [
       intentBatch.erc20Transfer.tokenOut.address,
-      intentBatch.erc20Transfer.amountOut,
+      parseUnits(String(intentBatch.erc20Transfer.amountOut), intentBatch.erc20Transfer.tokenOut.decimals),
       intentBatch.erc20Transfer.to,
     ])
     const intentBatchStruct = intentBatchManager.generate()
