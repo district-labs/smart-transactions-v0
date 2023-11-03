@@ -3,23 +3,21 @@
 import { IntentBatch, type TokenList } from "@district-labs/intentify-core"
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
-  intentErc20LimitOrder,
-  intentErc20LimitOrderFields,
-  intentTimestampRange,
-  intentTimestampRangeFields,
+  intentErc20Transfer,
+  intentErc20TransferFields,
   nonceManager,
 } from "@district-labs/intentify-intent-modules-react"
 import { Card, CardContent, CardFooter } from "@district-labs/ui-react"
 import { useImmer } from "use-immer"
 
 import { StrategyChildrenCallback } from "../types"
-import { convertDateStringToEpoch, deepMerge } from "../utils"
+import { deepMerge } from "../utils"
 import { NonceManager, type NonceConfig } from "./nonce-manager"
 import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
 import { useDynamicNonce } from "./use-dynamic-nonce"
 import { parseUnits } from "viem"
 
-export type StrategyLimitOrder = {
+export type StrategyRecurringPayment = {
   defaultValues: any
   intentifySafeModuleAddress?: `0x${string}`
   root?: `0x${string}`
@@ -28,20 +26,6 @@ export type StrategyLimitOrder = {
   intentBatchFactory?: IntentBatchFactory
   config: {
     nonce?: NonceConfig
-    minTimestamp: {
-      className: string
-      label: string
-      classNameLabel?: string
-      description?: string
-      classNameDescription?: string
-    }
-    maxTimestamp: {
-      className: string
-      label: string
-      classNameLabel?: string
-      description?: string
-      classNameDescription?: string
-    }
     tokenOutAndAmount: {
       className: string
       label: string
@@ -49,7 +33,7 @@ export type StrategyLimitOrder = {
       description?: string
       classNameDescription?: string
     }
-    tokenInAndAmount: {
+    to: {
       className: string
       label: string
       classNameLabel?: string
@@ -61,7 +45,7 @@ export type StrategyLimitOrder = {
   children: (props: StrategyChildrenCallback) => React.ReactNode
 }
 
-export function StrategyLimitOrder({
+export function StrategyRecurringPayment({
   config,
   defaultValues,
   children,
@@ -71,12 +55,11 @@ export function StrategyLimitOrder({
   tokenList,
   intentBatchFactory,
   onIntentBatchGenerated,
-}: StrategyLimitOrder) {
+}: StrategyRecurringPayment) {
   const startingState = deepMerge(
     {
       ...nonceManager,
-      ...intentTimestampRange,
-      ...intentErc20LimitOrder,
+      ...intentErc20Transfer,
     },
     defaultValues
   )
@@ -101,17 +84,12 @@ export function StrategyLimitOrder({
     setIntentBatchManagerNonce(intentBatchManager, intentBatch, {
       standard: nonceData.standard,
       dimensional: nonceData.dimensional
-    })
+    })  
 
-    intentBatchManager.add("TimestampRange", [
-      convertDateStringToEpoch(intentBatch.timestampRange.minTimestamp).toString(),
-      convertDateStringToEpoch(intentBatch.timestampRange.maxTimestamp).toString(),
-    ])
-    intentBatchManager.add("Erc20LimitOrder", [
-      intentBatch.erc20LimitOrder.tokenIn.address,
-      intentBatch.erc20LimitOrder.tokenOut.address,
-      parseUnits(String(intentBatch.erc20LimitOrder.amountIn), intentBatch.erc20LimitOrder.tokenOut.decimals),
-      parseUnits(String(intentBatch.erc20LimitOrder.amountOut), intentBatch.erc20LimitOrder.tokenOut.decimals)
+    intentBatchManager.add("Erc20Transfer", [
+      intentBatch.erc20Transfer.tokenOut.address,
+      parseUnits(String(intentBatch.erc20Transfer.amountOut), intentBatch.erc20Transfer.tokenOut.decimals),
+      intentBatch.erc20Transfer.to,
     ])
     const intentBatchStruct = intentBatchManager.generate()
     onIntentBatchGenerated?.(intentBatchStruct)
@@ -125,20 +103,8 @@ export function StrategyLimitOrder({
           setIntentBatch={setIntentBatch}
           nonceConfig={config?.nonce}
         />
-        <div className="grid grid-cols-2 gap-x-4">
-          {intentTimestampRangeFields.minTimestamp(
-            intentBatch,
-            setIntentBatch,
-            config?.minTimestamp
-          )}
-          {intentTimestampRangeFields.maxTimestamp(
-            intentBatch,
-            setIntentBatch,
-            config?.maxTimestamp
-          )}
-        </div>
         <div className="">
-          {intentErc20LimitOrderFields.tokenOutAndAmount(
+          {intentErc20TransferFields.tokenOutAndAmount(
             intentBatch,
             setIntentBatch,
             tokenList,
@@ -146,11 +112,10 @@ export function StrategyLimitOrder({
           )}
         </div>
         <div className="">
-          {intentErc20LimitOrderFields.tokenInAndAmount(
+          {intentErc20TransferFields.to(
             intentBatch,
             setIntentBatch,
-            tokenList,
-            config?.tokenInAndAmount
+            config?.to
           )}
         </div>
       </CardContent>

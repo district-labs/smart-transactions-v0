@@ -19,9 +19,9 @@ type Input = {
 export const Input = ({ path, intentBatch, setIntentBatch, config }: Input) => {
   return (
     <div className={config?.className}>
-      {config.label && (
-        <Label htmlFor="minTimestamp" className={config.classNameLabel}>
-          {config.label}
+      {config?.label && (
+        <Label htmlFor="minTimestamp" className={config?.classNameLabel}>
+          {config?.label}
         </Label>
       )}
       <InputCore

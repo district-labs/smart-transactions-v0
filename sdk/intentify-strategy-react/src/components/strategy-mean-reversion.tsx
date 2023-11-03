@@ -25,6 +25,7 @@ import { NonceManager, type NonceConfig } from "./nonce-manager"
 import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
 import { useDynamicNonce } from "./use-dynamic-nonce"
 import { tokenToChainLinkFeed } from "../token-to-chainlink-feed"
+import { parseUnits } from "viem"
 
 
 
@@ -192,14 +193,12 @@ export function StrategyMeanReversion({
       dimensional: nonceData.dimensional
     })
 
-    console.log(intentBatch?.erc20SwapSpotPrice?.isBuy, 'intentBatch?.erc20SwapSpotPrice?.isBuy')
-
     intentBatchManager.add("Erc20SwapSpotPrice", [
       intentBatch?.erc20SwapSpotPrice?.tokenOut?.address,
       intentBatch?.erc20SwapSpotPrice?.tokenIn?.address,
       tokenToChainLinkFeed(chainId, intentBatch?.erc20SwapSpotPrice?.tokenOut?.address),
       tokenToChainLinkFeed(chainId, intentBatch?.erc20SwapSpotPrice?.tokenIn?.address),
-      intentBatch?.erc20SwapSpotPrice?.tokenAmountExpected,
+      parseUnits(String(intentBatch.erc20SwapSpotPrice?.tokenAmountExpected), intentBatch.erc20LimitOrder.tokenOut.decimals),
       intentBatch?.erc20SwapSpotPrice?.thresholdSeconds,
       intentBatch?.erc20SwapSpotPrice?.isBuy == 'buy' ? '0x1' : '0x0',
     ])
