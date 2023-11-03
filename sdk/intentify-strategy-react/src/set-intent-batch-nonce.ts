@@ -8,15 +8,15 @@ export function setIntentBatchManagerNonce(intentBatchManager: any, intentBatch:
   
       if (intentBatch.nonce.type === "dimensional") {
         intentBatchManager.nonce("dimensional", [
-          intentBatch.nonce.args[0],
+          intentBatch?.nonce?.args[0],
           nonceData.dimensional,
         ])
       }
       if (intentBatch.nonce.type === "time") {
         intentBatchManager.nonce("time", [
-          intentBatch.nonce.args[0],
-          intentBatch.nonce.args[1],
-          intentBatch.nonce.args[2],
+          intentBatch?.nonce?.args[0],
+          intentBatch?.nonce?.args[1],
+          intentBatch?.nonce?.args[2],
         ])
       }
 }

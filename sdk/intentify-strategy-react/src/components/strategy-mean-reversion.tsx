@@ -198,7 +198,7 @@ export function StrategyMeanReversion({
       intentBatch?.erc20SwapSpotPrice?.tokenIn?.address,
       tokenToChainLinkFeed(chainId, intentBatch?.erc20SwapSpotPrice?.tokenOut?.address),
       tokenToChainLinkFeed(chainId, intentBatch?.erc20SwapSpotPrice?.tokenIn?.address),
-      parseUnits(String(intentBatch.erc20SwapSpotPrice?.tokenAmountExpected), intentBatch.erc20LimitOrder.tokenOut.decimals),
+      parseUnits(String(intentBatch.erc20SwapSpotPrice?.tokenAmountExpected), intentBatch.erc20SwapSpotPrice.tokenOut.decimals),
       intentBatch?.erc20SwapSpotPrice?.thresholdSeconds,
       intentBatch?.erc20SwapSpotPrice?.isBuy == 'buy' ? '0x1' : '0x0',
     ])

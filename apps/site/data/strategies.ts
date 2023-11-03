@@ -3,16 +3,16 @@ import tokenListGoerli from "@/data/token-list-district-goerli.json"
 import FormStrategyLeverageLong from "@/components/forms/form-strategy-leverage-long"
 import { FormStrategyLimitOrder } from "@/components/forms/form-strategy-limit-order"
 import FormStrategyMeanReversion from "@/components/forms/form-strategy-mean-reversion"
+import FormStrategyRecurringPayment from "@/components/forms/form-strategy-recurring-payment"
 import FormStrategySavingsDeposit from "@/components/forms/form-strategy-savings-deposit"
 import { StrategyTable } from "@/components/tables/strategy-table"
 
 import { columnsLeverageLong } from "./tables/columns-leverage-long"
-import { limitOrderTableColumns } from "./tables/limit-order"
+import { columnsLimitOrder } from "./tables/columns-limit-order"
+import { columnsRecurringPayment } from "./tables/columns-recurring-payment"
 import { transformToLeverageLong } from "./transforms/transform-to-leverage-long"
 import { transformToLimitOrder } from "./transforms/transform-to-limit-order"
-import FormStrategyRecurringPayment from "@/components/forms/form-strategy-recurring-payment"
 import { transformToRecurringPayment } from "./transforms/transform-to-recurring-payment"
-import { columnsRecurringPayment } from "./tables/columns-recurring-payment"
 
 export const strategies = {
   "0x564369be27beaca3a73a1da91280164eaa81e9a66d5e43c2a180c78fef295505": {
@@ -38,7 +38,7 @@ export const strategies = {
     IntentForm: FormStrategyLimitOrder,
     IntentTable: StrategyTable,
     transformData: transformToLimitOrder,
-    tableColumns: limitOrderTableColumns,
+    tableColumns: columnsLimitOrder,
   },
   "0x89033b533d9a8e6875cfd119a1bbaa4727cdd207c9b38a234022402b30e0a861": {
     id: "0x89033b533d9a8e6875cfd119a1bbaa4727cdd207c9b38a234022402b30e0a861",
@@ -72,8 +72,8 @@ export const strategies = {
     transformData: transformToLeverageLong,
     tableColumns: columnsLeverageLong,
   },
-  "0x4": {
-    id: "0x4",
+  "0x37023ec377f004afa9c88dc62b789d15d781796030e62f0a57a328aa21131ffb": {
+    id: "0x37023ec377f004afa9c88dc62b789d15d781796030e62f0a57a328aa21131ffb",
     name: "Recurring Transfer",
     alias: "recurring-transfer",
     description:
@@ -84,9 +84,9 @@ export const strategies = {
     },
     overrideValues: {
       nonce: {
-        type: 'time',
-        args: [0, 6000, 7]
-      }
+        type: "time",
+        args: [0, 6000, 7],
+      },
     },
     IntentForm: FormStrategyRecurringPayment,
     IntentTable: StrategyTable,

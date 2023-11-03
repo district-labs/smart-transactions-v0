@@ -95,11 +95,11 @@ export function FormStrategyRecurringPayment({
               classNameLabel: "text-muted-background",
               classNameTrigger:
                 "text-muted-background text-xs text-center my-1 cursor-pointer",
-                time: {
-                    defaultId: 0,
-                    defaultDelta: 86400,
-                    defaultCount: 7,
-                  }
+              time: {
+                defaultId: 0,
+                defaultDelta: 86400,
+                defaultCount: 7,
+              },
             },
           },
           tokenOutAndAmount: {

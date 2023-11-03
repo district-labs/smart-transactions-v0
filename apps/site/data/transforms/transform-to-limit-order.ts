@@ -1,9 +1,11 @@
 import { type IntentBatch } from "@district-labs/intentify-core"
 
+import { getStatus } from "./get-status"
 import { transformIntentQueryToIntentBatchStruct } from "./transform-intent-query-to-intent-batch-struct"
 
 export type LimitOrderIntent = {
   chainId: number
+  nonce: string
   sell: {
     asset: string
     amount: number
@@ -17,12 +19,14 @@ export type LimitOrderIntent = {
   executeBefore: string
   status: "open" | "closed" | "canceled"
   intentBatch: IntentBatch
+  intentBatchDb: any
 }
 
-export function transformToLimitOrder(intentBatch: any) {
+export function transformToLimitOrder(intentBatch: any): LimitOrderIntent {
   const { intents } = intentBatch
   return {
     chainId: Number(intentBatch.chainId),
+    nonce: intentBatch.nonce,
     sell: {
       asset: String(intents[1]?.intentArgs[0]?.value),
       amount: Number(intents[1]?.intentArgs[2]?.value),
@@ -37,18 +41,5 @@ export function transformToLimitOrder(intentBatch: any) {
     status: getStatus(intentBatch.executedAt, intentBatch?.cancelledAt),
     intentBatch: transformIntentQueryToIntentBatchStruct(intentBatch),
     intentBatchDb: intentBatch,
-  }
-}
-
-function getStatus(
-  executedAt: Date | null,
-  cancelledAt: Date | null
-): "open" | "closed" | "canceled" {
-  if (executedAt) {
-    return "closed"
-  } else if (cancelledAt) {
-    return "canceled"
-  } else {
-    return "open"
   }
 }

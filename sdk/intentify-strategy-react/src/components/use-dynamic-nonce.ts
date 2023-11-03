@@ -22,7 +22,7 @@ export function useDynamicNonce({address,  chainId, root, intentBatch, setIntent
     useIntentifySafeModuleGetDimensionalNonce({
       address: address,
       chainId: chainId,
-      args: [root, intentBatch.nonce.args[0]],
+      args: [root, intentBatch?.nonce?.args[0]],
       enabled: intentBatch.nonce.type === "dimensional",
     })
 
