@@ -19,7 +19,7 @@ export default function Home() {
         <Balancer className="my-2 max-w-3xl text-lg text-muted-foreground sm:text-xl">
           Interact with blockchains without the hassle<br/>
           <span className="font-bold">
-            Unlock the full potential of Decentralized Finance
+            Unlock the full power of Decentralized Finance
           </span>
         </Balancer>
       </section>

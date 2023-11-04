@@ -78,7 +78,7 @@ export default async function Image({ params }: { params: { id: string } }) {
         <h3
           style={{
             color: "#969696",
-            fontSize: "36px",
+            fontSize: "42px",
             fontFamily: "SF Pro",
             fontWeight: 900,
             letterSpacing: "-0.02em",
@@ -93,7 +93,7 @@ export default async function Image({ params }: { params: { id: string } }) {
             fontFamily: "SF Pro",
             fontWeight: 800,
             letterSpacing: "-0.02em",
-            marginBottom: "-26px",
+            marginBottom: "-16px",
           }}
         >
           {strategy.name}
@@ -121,17 +121,17 @@ export default async function Image({ params }: { params: { id: string } }) {
             }}>
               <h4
                 style={{
-                  fontSize: "18px",
+                  fontSize: "22px",
                   fontFamily: "SF Pro",
                   color: "black",
                   letterSpacing: "-0.02em",
-                  marginBottom: "-10px",
+                  marginBottom: "-4px",
                 }}
               >
                 {strategy.createdBy.name}
               </h4>
               <span style={{
-                  fontSize: "14px",
+                  fontSize: "18px",
                   fontFamily: "SF Pro",
                   color: "#7B7B7B",
                 }}>Created By</span>
