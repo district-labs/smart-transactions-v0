@@ -13,7 +13,7 @@ export const size = {
 
 export const contentType = "image/png"
 
-export default async function Image({ params }: { params: { id: string, accountSharing: string } }) {
+export default async function Image({ params }: { params: { id: string } }) {
   const strategy = Object.values(strategies).find(s => s.id === params.id)
 
   if(!strategy) {
@@ -29,7 +29,7 @@ export default async function Image({ params }: { params: { id: string, accountS
             justifyContent: "center",
             backgroundColor: "white",
             backgroundImage:
-              "linear-gradient(to bottom right, #FFF 25%, #FFF0CA 75%)",
+            "linear-gradient(to bottom right, #FFF 25%, #EEEEEE 75%)",
           }}
         >
           <h1
@@ -37,10 +37,7 @@ export default async function Image({ params }: { params: { id: string, accountS
             fontSize: "100px",
             fontFamily: "SF Pro",
             fontWeight: 900,
-            background:
-              "linear-gradient(to bottom right, #000000 21.66%, #78716c 86.47%)",
-            backgroundClip: "text",
-            color: "transparent",
+            color: "black",
             lineHeight: "5rem",
             letterSpacing: "-0.02em",
           }}
@@ -78,7 +75,7 @@ export default async function Image({ params }: { params: { id: string, accountS
           justifyContent: "center",
           backgroundColor: "white",
           backgroundImage:
-            "linear-gradient(to bottom right, #FFF 25%, #FFF0CA 75%)",
+            "linear-gradient(to bottom right, #FFF 25%, #EEEEEE 75%)",
         }}
       >
         <h1
@@ -86,11 +83,7 @@ export default async function Image({ params }: { params: { id: string, accountS
             fontSize: "100px",
             fontFamily: "SF Pro",
             fontWeight: 900,
-            background:
-              "linear-gradient(to bottom right, #000000 21.66%, #78716c 86.47%)",
-            backgroundClip: "text",
             color: "transparent",
-            lineHeight: "5rem",
             letterSpacing: "-0.02em",
           }}
         >
@@ -98,30 +91,40 @@ export default async function Image({ params }: { params: { id: string, accountS
         </h1>
         <h3
           style={{
-            fontSize: "22px",
+            fontSize: "25px",
             fontFamily: "SF Pro",
-            background:
-              "linear-gradient(to bottom right, #000000 21.66%, #78716c 86.47%)",
-            backgroundClip: "text",
-            color: "transparent",
+            color: "#7B7B7B",
             lineHeight: "5rem",
             letterSpacing: "-0.02em",
+            textAlign: "center",
+            maxWidth: "420px",
           }}
         >
-          {siteConfig.description}
+          {strategy.description}
         </h3>
         {
-          params.accountSharing ? (
-            <div
-              style={{
-                fontSize: "22px",
-                fontFamily: "SF Pro",
-                color: "black",
-                lineHeight: "5rem",
-                letterSpacing: "-0.02em",
-              }}
-            >
-              {params.accountSharing}
+          strategy.createdBy ? (
+            <div style={{
+              marginTop: "22px",
+            }}>
+              <h4
+                style={{
+                  fontSize: "18px",
+                  fontFamily: "SF Pro",
+                  color: "black",
+                  lineHeight: "5rem",
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                {strategy.createdBy.name}
+              </h4>
+              <span style={{
+                  fontSize: "12px",
+                  fontFamily: "SF Pro",
+                  color: "black",
+                  lineHeight: "5rem",
+                  letterSpacing: "-0.02em",
+                }}>Created By</span>
             </div>
           ) : null
         }
