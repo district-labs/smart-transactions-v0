@@ -1,6 +1,4 @@
 import { ImageResponse } from "next/server"
-
-import { siteConfig } from "@/config/site"
 import { strategies } from "@/data/strategies"
 
 export const runtime = "edge"
@@ -38,7 +36,6 @@ export default async function Image({ params }: { params: { id: string } }) {
             fontFamily: "SF Pro",
             fontWeight: 900,
             color: "black",
-            lineHeight: "5rem",
             letterSpacing: "-0.02em",
           }}
         >
@@ -83,7 +80,6 @@ export default async function Image({ params }: { params: { id: string } }) {
             fontSize: "100px",
             fontFamily: "SF Pro",
             fontWeight: 900,
-            color: "transparent",
             letterSpacing: "-0.02em",
           }}
         >
@@ -91,13 +87,13 @@ export default async function Image({ params }: { params: { id: string } }) {
         </h1>
         <h3
           style={{
-            fontSize: "25px",
+            fontSize: "22px",
             fontFamily: "SF Pro",
             color: "#7B7B7B",
             lineHeight: "5rem",
             letterSpacing: "-0.02em",
             textAlign: "center",
-            maxWidth: "420px",
+            maxWidth: "520px",
           }}
         >
           {strategy.description}
@@ -116,7 +112,6 @@ export default async function Image({ params }: { params: { id: string } }) {
                   fontSize: "18px",
                   fontFamily: "SF Pro",
                   color: "black",
-                  lineHeight: "5rem",
                   letterSpacing: "-0.02em",
                 }}
               >
@@ -126,8 +121,6 @@ export default async function Image({ params }: { params: { id: string } }) {
                   fontSize: "12px",
                   fontFamily: "SF Pro",
                   color: "#7B7B7B",
-                  lineHeight: "5rem",
-                  letterSpacing: "-0.02em",
                 }}>Created By</span>
             </div>
           ) : null
