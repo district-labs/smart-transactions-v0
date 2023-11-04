@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@axiom-crypto/core": "^0.3.6",
+    "@district-labs/intentify-abi-external": "workspace:^",
     "@district-labs/intentify-core": "workspace:*",
     "@district-labs/intentify-database": "workspace:*",
     "@district-labs/intentify-deployments": "workspace:*",
@@ -20,6 +21,7 @@
     "@openzeppelin/defender-relay-client": "^1.48.0",
     "@uniswap/sdk-core": "^4.0.7",
     "@uniswap/smart-order-router": "^3.16.29",
+    "@uniswap/v3-sdk": "^3.10.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "ethers": "^5.6.9",
@@ -28,7 +30,7 @@
     "postgres": "^3.4.0",
     "siwe": "1.1.6",
     "tsup": "^6.1.3",
-    "viem": "^1.16.6",
+    "viem": "^1.18.4",
     "zod": "^3.22.4"
   },
   "devDependencies": {
