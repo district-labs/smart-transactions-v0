@@ -49,13 +49,13 @@ export default function AccountPage() {
             <div className="container max-w-6xl">
               <TabsContent
                 value="profile"
-                className="grid grid-cols-6 gap-x-12"
+                className="grid lg:grid-cols-6 gap-12"
               >
-                <div className="col-span-4 grid gap-y-10">
+                <div className="lg:col-span-4 grid gap-y-10 order-2 lg:order-1">
                   <FormUserProfile />
                   <FormUserEmailPreferences />
                 </div>
-                <div className="col-span-2">
+                <div className="lg:col-span-2 order-1 lg:order-2">
                   <CardUserProfile />
                 </div>
               </TabsContent>

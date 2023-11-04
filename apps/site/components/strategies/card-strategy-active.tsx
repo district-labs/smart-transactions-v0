@@ -49,7 +49,7 @@ export const CardStrategyActive = ({
         </div>
       </CardHeader>
       <CardContent className="flex-grow">
-        <div className="grid grid-cols-4 gap-x-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
           <CardStatistic label="Pending" value={`${countPending}`} />
           <CardStatistic label="Executed" value={`${countExecuted}`} />
           <CardStatistic label="Cancelled" value={`${countCancelled}`} />

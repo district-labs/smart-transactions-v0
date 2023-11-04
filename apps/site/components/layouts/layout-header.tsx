@@ -7,6 +7,7 @@ import { NavigationCore } from "@/components/layouts/navigation-core"
 import { NavigationPanel } from "@/components/layouts/navigation-panel"
 
 import { NavigationAccount } from "./navigation-account"
+import { LinkComponent } from "../shared/link-component"
 
 export default function Header() {
   const scrolled = useScroll(0)
@@ -19,10 +20,15 @@ export default function Header() {
       )}
     >
       <div className=" flex h-16 items-center justify-between px-10 sm:flex-row">
-        <div className="hidden flex-1 justify-end sm:flex sm:justify-start">
+        <div className="hidden sm:flex-1 justify-end sm:flex sm:justify-start">
           <NavigationCore />
         </div>
-        <div className="justify-end space-x-2 sm:flex">
+        <div className='sm:flex-1 flex sm:justify-center'>
+          <LinkComponent href="/">
+            <img src="/district-globe-dark.svg" width={36} height={36} />
+          </LinkComponent>
+        </div>
+        <div className="justify-end space-x-2 sm:flex sm:flex-1">
           <NavigationAccount />
           <NavigationPanel />
         </div>

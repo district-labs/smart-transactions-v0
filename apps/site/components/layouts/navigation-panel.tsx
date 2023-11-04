@@ -59,7 +59,7 @@ export function NavigationPanel() {
             Account
           </Link>
           <Link
-            href={"/account"}
+            href={"/smart-wallet"}
             className="flex w-full items-center border-b py-4 text-sm font-medium"
             onClick={() => setOpen(false)}
           >
