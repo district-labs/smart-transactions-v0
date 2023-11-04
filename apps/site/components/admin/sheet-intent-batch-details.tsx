@@ -1,4 +1,5 @@
 import type { IntentBatchQuery } from "@district-labs/intentify-database"
+import { Info } from "lucide-react"
 
 import {
   Sheet,
@@ -11,23 +12,21 @@ import {
 
 import { Row } from "../shared/row"
 import { TimeFromDate } from "../shared/time-from-date"
-import { Button } from "../ui/button"
 import { ScrollArea } from "../ui/scroll-area"
 import { LimitOrderIntent } from "./limit-order-intent"
 import { TimestampRangeIntent } from "./timestamp-range-intent"
 
-type SheetIntentBatchDetails = {
+type SheetIntentBatchDetails = React.HTMLAttributes<HTMLElement> & {
   data: IntentBatchQuery
 }
 
-export const SheetIntentBatchDetails = ({ data }: SheetIntentBatchDetails) => {
+export const SheetIntentBatchDetails = ({
+  children,
+  data,
+}: SheetIntentBatchDetails) => {
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        <Button size={"sm"} variant="outline">
-          Details
-        </Button>
-      </SheetTrigger>
+      <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent className="sm:max-w-1/2 max-h-screen sm:w-[860px]">
         <ScrollArea className="max-h-[100%] overflow-auto">
           <div className="">

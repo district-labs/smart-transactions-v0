@@ -1,3 +1,3 @@
-export * from "./encode-standard-nonce";
-export * from "./encode-dimensional-nonce";
-export * from "./encode-time-nonce";
+export * from "./standard-nonce";
+export * from "./dimensional-nonce";
+export * from "./time-nonce";

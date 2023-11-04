@@ -13,30 +13,30 @@ import { strategiesBeta } from "./strategies"
 
 async function main() {
   await db.transaction(async (tx) => {
-    // Ensures that the user is created if it doesn't exist
-    await tx
-      .insert(users)
-      .values({
-        address: SEED_USER_ADDRESS,
-        firstName: "District",
-        lastName: "Finance",
-        email: "admin@districtfinance.com",
-        safeAddress: '0x000000000000000000000000000000000000dEaD'
-      })
-      .onDuplicateKeyUpdate({ set: { address: sql`address` } })
+    // // // Ensures that the user is created if it doesn't exist
+    // await tx
+    //   .insert(users)
+    //   .values({
+    //     address: SEED_USER_ADDRESS,
+    //     firstName: "District",
+    //     lastName: "Finance",
+    //     email: "admin@districtfinance.com",
+    //     safeAddress: '0x000000000000000000000000000000000000dEaD'
+    //   })
+    //   .onDuplicateKeyUpdate({ set: { address: sql`address` } })
 
-    // Ensures that the email preferences are created if they don't exist
-    await tx
-      .insert(emailPreferences)
-      .values({
-        marketing: true,
-        newsletter: true,
-        transactional: true,
-        userId: SEED_USER_ADDRESS,
-      })
-      .onDuplicateKeyUpdate({ set: { id: sql`id` } })
+    // // Ensures that the email preferences are created if they don't exist
+    // await tx
+    //   .insert(emailPreferences)
+    //   .values({
+    //     marketing: true,
+    //     newsletter: true,
+    //     transactional: true,
+    //     userId: SEED_USER_ADDRESS,
+    //   })
+    //   .onDuplicateKeyUpdate({ set: { id: sql`id` } })
 
-    strategiesBeta.map(async strategy => {
+    Promise.all(strategiesBeta.map(async strategy => {
         await tx
         .insert(strategies)
         .values({
@@ -47,7 +47,7 @@ async function main() {
           managerId: SEED_USER_ADDRESS,
         })
         // .onDuplicateKeyUpdate({ set: { id: sql`id` } })
-      })
+      }))
 
     // const {
     //   nonce,

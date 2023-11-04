@@ -9,13 +9,13 @@ import {
 } from "@district-labs/intentify-intent-modules-react"
 import { Card, CardContent, CardFooter } from "@district-labs/ui-react"
 import { useImmer } from "use-immer"
+import { parseUnits } from "viem"
 
+import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
 import { StrategyChildrenCallback } from "../types"
 import { deepMerge } from "../utils"
 import { NonceManager, type NonceConfig } from "./nonce-manager"
-import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
 import { useDynamicNonce } from "./use-dynamic-nonce"
-import { parseUnits } from "viem"
 
 export type StrategyRecurringPayment = {
   defaultValues: any
@@ -72,7 +72,7 @@ export function StrategyRecurringPayment({
     intentBatch,
     root,
     setIntentBatch,
-    config
+    config,
   })
 
   const handleGenerateIntentBatch = async () => {
@@ -83,12 +83,15 @@ export function StrategyRecurringPayment({
 
     setIntentBatchManagerNonce(intentBatchManager, intentBatch, {
       standard: nonceData.standard,
-      dimensional: nonceData.dimensional
-    })  
+      dimensional: nonceData.dimensional,
+    })
 
     intentBatchManager.add("Erc20Transfer", [
       intentBatch.erc20Transfer.tokenOut.address,
-      parseUnits(String(intentBatch.erc20Transfer.amountOut), intentBatch.erc20Transfer.tokenOut.decimals),
+      parseUnits(
+        String(intentBatch.erc20Transfer.amountOut),
+        intentBatch.erc20Transfer.tokenOut.decimals
+      ),
       intentBatch.erc20Transfer.to,
     ])
     const intentBatchStruct = intentBatchManager.generate()

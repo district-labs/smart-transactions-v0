@@ -4,6 +4,7 @@ const router = Router();
 router.get("/", strategiesUserController.userProfileIsSignedIn);
 router.get("/profile", strategiesUserController.userProfileGet);
 router.post("/profile", strategiesUserController.userProfileUpdate);
+router.post("/register", strategiesUserController.userProfileRegister);
 router.post(
   "/email-preferences",
   strategiesUserController.userEmailPreferencesUpdate,

@@ -1,15 +1,14 @@
 "use client"
 
 import React from "react"
-import Image from "next/image"
-import Link from "next/link"
-
 import { cn } from "@/lib/utils"
 import useScroll from "@/hooks/use-scroll"
 import { NavigationCore } from "@/components/layouts/navigation-core"
 import { NavigationPanel } from "@/components/layouts/navigation-panel"
 
 import { NavigationAccount } from "./navigation-account"
+import { LinkComponent } from "../shared/link-component"
+import Image from "next/image"
 
 export default function Header() {
   const scrolled = useScroll(0)
@@ -22,18 +21,15 @@ export default function Header() {
       )}
     >
       <div className=" flex h-16 items-center justify-between px-10 sm:flex-row">
-        <div className="hidden flex-1 justify-end sm:flex sm:justify-start">
+        <div className="hidden sm:flex-1 justify-end sm:flex sm:justify-start">
           <NavigationCore />
         </div>
-        <Link href="/" className="flex flex-1 items-center space-x-2">
-          <Image
-            src="/images/auth-layout.webp"
-            alt="District Labs Logo"
-            width={45}
-            height={45}
-          />
-        </Link>
-        <div className="justify-end space-x-2 sm:flex">
+        <div className='sm:flex-1 flex sm:justify-center'>
+          <LinkComponent href="/">
+            <Image alt="District Finance" src="/district-globe-dark.svg" width={36} height={36} />
+          </LinkComponent>
+        </div>
+        <div className="justify-end space-x-2 sm:flex sm:flex-1">
           <NavigationAccount />
           <NavigationPanel />
         </div>

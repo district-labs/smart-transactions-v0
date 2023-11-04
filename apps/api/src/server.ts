@@ -19,7 +19,7 @@ const app = express();
 const corsOptions = {
   origin: process.env.CORS_ORIGIN,
   credentials: true,
-  secure: true,
+  secure: process.env.NODE_ENV === "production" ? true : false,
 };
 
 // Use the CORS middleware with the defined options

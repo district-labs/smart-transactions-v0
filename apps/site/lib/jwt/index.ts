@@ -14,7 +14,6 @@ interface JwtPayload extends JWTPayload {
 export async function verifyJwt(jwt: string) {
   try {
     const secret = new TextEncoder().encode(env.JWT_SECRET)
-
     const { payload } = await jwtVerify(jwt, secret, {
       algorithms: [alg],
     })

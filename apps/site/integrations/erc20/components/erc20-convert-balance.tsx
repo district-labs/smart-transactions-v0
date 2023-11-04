@@ -22,7 +22,7 @@ export function ERC20ConvertBalance({
   return (
     <span className={className} {...props}>
       {Number(
-        formatUnits(BigInt(balance) || BigInt(0), decimals || 1)
+        formatUnits(BigInt(balance || 0), decimals || 1)
       ).toLocaleString()}
     </span>
   )

@@ -7,12 +7,17 @@ import { useQuery } from "@tanstack/react-query"
 
 interface User {
   isLoggedIn: boolean
+  isRegistered: boolean
   address?: string
   isAdmin?: boolean
 }
 
 export function useUser({ redirectTo = "", redirectIfFound = false } = {}) {
-  const { data: user, refetch: mutateUser } = useQuery<User>(["user"], {
+  const {
+    data: user,
+    refetch: mutateUser,
+    ...rest
+  } = useQuery<User>(["user"], {
     queryFn: () =>
       fetch(`${env.NEXT_PUBLIC_API_URL}/user`, {
         credentials: "include",
@@ -36,5 +41,5 @@ export function useUser({ redirectTo = "", redirectIfFound = false } = {}) {
     }
   }, [user, redirectIfFound, redirectTo])
 
-  return { user, mutateUser }
+  return { data: user, mutateUser, ...rest }
 }
