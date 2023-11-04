@@ -3,8 +3,8 @@
 import { IntentBatch, type TokenList } from "@district-labs/intentify-core"
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
-  intentErc20SwapSpotPrice,
-  intentErc20SwapSpotPriceFields,
+  intentErc20SwapSpotPriceExactTokenOut,
+  intentErc20SwapSpotPriceExactTokenOutFields,
   intentUniswapV3HistoricalTwapPercentageChange,
   intentUniswapV3HistoricalTwapPercentageChangeFields,
   nonceManager,
@@ -26,8 +26,9 @@ import { StrategyChildrenCallback } from "../types"
 import { decimalToBigInt, deepMerge } from "../utils"
 import { NonceManager, type NonceConfig } from "./nonce-manager"
 import { useDynamicNonce } from "./use-dynamic-nonce"
+import { useEffect } from "react"
 
-export type StrategyMeanReversion = {
+export type StrategyMeanReversionSell = {
   defaultValues: any
   intentifySafeModuleAddress?: `0x${string}`
   root?: `0x${string}`
@@ -37,7 +38,7 @@ export type StrategyMeanReversion = {
   config: {
     nonce?: NonceConfig
     // erc20-swap-spot-price
-    tokenOutAndAmount: {
+    tokenOut: {
       className: string
       label: string
       classNameLabel?: string
@@ -51,7 +52,25 @@ export type StrategyMeanReversion = {
       description?: string
       classNameDescription?: string
     }
-    tokenAmountExpected: {
+    tokenOutAmount: {
+      className: string
+      label: string
+      classNameLabel?: string
+      description?: string
+      classNameDescription?: string
+    }
+    tokenOutPriceFeed: {
+      className: string
+      label: string
+      classNameLabel?: string
+      description?: string
+      classNameDescription?: string
+    }
+    chainlinkTrigger: {
+      labelTrigger: string
+      classNameTrigger: string
+    }
+    tokenInPriceFeed: {
       className: string
       label: string
       classNameLabel?: string
@@ -59,13 +78,6 @@ export type StrategyMeanReversion = {
       classNameDescription?: string
     }
     thresholdSeconds: {
-      className: string
-      label: string
-      classNameLabel?: string
-      description?: string
-      classNameDescription?: string
-    }
-    isBuy: {
       className: string
       label: string
       classNameLabel?: string
@@ -149,7 +161,7 @@ export type StrategyMeanReversion = {
   children: (props: StrategyChildrenCallback) => React.ReactNode
 }
 
-export function StrategyMeanReversion({
+export function StrategyMeanReversionSell({
   config,
   defaultValues,
   children,
@@ -159,17 +171,37 @@ export function StrategyMeanReversion({
   tokenList,
   intentBatchFactory,
   onIntentBatchGenerated,
-}: StrategyMeanReversion) {
+}: StrategyMeanReversionSell) {
   const startingState = deepMerge(
     {
       ...nonceManager,
-      ...intentErc20SwapSpotPrice,
+      ...intentErc20SwapSpotPriceExactTokenOut,
       ...intentUniswapV3HistoricalTwapPercentageChange,
     },
     defaultValues
   )
 
   const [intentBatch, setIntentBatch] = useImmer(startingState)
+
+  useEffect( () => { 
+    if(chainId)  {
+        setIntentBatch((draft:any) => {
+            draft.ec20SwapSpotPriceExactTokenOut.tokenInPriceFeed = tokenToChainLinkFeed(
+                intentBatch?.ec20SwapSpotPriceExactTokenOut?.tokenIn?.address
+              )
+        })
+    }
+  }, [intentBatch?.ec20SwapSpotPriceExactTokenOut?.tokenIn])
+
+  useEffect( () => { 
+    if(chainId)  {
+        setIntentBatch((draft:any) => {
+            draft.ec20SwapSpotPriceExactTokenOut.tokenOutPriceFeed = tokenToChainLinkFeed(
+                intentBatch?.ec20SwapSpotPriceExactTokenOut?.tokenOut?.address
+              )
+        })
+    }
+  }, [intentBatch?.ec20SwapSpotPriceExactTokenOut?.tokenOut])
 
   const nonceData = useDynamicNonce({
     address: intentifySafeModuleAddress,
@@ -191,44 +223,18 @@ export function StrategyMeanReversion({
       dimensional: nonceData.dimensional,
     })
 
-    if (intentBatch?.erc20SwapSpotPrice?.isBuy == "buy") {
-      intentBatchManager.add("Erc20SwapSpotPriceExactTokenOut", [
-        intentBatch?.erc20SwapSpotPrice?.tokenOut?.address,
-        intentBatch?.erc20SwapSpotPrice?.tokenIn?.address,
-        tokenToChainLinkFeed(
-          chainId,
-          intentBatch?.erc20SwapSpotPrice?.tokenOut?.address
-        ),
-        tokenToChainLinkFeed(
-          chainId,
-          intentBatch?.erc20SwapSpotPrice?.tokenIn?.address
-        ),
-        parseUnits(
-          String(intentBatch.erc20SwapSpotPrice?.tokenAmountExpected),
-          intentBatch.erc20SwapSpotPrice.tokenOut.decimals
-        ),
-        intentBatch?.erc20SwapSpotPrice?.thresholdSeconds,
-      ])
-    }
-    if (intentBatch?.erc20SwapSpotPrice?.isBuy == "sell") {
-      intentBatchManager.add("Erc20SwapSpotPriceExactTokenIn", [
-        intentBatch?.erc20SwapSpotPrice?.tokenOut?.address,
-        intentBatch?.erc20SwapSpotPrice?.tokenIn?.address,
-        tokenToChainLinkFeed(
-          chainId,
-          intentBatch?.erc20SwapSpotPrice?.tokenOut?.address
-        ),
-        tokenToChainLinkFeed(
-          chainId,
-          intentBatch?.erc20SwapSpotPrice?.tokenIn?.address
-        ),
-        parseUnits(
-          String(intentBatch.erc20SwapSpotPrice?.tokenAmountExpected),
-          intentBatch.erc20SwapSpotPrice.tokenOut.decimals
-        ),
-        intentBatch?.erc20SwapSpotPrice?.thresholdSeconds,
-      ])
-    }
+    intentBatchManager.add("Erc20SwapSpotPriceExactTokenOut", [
+      intentBatch?.ec20SwapSpotPriceExactTokenOut?.tokenOut?.address,
+      intentBatch?.ec20SwapSpotPriceExactTokenOut?.tokenIn?.address,
+      intentBatch?.ec20SwapSpotPriceExactTokenOut?.tokenOutPriceFeed,
+      intentBatch?.ec20SwapSpotPriceExactTokenOut?.tokenInPriceFeed,
+      parseUnits(
+        String(intentBatch.ec20SwapSpotPriceExactTokenOut?.tokenOutAmount),
+        intentBatch.ec20SwapSpotPriceExactTokenOut.tokenOut.decimals
+      ),
+      intentBatch?.ec20SwapSpotPriceExactTokenOut?.thresholdSeconds || 3600,
+    ])
+
     intentBatchManager.add("UniswapHistoricalV3TwapPercentageChange", [
       intentBatch?.uniswapV3HistoricalTwapPercentageChange?.uniswapV3Pool,
       intentBatch?.uniswapV3HistoricalTwapPercentageChange
@@ -246,61 +252,78 @@ export function StrategyMeanReversion({
       decimalToBigInt(
         intentBatch?.uniswapV3HistoricalTwapPercentageChange
           ?.minPercentageDifference,
-        2
+        4
       ),
       decimalToBigInt(
         intentBatch?.uniswapV3HistoricalTwapPercentageChange
           ?.maxPercentageDifference,
-        2
+        4
       ),
     ])
     const intentBatchStruct = intentBatchManager.generate()
     onIntentBatchGenerated?.(intentBatchStruct)
   }
-
   return (
     <Card>
-      <CardContent className="grid gap-6 pt-4">
+      <CardContent className="grid gap-4 pt-4">
         <NonceManager
           intentBatch={intentBatch}
           setIntentBatch={setIntentBatch}
           nonceConfig={config?.nonce}
         />
-        {/* UniswapV3 Pool Address */}
-        {intentUniswapV3HistoricalTwapPercentageChangeFields.UniswapV3Pool(
-          intentBatch,
-          setIntentBatch,
-          tokenList,
-          config?.uniswapV3Pool
-        )}
-        {/* UniswapV3 Pool Address */}
+        {/* Token Out & Amount */}
         <div className="">
-          {/* UniswapV3 Pool Address */}
           <div className="flex gap-x-4">
             <div className="flex-1">
-              {intentErc20SwapSpotPriceFields.TokenOutAndAmount(
+              {intentErc20SwapSpotPriceExactTokenOutFields.TokenOutAndAmount(
                 intentBatch,
                 setIntentBatch,
                 tokenList,
-                config?.tokenOutAndAmount
+                config?.tokenOutAmount
               )}
             </div>
-            {intentErc20SwapSpotPriceFields.IsBuy(
-              intentBatch,
-              setIntentBatch,
-              config?.isBuy
-            )}
           </div>
         </div>
-        {intentErc20SwapSpotPriceFields.TokenIn(
+        {intentErc20SwapSpotPriceExactTokenOutFields.TokenIn(
           intentBatch,
           setIntentBatch,
           tokenList,
           config?.tokenIn
         )}
+        {/* Advanced Fields : Chainlink Data Feeds */}
+        <Collapsible>
+          <CollapsibleTrigger asChild>
+            <span className={config?.chainlinkTrigger?.classNameTrigger}>
+              {config?.chainlinkTrigger?.labelTrigger || "Advanced Settings"}
+            </span>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="grid gap-6 pt-4">
+            {intentErc20SwapSpotPriceExactTokenOutFields.TokenOutPriceFeed(
+              intentBatch,
+              setIntentBatch,
+              config?.tokenOutPriceFeed
+            )}
+            {intentErc20SwapSpotPriceExactTokenOutFields.TokenInPriceFeed(
+              intentBatch,
+              setIntentBatch,
+              config?.tokenInPriceFeed
+            )}
+            {intentErc20SwapSpotPriceExactTokenOutFields.ThresholdSeconds(
+              intentBatch,
+              setIntentBatch,
+              config?.thresholdSeconds
+            )}
+          </CollapsibleContent>
+        </Collapsible>
+        <hr className="" />
         <div className="">
-          <h3 className="mb-4 text-2xl font-bold">Time Ranges</h3>
-          <div className="">
+        {/* UniswapV3 Pool Address */}
+            {intentUniswapV3HistoricalTwapPercentageChangeFields.UniswapV3Pool(
+            intentBatch,
+            setIntentBatch,
+            config?.uniswapV3Pool
+            )}
+          <div className="mt-4">
             <h3 className="text-lg font-medium">Time Range Baseline</h3>
             <div className="flex gap-x-4">
               <div className="flex-1">
@@ -374,18 +397,16 @@ export function StrategyMeanReversion({
           </div>
         </div>
         <h3 className="mt-6 text-lg font-medium">Price Range</h3>
-        <div className="">
-          {intentUniswapV3HistoricalTwapPercentageChangeFields.MaxPercentageDifference(
+          {intentUniswapV3HistoricalTwapPercentageChangeFields.MinPercentageDifference(
             intentBatch,
             setIntentBatch,
             config?.minPercentageDifference
           )}
-          {intentUniswapV3HistoricalTwapPercentageChangeFields.MinPercentageDifference(
+          {intentUniswapV3HistoricalTwapPercentageChangeFields.MaxPercentageDifference(
             intentBatch,
             setIntentBatch,
             config?.maxPercentageDifference
           )}
-        </div>
       </CardContent>
       <CardFooter className="flex flex-col gap-y-3">
         {children({

@@ -11,13 +11,13 @@ import {
 } from "@district-labs/intentify-intent-modules-react"
 import { Card, CardContent, CardFooter } from "@district-labs/ui-react"
 import { useImmer } from "use-immer"
+import { parseUnits } from "viem"
 
+import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
 import { StrategyChildrenCallback } from "../types"
 import { convertDateStringToEpoch, deepMerge } from "../utils"
 import { NonceManager, type NonceConfig } from "./nonce-manager"
-import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
 import { useDynamicNonce } from "./use-dynamic-nonce"
-import { parseUnits } from "viem"
 
 export type StrategyLimitOrder = {
   defaultValues: any
@@ -89,7 +89,7 @@ export function StrategyLimitOrder({
     intentBatch,
     root,
     setIntentBatch,
-    config
+    config,
   })
 
   const handleGenerateIntentBatch = async () => {
@@ -100,18 +100,28 @@ export function StrategyLimitOrder({
 
     setIntentBatchManagerNonce(intentBatchManager, intentBatch, {
       standard: nonceData.standard,
-      dimensional: nonceData.dimensional
+      dimensional: nonceData.dimensional,
     })
 
     intentBatchManager.add("TimestampRange", [
-      convertDateStringToEpoch(intentBatch.timestampRange.minTimestamp).toString(),
-      convertDateStringToEpoch(intentBatch.timestampRange.maxTimestamp).toString(),
+      convertDateStringToEpoch(
+        intentBatch.timestampRange.minTimestamp
+      ).toString(),
+      convertDateStringToEpoch(
+        intentBatch.timestampRange.maxTimestamp
+      ).toString(),
     ])
     intentBatchManager.add("Erc20LimitOrder", [
       intentBatch.erc20LimitOrder.tokenIn.address,
       intentBatch.erc20LimitOrder.tokenOut.address,
-      parseUnits(String(intentBatch.erc20LimitOrder.amountIn), intentBatch.erc20LimitOrder.tokenOut.decimals),
-      parseUnits(String(intentBatch.erc20LimitOrder.amountOut), intentBatch.erc20LimitOrder.tokenOut.decimals)
+      parseUnits(
+        String(intentBatch.erc20LimitOrder.amountIn),
+        intentBatch.erc20LimitOrder.tokenOut.decimals
+      ),
+      parseUnits(
+        String(intentBatch.erc20LimitOrder.amountOut),
+        intentBatch.erc20LimitOrder.tokenOut.decimals
+      ),
     ])
     const intentBatchStruct = intentBatchManager.generate()
     onIntentBatchGenerated?.(intentBatchStruct)

@@ -40,7 +40,6 @@ export const getStrategiesActiveFromDB = async (
     },
   });
 
-
   return strategies
     .filter((strategy: any) => {
       return strategy.intentBatches.length > 0;

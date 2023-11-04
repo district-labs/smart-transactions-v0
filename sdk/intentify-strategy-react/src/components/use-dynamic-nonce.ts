@@ -1,16 +1,26 @@
-import { useIntentifySafeModuleGetDimensionalNonce, useIntentifySafeModuleGetStandardNonce } from "@district-labs/intentify-core-react"
 import { useEffect } from "react"
+import {
+  useIntentifySafeModuleGetDimensionalNonce,
+  useIntentifySafeModuleGetStandardNonce,
+} from "@district-labs/intentify-core-react"
 
 type UseDynamicNonce = {
-    address: `0x${string}` | undefined
-    chainId: number | undefined
-    root: `0x${string}` | undefined
-    intentBatch: any,
-    setIntentBatch: any,
-    config: any
+  address: `0x${string}` | undefined
+  chainId: number | undefined
+  root: `0x${string}` | undefined
+  intentBatch: any
+  setIntentBatch: any
+  config: any
 }
-export function useDynamicNonce({address,  chainId, root, intentBatch, setIntentBatch, config}: UseDynamicNonce) {
-    const { data: nonceStandardData, error: nonceStandardError } =
+export function useDynamicNonce({
+  address,
+  chainId,
+  root,
+  intentBatch,
+  setIntentBatch,
+  config,
+}: UseDynamicNonce) {
+  const { data: nonceStandardData, error: nonceStandardError } =
     useIntentifySafeModuleGetStandardNonce({
       address: address,
       chainId: chainId,
@@ -39,6 +49,6 @@ export function useDynamicNonce({address,  chainId, root, intentBatch, setIntent
 
   return {
     standard: nonceStandardData,
-    dimensional: nonceDimensionalData
+    dimensional: nonceDimensionalData,
   }
 }

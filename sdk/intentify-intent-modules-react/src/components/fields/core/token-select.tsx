@@ -14,12 +14,12 @@ export function TokenSelect({
   tokenList,
 }: TokenSelect) {
   return (
-    <div className="group relative flex items-center justify-between gap-2 rounded-md border p-2">
+    <div className="group relative flex items-center gap-2 rounded-md border p-2">
       <TokenSelector
         tokenList={tokenList}
         selectedToken={selectedToken}
         setSelectedToken={setSelectedToken}
-        className="mr-2"
+        className=""
       />
       {selectedToken && (
         <span className="text-sm font-medium">

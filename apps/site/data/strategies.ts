@@ -6,12 +6,16 @@ import FormStrategyMeanReversion from "@/components/forms/form-strategy-mean-rev
 import FormStrategyRecurringPayment from "@/components/forms/form-strategy-recurring-payment"
 import FormStrategySavingsDeposit from "@/components/forms/form-strategy-savings-deposit"
 import { StrategyTable } from "@/components/tables/strategy-table"
+import { ViewFormsStrategyMeanReversion } from "@/components/view/view-forms-strategy-mean-reversion"
+import { ViewTablesStrategyMeanReversion } from "@/components/view/view-tables-strategy-mean-reversion"
 
 import { columnsLeverageLong } from "./tables/columns-leverage-long"
 import { columnsLimitOrder } from "./tables/columns-limit-order"
+import { columnsMeanReversionBuy } from "./tables/columns-mean-reversion-buy"
 import { columnsRecurringPayment } from "./tables/columns-recurring-payment"
 import { transformToLeverageLong } from "./transforms/transform-to-leverage-long"
 import { transformToLimitOrder } from "./transforms/transform-to-limit-order"
+import { transformToMeanReversionBuy } from "./transforms/transform-to-mean-reversion-buy"
 import { transformToRecurringPayment } from "./transforms/transform-to-recurring-payment"
 
 export const strategies = {
@@ -67,10 +71,11 @@ export const strategies = {
       pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
     },
     overrideValues: {},
-    IntentForm: FormStrategyMeanReversion,
-    IntentTable: StrategyTable,
-    transformData: transformToLeverageLong,
-    tableColumns: columnsLeverageLong,
+    // IntentForm: FormStrategyMeanReversion,
+    IntentForm: ViewFormsStrategyMeanReversion,
+    IntentTable: ViewTablesStrategyMeanReversion,
+    transformData: transformToMeanReversionBuy,
+    tableColumns: columnsMeanReversionBuy,
   },
   "0x37023ec377f004afa9c88dc62b789d15d781796030e62f0a57a328aa21131ffb": {
     id: "0x37023ec377f004afa9c88dc62b789d15d781796030e62f0a57a328aa21131ffb",

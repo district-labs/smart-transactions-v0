@@ -85,12 +85,16 @@ export const nonceManagerFields = {
       </Collapsible>
     </div>
   ),
-  NonceTime: (intentBatch: any, setIntentBatch: any, config?: {
-    label: string
-    labelTrigger: string
-    classNameLabel?: string
-    classNameTrigger?: string
-  }) => (
+  NonceTime: (
+    intentBatch: any,
+    setIntentBatch: any,
+    config?: {
+      label: string
+      labelTrigger: string
+      classNameLabel?: string
+      classNameTrigger?: string
+    }
+  ) => (
     <Collapsible>
       <CollapsibleTrigger asChild>
         <p className={config?.classNameTrigger}>

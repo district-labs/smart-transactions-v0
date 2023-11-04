@@ -1,7 +1,6 @@
 "use client"
 
 import { IntentBatch, type TokenList } from "@district-labs/intentify-core"
-
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
   intentAaveLeverageLong,
@@ -12,11 +11,11 @@ import { Card, CardContent, CardFooter } from "@district-labs/ui-react"
 import { useImmer } from "use-immer"
 import { parseUnits } from "viem"
 
+import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
 import { StrategyChildrenCallback } from "../types"
+import { decimalToBigInt, deepMerge } from "../utils"
 import { NonceManager } from "./nonce-manager"
 import { useDynamicNonce } from "./use-dynamic-nonce"
-import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
-import { decimalToBigInt, deepMerge } from "../utils"
 
 export type StrategyLeverageLong = {
   defaultValues: any
@@ -92,7 +91,7 @@ export function StrategyLeverageLong({
     intentBatch,
     root,
     setIntentBatch,
-    config
+    config,
   })
 
   const handleGenerateIntentBatch = async () => {
@@ -103,7 +102,7 @@ export function StrategyLeverageLong({
 
     setIntentBatchManagerNonce(intentBatchManager, intentBatch, {
       standard: nonceData.standard,
-      dimensional: nonceData.dimensional
+      dimensional: nonceData.dimensional,
     })
 
     intentBatchManager.add("AaveLeverageLong", [
