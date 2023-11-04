@@ -10,6 +10,12 @@ import { assets } from "@/lib/utils/asset-utils"
 import { colors, type Color } from "@/lib/utils/color-utils"
 import { FormUserRegister } from "@/components/forms/form-user-register"
 import { Canvas } from "@/components/shared/canvas"
+import { IsSignedIn } from "@/integrations/siwe/components/is-signed-in"
+import { IsWalletConnected } from "@/components/shared/is-wallet-connected"
+import { IsSignedOut } from "@/integrations/siwe/components/is-signed-out"
+import { ButtonSiweSignIn } from "@/integrations/siwe/components/button-siwe-sign-in"
+import { IsWalletDisconnected } from "@/components/shared/is-wallet-disconnected"
+import { WalletConnect } from "@/components/blockchain/wallet-connect"
 
 // import { emailSchema } from "@/lib/validations"
 
@@ -112,7 +118,17 @@ export default function Register() {
           <p className="texty-center mb-8 text-xl text-gray-300">
             Unlock the full power of DeFi with District Finance
           </p>
-          <FormUserRegister currentColor={currentColor} />
+          <IsWalletDisconnected>
+            <WalletConnect />
+          </IsWalletDisconnected>
+          <IsWalletConnected>
+            <IsSignedOut>
+              <ButtonSiweSignIn  className="w-full max-w-[320px]" variant={"secondary"} label="Authenticate" />
+            </IsSignedOut>
+            <IsSignedIn>
+              <FormUserRegister currentColor={currentColor} />
+            </IsSignedIn>
+          </IsWalletConnected>
         </div>
       </div>
       <div className="hidden lg:block">

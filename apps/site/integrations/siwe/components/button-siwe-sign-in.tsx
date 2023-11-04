@@ -13,12 +13,14 @@ interface ButtonSiweSignIn extends HTMLAttributes<HTMLButtonElement> {
   label?: string
   disabled?: boolean
   size?: any
+  variant?: any
 }
 export const ButtonSiweSignIn = ({
   className,
   label = "Sign-In",
   disabled,
   size = "default",
+  variant,
   children,
   ...props
 }: ButtonSiweSignIn) => {
@@ -43,6 +45,7 @@ export const ButtonSiweSignIn = ({
 
   return (
     <Button
+    variant={variant}
       size={size}
       className={classes}
       disabled={disabled}
