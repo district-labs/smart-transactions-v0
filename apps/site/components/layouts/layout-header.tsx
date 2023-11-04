@@ -8,6 +8,7 @@ import { NavigationPanel } from "@/components/layouts/navigation-panel"
 
 import { NavigationAccount } from "./navigation-account"
 import { LinkComponent } from "../shared/link-component"
+import Image from "next/image"
 
 export default function Header() {
   const scrolled = useScroll(0)
@@ -25,7 +26,7 @@ export default function Header() {
         </div>
         <div className='sm:flex-1 flex sm:justify-center'>
           <LinkComponent href="/">
-            <img src="/district-globe-dark.svg" width={36} height={36} />
+            <Image alt="District Finance" src="/district-globe-dark.svg" width={36} height={36} />
           </LinkComponent>
         </div>
         <div className="justify-end space-x-2 sm:flex sm:flex-1">
