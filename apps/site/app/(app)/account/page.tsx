@@ -26,9 +26,9 @@ export default function AccountPage() {
               <TabsTrigger className={classesTabTrigger} value="profile">
                 Profile
               </TabsTrigger>
-              <TabsTrigger className={classesTabTrigger} value="feedback">
+              {/* <TabsTrigger className={classesTabTrigger} value="feedback">
                 Feedback
-              </TabsTrigger>
+              </TabsTrigger> */}
             </TabsList>
           </div>
         </section>
