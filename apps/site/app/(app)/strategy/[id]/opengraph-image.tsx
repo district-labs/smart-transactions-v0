@@ -105,6 +105,10 @@ export default async function Image({ params }: { params: { id: string } }) {
         {
           strategy.createdBy ? (
             <div style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
               marginTop: "22px",
             }}>
               <h4
@@ -121,7 +125,7 @@ export default async function Image({ params }: { params: { id: string } }) {
               <span style={{
                   fontSize: "12px",
                   fontFamily: "SF Pro",
-                  color: "black",
+                  color: "#7B7B7B",
                   lineHeight: "5rem",
                   letterSpacing: "-0.02em",
                 }}>Created By</span>
