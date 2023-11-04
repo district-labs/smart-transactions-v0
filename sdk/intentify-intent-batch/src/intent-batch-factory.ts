@@ -1,4 +1,4 @@
-import { IntentBatch, generateIntentId } from "@district-labs/intentify-core"
+import { generateIntentId, IntentBatch } from "@district-labs/intentify-core"
 import {
   decodeAbiParameters,
   encodeAbiParameters,
@@ -65,10 +65,14 @@ export class IntentBatchFactory {
     return decodeAbiParameters(args, data)
   }
 
-   async validate(intentBatch: IntentBatch, chainId: number, validationArgs?: {
-    name: string,
-    args: any
-  }[]) {
+  async validate(
+    intentBatch: IntentBatch,
+    chainId: number,
+    validationArgs?: {
+      name: string
+      args: any
+    }[]
+  ) {
     const results = intentBatch.intents.map(async (intent) => {
       // We add a try/catch statement around validation because getModuleByAddress throws an error if a module is unavailable.
       // There are instances where we want to ignore this error because we don't care about validating specific intents.
@@ -76,35 +80,43 @@ export class IntentBatchFactory {
       // The service might pass intents like Erc20LimitOrder even though it wants to ignore those validations.
       try {
         const module = this.getModuleByAddress(intent.target)
-        if(module.validate) {
+        if (module.validate) {
           let validationArguments = {}
-          const intentToValidate = validationArgs?.find(args => args.name == module.name)
-          if(this.clients) {
+          const intentToValidate = validationArgs?.find(
+            (args) => args.name == module.name
+          )
+          if (this.clients) {
             const publicClient = this?.clients[chainId]
-           if(!publicClient && !intentToValidate)  {
-            throw new Error(`Provide publicClient or validation arguments for ${module.name}`)
-           }
+            if (!publicClient && !intentToValidate) {
+              throw new Error(
+                `Provide publicClient or validation arguments for ${module.name}`
+              )
+            }
             validationArguments = {
               ...intentToValidate?.args,
-              publicClient
+              publicClient,
             }
           } else {
-            if(!intentToValidate)  {
+            if (!intentToValidate) {
               throw new Error(`Provide validation arguments for ${module.name}`)
             }
             validationArguments = {
-              ...intentToValidate?.args
+              ...intentToValidate?.args,
             }
           }
-          const validation = await module.validate(module.abi, intent.data, validationArguments)
+          const validation = await module.validate(
+            module.abi,
+            intent.data,
+            validationArguments
+          )
           return {
             name: module.name,
-            results: validation
+            results: validation,
           }
         } else {
           return {
             name: module.name,
-            results: []
+            results: [],
           }
         }
       } catch (error) {
@@ -118,7 +130,7 @@ export class IntentBatchFactory {
     return intentBatch.intents.map((intent) => {
       const module = this.getModuleByAddress(intent.target)
       const decoded = this.decode(module.abi, intent.data)
-      console.log(decoded,  module,'decoded')
+      console.log(decoded, module, "decoded")
       return {
         intentId: generateIntentId(module.name), // TODO: Update to use dynamic module version.
         name: module.name,

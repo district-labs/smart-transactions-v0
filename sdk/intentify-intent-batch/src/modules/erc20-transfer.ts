@@ -9,8 +9,7 @@ const erc20TransferIntentEncodeABI = getAbiItem({
   name: "encodeIntent",
 }).inputs
 
-export type Erc20TransferIntentEncodeABI =
-  typeof erc20TransferIntentEncodeABI
+export type Erc20TransferIntentEncodeABI = typeof erc20TransferIntentEncodeABI
 
 export const erc20Transfer = {
   name: "Erc20Transfer",

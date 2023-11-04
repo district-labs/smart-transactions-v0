@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { IntentBatch, type TokenList } from "@district-labs/intentify-core"
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
@@ -26,7 +27,6 @@ import { StrategyChildrenCallback } from "../types"
 import { decimalToBigInt, deepMerge } from "../utils"
 import { NonceManager, type NonceConfig } from "./nonce-manager"
 import { useDynamicNonce } from "./use-dynamic-nonce"
-import { useEffect } from "react"
 
 export type StrategyMeanReversionSell = {
   defaultValues: any
@@ -183,23 +183,25 @@ export function StrategyMeanReversionSell({
 
   const [intentBatch, setIntentBatch] = useImmer(startingState)
 
-  useEffect( () => { 
-    if(chainId)  {
-        setIntentBatch((draft:any) => {
-            draft.ec20SwapSpotPriceExactTokenOut.tokenInPriceFeed = tokenToChainLinkFeed(
-                intentBatch?.ec20SwapSpotPriceExactTokenOut?.tokenIn?.address
-              )
-        })
+  useEffect(() => {
+    if (chainId) {
+      setIntentBatch((draft: any) => {
+        draft.ec20SwapSpotPriceExactTokenOut.tokenInPriceFeed =
+          tokenToChainLinkFeed(
+            intentBatch?.ec20SwapSpotPriceExactTokenOut?.tokenIn?.address
+          )
+      })
     }
   }, [intentBatch?.ec20SwapSpotPriceExactTokenOut?.tokenIn])
 
-  useEffect( () => { 
-    if(chainId)  {
-        setIntentBatch((draft:any) => {
-            draft.ec20SwapSpotPriceExactTokenOut.tokenOutPriceFeed = tokenToChainLinkFeed(
-                intentBatch?.ec20SwapSpotPriceExactTokenOut?.tokenOut?.address
-              )
-        })
+  useEffect(() => {
+    if (chainId) {
+      setIntentBatch((draft: any) => {
+        draft.ec20SwapSpotPriceExactTokenOut.tokenOutPriceFeed =
+          tokenToChainLinkFeed(
+            intentBatch?.ec20SwapSpotPriceExactTokenOut?.tokenOut?.address
+          )
+      })
     }
   }, [intentBatch?.ec20SwapSpotPriceExactTokenOut?.tokenOut])
 
@@ -317,12 +319,12 @@ export function StrategyMeanReversionSell({
         </Collapsible>
         <hr className="" />
         <div className="">
-        {/* UniswapV3 Pool Address */}
-            {intentUniswapV3HistoricalTwapPercentageChangeFields.UniswapV3Pool(
+          {/* UniswapV3 Pool Address */}
+          {intentUniswapV3HistoricalTwapPercentageChangeFields.UniswapV3Pool(
             intentBatch,
             setIntentBatch,
             config?.uniswapV3Pool
-            )}
+          )}
           <div className="mt-4">
             <h3 className="text-lg font-medium">Time Range Baseline</h3>
             <div className="flex gap-x-4">
@@ -397,16 +399,16 @@ export function StrategyMeanReversionSell({
           </div>
         </div>
         <h3 className="mt-6 text-lg font-medium">Price Range</h3>
-          {intentUniswapV3HistoricalTwapPercentageChangeFields.MinPercentageDifference(
-            intentBatch,
-            setIntentBatch,
-            config?.minPercentageDifference
-          )}
-          {intentUniswapV3HistoricalTwapPercentageChangeFields.MaxPercentageDifference(
-            intentBatch,
-            setIntentBatch,
-            config?.maxPercentageDifference
-          )}
+        {intentUniswapV3HistoricalTwapPercentageChangeFields.MinPercentageDifference(
+          intentBatch,
+          setIntentBatch,
+          config?.minPercentageDifference
+        )}
+        {intentUniswapV3HistoricalTwapPercentageChangeFields.MaxPercentageDifference(
+          intentBatch,
+          setIntentBatch,
+          config?.maxPercentageDifference
+        )}
       </CardContent>
       <CardFooter className="flex flex-col gap-y-3">
         {children({

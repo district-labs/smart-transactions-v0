@@ -73,10 +73,35 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        blink: {
+          "0%": {
+            opacity: "0",
+          },
+          "0.1%": {
+            opacity: "1",
+          },
+          "50%": {
+            opacity: "1",
+          },
+          "50.1%": {
+            opacity: "0",
+          },
+          "100%": {
+            opacity: "0",
+          },
+        },
+        typewriter: {
+          to: {
+            left: "100%",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        caret:
+          "typewriter 2s steps(36) forwards, blink 1.5s steps(36) infinite 2s",
+        typewriter: "typewriter 2s steps(36) forwards",
       },
       screens: {
         "2xl": "1440px",

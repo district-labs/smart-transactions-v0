@@ -15,9 +15,27 @@ export const userProfileIsSignedIn = async (
 ) => {
   try {
     const session = await getIronSession(request, response, ironOptions);
+    if (!session.address) {
+      throw new Error("User session not found");
+    }
+    const user = await db.query.users.findFirst({
+      where: eq(users.address, session.address),
+      with: {
+        emailPreferences: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
     return response
       .status(200)
-      .json({ address: session.address, isLoggedIn: !!session.address });
+      .json({
+        address: session.address,
+        isLoggedIn: !!session.address,
+        isRegistered: user.isRegistered,
+        emailSaved: !!user.email,
+      });
   } catch (error) {
     next(error);
   }
@@ -47,6 +65,36 @@ export const userProfileGet = async (
     return response.status(200).json({
       data: user,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const userProfileRegister = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const data = await request.body;
+    const session = await getIronSession(request, response, ironOptions);
+
+    const existingUser = await db.query.users.findFirst({
+      where: eq(users.address, session.address),
+    });
+
+    if (existingUser) {
+      await db
+        .update(users)
+        .set({
+          email: data.email,
+        })
+        .where(eq(users.address, session.address));
+    } else {
+      await db.insert(users).values(data);
+    }
+
+    return response.status(200).send();
   } catch (error) {
     next(error);
   }

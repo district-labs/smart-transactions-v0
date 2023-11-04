@@ -12,11 +12,8 @@ export function encodeDimensionalNonce(
   );
 }
 
-
-export function decodeDimensionalNonce(
-  nonceData: Hex,
-) {
+export function decodeDimensionalNonce(nonceData: Hex) {
   const queue = nonceData.slice(4, 4 + 30);
   const accumulator = nonceData.slice(34, 34 + 32);
-  return [BigInt(queue), BigInt(accumulator)]
+  return [BigInt(queue), BigInt(accumulator)];
 }

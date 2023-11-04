@@ -24,7 +24,10 @@ import {
 } from "@district-labs/ui-react"
 import { useAccount } from "wagmi"
 
+import { useUser } from "@/hooks/use-user"
+
 import WalletConnectCustom from "../blockchain/wallet-connect-custom"
+import { LinkComponent } from "../shared/link-component"
 
 type ButtonSetupSmartWalletBeforeSigningIntent =
   React.HTMLAttributes<HTMLElement>
@@ -33,8 +36,15 @@ export const ButtonSetupSmartWalletBeforeSigningIntent = ({
   children,
 }: ButtonSetupSmartWalletBeforeSigningIntent) => {
   const { address } = useAccount()
+  const {
+    data: userData,
+    isError: userIsError,
+    isSuccess: userIsSuccess,
+  } = useUser()
   const isSmartWalletModuleEnabled = useIsSafeIntentModuleEnabled()
   const isSignedIn = useIsSignedIn()
+
+  console.log(userData, "userDatauserData")
 
   if (!address) {
     return (
@@ -47,6 +57,16 @@ export const ButtonSetupSmartWalletBeforeSigningIntent = ({
 
   if (!isSignedIn) {
     return <ButtonSiweSignIn label="Authenticate" className="w-full" />
+  }
+
+  if (userIsSuccess && !userData?.isRegistered) {
+    return (
+      <LinkComponent href="/register" className="w-full">
+        <Button variant="default" className="w-full">
+          Register for Alpha
+        </Button>
+      </LinkComponent>
+    )
   }
 
   if (isSmartWalletModuleEnabled) {

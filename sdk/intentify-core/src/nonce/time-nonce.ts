@@ -9,11 +9,9 @@ export function encodeTimeNonce(id: number, delta: bigint, count: bigint): Hex {
   );
 }
 
-export function decodeTimeNonce(
-  nonceData: Hex,
-) {
+export function decodeTimeNonce(nonceData: Hex) {
   const id = nonceData.slice(4, 4 + 8);
   const delta = nonceData.slice(12, 12 + 32);
   const count = nonceData.slice(44);
-  return [BigInt(id), BigInt(`0x${delta}`), BigInt(count)]
+  return [BigInt(id), BigInt(`0x${delta}`), BigInt(count)];
 }
