@@ -1,9 +1,6 @@
 "use client"
 
 import React from "react"
-import Image from "next/image"
-import Link from "next/link"
-
 import { cn } from "@/lib/utils"
 import useScroll from "@/hooks/use-scroll"
 import { NavigationCore } from "@/components/layouts/navigation-core"
@@ -25,14 +22,6 @@ export default function Header() {
         <div className="hidden flex-1 justify-end sm:flex sm:justify-start">
           <NavigationCore />
         </div>
-        <Link href="/" className="flex flex-1 items-center space-x-2">
-          <Image
-            src="/images/auth-layout.webp"
-            alt="District Labs Logo"
-            width={45}
-            height={45}
-          />
-        </Link>
         <div className="justify-end space-x-2 sm:flex">
           <NavigationAccount />
           <NavigationPanel />

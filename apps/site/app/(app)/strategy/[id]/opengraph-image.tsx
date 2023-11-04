@@ -75,29 +75,39 @@ export default async function Image({ params }: { params: { id: string } }) {
             "linear-gradient(to bottom right, #FFF 25%, #EEEEEE 75%)",
         }}
       >
-        <h1
+        <h3
           style={{
-            fontSize: "100px",
+            color: "#969696",
+            fontSize: "58px",
             fontFamily: "SF Pro",
             fontWeight: 900,
             letterSpacing: "-0.02em",
           }}
         >
+          Strategy
+        </h3>
+        <h1
+          style={{
+            fontSize: "100px",
+            fontFamily: "SF Pro",
+            fontWeight: 800,
+            letterSpacing: "-0.02em",
+          }}
+        >
           {strategy.name}
         </h1>
-        <h3
+        <p
           style={{
             fontSize: "22px",
             fontFamily: "SF Pro",
             color: "#7B7B7B",
-            lineHeight: "5rem",
             letterSpacing: "-0.02em",
             textAlign: "center",
-            maxWidth: "520px",
+            maxWidth: "65%",
           }}
         >
           {strategy.description}
-        </h3>
+        </p>
         {
           strategy.createdBy ? (
             <div style={{
