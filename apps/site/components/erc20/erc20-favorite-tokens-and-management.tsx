@@ -15,6 +15,7 @@ import { Erc20CardTokenOverview } from './erc20-card-token-overview';
 import { useFindTokenFromList } from '@/integrations/erc20/hooks/use-find-token-from-list';
 import { useChainId } from 'wagmi';
 import { ResponsiveMobileAndDesktop } from '../shared/responsive-mobile-and-desktop';
+import { ERC20BalanceSafe } from './erc20-balanceOf-safe';
 
 type Erc20FavoriteTokensAndManagement = React.HTMLAttributes<HTMLElement>;
 
@@ -73,7 +74,7 @@ const chainId = useChainId();
  return(
   <div className={classes}>
    <img src={token.logoURI} className="w-6 h-6 rounded-full" alt={token.name} />
-   <ERC20Balance address={token.address as `0x${string}`} chainId={token.chainId} />
+   <ERC20BalanceSafe address={token.address as `0x${string}`} chainId={token.chainId} />
    <span className='text-2xs font-medium'>{token.symbol}</span>
   </div>
 )}
