@@ -9,7 +9,7 @@ import { ExecuteRootTransaction } from "./utils/ExecuteRootTransaction.sol";
 
 /// @title ERC20 Swap Spot Price Exact Token Out Intent
 /// @notice An intent to execute a swap of ERC20 tokens at the current spot price providing the exact amount of tokens
-/// to be soold.
+/// to be sold.
 contract ERC20SwapSpotPriceBalanceTokenOutIntent is
     IntentWithHookAbstract,
     ExecuteRootTransaction,
