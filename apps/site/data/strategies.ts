@@ -17,22 +17,37 @@ import { transformToLeverageLong } from "./transforms/transform-to-leverage-long
 import { transformToLimitOrder } from "./transforms/transform-to-limit-order"
 import { transformToMeanReversionBuy } from "./transforms/transform-to-mean-reversion-buy"
 import { transformToRecurringPayment } from "./transforms/transform-to-recurring-payment"
+import FormStrategyAutomaticLending from "@/components/strategies/form-strategy-automatic-lending"
+import FormStrategyAutomaticSaving from "@/components/strategies/form-strategy-automatic-saving"
+import FormStrategyAutomaticLiquidate from "@/components/strategies/form-strategy-automatic-liquidate"
+import { columnsAutomaticLending } from "./tables/columns-automatic-lending"
+import { transformToAutomaticLending } from "./transforms/transform-to-automatic-lending"
+import { transformToAutomaticSaving } from "./transforms/transform-to-automatic-saving"
+import { columnsAutomaticSaving } from "./tables/columns-automatic-saving"
+import { transformToAutomaticLiquidate } from "./transforms/transform-to-automatic-liquidate"
+import { columnsAutomaticLiquidate } from "./tables/columns-automatic-liquidate"
+import { ADDRESS_ZERO } from "@district-labs/intentify-core"
 
 export const strategies = {
   "0x37023ec377f004afa9c88dc62b789d15d781796030e62f0a57a328aa21131ffb": {
     id: "0x37023ec377f004afa9c88dc62b789d15d781796030e62f0a57a328aa21131ffb",
-    name: "Recurring Transfer",
+    name: "District Subscription",
     alias: "recurring-transfer",
     description:
-      "Automatically transfer tokens to a specified address at a specified time interval. ",
+      "Subscribe to District Finance for 7 days. Make a daily payment of 10 DIS.",
     createdBy: {
       name: "District Finance",
-      pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
+      pfp: "/apple-touch-icon.png",
     },
     overrideValues: {
       nonce: {
         type: "time",
         args: [0, 6000, 7],
+      },
+      erc20Transfer: {
+        tokenOut: tokenListGoerli.tokens[2],
+        amountOut: 100,
+        to: ADDRESS_ZERO
       },
     },
     IntentForm: FormStrategyRecurringPayment,
@@ -40,21 +55,54 @@ export const strategies = {
     transformData: transformToRecurringPayment,
     tableColumns: columnsRecurringPayment,
   },
-  // "0x5": {
-  //   id: "0x5",
-  //   name: "Automatic Savings Deposit",
-  //   alias: "automatic-savings-deposit",
-  //   description:
-  //     "Automatically deposit into a PoolTogether savings account for a chance to win prizes. Minimum token balance required.",
-  //   createdBy: {
-  //     name: "District Finance",
-  //     pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
-  //   },
-  //   IntentForm: FormStrategySavingsDeposit,
-  //   IntentTable: StrategyTable,
-  //   transformData: transformToLeverageLong,
-  //   tableColumns: columnsLeverageLong,
-  // },
+  "0x5": {
+    id: "0x5",
+    name: "Automatic Lending",
+    alias: "automatic-lending",
+    description:
+      "Automatically lend an asset when you have a minimum balance in your account.",
+    createdBy: {
+      name: "District Finance",
+      pfp: "/apple-touch-icon.png",
+    },
+    overrideValues: {},
+    IntentForm: FormStrategyAutomaticLending,
+    IntentTable: StrategyTable,
+    transformData: transformToAutomaticLending,
+    tableColumns: columnsAutomaticLending,
+  },
+  "0x6": {
+    id: "0x6",
+    name: "Recurring Prize Savings Deposit",
+    alias: "recurring-prize-savings-deposit",
+    description:
+      "Automatically deposit into a PoolTogether savings account for a chance to win prizes. Minimum token balance required.",
+    createdBy: {
+      name: "District Finance",
+      pfp: "/apple-touch-icon.png",
+    },
+    overrideValues: {},
+    IntentForm: FormStrategyAutomaticSaving,
+    IntentTable: StrategyTable,
+    transformData: transformToAutomaticSaving,
+    tableColumns: columnsAutomaticSaving,
+  },
+  "0x7": {
+    id: "0x7",
+    name: "Liquidate Balance",
+    alias: "liquidate-balance",
+    description:
+      "Automatically liquidate a position (spot price) when it reaches a certain threshold.",
+    createdBy: {
+      name: "District Finance",
+      pfp: "/apple-touch-icon.png",
+    },
+    overrideValues: {},
+    IntentForm: FormStrategyAutomaticLiquidate,
+    IntentTable: StrategyTable,
+    transformData: transformToAutomaticLiquidate,
+    tableColumns: columnsAutomaticLiquidate,
+  },
   "0x564369be27beaca3a73a1da91280164eaa81e9a66d5e43c2a180c78fef295505": {
     id: "0x564369be27beaca3a73a1da91280164eaa81e9a66d5e43c2a180c78fef295505",
     name: "Limit Order",
@@ -63,17 +111,13 @@ export const strategies = {
       "Swap ERC20 tokens at a specified rate and time range. The order will be executed if an order can be filled within the time range.",
     createdBy: {
       name: "District Finance",
-      pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
+      pfp: "/apple-touch-icon.png",
     },
     overrideValues: {
       erc20LimitOrder: {
         tokenOut: tokenListGoerli.tokens[0],
         tokenIn: tokenListGoerli.tokens[2],
-      },
-      timestampRange: {
-        minTimestamp: "2023-10-28T07:00",
-        maxTimestamp: "2023-10-28T07:00",
-      },
+      }
     },
     IntentForm: FormStrategyLimitOrder,
     IntentTable: StrategyTable,
@@ -88,7 +132,7 @@ export const strategies = {
       "Leverage long an asset by borrowing and buying more of it. You can set the leverage amount and the supply token.",
     createdBy: {
       name: "District Finance",
-      pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
+      pfp: "/apple-touch-icon.png",
     },
     overrideValues: {},
     IntentForm: FormStrategyLeverageLong,
@@ -104,7 +148,7 @@ export const strategies = {
       "Buy or sell token when it's price is above/below a certain threshold. Measures historical onchain price data.",
     createdBy: {
       name: "District Finance",
-      pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
+      pfp: "/apple-touch-icon.png",
     },
     overrideValues: {},
     // IntentForm: FormStrategyMeanReversion,

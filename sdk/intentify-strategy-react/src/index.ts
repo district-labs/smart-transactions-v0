@@ -1,4 +1,7 @@
 export * from "./types"
+export * from "./components/strategy-automatic-lending"
+export * from "./components/strategy-automatic-savings"
+export * from "./components/strategy-automatic-liquidate"
 export * from "./components/strategy-limit-order"
 export * from "./components/strategy-leverage-long"
 export * from "./components/strategy-recurring-payment"

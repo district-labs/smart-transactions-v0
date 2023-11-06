@@ -201,6 +201,18 @@ export function FormStrategyMeanReversionSell({
             classNameValue:
               "pl-2 ml-3 text-lg text-muted-background w-[52px] block text-right flex items-center gap-x-1",
           },
+          intentContainerStatement: {
+            label: "Intent Statement",
+            className: "bg-card-footer p-3 rounded-md shadow-xs border-dotted border-2 border-neutral-400 text-xs",
+          },
+          nonceStatement: {
+            label: "Intent Statement",
+            className: "mb-3",
+          },
+          intentStatement: {
+            label: "Intent Statement",
+            className: "text-xs",
+          },
         }}
       >
         {({

@@ -16,6 +16,24 @@ type DateTimeLocal = {
   config: DateTimeLocalConfig
 }
 
+function toDateInputValue(epoch?: number) {
+  if(typeof epoch !== 'number') { 
+    return new Date().getFullYear()
+  } else {
+    const date = new Date(epoch * 1000)
+    // Pad the month, day, hours and minutes with leading zeros, if required
+    var month = ('0' + (date.getMonth() + 1)).slice(-2);
+    var day = ('0' + date.getDate()).slice(-2);
+    var hours = ('0' + date.getHours()).slice(-2);
+    var minutes = ('0' + date.getMinutes()).slice(-2);
+    
+    // Format the datetime-local input value in the required format
+    var dateTimeLocalFormat = date.getFullYear() + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+   
+    return dateTimeLocalFormat
+  }
+}
+
 export const DateTimeLocal = ({
   path,
   intentBatch,
@@ -30,13 +48,14 @@ export const DateTimeLocal = ({
         </Label>
       )}
       <Input
+        defaultValue={toDateInputValue()}
         type="datetime-local"
-        value={getValueFromPath(intentBatch, path)}
+        value={toDateInputValue(getValueFromPath(intentBatch, path))}
         onChange={(event: any) => {
           const date = new Date(event.target.value)
           const epoch = Math.floor(date.getTime() / 1000)
           setIntentBatch((draft: any) => {
-            setValueFromPath(draft, path, event.target.value)
+            setValueFromPath(draft, path, epoch)
           })
         }}
       />

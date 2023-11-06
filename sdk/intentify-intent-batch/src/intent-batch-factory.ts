@@ -130,7 +130,6 @@ export class IntentBatchFactory {
     return intentBatch.intents.map((intent) => {
       const module = this.getModuleByAddress(intent.target)
       const decoded = this.decode(module.abi, intent.data)
-      console.log(decoded, module, "decoded")
       return {
         intentId: generateIntentId(module.name), // TODO: Update to use dynamic module version.
         name: module.name,

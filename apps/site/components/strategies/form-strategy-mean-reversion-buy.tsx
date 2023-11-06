@@ -116,12 +116,6 @@ export function FormStrategyMeanReversionBuy({
             description: "The amount of tokens to trade.",
             classNameDescription: "text-xs",
           },
-          thresholdSeconds: {
-            label: "Threshold Seconds",
-            className: "text-muted-background",
-            description: "Chainlink price feed update threshold.",
-            classNameDescription: "text-xs",
-          },
           chainlinkTrigger: {
             classNameTrigger:
               "text-xs bg-neutral-100 px-2 py-1 w-full text-center cursor-pointer rounded-lg shadow-sm",
@@ -136,6 +130,12 @@ export function FormStrategyMeanReversionBuy({
             label: "Token In Chainlink Price Feed",
             className: "text-muted-background",
             description: "Chainlink price feed to measure a historical price.",
+            classNameDescription: "text-xs",
+          },
+          thresholdSeconds: {
+            label: "Threshold Seconds",
+            className: "text-muted-background",
+            description: "Chainlink price feed update threshold.",
             classNameDescription: "text-xs",
           },
           uniswapV3Pool: {
@@ -205,6 +205,18 @@ export function FormStrategyMeanReversionBuy({
             classNameDescription: "text-xs",
             classNameValue:
               "pl-2 ml-3 text-lg text-muted-background w-[52px] block text-right flex items-center gap-x-1",
+          },
+          intentContainerStatement: {
+            label: "Intent Statement",
+            className: "bg-card-footer p-3 rounded-md shadow-xs border-dotted border-2 border-neutral-400 text-xs",
+          },
+          nonceStatement: {
+            label: "Intent Statement",
+            className: "mb-3",
+          },
+          intentStatement: {
+            label: "Intent Statement",
+            className: "text-xs",
           },
         }}
       >

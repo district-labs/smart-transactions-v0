@@ -44,8 +44,6 @@ export const ButtonSetupSmartWalletBeforeSigningIntent = ({
   const isSmartWalletModuleEnabled = useIsSafeIntentModuleEnabled()
   const isSignedIn = useIsSignedIn()
 
-  console.log(userData, "userDatauserData")
-
   if (!address) {
     return (
       <WalletConnectCustom
@@ -57,16 +55,6 @@ export const ButtonSetupSmartWalletBeforeSigningIntent = ({
 
   if (!isSignedIn) {
     return <ButtonSiweSignIn label="Authenticate" className="w-full" />
-  }
-
-  if (userIsSuccess && !userData?.isRegistered) {
-    return (
-      <LinkComponent href="/register" className="w-full">
-        <Button variant="default" className="w-full">
-          Register for Alpha
-        </Button>
-      </LinkComponent>
-    )
   }
 
   if (isSmartWalletModuleEnabled) {
@@ -160,5 +148,16 @@ export const ButtonSetupSmartWalletBeforeSigningIntent = ({
       </Sheet>
     )
   }
+
+  if (userIsSuccess && !userData?.isRegistered) {
+    return (
+      <LinkComponent href="/register" className="w-full">
+        <Button variant="default" className="w-full">
+          Register for Alpha
+        </Button>
+      </LinkComponent>
+    )
+  }
+
   return null
 }

@@ -42,7 +42,6 @@ export function FormStrategyRecurringPayment({
 
   const [currentValues, setCurrentValues] = useState<any>(null)
   const defaultValues = useFormStrategySetDefaultValues(overrideValues)
-
   const { isLoading: isSignatureRequested, signTypedDataAsync } =
     useSignTypedData()
 
@@ -101,6 +100,18 @@ export function FormStrategyRecurringPayment({
                 defaultCount: 7,
               },
             },
+          },
+          intentContainerStatement: {
+            label: "Intent Statement",
+            className: "bg-card-footer p-3 rounded-md shadow-xs border-dotted border-2 border-neutral-400 text-xs",
+          },
+          nonceStatement: {
+            label: "Intent Statement",
+            className: "mb-3",
+          },
+          intentStatement: {
+            label: "Intent Statement",
+            className: "",
           },
           tokenOutAndAmount: {
             label: "Transfer",

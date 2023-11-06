@@ -33,6 +33,8 @@ export const DeploySafe = ({
   const walletFactoryAddress = useGetWalletFactoryAddress(chainId);
   const safeProxyAddress = useGetSafeProxyAddress(chainId);
 
+  console.log(safeProxyAddress, 'safeProxyAddresssafeProxyAddress')
+
   const deterministicWalletAddress =
     useWalletFactoryGetDeterministicWalletAddress({
       address: walletFactoryAddress,
