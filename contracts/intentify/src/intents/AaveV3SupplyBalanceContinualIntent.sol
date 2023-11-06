@@ -81,7 +81,6 @@ contract AaveV3SupplyBalanceContinualIntent is IntentAbstract, ExecuteRootTransa
 
         uint256 supplyAmount = tokenOutBalance - minBalance;
 
-        // supply(address asset, uint256 amount, address onBehalfOf, uint16 referralCode)
         bytes memory txData = abi.encodeWithSelector(IPool.supply.selector, tokenOut, supplyAmount, intent.root, 0);
         executeFromRoot(_aaveV3Pool, 0, txData);
 
