@@ -1,7 +1,11 @@
-# Setup Local Environment
+# Local Setup
 forge script script/deploy/SafeDeploy.s.sol:SafeDeploy --rpc-url http://localhost:8545 --broadcast
-forge script script/deploy/CoreDeploy.s.sol:CoreDeploy --rpc-url http://localhost:8545 --broadcast
-forge script script/deploy/ERC20TestDeploy.s.sol:ERC20TestDeploy --rpc-url http://localhost:8545 --broadcast
+forge script script/deploy/testnet/CoreDeploy.s.sol:CoreDeploy 0x000000000000000000000000000000000000dEaD 0x000000000000000000000000000000000000dEaD 0x000000000000000000000000000000000000dEaD 0x000000000000000000000000000000000000dEaD 0x000000000000000000000000000000000000dEaD--sig "run(address,address)" --rpc-url http://localhost:8545 --broadcast
+forge script script/deploy/testnet/PeripheryDeploy.s.sol:PeripheryDeploy --rpc-url http://localhost:8545 --broadcast
+
+# Testnet Setup
+forge script script/deploy/testnet/CoreDeploy.s.sol:CoreDeploy 0x000000000000000000000000000000000000dEaD 0x000000000000000000000000000000000000dEaD 0x000000000000000000000000000000000000dEaD 0x000000000000000000000000000000000000dEaD 0x000000000000000000000000000000000000dEaD --sig "run(address,address,address,address,address)" --rpc-url http://localhost:8545 --broadcast
+forge script script/deploy/testnet/PeripheryDeploy.s.sol:PeripheryDeploy --rpc-url http://localhost:8545 --broadcast
 
 
 # E2E Testing
