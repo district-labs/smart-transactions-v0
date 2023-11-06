@@ -20,6 +20,14 @@ export const strategyMeanReversion = {
     "Buy/Sell an asset when it's price is above/below a certain threshold. Generally higher returns than holding or dollar cost averaging.",
 }
 
+export const strategyRecurringTransfer = {
+  id: "0x37023ec377f004afa9c88dc62b789d15d781796030e62f0a57a328aa21131ffb",
+  name: "Recurring Transfer",
+  alias: "recurring-transfer",
+  description:
+    "Automatically transfer tokens to a specified address at a specified time interval. ",
+}
+
 // export const strategySmartCash = {
 //   id: "0x4",
 //   name: "Smart Cash",
@@ -29,8 +37,9 @@ export const strategyMeanReversion = {
 // }
 
 export const strategiesBeta = [
-  strategyLimitOrder,
-  strategyLeverageLong,
-  strategyMeanReversion,
+  // strategyLimitOrder,
+  // strategyLeverageLong,
+  // strategyMeanReversion,
+  strategyRecurringTransfer
   // strategySmartCash
 ]

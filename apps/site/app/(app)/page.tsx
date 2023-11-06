@@ -14,12 +14,12 @@ export default function Home() {
         className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center justify-center gap-4 px-6 pb-8 pt-6 text-center md:pb-12 md:pt-10 lg:px-8 lg:py-20"
       >
         <h1 className="text-3xl font-bold leading-tight tracking-normal md:text-5xl lg:text-6xl lg:leading-[1.1]">
-          District Finance
+          Smart Transactions
         </h1>
         <Balancer className="my-2 max-w-3xl text-lg text-muted-foreground sm:text-xl">
-          Interact with blockchains without the hassle.{" "}
+          Interact with blockchains without the hassle<br/>
           <span className="font-bold">
-            Smart transactions that work for you.
+            Unlock the full power of Decentralized Finance
           </span>
         </Balancer>
       </section>

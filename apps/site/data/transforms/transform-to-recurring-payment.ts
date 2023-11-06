@@ -3,22 +3,26 @@ import { type IntentBatch } from "@district-labs/intentify-core"
 import { transformIntentQueryToIntentBatchStruct } from "./transform-intent-query-to-intent-batch-struct"
 
 export type RecurringPaymentIntent = {
+  nonce: string
   chainId: number
   tokenOut: string
   amountOut: number
   to: string
   status: "open" | "closed" | "canceled"
   intentBatch: IntentBatch
+  intentBatchDb: any
 }
 
-export function transformToRecurringPayment(intentBatch: any) {
+export function transformToRecurringPayment(
+  intentBatch: any
+): RecurringPaymentIntent {
   const { intents } = intentBatch
   return {
     chainId: Number(intentBatch.chainId),
+    nonce: intentBatch.nonce,
     tokenOut: String(intents[0]?.intentArgs[0]?.value),
     amountOut: Number(intents[0]?.intentArgs[1]?.value),
     to: String(intents[0]?.intentArgs[2]?.value),
-    executeBefore: String(intents[0]?.intentArgs[1]?.value),
     status: getStatus(intentBatch.executedAt, intentBatch?.cancelledAt),
     intentBatch: transformIntentQueryToIntentBatchStruct(intentBatch),
     intentBatchDb: intentBatch,

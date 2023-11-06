@@ -18,16 +18,14 @@ import {
   CollapsibleTrigger,
 } from "@district-labs/ui-react"
 import { useImmer } from "use-immer"
+import { parseUnits } from "viem"
 
+import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
+import { tokenToChainLinkFeed } from "../token-to-chainlink-feed"
 import { StrategyChildrenCallback } from "../types"
 import { decimalToBigInt, deepMerge } from "../utils"
 import { NonceManager, type NonceConfig } from "./nonce-manager"
-import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
 import { useDynamicNonce } from "./use-dynamic-nonce"
-import { tokenToChainLinkFeed } from "../token-to-chainlink-feed"
-import { parseUnits } from "viem"
-
-
 
 export type StrategyMeanReversion = {
   defaultValues: any
@@ -179,7 +177,7 @@ export function StrategyMeanReversion({
     intentBatch,
     root,
     setIntentBatch,
-    config
+    config,
   })
 
   const handleGenerateIntentBatch = async () => {
@@ -190,28 +188,71 @@ export function StrategyMeanReversion({
 
     setIntentBatchManagerNonce(intentBatchManager, intentBatch, {
       standard: nonceData.standard,
-      dimensional: nonceData.dimensional
+      dimensional: nonceData.dimensional,
     })
 
-    intentBatchManager.add("Erc20SwapSpotPrice", [
-      intentBatch?.erc20SwapSpotPrice?.tokenOut?.address,
-      intentBatch?.erc20SwapSpotPrice?.tokenIn?.address,
-      tokenToChainLinkFeed(chainId, intentBatch?.erc20SwapSpotPrice?.tokenOut?.address),
-      tokenToChainLinkFeed(chainId, intentBatch?.erc20SwapSpotPrice?.tokenIn?.address),
-      parseUnits(String(intentBatch.erc20SwapSpotPrice?.tokenAmountExpected), intentBatch.erc20LimitOrder.tokenOut.decimals),
-      intentBatch?.erc20SwapSpotPrice?.thresholdSeconds,
-      intentBatch?.erc20SwapSpotPrice?.isBuy == 'buy' ? '0x1' : '0x0',
-    ])
+    if (intentBatch?.erc20SwapSpotPrice?.isBuy == "buy") {
+      intentBatchManager.add("Erc20SwapSpotPriceExactTokenOut", [
+        intentBatch?.erc20SwapSpotPrice?.tokenOut?.address,
+        intentBatch?.erc20SwapSpotPrice?.tokenIn?.address,
+        tokenToChainLinkFeed(
+          chainId,
+          intentBatch?.erc20SwapSpotPrice?.tokenOut?.address
+        ),
+        tokenToChainLinkFeed(
+          chainId,
+          intentBatch?.erc20SwapSpotPrice?.tokenIn?.address
+        ),
+        parseUnits(
+          String(intentBatch.erc20SwapSpotPrice?.tokenAmountExpected),
+          intentBatch.erc20SwapSpotPrice.tokenOut.decimals
+        ),
+        intentBatch?.erc20SwapSpotPrice?.thresholdSeconds,
+      ])
+    }
+    if (intentBatch?.erc20SwapSpotPrice?.isBuy == "sell") {
+      intentBatchManager.add("Erc20SwapSpotPriceExactTokenIn", [
+        intentBatch?.erc20SwapSpotPrice?.tokenOut?.address,
+        intentBatch?.erc20SwapSpotPrice?.tokenIn?.address,
+        tokenToChainLinkFeed(
+          chainId,
+          intentBatch?.erc20SwapSpotPrice?.tokenOut?.address
+        ),
+        tokenToChainLinkFeed(
+          chainId,
+          intentBatch?.erc20SwapSpotPrice?.tokenIn?.address
+        ),
+        parseUnits(
+          String(intentBatch.erc20SwapSpotPrice?.tokenAmountExpected),
+          intentBatch.erc20SwapSpotPrice.tokenOut.decimals
+        ),
+        intentBatch?.erc20SwapSpotPrice?.thresholdSeconds,
+      ])
+    }
     intentBatchManager.add("UniswapHistoricalV3TwapPercentageChange", [
       intentBatch?.uniswapV3HistoricalTwapPercentageChange?.uniswapV3Pool,
-      intentBatch?.uniswapV3HistoricalTwapPercentageChange?.numeratorReferenceBlockOffset,
-      intentBatch?.uniswapV3HistoricalTwapPercentageChange?.numeratorBlockWindow,
-      intentBatch?.uniswapV3HistoricalTwapPercentageChange?.numeratorBlockWindowTolerance,
-      intentBatch?.uniswapV3HistoricalTwapPercentageChange?.denominatorReferenceBlockOffset,
-      intentBatch?.uniswapV3HistoricalTwapPercentageChange?.denominatorBlockWindow,
-      intentBatch?.uniswapV3HistoricalTwapPercentageChange?.denominatorBlockWindowTolerance,
-      decimalToBigInt(intentBatch?.uniswapV3HistoricalTwapPercentageChange?.minPercentageDifference,2 ), 
-      decimalToBigInt(intentBatch?.uniswapV3HistoricalTwapPercentageChange?.maxPercentageDifference,2)
+      intentBatch?.uniswapV3HistoricalTwapPercentageChange
+        ?.numeratorReferenceBlockOffset,
+      intentBatch?.uniswapV3HistoricalTwapPercentageChange
+        ?.numeratorBlockWindow,
+      intentBatch?.uniswapV3HistoricalTwapPercentageChange
+        ?.numeratorBlockWindowTolerance,
+      intentBatch?.uniswapV3HistoricalTwapPercentageChange
+        ?.denominatorReferenceBlockOffset,
+      intentBatch?.uniswapV3HistoricalTwapPercentageChange
+        ?.denominatorBlockWindow,
+      intentBatch?.uniswapV3HistoricalTwapPercentageChange
+        ?.denominatorBlockWindowTolerance,
+      decimalToBigInt(
+        intentBatch?.uniswapV3HistoricalTwapPercentageChange
+          ?.minPercentageDifference,
+        2
+      ),
+      decimalToBigInt(
+        intentBatch?.uniswapV3HistoricalTwapPercentageChange
+          ?.maxPercentageDifference,
+        2
+      ),
     ])
     const intentBatchStruct = intentBatchManager.generate()
     onIntentBatchGenerated?.(intentBatchStruct)

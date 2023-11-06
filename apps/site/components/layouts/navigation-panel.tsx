@@ -59,7 +59,7 @@ export function NavigationPanel() {
             Account
           </Link>
           <Link
-            href={"/account"}
+            href={"/smart-wallet"}
             className="flex w-full items-center border-b py-4 text-sm font-medium"
             onClick={() => setOpen(false)}
           >
@@ -73,13 +73,13 @@ export function NavigationPanel() {
           >
             <CircleDollarSign size={16} className="mr-1" /> Strategies
           </Link>
-          <Link
+          {/* <Link
             href={"/data-hub"}
             className="flex w-full items-center border-b py-4 text-sm font-medium"
             onClick={() => setOpen(false)}
           >
             <FileText size={16} className="mr-1" /> Data Hub
-          </Link>
+          </Link> */}
           <Link
             href={siteConfig.links.discord}
             className="flex w-full items-center border-b py-4 text-sm font-medium"

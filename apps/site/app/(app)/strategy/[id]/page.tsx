@@ -20,8 +20,15 @@ export default function Page({ params }: any) {
     return <StrategyUnavailable />
   }
 
-  const { name, description, IntentForm, id, tableColumns, transformData } =
-    selectedStrategy
+  const {
+    name,
+    description,
+    IntentForm,
+    IntentTable,
+    id,
+    tableColumns,
+    transformData,
+  } = selectedStrategy
 
   return (
     <>
@@ -66,7 +73,7 @@ export default function Page({ params }: any) {
             </IsSignedOut>
             <IsSignedIn>
               <div className="rounded-xl bg-background p-4 shadow-md">
-                <StrategyTable
+                <IntentTable
                   pageCount={10}
                   strategyId={id}
                   columns={tableColumns}

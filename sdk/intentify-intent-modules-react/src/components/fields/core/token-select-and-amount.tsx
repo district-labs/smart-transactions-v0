@@ -19,23 +19,26 @@ export function TokenSelectAndAmount({
   tokenList,
 }: TokenSelectAndAmount) {
   return (
-    <div className="group relative flex items-center justify-between gap-2 rounded-md border py-1">
+    <div className="group relative flex items-center justify-between gap-2 rounded-md border p-2">
+      <div className="flex items-center gap-x-2">
+        <TokenSelector
+          tokenList={tokenList}
+          selectedToken={selectedToken}
+          setSelectedToken={setSelectedToken}
+        />
+        {selectedToken?.symbol && (
+          <span className="text-sm font-medium">
+            {selectedToken.name} ({selectedToken.symbol})
+          </span>
+        )}
+      </div>
       <input
         id="amount"
         type="number"
-        className="placeholder:text-muted-foreground block w-full flex-1 bg-transparent px-3 py-1 text-sm font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-transparent"
+        className="placeholder:text-muted-foreground block w-full flex-1 bg-transparent px-3 py-1 text-right text-sm text-xl font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-transparent"
         placeholder="0.0"
         value={amount}
         onChange={(e) => setAmount(parseInt(e.target.value))}
-      />
-      {selectedToken?.symbol && (
-        <span className="text-sm font-medium">{selectedToken?.symbol}</span>
-      )}
-      <TokenSelector
-        tokenList={tokenList}
-        selectedToken={selectedToken}
-        setSelectedToken={setSelectedToken}
-        className="mr-2"
       />
     </div>
   )

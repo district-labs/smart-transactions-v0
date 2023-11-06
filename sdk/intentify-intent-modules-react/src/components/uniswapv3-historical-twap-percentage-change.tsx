@@ -10,7 +10,7 @@ export type IntentUniswapV3HistoricalTwapPercentageChange = {
     denominatorBlockWindow: string
     denominatorBlockWindowTolerance: string
     minPercentageDifference: string
-    maxPercentageDifference: boolean
+    maxPercentageDifference: string
   }
 }
 
@@ -23,8 +23,8 @@ export const intentUniswapV3HistoricalTwapPercentageChange = {
     denominatorReferenceBlockOffset: "0",
     denominatorBlockWindow: "0",
     denominatorBlockWindowTolerance: "0",
-    minPercentageDifference: "0",
-    maxPercentageDifference: false,
+    minPercentageDifference: "1",
+    maxPercentageDifference: "1",
   },
 } as IntentUniswapV3HistoricalTwapPercentageChange
 
@@ -32,7 +32,6 @@ export const intentUniswapV3HistoricalTwapPercentageChangeFields = {
   UniswapV3Pool: (
     intentBatch: any,
     setIntentBatch: any,
-    poolList: any,
     config: {
       className?: string
       label: string

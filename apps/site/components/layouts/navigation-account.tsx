@@ -14,7 +14,7 @@ import {
 
 export function NavigationAccount() {
   return (
-    <div className="mr-4 hidden md:flex">
+    <div className="mr-4 hidden sm:flex">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>

@@ -9,4 +9,3 @@ export * from "./eth-tip"
 export * from "./timestamp-range"
 export * from "./uniswapv3-historical-twap-percentage-change-intent"
 export * from "./uniswapv3-twap-intent"
-
