@@ -10,7 +10,8 @@ import { AaveLeverageLongIntent } from "../../../src/intents/AaveLeverageLongInt
 import { ChainlinkDataFeedIntent } from "../../../src/intents/ChainlinkDataFeedIntent.sol";
 import { ERC20LimitOrderIntent } from "../../../src/intents/ERC20LimitOrderIntent.sol";
 import { ERC20RebalanceIntent } from "../../../src/intents/ERC20RebalanceIntent.sol";
-import { ERC20SwapSpotPriceBalanceTokenOutIntent } from "../../../src/intents/ERC20SwapSpotPriceBalanceTokenOutIntent.sol";
+import { ERC20SwapSpotPriceBalanceTokenOutIntent } from
+    "../../../src/intents/ERC20SwapSpotPriceBalanceTokenOutIntent.sol";
 import { ERC20SwapSpotPriceExactTokenInIntent } from "../../../src/intents/ERC20SwapSpotPriceExactTokenInIntent.sol";
 import { ERC20SwapSpotPriceExactTokenOutIntent } from "../../../src/intents/ERC20SwapSpotPriceExactTokenOutIntent.sol";
 import { ERC20TipIntent } from "../../../src/intents/ERC20TipIntent.sol";
@@ -19,11 +20,20 @@ import { ERC4626DepositBalanceContinualIntent } from "../../../src/intents/ERC46
 import { ERC20TipIntent } from "../../../src/intents/ERC20TipIntent.sol";
 import { BlockNumberIntent } from "../../../src/intents/BlockNumberIntent.sol";
 import { TimestampIntent } from "../../../src/intents/TimestampIntent.sol";
-import { UniswapV3HistoricalTwapPercentageChangeIntent } from "../../../src/intents/UniswapV3HistoricalTwapPercentageChangeIntent.sol";
+import { UniswapV3HistoricalTwapPercentageChangeIntent } from
+    "../../../src/intents/UniswapV3HistoricalTwapPercentageChangeIntent.sol";
 import { UniswapV3TwapIntent } from "../../../src/intents/UniswapV3TwapIntent.sol";
 
 contract CoreDeploy is Script {
-    function run(address intentifySafeModule, address multisend, address aaveV3Pool, address uniswapV3TwapOracleAddress, address chainlinkPriceFeedUSD) external {
+    function run(
+        address intentifySafeModule,
+        address multisend,
+        address aaveV3Pool,
+        address uniswapV3TwapOracleAddress,
+        address chainlinkPriceFeedUSD
+    )
+        external
+    {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
         // Periphery Contracts

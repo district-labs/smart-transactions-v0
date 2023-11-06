@@ -7,7 +7,6 @@ import { WalletFactoryTestnet } from "../../../src/WalletFactoryTestnet.sol";
 
 contract PeripheryDeploy is Script {
     function run() external {
-
         ERC20Mintable weth = new ERC20Mintable("Test Wrapped ETH","WETH",18);
         ERC20Mintable usdc = new ERC20Mintable("Test USDC","USDC", 6);
         ERC20Mintable dis = new ERC20Mintable("District Labs","DIS", 18);
