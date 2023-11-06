@@ -11,6 +11,7 @@ import { useChainId } from "wagmi"
 import { cn } from "@/lib/utils"
 
 import { Erc20MintTestnet } from "./erc20-mint-testnet"
+import { ERC20BalanceSafe } from "./erc20-balanceOf-safe"
 
 type Erc20CardTokenOverview = React.HTMLAttributes<HTMLElement> & {
   symbol: string
@@ -40,7 +41,7 @@ export const Erc20CardTokenOverview = ({
       <div className="col-span-6 flex items-center gap-x-10">
         <div className="flex-1">
           <h3 className="text-2xl font-bold">
-            <ERC20Balance
+            <ERC20BalanceSafe
               address={token.address as `0x${string}`}
               chainId={chainId}
             />
