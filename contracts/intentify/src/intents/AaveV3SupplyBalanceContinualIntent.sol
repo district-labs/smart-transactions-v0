@@ -43,7 +43,7 @@ contract AaveV3SupplyBalanceContinualIntent is IntentAbstract, ExecuteRootTransa
     }
 
     /// @notice Helper function to encode provided parameters into a byte array.
-    /// @param tokenOut The token to be sold.
+    /// @param tokenOut The token to be supplied.
     /// @param minBalance The minimum balance to be maintained in the root smart wallet.
     /// @param balanceDelta The difference from the minimum balance before a deposit is triggered.
     function encodeIntent(
