@@ -59,16 +59,16 @@ export type StrategyMeanReversionSell = {
       description?: string
       classNameDescription?: string
     }
+    chainlinkTrigger: {
+      labelTrigger: string
+      classNameTrigger: string
+    }
     tokenOutPriceFeed: {
       className: string
       label: string
       classNameLabel?: string
       description?: string
       classNameDescription?: string
-    }
-    chainlinkTrigger: {
-      labelTrigger: string
-      classNameTrigger: string
     }
     tokenInPriceFeed: {
       className: string

@@ -1,6 +1,6 @@
 "use client"
 
-import { IntentBatch, type TokenList } from "@district-labs/intentify-core"
+import { IntentBatch, Token, type TokenList } from "@district-labs/intentify-core"
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
   intentAaveLeverageLong,
@@ -16,6 +16,9 @@ import { StrategyChildrenCallback } from "../types"
 import { decimalToBigInt, deepMerge } from "../utils"
 import { NonceManager } from "./nonce-manager"
 import { useDynamicNonce } from "./use-dynamic-nonce"
+import { NonceStatement } from "./nonce-statement"
+import numeral from "numeral"
+import { useEffect, useState } from "react"
 
 export type StrategyLeverageLong = {
   defaultValues: any
@@ -59,6 +62,18 @@ export type StrategyLeverageLong = {
       description: string
       classNameDescription?: string
       classNameValue?: string
+    }
+    intentContainerStatement: {
+      className: string
+      label: string
+    }
+    intentStatement: {
+      className: string
+      label: string
+    }
+    nonceStatement: {
+      className: string
+      label: string
     }
   }
   onIntentBatchGenerated: (intentBatchEIP712: IntentBatch) => void
@@ -161,6 +176,18 @@ export function StrategyLeverageLong({
           setIntentBatch,
           config?.fee
         )}
+        <div className={config?.intentContainerStatement?.className}>
+          <NonceStatement
+            className={config?.nonceStatement?.className}
+            nonce={intentBatch.nonce}
+          />
+          <IntentStatement
+            tokenOut={intentBatch?.aaveLeverageLong?.supplyAsset}
+            tokenIn={intentBatch?.aaveLeverageLong?.borrowAsset}
+            minHealthFactor={intentBatch?.aaveLeverageLong?.minHealthFactor}
+            fee={intentBatch?.aaveLeverageLong?.fee}
+          />
+        </div>
       </CardContent>
       <CardFooter>
         {children({
@@ -169,5 +196,47 @@ export function StrategyLeverageLong({
         })}
       </CardFooter>
     </Card>
+  )
+}
+
+
+type IntentStatement = React.HTMLAttributes<HTMLElement> & {
+  tokenOut: Token
+  tokenIn: Token
+  minHealthFactor: string
+  fee: string
+}
+
+const IntentStatement = ({
+  className,
+  tokenIn,
+  tokenOut,
+  minHealthFactor,
+  fee,
+}: IntentStatement) => {
+  if (
+    !tokenOut ||
+    !tokenIn ||
+    !minHealthFactor ||
+    !fee
+  )
+    return (
+      <div className={className}>
+        <p className="">
+          Please fill out the form to generate an intent statement.
+        </p>
+      </div>
+    )
+
+  return (
+    <div className={className}>
+      Leverage long by borrowing against{" "}
+      <span className="font-bold">
+         {tokenOut?.symbol}{" "}
+        <span className="font-normal">and borrowing/swapping</span> {tokenIn.symbol}
+      </span> for more {tokenOut?.symbol}. The minimum health factor is{" "}
+      <span className="font-bold">{minHealthFactor}%</span> and the fee is{" "}
+      <span className="font-bold">{fee}%</span>.
+    </div>
   )
 }

@@ -8,7 +8,7 @@ export function useFindTokenFromList(
   symbol: string,
   chainId: number
 ) {
-  const [token, setToken] = useState<Token | undefined>()
+  const [token, setToken] = useState<Token | null>()
 
   useEffect(() => {
     setToken(findTokenFromList(tokenList, symbol, chainId))

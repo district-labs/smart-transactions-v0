@@ -14,9 +14,10 @@ type Input = {
   intentBatch: any
   setIntentBatch: any
   config: InputConfig
+  disabled?: boolean
 }
 
-export const Input = ({ path, intentBatch, setIntentBatch, config }: Input) => {
+export const Input = ({ disabled, path, intentBatch, setIntentBatch, config }: Input) => {
   return (
     <div className={config?.className}>
       {config?.label && (
@@ -25,6 +26,7 @@ export const Input = ({ path, intentBatch, setIntentBatch, config }: Input) => {
         </Label>
       )}
       <InputCore
+        disabled={disabled}
         value={getValueFromPath(intentBatch, path)}
         onChange={(event: any) => {
           const date = new Date(event.target.value)

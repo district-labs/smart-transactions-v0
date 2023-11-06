@@ -12,6 +12,7 @@ export type TokenSelectAndAmountConfig = {
 }
 
 export type TokenSelectAndAmount = {
+  disabled?: boolean
   pathAmount: string[]
   pathToken: string[]
   intentBatch: any
@@ -21,6 +22,7 @@ export type TokenSelectAndAmount = {
 }
 
 export const TokenSelectAndAmount = ({
+  disabled,
   pathAmount,
   pathToken,
   tokenList,
@@ -39,6 +41,7 @@ export const TokenSelectAndAmount = ({
         </Label>
       )}
       <TokenSelectAndAmountCore
+        disabled={disabled}
         tokenList={tokenList}
         amount={getValueFromPath(intentBatch, pathAmount)}
         setAmount={(value) =>

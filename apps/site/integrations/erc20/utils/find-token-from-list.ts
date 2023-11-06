@@ -10,7 +10,8 @@ export function findTokenFromList(
   })
 
   if (!token) {
-    throw new Error(`Token ${symbol} not found in token list`)
+    return null
+    // throw new Error(`Token ${symbol} not found in token list`)
   }
 
   return token

@@ -194,7 +194,6 @@ contract ERC20SwapSpotPriceExactTokenOutIntent is
     /// @param intent Contains data related to intent.
     /// @param hook Contains data related to hook.
     /// @param tokenInAmount The estimated amount of tokens to be purchased.
-    /// parameter (purchased if true, sold if false).
     /// @param initialTokenInBalance The initial balance of the tokenIn in the intent root.
     /// @return success Whether the unlock was successful or not.
     function _unlock(

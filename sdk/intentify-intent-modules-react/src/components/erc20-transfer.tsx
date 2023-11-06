@@ -33,6 +33,7 @@ export const intentErc20TransferFields = {
     }
   ) => (
     <TokenSelectAndAmount
+    disabled={true}
       intentBatch={intentBatch}
       config={config}
       setIntentBatch={setIntentBatch}
@@ -53,6 +54,7 @@ export const intentErc20TransferFields = {
     }
   ) => (
     <Input
+      disabled={true}
       intentBatch={intentBatch}
       config={config}
       setIntentBatch={setIntentBatch}

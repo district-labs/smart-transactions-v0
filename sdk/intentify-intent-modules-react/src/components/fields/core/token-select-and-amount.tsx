@@ -4,6 +4,7 @@ import type { Token, TokenList } from "@district-labs/intentify-core"
 import { TokenSelector } from "./token-selector"
 
 interface TokenSelectAndAmount {
+  disabled?: boolean
   amount: number | undefined
   setAmount: Dispatch<SetStateAction<number | undefined>>
   selectedToken: Token
@@ -12,6 +13,7 @@ interface TokenSelectAndAmount {
 }
 
 export function TokenSelectAndAmount({
+  disabled,
   amount,
   setAmount,
   selectedToken,
@@ -22,6 +24,7 @@ export function TokenSelectAndAmount({
     <div className="group relative flex items-center justify-between gap-2 rounded-md border p-2">
       <div className="flex items-center gap-x-2">
         <TokenSelector
+          disabled={disabled}
           tokenList={tokenList}
           selectedToken={selectedToken}
           setSelectedToken={setSelectedToken}
@@ -33,6 +36,7 @@ export function TokenSelectAndAmount({
         )}
       </div>
       <input
+        disabled={disabled}
         id="amount"
         type="number"
         className="placeholder:text-muted-foreground block w-full flex-1 bg-transparent px-3 py-1 text-right text-sm text-xl font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-transparent"

@@ -1,6 +1,6 @@
 "use client"
 
-import { HTMLAttributes } from "react"
+import { HTMLAttributes, useState } from "react"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { formatUnits } from "viem"
 import { Address, useAccount } from "wagmi"
@@ -28,13 +28,16 @@ export interface ERC20ChainIdProps extends ERC20Props {
 }
 
 export function ERC20Image({ address, ...props }: ERC20Props) {
+  const [ src, setSrc ] = useState(`https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`)
+
   return (
     <img
+      onError={(e) => setSrc("/images/tokens/generic.png")}
       alt={`Token ${address} icon`}
       className="mx-auto h-12 w-12 rounded-full border-2 border-white shadow-md"
-      src={`https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`}
+      src={src}
       {...props}
-    />
+      />
   )
 }
 
@@ -131,7 +134,7 @@ export function ERC20Balance({
     watch: true,
   })
 
-  if (!isSuccess || !isSuccessDecimals) return null
+  if (!isSuccess || !isSuccessDecimals) return <span className={className}>0</span>
 
   return (
     <span className={className} {...props}>

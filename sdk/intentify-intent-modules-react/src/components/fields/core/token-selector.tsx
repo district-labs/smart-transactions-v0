@@ -13,6 +13,7 @@ import {
 import { cn } from "../../../utils"
 
 interface TokenSelectorProps {
+  disabled?: boolean
   selectedToken: Token
   setSelectedToken: (token: Token) => void
   className?: string
@@ -20,6 +21,7 @@ interface TokenSelectorProps {
 }
 
 export function TokenSelector({
+  disabled,
   selectedToken,
   setSelectedToken,
   className,
@@ -59,7 +61,7 @@ export function TokenSelector({
     <>
       <button
         className={(cn("w-fit rounded-full"), className)}
-        onClick={() => setOpen(true)}
+        onClick={() => !disabled ? setOpen(true) : undefined}
       >
         {selectedToken && (
           <img

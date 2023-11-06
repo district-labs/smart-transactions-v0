@@ -10,6 +10,7 @@ import { IsWalletConnected } from "@/components/shared/is-wallet-connected"
 import { IsWalletDisconnected } from "@/components/shared/is-wallet-disconnected"
 import { SkeletonTable } from "@/components/skeleton/skeleton-table"
 import { StrategyTable } from "@/components/tables/strategy-table"
+import { Erc20FavoriteTokensAndManagement } from "@/components/erc20/erc20-favorite-tokens-and-management"
 
 export default function Page({ params }: any) {
   const selectedStrategy = Object.values(strategies).find((strategy: any) => {
@@ -32,6 +33,11 @@ export default function Page({ params }: any) {
 
   return (
     <>
+        <section className="relative mb-12">
+          <div className='container max-w-screen-md mx-auto'>
+            <Erc20FavoriteTokensAndManagement />
+          </div>
+        </section>
       <div className="overflow-hidden">
         <section className="relative mb-12">
           <div className="h-84 w-84 absolute inset-0 z-0 mx-auto rounded-full bg-gradient-radial from-neutral-200 via-white to-transparent dark:from-neutral-700 dark:via-transparent dark:to-transparent"></div>
