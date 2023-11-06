@@ -6,6 +6,7 @@ import { IntentifySafeModule } from "../../../src/module/IntentifySafeModule.sol
 import { IntentifySafeModuleBundler } from "../../../src/module/IntentifySafeModuleBundler.sol";
 import { WalletFactoryTestnet } from "../../../src/WalletFactoryTestnet.sol";
 import { ChainlinkDataFeedIntent } from "../../../src/intents/ChainlinkDataFeedIntent.sol";
+import { EthTipIntent } from "../../../src/intents/EthTipIntent.sol";
 import { ERC20LimitOrderIntent } from "../../../src/intents/ERC20LimitOrderIntent.sol";
 import { ERC20RebalanceIntent } from "../../../src/intents/ERC20RebalanceIntent.sol";
 import { ERC20SwapSpotPriceBalanceTokenOutIntent } from
@@ -34,6 +35,7 @@ contract GoerliCoreDeploy is Script {
         // Intent Modules Contracts
         new BlockNumberIntent();
         new ChainlinkDataFeedIntent();
+        new EthTipIntent(intentifySafeModule);
         new ERC20SwapSpotPriceBalanceTokenOutIntent(intentifySafeModule);
         new ERC20TipIntent(intentifySafeModule);
         new ERC20TransferIntent(intentifySafeModule);

@@ -15,11 +15,43 @@
   "tokens": [
     {
       "chainId": 5,
-      "address": "0xB992440B880F2BEa8B1656EF305B0f7cC607A625",
+      "address": "0x2ab2786E93EF381C37463330eb570449E87fa492",
+      "name": "Test Wrapped ETH",
+      "symbol": "WETH",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+    },
+    {
+      "chainId": 5,
+      "address": "0x1700AF12268032f96f4c447ac15d381442Be99f4",
       "name": "Test USDC",
       "symbol": "USDC",
       "decimals": 6,
       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+    },
+    {
+      "chainId": 5,
+      "address": "0xf212c1F9d768AbBB111a23cbAa4172FdAA2A6600",
+      "name": "District Labs",
+      "symbol": "DIS",
+      "decimals": 18,
+      "logoURI": "/images/tokens/district.png"
+    },
+    {
+      "chainId": 5,
+      "address": "0xBF3C31027452F6f7ed0Ff6dAEA1F371C9F646aFc",
+      "name": "Web3 Rizz",
+      "symbol": "RIZZ",
+      "decimals": 18,
+      "logoURI": "/images/tokens/rizz.png"
+    },
+    {
+      "chainId": 31337,
+      "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+      "name": "Test Wrapped ETH",
+      "symbol": "WETH",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
     },
     {
       "chainId": 31337,
@@ -44,22 +76,6 @@
       "symbol": "RIZZ",
       "decimals": 18,
       "logoURI": "/images/tokens/rizz.png"
-    },
-    {
-      "chainId": 5,
-      "address": "0x0dcd1bf9a1b36ce34237eeafef220932846bcd82",
-      "name": "Test Wrapped ETH",
-      "symbol": "WETH",
-      "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-    },
-    {
-      "chainId": 31337,
-      "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
-      "name": "Test Wrapped ETH",
-      "symbol": "WETH",
-      "decimals": 18,
-      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
     }
   ]
 }

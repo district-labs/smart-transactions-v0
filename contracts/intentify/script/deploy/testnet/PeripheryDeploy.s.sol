@@ -42,8 +42,8 @@ contract PeripheryDeploy is Script {
         amountList[3] = 1e18;
         vm.stopBroadcast();
 
-        uint256 deployerPrivateKey = vm.envUint("WALLET_FACTORY_PRIVATE_KEY");
-        vm.startBroadcast(deployerPrivateKey);
+        uint256 walletFactoryDeployerPrivateKey = vm.envUint("WALLET_FACTORY_PRIVATE_KEY");
+        vm.startBroadcast(walletFactoryDeployerPrivateKey);
 
         // Wallet Factory
         new WalletFactoryTestnet(

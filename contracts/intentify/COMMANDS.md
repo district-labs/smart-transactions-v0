@@ -4,8 +4,9 @@ forge script script/deploy/testnet/CoreDeploy.s.sol:CoreDeploy 0x000000000000000
 forge script script/deploy/testnet/PeripheryDeploy.s.sol:PeripheryDeploy --rpc-url http://localhost:8545 --broadcast
 
 # Testnet Setup
-forge script script/deploy/testnet/CoreDeploy.s.sol:CoreDeploy 0x000000000000000000000000000000000000dEaD 0x000000000000000000000000000000000000dEaD 0x000000000000000000000000000000000000dEaD 0x000000000000000000000000000000000000dEaD 0x000000000000000000000000000000000000dEaD --sig "run(address,address,address,address,address)" --rpc-url http://localhost:8545 --broadcast
-forge script script/deploy/testnet/PeripheryDeploy.s.sol:PeripheryDeploy --rpc-url http://localhost:8545 --broadcast
+forge script script/deploy/testnet/PeripheryDeploy.s.sol:PeripheryDeploy 0x8018fe32fCFd3d166E8b4c4E37105318A84BA11b --sig "run(address)" --rpc-url $GOERLI_RPC_URL --broadcast
+
+forge script script/deploy/testnet/GoerliCoreDeploy.s.sol:GoerliCoreDeploy 0xA238CBeb142c10Ef7Ad8442C6D1f9E89e07e7761 0x3316EEA891fFdE66773E0937F48658677f342e2A --sig "run(address,address)" --rpc-url $GOERLI_RPC_URL --broadcast
 
 
 # E2E Testing
