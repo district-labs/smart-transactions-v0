@@ -1,18 +1,55 @@
 import type {
-  DbIntentBatchWithRelations,
   DbIntentBatch,
+  DbIntentBatchWithRelations,
 } from "@district-labs/intentify-database";
 import {
   and,
   db,
   eq,
+  inArray,
   intentBatch,
   intents,
+  notInArray,
 } from "@district-labs/intentify-database";
 
 interface GetIntentBatchesFromDBFilter
   extends Partial<Omit<DbIntentBatchWithRelations, "id" | "updatedAt">> {
   intentBatchesValidity?: "valid" | "invalid" | "all";
+}
+
+function applyIntentBatchesValidityFilter(
+  filtersToApply: any,
+  intentBatchesValidity: GetIntentBatchesFromDBFilter["intentBatchesValidity"],
+) {
+  // Retrieve only intent batches with valid intents is "valid" is provided
+  if (intentBatchesValidity === "valid") {
+    filtersToApply.push(
+      notInArray(
+        intentBatch.intentBatchHash,
+        db
+          .select({ id: intents.intentBatchId })
+          .from(intents)
+          .where(eq(intents.isInvalid, true)),
+      ),
+    );
+  } else if (intentBatchesValidity === "invalid") {
+    // Retrieve only intent batches with at least one invalid intent is "invalid" is provided
+    filtersToApply.push(
+      inArray(
+        intentBatch.intentBatchHash,
+        db
+          .select({ id: intents.intentBatchId })
+          .from(intents)
+          .where(eq(intents.isInvalid, true)),
+      ),
+    );
+  } else if (
+    intentBatchesValidity !== "all" &&
+    intentBatchesValidity !== undefined
+  ) {
+    // Throw an error if an invalid filter is provided
+    throw new Error(`Invalid filter: ${intentBatchesValidity}`);
+  }
 }
 
 /**
@@ -33,26 +70,13 @@ export const getIntentBatchesFromDB = async (
     filtersToApply.push(eq(intentBatch.strategyId, strategyId));
   }
 
+  /// Intent batches validity filter
+  applyIntentBatchesValidityFilter(filtersToApply, intentBatchesValidity);
+
   return db.query.intentBatch.findMany({
     where: !filtersToApply ? undefined : () => and(...filtersToApply),
     with: {
-      intents:
-        // Retrieve all intents if no filter of "all" is provided
-        intentBatchesValidity === "all" || intentBatchesValidity === undefined
-          ? true
-          : // Retrieve only intent batches with valid intents
-          intentBatchesValidity === "valid"
-          ? {
-              where(fields, { eq }) {
-                return eq(fields.isInvalid, false);
-              },
-            }
-          : // Retrieve only intent batches with at least one invalid intent
-            {
-              where(fields, { eq }) {
-                return eq(fields.isInvalid, true);
-              },
-            },
+      intents: true,
       intentBatchExecution: {
         with: {
           hooks: true,
