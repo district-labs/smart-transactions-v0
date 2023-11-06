@@ -37,7 +37,7 @@ export const strategies = {
       "Subscribe to District Finance for 7 days. Make a daily payment of 10 DIS.",
     createdBy: {
       name: "District Finance",
-      pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
+      pfp: "/apple-touch-icon.png",
     },
     overrideValues: {
       nonce: {
@@ -63,7 +63,7 @@ export const strategies = {
       "Automatically lend an asset when you have a minimum balance in your account.",
     createdBy: {
       name: "District Finance",
-      pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
+      pfp: "/apple-touch-icon.png",
     },
     overrideValues: {},
     IntentForm: FormStrategyAutomaticLending,
@@ -79,7 +79,7 @@ export const strategies = {
       "Automatically deposit into a PoolTogether savings account for a chance to win prizes. Minimum token balance required.",
     createdBy: {
       name: "District Finance",
-      pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
+      pfp: "/apple-touch-icon.png",
     },
     overrideValues: {},
     IntentForm: FormStrategyAutomaticSaving,
@@ -95,7 +95,7 @@ export const strategies = {
       "Automatically liquidate a position (spot price) when it reaches a certain threshold.",
     createdBy: {
       name: "District Finance",
-      pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
+      pfp: "/apple-touch-icon.png",
     },
     overrideValues: {},
     IntentForm: FormStrategyAutomaticLiquidate,
@@ -111,7 +111,7 @@ export const strategies = {
       "Swap ERC20 tokens at a specified rate and time range. The order will be executed if an order can be filled within the time range.",
     createdBy: {
       name: "District Finance",
-      pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
+      pfp: "/apple-touch-icon.png",
     },
     overrideValues: {
       erc20LimitOrder: {
@@ -132,7 +132,7 @@ export const strategies = {
       "Leverage long an asset by borrowing and buying more of it. You can set the leverage amount and the supply token.",
     createdBy: {
       name: "District Finance",
-      pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
+      pfp: "/apple-touch-icon.png",
     },
     overrideValues: {},
     IntentForm: FormStrategyLeverageLong,
@@ -148,7 +148,7 @@ export const strategies = {
       "Buy or sell token when it's price is above/below a certain threshold. Measures historical onchain price data.",
     createdBy: {
       name: "District Finance",
-      pfp: "https://pbs.twimg.com/profile_images/1666003748399841280/4vrLJPIO_400x400.png",
+      pfp: "/apple-touch-icon.png",
     },
     overrideValues: {},
     // IntentForm: FormStrategyMeanReversion,
