@@ -1,6 +1,5 @@
 import type {
-  DbIntentBatchWithRelations,
-  DbIntentBatch,
+  DbIntentBatchWithRelations
 } from "@district-labs/intentify-database";
 import {
   and,
@@ -69,11 +68,13 @@ export const getIntentBatchesFromDB = async (
  */
 export const getIntentBatchFromDB = async (
   intentBatchId: string,
-): Promise<DbIntentBatch[]> => {
-  return await db
-    .select()
-    .from(intentBatch)
-    .where(eq(intentBatch.intentBatchHash, intentBatchId));
+): Promise<DbIntentBatchWithRelations | undefined> => {
+  return db.query.intentBatch.findFirst({
+    where: eq(intentBatch.intentBatchHash, intentBatchId),
+    with: {
+      intents: true,
+    }
+  })
 };
 
 /**

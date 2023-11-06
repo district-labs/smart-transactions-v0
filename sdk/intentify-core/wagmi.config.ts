@@ -11,7 +11,7 @@ export default defineConfig({
         "EngineHub.json",
         "ERC20.json",
         "Intentify.json",
-        "EngineHub.json",
+        "MultiCallWithFlashLoan.json",
         "IntentifySafeModule.json",
         "IntentifySafeModuleBundler.json",
         "AaveLeverageLongIntent.json",

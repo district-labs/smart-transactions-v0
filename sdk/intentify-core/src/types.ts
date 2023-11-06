@@ -38,6 +38,7 @@ export type IntentBatch = {
 
 export type Hook = {
   target: `0x${string}`; // Ethereum addresses are usually represented as strings in TypeScript
+  instructions: `0x${string}`; // bytes can be represented as a hex string
   data: `0x${string}`; // bytes can be represented as a hex string
 };
 

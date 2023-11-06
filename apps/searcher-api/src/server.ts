@@ -5,6 +5,7 @@ import "dotenv/config"
 import express from "express"
 
 import { errorHandler } from "./middleware/errorHandler"
+import { engineRoutes } from "./routes/engine"
 
 const PORT = process.env.PORT || 3000
 const app = express()
@@ -23,15 +24,7 @@ app.use(cors(corsOptions))
 app.use(express.json())
 
 // Route groups
-// app.use("/auth", authRoutes)
-// app.use("/user", profileUserRoutes)
-// app.use("/intent-batch", intentBatchUserRoutes)
-// app.use("/strategy", strategyUserRoutes)
-// app.use("/admin/intent-batch", intentBatchAdminRoutes)
-// app.use("/service", serviceEngineRoutes)
-// app.use("/service", serviceEventsRoutes)
-// app.use("/service", serviceExecuteRoutes)
-// app.use("/service", serviceAxiomRoutes)
+app.use("/", engineRoutes)
 
 // Middleware for error handling
 app.use(errorHandler)
