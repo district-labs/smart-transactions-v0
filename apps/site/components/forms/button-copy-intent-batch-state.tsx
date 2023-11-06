@@ -4,6 +4,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard"
 import { toHex } from "viem"
 
 import { toast } from "../ui/use-toast"
+import { toObjectString } from "@/data/tables/to-object-string"
 
 type ButtonCopyIntentBatchState = React.HTMLAttributes<HTMLElement> & {
   intentBatchData: any
@@ -21,7 +22,7 @@ export const ButtonCopyIntentBatchState = ({
   React.useEffect(() => {
     if (intentBatchData) {
       const current = new URLSearchParams(Array.from(searchParams.entries())) // -> has to use this form
-      current.set("intentBatchData", toHex(JSON.stringify(intentBatchData)))
+      current.set("intentBatchData", toHex(toObjectString(intentBatchData)))
       const search = current.toString()
       const url = `${pathname}?${search}`
       setUrl(window.location.origin + url)

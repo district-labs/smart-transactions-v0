@@ -4,8 +4,8 @@ import { DateTimeLocal } from "./fields/datetime-local"
 
 export type IntentTimestampRange = {
   timestampRange: {
-    minTimestamp: string | undefined
-    maxTimestamp: string | undefined
+    minTimestamp: number | undefined
+    maxTimestamp: number | undefined
   }
 }
 

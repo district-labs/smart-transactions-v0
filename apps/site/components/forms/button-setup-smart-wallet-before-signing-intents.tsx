@@ -44,8 +44,6 @@ export const ButtonSetupSmartWalletBeforeSigningIntent = ({
   const isSmartWalletModuleEnabled = useIsSafeIntentModuleEnabled()
   const isSignedIn = useIsSignedIn()
 
-  console.log(userData, "userDatauserData")
-
   if (!address) {
     return (
       <WalletConnectCustom

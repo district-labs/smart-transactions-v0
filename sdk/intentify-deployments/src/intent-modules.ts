@@ -16,7 +16,7 @@ export const EthTipIntent: ChainToAddress = {
   31337: "0x300000000000000000000000000000000000dEaD",
 };
 
-// ERC20 Intents
+// Erc20 Intents
 
 export const Erc20SwapSpotPriceIntent: ChainToAddress = {
   5: "0x400000000000000000000000000000000000dEaD",
@@ -53,6 +53,16 @@ export const Erc20RebalanceIntent: ChainToAddress = {
   31337: "0x120000000000000000000000000000000000dEaD",
 };
 
+export const Erc20SwapSpotPriceBalanceTokenOutIntent: ChainToAddress = {
+  5: "0x120000000000000000000000000000000000dEaD",
+  31337: "0x120000000000000000000000000000000000dEaD",
+};
+
+export const Erc4626DepositBalanceContinualIntent: ChainToAddress = {
+  5: "0x123000000000000000000000000000000000dEaD",
+  31337: "0x123000000000000000000000000000000000dEaD",
+};
+
 
 // Oracle Intents
 export const ChainlinkDataFeedIntent: ChainToAddress = {
@@ -71,6 +81,10 @@ export const UniswapV3HistoricalTwapPercentageChangeIntent: ChainToAddress = {
 };
 
 // DeFi Intents
+export const AaveV3SupplyBalanceContinualIntent: ChainToAddress = {
+  5: "0x888000000000000000000000000000000000dEaD",
+  31337: "0x888000000000000000000000000000000000dEaD",
+};
 export const AaveLeverageLongIntent: ChainToAddress = {
   5: "0x770000000000000000000000000000000000dEaD",
   31337: "0x770000000000000000000000000000000000dEaD",

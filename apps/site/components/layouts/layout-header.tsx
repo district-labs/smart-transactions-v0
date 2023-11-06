@@ -9,6 +9,8 @@ import { NavigationPanel } from "@/components/layouts/navigation-panel"
 import { NavigationAccount } from "./navigation-account"
 import { LinkComponent } from "../shared/link-component"
 import Image from "next/image"
+import { IsDarkTheme } from "../shared/is-dark-theme"
+import { IsLightTheme } from "../shared/is-light-theme"
 
 export default function Header() {
   const scrolled = useScroll(0)
@@ -26,7 +28,12 @@ export default function Header() {
         </div>
         <div className='sm:flex-1 flex sm:justify-center'>
           <LinkComponent href="/">
-            <Image alt="District Finance" src="/district-globe-dark.svg" width={36} height={36} />
+            <IsDarkTheme>
+              <Image alt="District Finance" src="/district-globe.svg" width={36} height={36} />
+            </IsDarkTheme>
+            <IsLightTheme>
+              <Image alt="District Finance" src="/district-globe-dark.svg" width={36} height={36} />
+            </IsLightTheme>
           </LinkComponent>
         </div>
         <div className="justify-end space-x-2 sm:flex sm:flex-1">

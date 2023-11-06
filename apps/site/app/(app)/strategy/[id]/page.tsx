@@ -10,6 +10,8 @@ import { IsWalletConnected } from "@/components/shared/is-wallet-connected"
 import { IsWalletDisconnected } from "@/components/shared/is-wallet-disconnected"
 import { SkeletonTable } from "@/components/skeleton/skeleton-table"
 import { StrategyTable } from "@/components/tables/strategy-table"
+import { Erc20FavoriteTokensAndManagement } from "@/components/erc20/erc20-favorite-tokens-and-management"
+import Balancer from "react-wrap-balancer"
 
 export default function Page({ params }: any) {
   const selectedStrategy = Object.values(strategies).find((strategy: any) => {
@@ -32,6 +34,11 @@ export default function Page({ params }: any) {
 
   return (
     <>
+        <section className="relative mb-12">
+          <div className='container max-w-screen-md mx-auto'>
+            <Erc20FavoriteTokensAndManagement />
+          </div>
+        </section>
       <div className="overflow-hidden">
         <section className="relative mb-12">
           <div className="h-84 w-84 absolute inset-0 z-0 mx-auto rounded-full bg-gradient-radial from-neutral-200 via-white to-transparent dark:from-neutral-700 dark:via-transparent dark:to-transparent"></div>
@@ -47,15 +54,17 @@ export default function Page({ params }: any) {
           </div>
         </section>
 
-        <section className="bg-neutral-100 p-14 dark:bg-neutral-800 ">
-          <div className="max-w-screen-4xl container">
+        <section className="bg-neutral-100 py-14 dark:bg-neutral-800 ">
+          <div className="lg:max-w-screen-4xl container">
             <div className="mb-7 text-center">
               <h3 className="text-xl font-extrabold">
                 Active Smart Transactions
               </h3>
               <p className="mt-2 text-sm">
+                <Balancer>
                 View all smart transactions you&apos;ve created for the{" "}
                 <span className="font-bold">{name}</span> strategy.
+                </Balancer>
               </p>
             </div>
             <IsSignedOut>

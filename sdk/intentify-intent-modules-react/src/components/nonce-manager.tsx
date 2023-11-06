@@ -21,7 +21,7 @@ export type NonceManager = {
 export const nonceManager = {
   nonce: {
     type: "standard",
-    args: [],
+    args: [0,0,0],
   },
 } as NonceManager
 
