@@ -4,9 +4,7 @@ pragma solidity >=0.8.19;
 import "forge-std/Script.sol";
 import { IntentifySafeModule } from "../../../src/module/IntentifySafeModule.sol";
 import { IntentifySafeModuleBundler } from "../../../src/module/IntentifySafeModuleBundler.sol";
-import { WalletFactory } from "../../../src/WalletFactory.sol";
-import { AaveV3SupplyBalanceContinualIntent } from "../../../src/intents/AaveV3SupplyBalanceContinualIntent.sol";
-import { AaveLeverageLongIntent } from "../../../src/intents/AaveLeverageLongIntent.sol";
+import { WalletFactoryTestnet } from "../../../src/WalletFactoryTestnet.sol";
 import { ChainlinkDataFeedIntent } from "../../../src/intents/ChainlinkDataFeedIntent.sol";
 import { ERC20LimitOrderIntent } from "../../../src/intents/ERC20LimitOrderIntent.sol";
 import { ERC20RebalanceIntent } from "../../../src/intents/ERC20RebalanceIntent.sol";
@@ -25,27 +23,15 @@ import { UniswapV3HistoricalTwapPercentageChangeIntent } from
 import { UniswapV3TwapIntent } from "../../../src/intents/UniswapV3TwapIntent.sol";
 
 contract CoreDeploy is Script {
-    function run(
-        address intentifySafeModule,
-        address multisend,
-        address aaveV3Pool,
-        address uniswapV3TwapOracleAddress,
-        address chainlinkPriceFeedUSD
-    )
-        external
-    {
+    function run(address multisend, address uniswapV3TwapOracleAddress) external {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
-        // Periphery Contracts
-        new WalletFactory();
 
         // Core Contracts
-        new IntentifySafeModule();
+        address intentifySafeModule = address(new IntentifySafeModule());
         new IntentifySafeModuleBundler();
 
         // Intent Modules Contracts
-        new AaveV3SupplyBalanceContinualIntent(intentifySafeModule, aaveV3Pool);
-        new AaveLeverageLongIntent(intentifySafeModule, chainlinkPriceFeedUSD, aaveV3Pool);
         new BlockNumberIntent();
         new ChainlinkDataFeedIntent();
         new ERC20SwapSpotPriceBalanceTokenOutIntent(intentifySafeModule);
