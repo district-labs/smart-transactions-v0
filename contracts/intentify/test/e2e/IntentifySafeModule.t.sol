@@ -2,7 +2,6 @@
 pragma solidity >=0.8.19 <0.9.0;
 
 import { Enum } from "safe-contracts/common/Enum.sol";
-
 import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "../../src/TypesAndDecoders.sol";
 import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
 import { SafeTestingUtils } from "../utils/SafeTestingUtils.sol";
@@ -50,7 +49,7 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
             // Initialize the Safe Intentiy Module
             vm.expectEmit();
             emit IntentBatchCancelled(
-                address(_safeCreated), 0xf94fa8b78fad6bb6e15602a62fc9abbfcaeed303520c7b1d37a4064c1e8d04bb
+                address(_safeCreated), 0xbaf020709e6cb68cec50b9622baaa24cdcf6bb91b714a58ab59f310d847b3c9e
             );
             _safeCreated.execTransaction(
                 address(_intentifySafeModule),
@@ -89,7 +88,7 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
         emit IntentBatchExecuted(
             address(0x7FA9385bE102ac3EAc297483Dd6233D62b3e1496),
             address(_safeCreated),
-            0x9de8c462cd9b16a392ea576b7119d1ccf56dc3551ca57809a7a0f8e324c5ff21
+            0xb12a65a0a8eb9bd66a5d771f004714d8d3052e07a9ac677a08fa41ea85d6d396
         );
         IntentBatchExecution memory batchExecution =
             IntentBatchExecution({ batch: intentBatch, signature: Signature({ r: r, s: s, v: v }), hooks: hooks });
