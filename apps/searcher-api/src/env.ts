@@ -1,8 +1,8 @@
-import { createEnv } from "@t3-oss/env-core";
-import { z } from "zod";
+import { createEnv } from "@t3-oss/env-core"
+import { z } from "zod"
 
 export const env = createEnv({
-  server:{
+  server: {
     GOERLI_RPC_URL: z.string().url(),
     PORT: z.string().default("3000"),
     CORS_ORIGIN: z.string(),

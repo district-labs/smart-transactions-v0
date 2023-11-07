@@ -1,10 +1,11 @@
-import { Relayer } from "@openzeppelin/defender-relay-client";
+import { Relayer } from "@openzeppelin/defender-relay-client"
 import {
   DefenderRelayProvider,
   DefenderRelaySigner,
-} from "@openzeppelin/defender-relay-client/lib/ethers";
-import type { Address } from "viem";
-import { env } from "../env";
+} from "@openzeppelin/defender-relay-client/lib/ethers"
+import type { Address } from "viem"
+
+import { env } from "../env"
 
 const credentialsList: Record<number, { apiKey: string; apiSecret: string }> = {
   1: {

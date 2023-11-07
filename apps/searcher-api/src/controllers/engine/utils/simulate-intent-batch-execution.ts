@@ -21,13 +21,12 @@ export async function simulateIntentBatchExecution({
   if (!intentifySafeModuleAddress) {
     throw new Error(`No IntentifyModuleAddress for chainId ${chainId}`)
   }
-  
-   await publicClient.simulateContract({
+
+  await publicClient.simulateContract({
     address: intentifySafeModuleAddress,
     abi: intentifySafeModuleABI,
     functionName: "execute",
     args: [intentBatchExecution],
     account: searcherAddress,
   })
-
 }
