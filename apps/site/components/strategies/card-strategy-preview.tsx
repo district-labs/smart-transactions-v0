@@ -33,8 +33,8 @@ export const CardStrategyPreview = ({
   )
 
   return (
-    <LinkComponent href={`/strategy/${id}`}>
-      <Card className={classes}>
+    <Card className={classes}>
+        <LinkComponent href={`/strategy/${id}`} className="flex flex-col justify-between h-full">
         <CardHeader className="relative overflow-hidden lg:pt-10">
           <div className="z-10">
             <h3 className="text-2xl font-bold">{name}</h3>
@@ -44,7 +44,7 @@ export const CardStrategyPreview = ({
         <CardContent className="flex gap-x-2 items-center">
           <ChainsSupportedList className="flex gap-x-2 items-center" supportedChains={supportedChains} />
         </CardContent>
-        <CardFooter className="flex justify-between gap-x-4 bg-card-footer pb-5 pt-4">
+        <CardFooter className="flex justify-between gap-x-4 bg-card-footer pb-5 pt-4 justify-self-end">
           <div className="text-right">
             <span className="text-xs font-bold">Created By</span>
           </div>
@@ -56,7 +56,7 @@ export const CardStrategyPreview = ({
             <span className="">{createdBy.name}</span>
           </div>
         </CardFooter>
-      </Card>
     </LinkComponent>
+      </Card>
   )
 }

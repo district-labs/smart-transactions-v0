@@ -53,7 +53,8 @@ export const ButtonSetupSmartWalletBeforeSigningIntent = ({
   if (!isSignedIn) {
     return <ButtonSiweSignIn label="Authenticate" className="w-full" />
   }
-
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   if(!selectedStrategy?.supportedChains?.includes(chainId)) {
     return (
         <Button variant="outline" className="w-full flex items-center gap-x-1">

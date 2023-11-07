@@ -28,8 +28,8 @@ import { ADDRESS_ZERO } from "@district-labs/intentify-core"
 import { findTokenFromList } from "@/integrations/erc20/utils/find-token-from-list"
 
 export const strategies = {
-  "0x37023ec377f004afa9c88dc62b789d15d781796030e62f0a57a328aa21131ffb": {
-    id: "0x37023ec377f004afa9c88dc62b789d15d781796030e62f0a57a328aa21131ffb",
+  "0x22ffb702ee9a3bd196987c66bcad309a3576c8ec14a4101b611fc694663da6ba": {
+    id: "0x22ffb702ee9a3bd196987c66bcad309a3576c8ec14a4101b611fc694663da6ba",
     name: "District Subscription",
     alias: "recurring-transfer",
     description:
@@ -55,29 +55,12 @@ export const strategies = {
     transformData: transformToRecurringPayment,
     tableColumns: columnsRecurringPayment,
   },
-  "0x5": {
-    id: "0x5",
-    name: "Automatic Lending",
-    alias: "automatic-lending",
-    description:
-      "Automatically lend an asset when you have a minimum balance in your account.",
-    createdBy: {
-      name: "District Finance",
-      pfp: "/apple-touch-icon.png",
-    },
-    supportedChains: [],
-    overrideValues: {},
-    IntentForm: FormStrategyAutomaticLending,
-    IntentTable: StrategyTable,
-    transformData: transformToAutomaticLending,
-    tableColumns: columnsAutomaticLending,
-  },
-  "0x6": {
-    id: "0x6",
+  "0xeb597abd3d72972a0bb1199caa65378889d54e1a0edcb1017235626f5f12a4d3": {
+    id: "0xeb597abd3d72972a0bb1199caa65378889d54e1a0edcb1017235626f5f12a4d3",
     name: "Recurring Prize Savings Deposit",
     alias: "recurring-prize-savings-deposit",
     description:
-      "Automatically deposit into a PoolTogether savings account for a chance to win prizes.",
+      "Automatically deposit into a prize savings account for a chance to win prizes.",
     createdBy: {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
@@ -89,8 +72,8 @@ export const strategies = {
     transformData: transformToAutomaticSaving,
     tableColumns: columnsAutomaticSaving,
   },
-  "0x7": {
-    id: "0x7",
+  "0x862579b2580594878e5e916a94308de27b43bbe8f3775978d2c14964ad485da2": {
+    id: "0x862579b2580594878e5e916a94308de27b43bbe8f3775978d2c14964ad485da2",
     name: "Liquidate Balance",
     alias: "liquidate-balance",
     description:
@@ -127,6 +110,23 @@ export const strategies = {
     IntentTable: StrategyTable,
     transformData: transformToLimitOrder,
     tableColumns: columnsLimitOrder,
+  },
+  "0xd5720c3e00f3ea3b1179e3b10c7a033f9db23cad12b68ddabf7c392b604812a3": {
+    id: "0xd5720c3e00f3ea3b1179e3b10c7a033f9db23cad12b68ddabf7c392b604812a3",
+    name: "Automatic Lending",
+    alias: "automatic-lending",
+    description:
+      "Automatically lend an asset using the Aave V3 protocol.",
+    createdBy: {
+      name: "District Finance",
+      pfp: "/apple-touch-icon.png",
+    },
+    supportedChains: [],
+    overrideValues: {},
+    IntentForm: FormStrategyAutomaticLending,
+    IntentTable: StrategyTable,
+    transformData: transformToAutomaticLending,
+    tableColumns: columnsAutomaticLending,
   },
   "0x89033b533d9a8e6875cfd119a1bbaa4727cdd207c9b38a234022402b30e0a861": {
     id: "0x89033b533d9a8e6875cfd119a1bbaa4727cdd207c9b38a234022402b30e0a861",
