@@ -20,7 +20,7 @@ export const env = createEnv({
     OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_GOERLI: z.string(),
     PRIVATE_KEY: z.string().min(64).max(66),
     JWT_SECRET: z.string(),
-    VERCEL_URL: z.string().url().optional(),
+    VERCEL_URL: z.string().optional(),
     // Comma separated list of Ethereum addresses, accepts optinal whitespace after comma
     APP_ADMINS: z
       .string()
