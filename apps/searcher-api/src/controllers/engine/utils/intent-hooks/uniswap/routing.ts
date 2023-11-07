@@ -1,3 +1,4 @@
+import { env } from "@/src/env"
 import {
   CurrencyAmount,
   Percent,
@@ -34,7 +35,7 @@ export async function routeSwapExactOutput({
 }: RouteSwapExactOutputParams) {
   const router = new AlphaRouter({
     chainId,
-    provider: new ethers.providers.JsonRpcProvider(process.env.RPC_URL),
+    provider: new ethers.providers.JsonRpcProvider(env.GOERLI_RPC_URL),
   })
 
   const inputTokenUniV3 = new UniV3Token(
@@ -83,7 +84,7 @@ export async function routeSwapExactInput({
 }: RouteSwapExactInputParams) {
   const router = new AlphaRouter({
     chainId,
-    provider: new ethers.providers.JsonRpcProvider(process.env.RPC_URL),
+    provider: new ethers.providers.JsonRpcProvider(env.GOERLI_RPC_URL),
   })
 
   const inputTokenUniV3 = new UniV3Token(

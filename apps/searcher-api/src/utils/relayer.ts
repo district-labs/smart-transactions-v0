@@ -4,15 +4,16 @@ import {
   DefenderRelaySigner,
 } from "@openzeppelin/defender-relay-client/lib/ethers";
 import type { Address } from "viem";
+import { env } from "../env";
 
 const credentialsList: Record<number, { apiKey: string; apiSecret: string }> = {
   1: {
-    apiKey: process.env.OPEN_ZEPPELIN_DEFENDER_API_KEY_MAINNET as string,
-    apiSecret: process.env.OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_MAINNET as string,
+    apiKey: env.OPEN_ZEPPELIN_DEFENDER_API_KEY_MAINNET as string,
+    apiSecret: env.OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_MAINNET as string,
   },
   5: {
-    apiKey: process.env.OPEN_ZEPPELIN_DEFENDER_API_KEY_GOERLI as string,
-    apiSecret: process.env.OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_GOERLI as string,
+    apiKey: env.OPEN_ZEPPELIN_DEFENDER_API_KEY_GOERLI as string,
+    apiSecret: env.OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_GOERLI as string,
   },
 }
 

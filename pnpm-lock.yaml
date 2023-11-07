@@ -911,6 +911,9 @@ importers:
       '@openzeppelin/defender-relay-client':
         specifier: ^1.49.0
         version: 1.49.0(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/hash@5.7.0)(@ethersproject/providers@5.7.2)(@ethersproject/transactions@5.7.0)(web3-core-helpers@1.10.3)(web3-core@1.10.3)
+      '@t3-oss/env-core':
+        specifier: ^0.7.1
+        version: 0.7.1(typescript@5.2.2)(zod@3.22.4)
       '@uniswap/sdk-core':
         specifier: ^4.0.7
         version: 4.0.9
@@ -11863,6 +11866,19 @@ packages:
       zod: ^3.0.0
     dependencies:
       typescript: 5.0.4
+      zod: 3.22.4
+    dev: false
+
+  /@t3-oss/env-core@0.7.1(typescript@5.2.2)(zod@3.22.4):
+    resolution: {integrity: sha512-3+SQt39OlmSaRLqYVFv8uRm1BpFepM5TIiMytRqO9cjH+wB77o6BIJdeyM5h5U4qLBMEzOJWCY4MBaU/rLwbYw==}
+    peerDependencies:
+      typescript: '>=4.7.2'
+      zod: ^3.0.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      typescript: 5.2.2
       zod: 3.22.4
     dev: false
 

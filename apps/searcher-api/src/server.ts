@@ -3,16 +3,16 @@ import cors from "cors"
 import "dotenv/config"
 
 import express from "express"
-
+import { env } from "./env"
 import { errorHandler } from "./middleware/errorHandler"
 import { engineRoutes } from "./routes/engine"
 
-const PORT = process.env.PORT || 3000
+const PORT = env.PORT
 const app = express()
 
 // CORS configuration
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN,
+  origin: env.CORS_ORIGIN,
   credentials: true,
   secure: true,
 }
