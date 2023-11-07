@@ -23,9 +23,6 @@ export default function BlogPage() {
           <h1 className="font-heading inline-block text-4xl tracking-tight lg:text-5xl">
             Blog
           </h1>
-          <p className="text-xl text-muted-foreground">
-            A blog built using Contentlayer. Posts are written in MDX.
-          </p>
         </div>
       </div>
       <hr className="my-8" />

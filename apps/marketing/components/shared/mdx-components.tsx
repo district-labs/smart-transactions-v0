@@ -7,7 +7,7 @@ import { MdxCard } from "@/components/cards/mdx-card"
 import { Callout } from "@/components/shared/callout"
 
 interface componentProps {
-  className: string
+  className?: string
 }
 
 const components = {
