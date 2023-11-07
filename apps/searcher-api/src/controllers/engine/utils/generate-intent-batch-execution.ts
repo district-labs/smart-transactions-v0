@@ -24,7 +24,6 @@ export async function generateIntentBatchExecution({
 
   const intentBatchExecution: IntentBatchExecution = {
     batch: {
-      intentBatchHash: intentBatch.intentBatchHash as `0x${string}`,
       root: intentBatch.root as `0x${string}`,
       nonce: intentBatch.nonce as `0x${string}`,
       intents: intentBatch.intents.map((intent: any) => ({
