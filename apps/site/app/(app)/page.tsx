@@ -26,15 +26,10 @@ export default function Home() {
       <section className="h-full px-10 lg:px-20">
         <div className="max-w-screen-3xl mx-auto grid gap-10 text-left lg:grid-cols-3">
           {Object.values(strategies).map((strategy) => {
-            const { name, description, id, alias, createdBy } = strategy
             return (
               <CardStrategyPreview
-                key={id}
-                id={id}
-                alias={alias}
-                name={name}
-                description={description}
-                createdBy={createdBy}
+                key={strategy.id}
+                {...strategy}
               />
             )
           })}

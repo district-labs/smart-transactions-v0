@@ -1,14 +1,11 @@
-import type { Token, TokenList } from "@district-labs/intentify-core"
-
-import { Select } from "./fields/select"
-import { Slider } from "./fields/slider"
-import { TokenSelect } from "./fields/token-select"
+import type { Vault, VaultList } from "@district-labs/intentify-core"
+import { VaultSelect } from "./fields/vault-select"
 import { TokenAmount } from "./fields/token-amount"
 import { getValueFromPath } from "../utils"
 
 type ERC4626DepositBalanceContinual = {
   erc4626DepositBalanceContinual: {
-    tokenOut: Token | undefined
+    tokenOut: Vault | undefined
     minBalance: string | undefined
     balanceDelta: string | undefined
   }
@@ -26,7 +23,7 @@ export const intentERC4626DepositBalanceContinualFields = {
     TokenOut: (
         intentBatch: any,
         setIntentBatch: any,
-        tokenList: TokenList,
+        vaultList: VaultList,
         config: {
           className: string
           label: string
@@ -35,11 +32,11 @@ export const intentERC4626DepositBalanceContinualFields = {
           classNameDescription?: string
         }
       ) => (
-        <TokenSelect
+        <VaultSelect
           intentBatch={intentBatch}
           config={config}
           setIntentBatch={setIntentBatch}
-          tokenList={tokenList}
+          vaultList={vaultList}
           path={["erc4626DepositBalanceContinual", "tokenOut"]}
         />
       ),

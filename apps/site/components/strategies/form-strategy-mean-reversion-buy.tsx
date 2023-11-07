@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react"
 import { intentBatchFactory } from "@/core/intent-batch-factory"
-import tokenListGoerli from "@/data/token-list-district-goerli.json"
+import tokenListGoerli from "@/data/lists/token-list-testnet.json"
 import { functionTokenListByChainId } from "@/integrations/erc20/utils/filter-token-list-by-chain-id"
 import {
   generateIntentBatchEIP712,
@@ -232,7 +232,7 @@ export function FormStrategyMeanReversionBuy({
               intentBatchState={intentBatch}
               setIntentBatchState={setCurrentValues}
             />
-            <ButtonSetupSmartWalletBeforeSigningIntent>
+            <ButtonSetupSmartWalletBeforeSigningIntent strategyId={strategyId}>
               {isSuccess && <Button className="w-full">Intent Saved</Button>}
               {isSignatureRequested && (
                 <Button className="w-full">Requesting Signature</Button>

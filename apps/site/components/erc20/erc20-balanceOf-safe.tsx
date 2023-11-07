@@ -1,8 +1,8 @@
 "use client"
 
-import { HTMLAttributes, useState } from "react"
+import { HTMLAttributes } from "react"
 import { formatUnits } from "viem"
-import { Address, useAccount } from "wagmi"
+import { Address } from "wagmi"
 
 import { useGetSafeAddress } from '@district-labs/intentify-core-react' 
 import { useErc20BalanceOf, useErc20Decimals } from "@/integrations/erc20/generated/erc20-wagmi"
@@ -14,7 +14,6 @@ export interface ERC20Props extends HTMLAttributes<HTMLElement> {
 export interface ERC20ChainIdProps extends ERC20Props {
   chainId?: number
 }
-
 
 export function ERC20BalanceSafe({
   address,

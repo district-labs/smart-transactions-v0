@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react"
 import { intentBatchFactory } from "@/core/intent-batch-factory"
-import tokenListGoerli from "@/data/token-list-district-goerli.json"
+import tokenListGoerli from "@/data/lists/token-list-testnet.json"
 import {
   generateIntentBatchEIP712,
   type IntentBatch,
@@ -132,7 +132,7 @@ export function FormStrategySavingsDeposit({
               intentBatchState={intentBatch}
               setIntentBatchState={setCurrentValues}
             />
-            <ButtonSetupSmartWalletBeforeSigningIntent>
+            <ButtonSetupSmartWalletBeforeSigningIntent strategyId={strategyId}>
               {isSuccess && <Button className="w-full">Intent Saved</Button>}
               {isSignatureRequested && (
                 <Button className="w-full">Requesting Signature</Button>
