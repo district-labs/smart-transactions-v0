@@ -50,6 +50,8 @@ export const executeIntentBatchSingle = async (
       publicClient,
     })
 
+    delete intentBatchExecution.batch.intentBatchHash
+
     // Run a simulation of the intent batch execution
     // Reverts if the intent batch execution is invalid
     await simulateIntentBatchExecution({

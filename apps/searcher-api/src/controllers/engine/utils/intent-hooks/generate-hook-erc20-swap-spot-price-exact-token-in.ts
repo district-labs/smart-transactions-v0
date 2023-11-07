@@ -5,7 +5,7 @@ import {
 import type { Hook } from "@district-labs/intentify-core"
 import type { DbIntent } from "@district-labs/intentify-database"
 import { Erc20SwapSpotPriceExactTokenInIntent } from "@district-labs/intentify-deployments"
-import { Address, encodeAbiParameters, type PublicClient } from "viem"
+import { encodeAbiParameters, type Address, type Hex, type PublicClient } from "viem"
 
 import { intentArgsToObj } from ".."
 import {
@@ -119,7 +119,11 @@ export async function generateHookErc20SwapSpotPriceExactTokenIn({
       tokens: [tokenIn  as Address],
       amounts: [tokenInAmountBigInt],
     },
-    multiCallParams: [[uniV3SwapperAddress  as Address, BigInt(0), uniV3SwapData]],
+    multiCallParams: [{
+      target: uniV3SwapperAddress as Address,
+      value: BigInt(0),
+      callData: uniV3SwapData as Hex,
+    }],
   })
 
   const hookInstructions = encodeAbiParameters(

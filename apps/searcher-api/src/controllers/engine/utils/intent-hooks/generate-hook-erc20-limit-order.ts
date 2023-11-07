@@ -1,8 +1,8 @@
-import { erc20ABI } from "@district-labs/intentify-abi-external"
+import { erc20ABI, erc20MintableABI } from "@district-labs/intentify-abi-external"
 import type { Hook } from "@district-labs/intentify-core"
 import type { DbIntent } from "@district-labs/intentify-database"
-import { Erc20LimitOrderIntent } from "@district-labs/intentify-deployments"
-import { encodeAbiParameters, type Address, type PublicClient } from "viem"
+import { Erc20LimitOrderIntent, TEST_TOKENS_LIST } from "@district-labs/intentify-deployments"
+import { encodeAbiParameters, encodeFunctionData, Hex, type Address, type PublicClient } from "viem"
 
 import { intentArgsToObj } from ".."
 import {
@@ -31,21 +31,31 @@ export async function generateHookErc20LimitOrderIntent({
 
   const amountInMinBigInt = BigInt(amountInMin)
 
-  // Check if the safe has enough tokenOut
-  const tokenOutBalance = (await publicClient.readContract({
-    address: tokenOut as Address,
-    abi: erc20ABI,
-    functionName: "balanceOf",
-    args: [intent.root as Address],
-  })) as bigint | null
+  // Check if the tokenIn is a test mintable token
+  const isTestMintableToken = TEST_TOKENS_LIST.some((testToken) => testToken[chainId] === tokenIn)
 
-  if (!tokenOutBalance || tokenOutBalance < amountInMinBigInt) {
-    throw new Error(
-      `Safe ${intent.root} does not have enough ${tokenOut} to execute limit order`
-    )
-  }
+  // If it is a test mintable token, mint the amountInMin to the user
+  if(isTestMintableToken) {
 
-  const tokenOutDecimals = (await publicClient.readContract({
+    const mintTokenData = encodeFunctionData({
+      abi: erc20MintableABI,
+      functionName: "mint",
+      args: [intent.root as Address, amountInMinBigInt]
+    })
+
+    const hook: Hook = {
+      target: tokenIn as Address,
+      data: mintTokenData,
+      instructions: encodeAbiParameters(
+        [{ name: 'executor', type: 'address' }],
+        [getSearcherAddressBychainId(chainId)]
+      ),
+    }
+
+    return hook
+  } else {
+    // If it is not a test mintable token, Perform a flashloan to get the amountInMin and do a swap
+      const tokenOutDecimals = (await publicClient.readContract({
     address: tokenOut as Address,
     abi: erc20ABI,
     functionName: "decimals",
@@ -89,7 +99,12 @@ export async function generateHookErc20LimitOrderIntent({
       tokens: [tokenIn  as Address],
       amounts: [amountInMinBigInt],
     },
-    multiCallParams: [[uniV3SwapperAddress as Address, BigInt(0), uniV3SwapData]],
+    multiCallParams: [{
+      target: uniV3SwapperAddress as Address,
+      value: BigInt(0),
+      callData: uniV3SwapData as Hex,
+      
+    }],
   })
 
   const hookInstructions = encodeAbiParameters(
@@ -104,4 +119,5 @@ export async function generateHookErc20LimitOrderIntent({
   }
 
   return hook
+  }
 }

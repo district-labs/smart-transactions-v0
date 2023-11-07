@@ -4,6 +4,7 @@ import {
   encodeFunctionData,
   getAbiItem,
   type Address,
+  type Hex
 } from "viem"
 
 interface FlashLoanParams {
@@ -11,7 +12,11 @@ interface FlashLoanParams {
   amounts: bigint[]
 }
 
-type MultiCallParam = [Address, bigint, string]
+type MultiCallParam = {
+  target: Address
+  value: bigint
+  callData: Hex
+}
 
 interface EncodeMultiCallWithFlashLoanData {
   flashLoanParams: FlashLoanParams
@@ -27,7 +32,7 @@ export function encodeMultiCallWithFlashLoanData({
       abi: multiCallWithFlashLoanABI,
       name: "multiCall",
     }).inputs,
-    multiCallParams
+    [multiCallParams],
   )
 
   const multiCallWithFlashLoanData = encodeFunctionData({

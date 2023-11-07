@@ -4,7 +4,7 @@ import { goerli } from "viem/chains"
 export const SUPPORTED_CHAINS = [5, 31337]
 export const MULTICALL_WITH_FLASHLOAN_ADDRESS =
   "0x1Ee38d535d541c55C9dae27B12edf090C608E6Fb"
-export const INTENTIFY_API_URL = "http://localhost:3000"
+export const INTENTIFY_API_URL = "http://localhost:3002"
 
 export function getSearcherAddressBychainId(chainId: number): Address {
   switch (chainId) {
