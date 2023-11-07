@@ -92,7 +92,7 @@ export const createIntentBatch = async (
     const domainSeparator = getEIP712DomainPacketHash({
       name: "Intentify Safe Module",
       version: "0",
-      chainId: chainId,
+      chainId: chainId, 
       verifyingContract: IntentifySafeModule[chainId],
     });
 
