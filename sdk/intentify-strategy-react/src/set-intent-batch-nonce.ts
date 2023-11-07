@@ -23,4 +23,8 @@ export function setIntentBatchManagerNonce(
       intentBatch?.nonce?.args[2],
     ])
   }
+
+  if (intentBatch.nonce.type === "module") {
+    intentBatchManager.nonce("module")
+  }
 }

@@ -31,7 +31,8 @@ pragma solidity >=0.8.19;
 enum NonceType {
     Standard,
     Dimensional,
-    Time
+    Time,
+    Module
 }
 
 struct TimeTracker {

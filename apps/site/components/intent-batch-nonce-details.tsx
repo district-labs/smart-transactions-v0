@@ -120,6 +120,21 @@ const NonceSelection = ({ nonce }: { nonce: Hex }) => {
       </Tooltip>
     )
   }
+  
+  if (nonce?.startsWith("0x03")) {
+    return (
+      <Tooltip>
+        <TooltipTrigger className="flex items-center gap-x-1">
+          <HelpCircle size={12} />
+          <span className={"text-xs"}>Module</span>{" "}
+        </TooltipTrigger>
+        <TooltipContent className="bg-card p-4 text-card-foreground">
+          <h3 className="text-lg font-normal">Module Nonce</h3>
+          <span className="text-xs">Module transaction nonce. Execution rules managed by underlying intents</span>
+        </TooltipContent>
+      </Tooltip>
+    )
+  }
 
   return null
 }

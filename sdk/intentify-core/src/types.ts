@@ -2,6 +2,7 @@ export enum NonceType {
   Standard = 0,
   Dimensional = 1,
   Time = 2,
+  Module = 3,
 }
 
 export type EIP712Domain = {
