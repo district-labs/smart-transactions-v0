@@ -86,3 +86,44 @@ export interface TokenList {
     patch: number;
   };
 }
+
+export interface Vault {
+  name: string
+  address: string
+  symbol: string
+  decimals: number
+  chainId: number
+  logoURI: string
+  tags?: string[]
+  extensions?: {
+    bridgeInfo?:
+      | {
+          [key: string]:
+            | {
+                tokenAddress: string
+              }
+            | undefined
+        }
+      | undefined
+  }
+  asset: Token
+}
+
+export interface VaultList {
+  name: string
+  logoURI: string
+  keywords: string[]
+  tags: {
+    [key: string]: {
+      name: string
+      description: string
+    }
+  }
+  timestamp: string
+  vaults: Vault[]
+  version: {
+    major: number
+    minor: number
+    patch: number
+  }
+}

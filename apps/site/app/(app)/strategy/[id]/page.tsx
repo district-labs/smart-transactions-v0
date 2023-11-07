@@ -9,7 +9,6 @@ import WalletConnectCustom from "@/components/blockchain/wallet-connect-custom"
 import { IsWalletConnected } from "@/components/shared/is-wallet-connected"
 import { IsWalletDisconnected } from "@/components/shared/is-wallet-disconnected"
 import { SkeletonTable } from "@/components/skeleton/skeleton-table"
-import { StrategyTable } from "@/components/tables/strategy-table"
 import { Erc20FavoriteTokensAndManagement } from "@/components/erc20/erc20-favorite-tokens-and-management"
 import Balancer from "react-wrap-balancer"
 

@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react"
 import {
   IntentBatch,
-  Token,
-  type TokenList,
+  Vault,
+  type VaultList,
 } from "@district-labs/intentify-core"
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
@@ -29,7 +29,7 @@ export type StrategyAutomaticSavings = {
   intentifySafeModuleAddress?: `0x${string}`
   root?: `0x${string}`
   chainId?: number
-  tokenList: TokenList
+  vaultList: VaultList
   intentBatchFactory?: IntentBatchFactory
   config: {
     nonce?: NonceConfig
@@ -78,7 +78,7 @@ export function StrategyAutomaticSavings({
   intentifySafeModuleAddress,
   root,
   chainId,
-  tokenList,
+  vaultList,
   intentBatchFactory,
   onIntentBatchGenerated,
 }: StrategyAutomaticSavings) {
@@ -137,7 +137,7 @@ export function StrategyAutomaticSavings({
         {intentERC4626DepositBalanceContinualFields.TokenOut(
           intentBatch,
           setIntentBatch,
-          tokenList,
+          vaultList,
           config?.tokenOut
         )}
         <div className="grid grid-cols-2 gap-x-4">
@@ -159,7 +159,7 @@ export function StrategyAutomaticSavings({
           />
           <IntentStatement
             className={config?.intentStatement?.className}
-            token={intentBatch?.erc4626DepositBalanceContinual?.tokenOut}
+            vault={intentBatch?.erc4626DepositBalanceContinual?.tokenOut}
             minBalance={intentBatch?.erc4626DepositBalanceContinual?.minBalance}
             balanceDelta={
               intentBatch?.erc4626DepositBalanceContinual?.balanceDelta
@@ -178,28 +178,28 @@ export function StrategyAutomaticSavings({
 }
 
 type IntentStatement = React.HTMLAttributes<HTMLElement> & {
-  token: Token
+  vault: Vault
   minBalance: string
   balanceDelta: string
 }
 
 const IntentStatement = ({
   className,
-  token,
+  vault,
   minBalance,
   balanceDelta,
 }: IntentStatement) => {
   const [balanceDeltaFormatted, setBalanceDeltaFormatted] = useState<string>()
   const [minimumAccountBalance, setMinimumAccountBalance] = useState<string>()
   useEffect(() => {
-    if (token && minBalance && balanceDelta) {
+    if (vault && minBalance && balanceDelta) {
       setBalanceDeltaFormatted(numeral(balanceDelta).format("0,0"))
       const floor = BigInt(minBalance) + BigInt(balanceDelta)
       setMinimumAccountBalance(numeral(floor).format("0,0"))
     }
-  }, [token, minBalance, balanceDelta])
+  }, [vault, minBalance, balanceDelta])
 
-  if (!token || !minBalance || !balanceDelta)
+  if (!vault || !minBalance || !balanceDelta)
     return (
       <div className={className}>
         <p className="">
@@ -212,11 +212,11 @@ const IntentStatement = ({
     <div className={className}>
       Automatically save{" "}
       <span className="font-bold">
-        {balanceDeltaFormatted}+ ${token?.symbol}
+        {balanceDeltaFormatted}+ ${vault?.symbol}
       </span>{" "}
       in PoolTogether when you account contains{" "}
       <span className="font-bold">
-        {minimumAccountBalance}+ ${token?.symbol}.
+        {minimumAccountBalance}+ ${vault?.symbol}.
       </span>
     </div>
   )

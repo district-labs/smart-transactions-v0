@@ -1,10 +1,8 @@
-import tokenListGoerli from "@/data/token-list-district-goerli.json"
+import tokenListGoerli from "@/data/lists/token-list-testnet.json"
 
 import FormStrategyLeverageLong from "@/components/forms/form-strategy-leverage-long"
 import { FormStrategyLimitOrder } from "@/components/forms/form-strategy-limit-order"
-import FormStrategyMeanReversion from "@/components/forms/form-strategy-mean-reversion"
 import FormStrategyRecurringPayment from "@/components/forms/form-strategy-recurring-payment"
-import FormStrategySavingsDeposit from "@/components/forms/form-strategy-savings-deposit"
 import { StrategyTable } from "@/components/tables/strategy-table"
 import { ViewFormsStrategyMeanReversion } from "@/components/view/view-forms-strategy-mean-reversion"
 import { ViewTablesStrategyMeanReversion } from "@/components/view/view-tables-strategy-mean-reversion"
@@ -17,9 +15,9 @@ import { transformToLeverageLong } from "./transforms/transform-to-leverage-long
 import { transformToLimitOrder } from "./transforms/transform-to-limit-order"
 import { transformToMeanReversionBuy } from "./transforms/transform-to-mean-reversion-buy"
 import { transformToRecurringPayment } from "./transforms/transform-to-recurring-payment"
-import FormStrategyAutomaticLending from "@/components/strategies/form-strategy-automatic-lending"
-import FormStrategyAutomaticSaving from "@/components/strategies/form-strategy-automatic-saving"
-import FormStrategyAutomaticLiquidate from "@/components/strategies/form-strategy-automatic-liquidate"
+import {FormStrategyAutomaticLending} from "@/components/strategies/form-strategy-automatic-lending"
+import {FormStrategyAutomaticSaving} from "@/components/strategies/form-strategy-automatic-saving"
+import {FormStrategyAutomaticLiquidate} from "@/components/strategies/form-strategy-automatic-liquidate"
 import { columnsAutomaticLending } from "./tables/columns-automatic-lending"
 import { transformToAutomaticLending } from "./transforms/transform-to-automatic-lending"
 import { transformToAutomaticSaving } from "./transforms/transform-to-automatic-saving"
@@ -27,6 +25,7 @@ import { columnsAutomaticSaving } from "./tables/columns-automatic-saving"
 import { transformToAutomaticLiquidate } from "./transforms/transform-to-automatic-liquidate"
 import { columnsAutomaticLiquidate } from "./tables/columns-automatic-liquidate"
 import { ADDRESS_ZERO } from "@district-labs/intentify-core"
+import { findTokenFromList } from "@/integrations/erc20/utils/find-token-from-list"
 
 export const strategies = {
   "0x37023ec377f004afa9c88dc62b789d15d781796030e62f0a57a328aa21131ffb": {
@@ -39,14 +38,15 @@ export const strategies = {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
     },
+    supportedChains: [5],
     overrideValues: {
       nonce: {
         type: "time",
-        args: [0, 6000, 7],
+        args: [0, 86400, 7],
       },
       erc20Transfer: {
-        tokenOut: tokenListGoerli.tokens[2],
-        amountOut: 100,
+        tokenOut: findTokenFromList(tokenListGoerli, "DIS", 5),
+        amountOut: 10,
         to: ADDRESS_ZERO
       },
     },
@@ -65,6 +65,7 @@ export const strategies = {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
     },
+    supportedChains: [],
     overrideValues: {},
     IntentForm: FormStrategyAutomaticLending,
     IntentTable: StrategyTable,
@@ -76,11 +77,12 @@ export const strategies = {
     name: "Recurring Prize Savings Deposit",
     alias: "recurring-prize-savings-deposit",
     description:
-      "Automatically deposit into a PoolTogether savings account for a chance to win prizes. Minimum token balance required.",
+      "Automatically deposit into a PoolTogether savings account for a chance to win prizes.",
     createdBy: {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
     },
+    supportedChains: [5],
     overrideValues: {},
     IntentForm: FormStrategyAutomaticSaving,
     IntentTable: StrategyTable,
@@ -92,11 +94,12 @@ export const strategies = {
     name: "Liquidate Balance",
     alias: "liquidate-balance",
     description:
-      "Automatically liquidate a position (spot price) when it reaches a certain threshold.",
+      "Automatically liquidate a position at spot price.",
     createdBy: {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
     },
+    supportedChains: [5],
     overrideValues: {},
     IntentForm: FormStrategyAutomaticLiquidate,
     IntentTable: StrategyTable,
@@ -108,11 +111,12 @@ export const strategies = {
     name: "Limit Order",
     alias: "limit-order",
     description:
-      "Swap ERC20 tokens at a specified rate and time range. The order will be executed if an order can be filled within the time range.",
+      "Swap tokens at a specified exchange rate and time range.",
     createdBy: {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
     },
+    supportedChains: [5],
     overrideValues: {
       erc20LimitOrder: {
         tokenOut: tokenListGoerli.tokens[0],
@@ -129,11 +133,12 @@ export const strategies = {
     name: "Leverage Long",
     alias: "leveraged-long",
     description:
-      "Leverage long an asset by borrowing and buying more of it. You can set the leverage amount and the supply token.",
+      "Leverage long an asset by borrowing and buying more of it.",
     createdBy: {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
     },
+    supportedChains: [],
     overrideValues: {},
     IntentForm: FormStrategyLeverageLong,
     IntentTable: StrategyTable,
@@ -150,8 +155,8 @@ export const strategies = {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
     },
+    supportedChains: [],
     overrideValues: {},
-    // IntentForm: FormStrategyMeanReversion,
     IntentForm: ViewFormsStrategyMeanReversion,
     IntentTable: ViewTablesStrategyMeanReversion,
     transformData: transformToMeanReversionBuy,
