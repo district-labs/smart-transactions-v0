@@ -1,7 +1,5 @@
+import { encodeAbiParameters, encodePacked, keccak256, parseAbiParameters, stringToBytes, toBytes } from "viem";
 import { DimensionalNonce, EIP712Domain, Intent, IntentBatch } from "./types";
-import { keccak256, encodePacked, toBytes } from "viem";
-import { stringToBytes } from "viem";
-import { encodeAbiParameters, parseAbiParameters } from "viem";
 
 // Define the TypeHash constants
 const EIP712DOMAIN_TYPEHASH = keccak256(
@@ -28,12 +26,30 @@ const INTENTBATCH_TYPEHASH = keccak256(
 export function getEIP712DomainPacketHash(domain: EIP712Domain): `0x${string}` {
   return keccak256(
     encodeAbiParameters(
-      parseAbiParameters(
-        "string name, string version, uint256 chainId, address verifyingContract",
-      ),
+      [{
+        name: "EIP712DOMAIN_TYPEHASH",
+        type: "bytes32"  },
+        {
+          name: "name",
+          type: "bytes32",
+        },
+        {
+          name: "version",
+          type: "bytes32",
+        },
+        {
+          name: "chainId",
+          type: "uint256",
+        },
+        {
+          name: "verifyingContract",
+          type: "address",
+        }
+    ],
       [
         EIP712DOMAIN_TYPEHASH,
-        domain.version,
+        keccak256(toBytes(domain.name)),
+        keccak256(toBytes(domain.version)),
         domain.chainId,
         domain.verifyingContract,
       ],
