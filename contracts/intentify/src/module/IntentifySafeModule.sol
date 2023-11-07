@@ -252,9 +252,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Rever
         pure
         returns (bytes32)
     {
-        bytes memory encoded = abi.encode(
-            EIP712DOMAIN_TYPEHASH, keccak256(bytes(contractName)), keccak256(bytes(version)), chainId, verifyingContract
-        );
+        bytes memory encoded = abi.encode(EIP712DOMAIN_TYPEHASH, contractName, version, chainId, verifyingContract);
         return keccak256(encoded);
     }
 
