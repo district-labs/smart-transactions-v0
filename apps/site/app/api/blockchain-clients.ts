@@ -1,17 +1,18 @@
+import { env } from "@/env.mjs"
 import type { PublicClient, WalletClient } from "viem"
 import { createPublicClient, createWalletClient, http } from "viem"
 import { privateKeyToAccount } from "viem/accounts"
 import { foundry, goerli, mainnet } from "viem/chains"
 
 export const accountShared = privateKeyToAccount(
-  (process.env.PRIVATE_KEY as `0x{string}`) || "0x00"
+  env.PRIVATE_KEY as `0x${string}`
 )
 
 const transportMainnet = http(
-  `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
+  `https://eth-mainnet.g.alchemy.com/v2/${env.ALCHEMY_API_KEY}`
 )
 const transportGoerli = http(
-  `https://eth-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`
+  `https://eth-goerli.g.alchemy.com/v2/${env.ALCHEMY_API_KEY}`
 )
 
 const localGoerli = http(`http://localhost:8545`)

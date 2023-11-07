@@ -1,3 +1,5 @@
+import { env } from "@/env.mjs"
+
 const adjustPriceBody = {
   chainId: 5,
   token0: "0x18Be8De03fb9c521703DE8DED7Da5031851CbBEB",
@@ -6,8 +8,8 @@ const adjustPriceBody = {
   randomTargetPrice: true,
 }
 
-const baseUrl = process.env.VERCEL_URL
-  ? "https://" + process.env.VERCEL_URL
+const baseUrl = env.VERCEL_URL
+  ? "https://" + env.VERCEL_URL
   : "http://localhost:3000"
 
 export async function GET() {
