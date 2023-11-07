@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react"
 import {
-  IntentBatch,
-  Token,
-  type TokenList,
+  type IntentBatch,
+  type VaultList,
 } from "@district-labs/intentify-core"
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
@@ -29,7 +28,7 @@ export type StrategyRecurringPayment = {
   intentifySafeModuleAddress?: `0x${string}`
   root?: `0x${string}`
   chainId?: number
-  tokenList: TokenList
+  vaultList: VaultList
   intentBatchFactory?: IntentBatchFactory
   config: {
     nonce?: NonceConfig
@@ -71,7 +70,7 @@ export function StrategyRecurringPayment({
   intentifySafeModuleAddress,
   root,
   chainId,
-  tokenList,
+  vaultList,
   intentBatchFactory,
   onIntentBatchGenerated,
 }: StrategyRecurringPayment) {
@@ -129,7 +128,7 @@ export function StrategyRecurringPayment({
           {intentErc20TransferFields.tokenOutAndAmount(
             intentBatch,
             setIntentBatch,
-            tokenList,
+            vaultList,
             config?.tokenOutAndAmount
           )}
         </div>

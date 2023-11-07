@@ -1,7 +1,15 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { ERC20Balance, ERC20Image } from '@/integrations/erc20/components/erc20-read';
-import tokenList from "@/data/token-list-district-goerli.json"
+import {
+    DeploySafe,
+    EnableSafeIntentModule,
+    IsSafeCounterfactual,
+    IsSafeIntentModuleDisabled,
+    IsSafeIntentModuleEnabled,
+    IsSafeMaterialized,
+    useIsSafeIntentModuleEnabled
+  } from "@district-labs/intentify-core-react"
+import tokenList from "@/data/lists/token-list-testnet.json"
 import {
     Sheet,
     SheetContent,
@@ -16,6 +24,7 @@ import { useFindTokenFromList } from '@/integrations/erc20/hooks/use-find-token-
 import { useChainId } from 'wagmi';
 import { ResponsiveMobileAndDesktop } from '../shared/responsive-mobile-and-desktop';
 import { ERC20BalanceSafe } from './erc20-balanceOf-safe';
+import { ViewCreateAndSetupSmartWallet } from '../view/view-create-and-setup-smart-wallet';
 
 type Erc20FavoriteTokensAndManagement = React.HTMLAttributes<HTMLElement>;
 
@@ -38,9 +47,14 @@ export const Erc20FavoriteTokensAndManagement = ({ className }: Erc20FavoriteTok
             </>
         </ResponsiveMobileAndDesktop>
      </div>
-     <Sheet>
-      <SheetTrigger className='text-xs font-medium hover:opacity-80 cursor-pointer'>Manage Tokens ({tokenList.tokens.length})</SheetTrigger>
-      <SheetContent>
+     <Sheet >
+      <SheetTrigger className='text-xs font-medium hover:opacity-80 cursor-pointer'>Manage Tokens</SheetTrigger>
+      <SheetContent side="bottom" className='h-full w-fullz'>
+        <IsSafeCounterfactual>
+            <ViewCreateAndSetupSmartWallet />
+        </IsSafeCounterfactual>
+        <IsSafeMaterialized>
+
           <SheetHeader>
           <SheetTitle>Token Manage</SheetTitle>
           <SheetDescription>
@@ -53,6 +67,7 @@ export const Erc20FavoriteTokensAndManagement = ({ className }: Erc20FavoriteTok
               <Erc20CardTokenOverview symbol="DIS" />
               <Erc20CardTokenOverview symbol="RIZZ" />
           </div>
+        </IsSafeMaterialized>
       </SheetContent>
       </Sheet>
     </div>

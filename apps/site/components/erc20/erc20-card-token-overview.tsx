@@ -1,7 +1,6 @@
 import * as React from "react"
-import tokenList from "@/data/token-list-district-goerli.json"
+import tokenList from "@/data/lists/token-list-testnet.json"
 import {
-  ERC20Balance,
   ERC20TotalSupply,
 } from "@/integrations/erc20/components/erc20-read"
 import { useFindTokenFromList } from "@/integrations/erc20/hooks/use-find-token-from-list"

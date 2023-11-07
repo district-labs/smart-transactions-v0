@@ -260,7 +260,7 @@ const IntentStatement = ({
       Swap{" "}
       <span className="font-bold">
         {formatted?.tokenOutAmount} {tokenOut?.symbol}{" "}
-        <span className="font-normal">for</span> {formatted?.tokenInAmount} ${tokenIn?.symbol}
+        <span className="font-normal">for</span> {formatted?.tokenInAmount} {tokenIn?.symbol}
       </span>
       . Limit order must be executded after{" "}
       <TimeFromEpoch

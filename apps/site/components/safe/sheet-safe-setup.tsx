@@ -22,15 +22,13 @@ import { ScrollArea } from "../ui/scroll-area"
 
 // type SheetSafeSetup = {}
 
-export const SheetSafeSetup = ({}) => {
+export const SheetSafeSetup = ({children}: any) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
         <div className="">
           <IsSafeIntentModuleDisabled>
-            <Button size="lg" className="px-12 py-7 text-xl">
-              Get Started
-            </Button>
+            {children}
           </IsSafeIntentModuleDisabled>
         </div>
       </SheetTrigger>

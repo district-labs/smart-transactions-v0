@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { IntentBatch, type TokenList } from "@district-labs/intentify-core"
+import { IntentBatch, type VaultList } from "@district-labs/intentify-core"
 import {
   useIntentifySafeModuleGetDimensionalNonce,
   useIntentifySafeModuleGetStandardNonce,
@@ -24,7 +24,7 @@ export type StrategySavingsDeposit = {
   intentifySafeModuleAddress?: `0x${string}`
   root?: `0x${string}`
   chainId?: number
-  tokenList: TokenList
+  vaultList: VaultList
   intentBatchFactory?: IntentBatchFactory
   config: {
     nonce?: NonceConfig
@@ -61,7 +61,7 @@ export function StrategySavingsDeposit({
   intentifySafeModuleAddress,
   root,
   chainId,
-  tokenList,
+  vaultList,
   intentBatchFactory,
   onIntentBatchGenerated,
 }: StrategySavingsDeposit) {
@@ -148,7 +148,7 @@ export function StrategySavingsDeposit({
         {intentPoolTogetherSavingsDepositFields.SupplyAsset(
           intentBatch,
           setIntentBatch,
-          tokenList,
+          vaultList,
           config?.supplyAsset
         )}
         {/* Min Threshold */}

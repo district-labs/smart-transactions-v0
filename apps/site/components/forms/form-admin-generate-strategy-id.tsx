@@ -14,13 +14,12 @@ import {
   FormItem,
   FormLabel,
   Input,
-  UncontrolledFormMessage,
 } from "@district-labs/ui-react"
 import { useForm } from "react-hook-form"
 
 import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
 
-import { Icons } from "../icons"
+import { keccak256, toHex } from "viem"
 
 export function FormAdminGenerateStrategyId() {
   useUserProfileGet()
@@ -28,11 +27,8 @@ export function FormAdminGenerateStrategyId() {
   const form = useForm()
 
   const [strategyId, setStrategyId] = useState<string>("0x00")
-  function onSubmit({ intentModuleIds }: any) {
-    const parsedIntentModuleIds = JSON.parse(intentModuleIds)
-    const strategyId = intentBatchFactory.generateStrategyId(
-      parsedIntentModuleIds
-    )
+  function onSubmit({ strategyName }: any) {
+    const strategyId = keccak256(toHex(strategyName))
     setStrategyId(strategyId)
   }
 
@@ -53,8 +49,8 @@ export function FormAdminGenerateStrategyId() {
                 <FormControl>
                   <Input
                     aria-invalid={!!form.formState.errors.firstName}
-                    placeholder="[[TimestampRange, Erc20LimitOrder]]"
-                    {...form.register("intentModuleIds")}
+                    placeholder="RecurringPayment"
+                    {...form.register("strategyName")}
                   />
                 </FormControl>
               </FormItem>
