@@ -1,4 +1,3 @@
-import { env } from "@/src/env"
 import {
   CurrencyAmount,
   Percent,
@@ -12,6 +11,7 @@ import {
 } from "@uniswap/smart-order-router"
 import { ethers } from "ethers"
 import { type Address } from "viem"
+import { env } from "../../../../../env"
 
 interface Token {
   address: Address

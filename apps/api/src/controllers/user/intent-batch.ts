@@ -114,7 +114,7 @@ export const createIntentBatch = async (
       strategyId,
     });
 
-    return response.status(201).json({ data: newIntentBatch });
+    return response.status(201).json({ data: newIntentBatch, intentBatchHash });
   } catch (error) {
     next(error);
   }
