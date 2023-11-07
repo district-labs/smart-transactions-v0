@@ -2,16 +2,17 @@ import type { PublicClient, WalletClient } from "viem";
 import { createPublicClient, createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { foundry, goerli, mainnet } from "viem/chains";
+import { env } from "./env";
 
 export const accountShared = privateKeyToAccount(
-  (process.env.PRIVATE_KEY as `0x{string}`) || "0x00",
+  env.PRIVATE_KEY as `0x${string}`
 );
 
 const transportMainnet = http(
-  `https://eth-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+  env.MAINNET_RPC_URL
 );
 const transportGoerli = http(
-  `https://eth-goerli.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+  env.GOERLI_RPC_URL
 );
 
 const localGoerli = http(`http://localhost:8545`);
