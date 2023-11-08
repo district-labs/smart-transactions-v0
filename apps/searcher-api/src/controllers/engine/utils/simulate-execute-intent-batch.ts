@@ -14,43 +14,45 @@ import { simulateIntentBatch } from "./simulate-intent-batch"
 export async function simulateExecuteIntentBatch(
   intentBatchDb: DbIntentBatchWithRelations
 ) {
-    const { chainId, intentBatchHash } = intentBatchDb
+  const { chainId, intentBatchHash } = intentBatchDb
   try {
+    const relayer = getRelayerByChainId(chainId).relayer
+    const searcherAddress = await getRelayerAddress(relayer)
+    const publicClient = getPublicClientByChainId(chainId)
 
-  const relayer = getRelayerByChainId(chainId).relayer
-  const searcherAddress = await getRelayerAddress(relayer)
-  const publicClient = getPublicClientByChainId(chainId)
+    const intentBatchExecution = await generateIntentBatchExecution({
+      intentBatch: intentBatchDb,
+      publicClient,
+    })
 
-  const intentBatchExecution = await generateIntentBatchExecution({
-    intentBatch: intentBatchDb,
-    publicClient,
-  })
+    // Run a simulation of the intent batch execution
+    // Reverts if the intent batch execution is invalid
+    await simulateIntentBatch({
+      intentBatchExecution,
+      chainId,
+      publicClient,
+      searcherAddress,
+    })
 
-  // Run a simulation of the intent batch execution
-  // Reverts if the intent batch execution is invalid
-  await simulateIntentBatch({
-    intentBatchExecution,
-    chainId,
-    publicClient,
-    searcherAddress,
-  })
+    // Execute the intent batch
+    const { success, txReceipt, message } = await executeIntentBatch({
+      chainId,
+      intentBatchExecution,
+      publicClient,
+      relayer,
+    })
 
-  // Execute the intent batch
-  const { success, txReceipt, message } = await executeIntentBatch({
-    chainId,
-    intentBatchExecution,
-    publicClient,
-    relayer,
-  })
+    if (!success) {
+      return { success, intentBatchHash, message } as const
+    }
 
-  if (!success) {
-    return { success, intentBatchHash, message } as const
-  }
-
-  return { success, intentBatchHash, txReceipt } as const
+    return { success, intentBatchHash, txReceipt } as const
   } catch (error: any) {
     console.error(error)
-    return { success: false, intentBatchHash, message: String(error?.message) } as const
+    return {
+      success: false,
+      intentBatchHash,
+      message: String(error?.message),
+    } as const
   }
-  
 }

@@ -8,9 +8,9 @@ import { type Address, type PublicClient } from "viem"
 
 import { intentArgsToObj } from ".."
 import { generateHookErc20Swap } from "./utils/generate-hook-erc20-swap"
-import { erc20SwapSpotPriceExactTokenOutArgsSchema } from "./validations"
+import { erc20SwapSpotPriceBalanceTokenOutArgsSchema } from "./validations"
 
-interface Erc20SwapSpotPriceExactTokenOutParams {
+interface Erc20SwapSpotPriceBalanceTokenOutParams {
   chainId: number
   intent: DbIntent
   publicClient: PublicClient
@@ -18,21 +18,22 @@ interface Erc20SwapSpotPriceExactTokenOutParams {
 
 const PRICE_FEED_DECIMALS = 10n ** 8n
 
-export async function generateHookErc20SwapSpotPriceExactTokenOut({
+export async function generateHookErc20SwapSpotPriceBalanceTokenOut({
   chainId,
   intent,
   publicClient,
-}: Erc20SwapSpotPriceExactTokenOutParams): Promise<Hook> {
+}: Erc20SwapSpotPriceBalanceTokenOutParams): Promise<Hook> {
   const inputs = intentArgsToObj(intent.intentArgs)
   const {
     tokenOut,
     tokenIn,
     tokenOutPriceFeed,
     tokenInPriceFeed,
-    tokenOutAmount,
-  } = erc20SwapSpotPriceExactTokenOutArgsSchema.parse(inputs)
+    minBalance,
+    balanceDelta,
+  } = erc20SwapSpotPriceBalanceTokenOutArgsSchema.parse(inputs)
 
-  const tokenOutAmountBigInt = BigInt(tokenOutAmount)
+  const tokenOutAmountBigInt = BigInt(minBalance) + BigInt(balanceDelta)
 
   const tokenOutDecimals = await publicClient.readContract({
     address: tokenOut as Address,

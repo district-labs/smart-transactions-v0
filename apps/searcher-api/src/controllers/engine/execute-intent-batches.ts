@@ -32,7 +32,6 @@ export const executeIntentBatches = async (
         .json({ message: "No valid intent batches to execute" })
     }
 
-
     const executionResult = await Promise.all(
       validIntentBatches.map((intentBatchDb) =>
         simulateExecuteIntentBatch(intentBatchDb)

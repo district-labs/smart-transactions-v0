@@ -28,3 +28,13 @@ export const erc20SwapSpotPriceExactTokenOutArgsSchema = z.object({
   tokenOutAmount: stringBigInt,
   thresholdSeconds: stringBigInt,
 })
+
+export const erc20SwapSpotPriceBalanceTokenOutArgsSchema = z.object({
+  tokenOut: stringAddress,
+  tokenIn: stringAddress,
+  tokenOutPriceFeed: stringAddress,
+  tokenInPriceFeed: stringAddress,
+  thresholdSeconds: stringBigInt,
+  minBalance: stringBigInt,
+  balanceDelta: stringBigInt,
+})
