@@ -3,67 +3,43 @@ import {
   encodePacked,
   keccak256,
   parseAbiParameters,
-  stringToBytes,
-  toBytes,
+  toBytes
 } from "viem";
 import { DimensionalNonce, EIP712Domain, Intent, IntentBatch } from "./types";
 
 // Define the TypeHash constants
 const EIP712DOMAIN_TYPEHASH = keccak256(
-  stringToBytes(
+  toBytes(
     "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)",
   ),
 );
 
 const DIMENSIONALNONCE_TYPEHASH = keccak256(
-  stringToBytes("DimensionalNonce(uint128 queue,uint128 accumulator)"),
+  toBytes("DimensionalNonce(uint128 queue,uint128 accumulator)"),
 );
 
 const INTENT_TYPEHASH = keccak256(
-  stringToBytes("Intent(address root,address target,uint256 value,bytes data)"),
+  toBytes("Intent(address root,address target,uint256 value,bytes data)"),
 );
 
 const INTENTBATCH_TYPEHASH = keccak256(
-  stringToBytes(
+  toBytes(
     "IntentBatch(address root,bytes nonce,Intent[] intents)Intent(address root,address target,uint256 value,bytes data)",
   ),
 );
 
 // Define the TypeScript functions
 export function getEIP712DomainPacketHash(domain: EIP712Domain): `0x${string}` {
-  return keccak256(
-    encodeAbiParameters(
-      [
-        {
-          name: "EIP712DOMAIN_TYPEHASH",
-          type: "bytes32",
-        },
-        {
-          name: "name",
-          type: "string",
-        },
-        {
-          name: "version",
-          type: "string",
-        },
-        {
-          name: "chainId",
-          type: "uint256",
-        },
-        {
-          name: "verifyingContract",
-          type: "address",
-        },
-      ],
-      [
-        EIP712DOMAIN_TYPEHASH,
-        domain.name,
-        domain.version,
-        domain.chainId,
-        domain.verifyingContract,
-      ],
-    ),
-  );
+  const encodedData = encodeAbiParameters([
+      {name:"EIP712DOMAIN_TYPEHASH", type:"bytes32"},
+      {name:"name", type:"bytes32"},
+      {name:"version", type:"bytes32"},
+      {name:"chainId", type:"uint256"},
+      {name:"verifyingContract", type:"address"}
+    ],
+      [EIP712DOMAIN_TYPEHASH, keccak256(toBytes(domain.name)), keccak256(toBytes(domain.version)), domain.chainId, domain.verifyingContract])
+    const DOMAIN_SEPARATOR = keccak256(encodedData)
+return DOMAIN_SEPARATOR
 }
 
 export function getDimensionalNoncePacketHash(

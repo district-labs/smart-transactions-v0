@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@wagmi/cli": "1.1.0",
-    "viem": "^1.12.1"
+    "viem": "^1.12.1",
+    "wagmi": "^1.4.5"
   }
 }
