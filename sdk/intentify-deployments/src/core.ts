@@ -4,12 +4,12 @@ export const ADDRESS_ZERO =
   '0x0000000000000000000000000000000000000000' as `0x${string}`;
 
 export const IntentifySafeModule: ChainToAddress = {
-  5: "0xBF3e94cD03Dc0a6677BafC1b14c1154E50629cce",
+  5: "0xd6f159e1D623Bc9F48AfC6D7E8337AD8612f43Aa",
   31337: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
 };
 
 export const IntentifyBundler: ChainToAddress = {
-    5: '0xeBfb32e7422f98618688391D5c68B1861737e0fe',
+    5: '0xDd72ddD8F8eA1Bd67bE4380A777093E823d13AA2',
     31337: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
   };
 
