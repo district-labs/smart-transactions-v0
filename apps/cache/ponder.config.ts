@@ -1,10 +1,5 @@
 import type { Config } from "@ponder/core";
-
-export const IntentifyModuleAddressList = {
-  5: '0x6d39bb7e7BF4eDE48E0CC62701E751D8deC07D2d',
-  31337: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-} as const
-
+import { IntentifySafeModule } from '@district-labs/intentify-deployments' 
 
 const localConfig: Config = {
   networks: [
@@ -16,14 +11,14 @@ const localConfig: Config = {
     {
       name: "IntentifySafeModuleGoerli",
       network: "goerli",
-      address: IntentifyModuleAddressList[5],
+      address: IntentifySafeModule[5],
       abi: './abis/IntentifySafeModule.json',
       startBlock: 9764809,
     },
     {
       name: "IntentifySafeModuleLocal",
       network: "testnet",
-      address: IntentifyModuleAddressList[31337],
+      address: IntentifySafeModule[31337],
       abi: './abis/IntentifySafeModule.json',
       startBlock: 0,
     },
@@ -39,7 +34,7 @@ const localConfig: Config = {
     {
       name: "IntentifySafeModuleGoerli",
       network: "goerli",
-      address: IntentifyModuleAddressList[5],
+      address: IntentifySafeModule[5],
       abi: './abis/IntentifySafeModule.json',
       startBlock: 9764809,
     },

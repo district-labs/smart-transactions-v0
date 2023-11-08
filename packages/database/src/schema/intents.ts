@@ -11,6 +11,7 @@ import {
 
 import { DbStrategy, DbUser, strategies, users } from "."
 import { charAddress, charHash } from "../utils/schema"
+import { DbTransaction, transaction } from "./transaction"
 
 // ------------------ INTENT ------------------ //
 
@@ -54,7 +55,6 @@ export const intentBatch = mysqlTable("intent_batch", {
   nonce: charHash("nonce").notNull(),
   chainId: int("chain_id").notNull(),
   signature: text("signature").notNull(),
-  executedTxHash: charHash("executed_tx_hash").unique(),
   executedAt: timestamp("executed_at"),
   cancelledTxHash: charHash("cancelled_tx_hash").unique(),
   cancelledAt: timestamp("cancelled_at"),
@@ -64,6 +64,7 @@ export const intentBatch = mysqlTable("intent_batch", {
 
 export const intentBatchRelations = relations(intentBatch, ({ one, many }) => ({
   intents: many(intents),
+  executedTxs: many(transaction),
   user: one(users, {
     fields: [intentBatch.userId],
     references: [users.address],
@@ -85,6 +86,7 @@ export type DbIntentBatchWithRelations = InferSelectModel<typeof intentBatch> & 
   intents?: DbIntent[]
   strategy?: DbStrategy
   intentBatchExecution?: DbIntentBatchExecution
+  executedTxs?: DbTransaction[]
 }
 
 // ------------------ HOOKS ------------------ //

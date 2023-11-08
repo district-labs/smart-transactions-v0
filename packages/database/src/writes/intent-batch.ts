@@ -2,6 +2,7 @@ import { and, eq } from 'drizzle-orm';
 import type { PlanetScaleDatabase } from "drizzle-orm/planetscale-serverless";
 import { intentBatch, type DbIntentBatch } from "../";
 import * as schema from "../schema";
+import { transaction } from '../schema/transaction';
 
 export function newIntentBatch(db: PlanetScaleDatabase<typeof schema>, intentBatchNew: DbIntentBatch) {
   return db.insert(intentBatch).values(intentBatchNew)
@@ -14,24 +15,32 @@ export type IntentBatchNew = Awaited<ReturnType<typeof newIntentBatch>>
 // ----------------------------------------------
 export function updateIntentBatchExecuted(
   db: PlanetScaleDatabase<typeof schema>,
-  intentBatchHash: string,
   {
-    executedAt,
-    executedTxHash,
+    intentBatchId,
+    blockHash,
+    blockNumber,
+    transactionHash,
     chainId,
+    to
   }: {
-    executedAt: Date
-    executedTxHash: string
+    blockHash: string
+    blockNumber: number
+    intentBatchId: string
+    transactionHash: string
     chainId: number
+    to: string
   }
 ) {
   return db
-    .update(intentBatch)
-    .set({
-      executedAt,
-      executedTxHash,
+    .insert(transaction)
+    .values({
+      blockHash,
+      blockNumber,
+      transactionHash,
+      intentBatchId,
+      chainId,
+      to
     })
-    .where(and(eq(intentBatch.intentBatchHash, intentBatchHash), eq(intentBatch.chainId, chainId)))
 }
 
 export type IntentBatchUpdateExecuted = Awaited<

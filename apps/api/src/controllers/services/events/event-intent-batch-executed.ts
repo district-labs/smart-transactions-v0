@@ -11,16 +11,19 @@ export const eventIntentBatchExecuted = async (
   next: NextFunction,
 ) => {
   try {
-    const { chainId, intentBatchId, transactionHash } = await request.body;
+    const { chainId, intentBatchId, transactionHash, blockHash, blockNumber, to } = await request.body;
 
     if (!chainId || !intentBatchId || !transactionHash) {
       throw new CustomError("Missing Event Parameters", 400);
     }
 
-    await updateIntentBatchExecuted(db, intentBatchId, {
+    await updateIntentBatchExecuted(db, {
+      intentBatchId,
       chainId: Number(chainId),
-      executedTxHash: transactionHash,
-      executedAt: new Date(), // TODO: Use the timestamp from the event/transaction
+      transactionHash: transactionHash,
+      blockHash: blockHash,
+      blockNumber: blockNumber,
+      to: to
     });
 
     return response.status(200).send();
