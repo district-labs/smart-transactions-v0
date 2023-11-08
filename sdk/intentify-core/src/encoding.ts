@@ -72,7 +72,7 @@ export function getIntentPacketHash(intent: Intent): `0x${string}` {
   return keccak256(
     encodeAbiParameters(
       parseAbiParameters("bytes32, address, address, uint256, bytes"),
-      [INTENT_TYPEHASH, intent.root, intent.target, intent.value, intent.data],
+      [INTENT_TYPEHASH, intent.root, intent.target, intent.value, keccak256(intent.data)],
     ),
   );
 }

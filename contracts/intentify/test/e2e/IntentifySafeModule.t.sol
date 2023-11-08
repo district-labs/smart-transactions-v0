@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19 <0.9.0;
 
+import { console2 } from "forge-std/StdCheats.sol";
 import { Enum } from "safe-contracts/common/Enum.sol";
 import { Intent, IntentBatch, IntentBatchExecution, Signature, Hook } from "../../src/TypesAndDecoders.sol";
 import { IntentifySafeModule } from "../../src/module/IntentifySafeModule.sol";
@@ -17,13 +18,25 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
     function setUp() public virtual {
         initializeBase();
         initializeSafeBase();
-
+        console2.log("_intentifySafeModule", address(_intentifySafeModule));
+        console2.logBytes(bytes(""));
+        console2.log(block.chainid);
+        console2.logBytes(abi.encodePacked(uint256(0)));
         _counter = new Counter();
     }
 
     /* ===================================================================================== */
     /* Failure Tests                                                                         */
     /* ===================================================================================== */
+
+    function test_intentSafeModule_getIntentBatchTypedDataHash_Success() external {
+        Intent[] memory intents = new Intent[](1);
+        intents[0] = Intent({ root: address(0), value: 0, target: address(0), data: bytes("") });
+        IntentBatch memory intentBatch =
+            IntentBatch({ root: address(0), nonce: abi.encodePacked(uint256(0)), intents: intents });
+        bytes32 digest = _intentifySafeModule.getIntentBatchTypedDataHash(intentBatch);
+        assertEq(digest, 0xdadf946adb368f799b19d874f5d142a1ed27c339d3a480b9af5a90269e29d615);
+    }
 
     function test_RevertWhen_intentSafeModule_IntentBundleCancelled_Success() external {
         Intent[] memory intents = new Intent[](1);

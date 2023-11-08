@@ -1,4 +1,4 @@
-import { SignTypedDataParameters } from "viem";
+import { SignTypedDataParameters, keccak256, toHex } from "viem";
 import { eip712Types } from "./eip712-types";
 import { IntentBatch } from "./types";
 import { ADDRESS_ZERO } from "./constants";

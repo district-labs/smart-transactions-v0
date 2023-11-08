@@ -89,7 +89,7 @@ contract TypesAndDecoders {
     }
 
     function GET_INTENT_PACKETHASH(Intent memory _input) public pure returns (bytes32) {
-        bytes memory encoded = abi.encode(INTENT_TYPEHASH, _input.root, _input.target, _input.value, _input.data);
+        bytes memory encoded = abi.encode(INTENT_TYPEHASH, _input.root, _input.target, _input.value, keccak256(_input.data));
 
         return keccak256(encoded);
     }
