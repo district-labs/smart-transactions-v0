@@ -1,6 +1,8 @@
+import { env } from "../env";
+
 export async function invalidateIntentBatches() {
     try {
-        await fetch(`${process.env.API_URL}/infra/intents/invalidate`, {
+        await fetch(`${env.API_URL}/infra/intents/invalidate`, {
             method: 'GET',
         });
     } catch (error) {

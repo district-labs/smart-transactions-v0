@@ -11,14 +11,16 @@ export const env = createEnv({
     NODE_ENV: z.enum(["development", "test", "production"]),
     AUTH_SECRET_KEY: z.string(),
     RESEND_API_KEY: z.string(),
+    ALCHEMY_API_KEY: z.string().length(32),
     EMAIL_FROM_ADDRESS: z.string().email(),
     API_EXECUTE_INTENT_BATCHES: z.string(),
     OPEN_ZEPPELIN_DEFENDER_API_KEY_MAINNET: z.string(),
     OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_MAINNET: z.string(),
     OPEN_ZEPPELIN_DEFENDER_API_KEY_GOERLI: z.string(),
     OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_GOERLI: z.string(),
-    PRIVATE_KEY: z.string(),
+    PRIVATE_KEY: z.string().min(64).max(66),
     JWT_SECRET: z.string(),
+    VERCEL_URL: z.string().optional(),
     // Comma separated list of Ethereum addresses, accepts optinal whitespace after comma
     APP_ADMINS: z
       .string()
@@ -58,6 +60,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     AUTH_SECRET_KEY: process.env.AUTH_SECRET_KEY,
+    ALCHEMY_API_KEY: process.env.ALCHEMY_API_KEY,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     EMAIL_FROM_ADDRESS: process.env.EMAIL_FROM_ADDRESS,
     API_EXECUTE_INTENT_BATCHES: process.env.API_EXECUTE_INTENT_BATCHES,
@@ -68,6 +71,7 @@ export const env = createEnv({
     JWT_SECRET: process.env.JWT_SECRET,
     APP_ADMINS: process.env.APP_ADMINS,
     PRIVATE_KEY: process.env.PRIVATE_KEY,
+    VERCEL_URL: process.env.VERCEL_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validaiton

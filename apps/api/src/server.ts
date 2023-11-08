@@ -1,22 +1,22 @@
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
+import { env } from "./env";
 import { errorHandler } from "./middleware/errorHandler";
 import intentBatchAdminRoutes from "./routes/admin/intent-batch";
 import authRoutes from "./routes/auth";
 import infraIntentBatchRoutes from "./routes/infra/intent-batch";
 import serviceAxiomRoutes from "./routes/services/axiom";
 import serviceEventsRoutes from "./routes/services/events";
-import serviceExecuteRoutes from "./routes/services/execution";
 import intentBatchUserRoutes from "./routes/user/intent-batch";
 import profileUserRoutes from "./routes/user/profile";
 import strategyUserRoutes from "./routes/user/strategy";
 
-const PORT = process.env.PORT || 3000;
+const PORT = env.PORT;
 const app = express();
 // CORS configuration
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN,
+  origin: env.CORS_ORIGIN,
   credentials: true,
   secure: process.env.NODE_ENV === "production" ? true : false,
 };
@@ -34,7 +34,6 @@ app.use("/intent-batch", intentBatchUserRoutes);
 app.use("/strategy", strategyUserRoutes);
 app.use("/admin/intent-batch", intentBatchAdminRoutes);
 app.use("/service", serviceEventsRoutes);
-app.use("/service", serviceExecuteRoutes);
 app.use("/service", serviceAxiomRoutes);
 app.use("/infra", infraIntentBatchRoutes);
 

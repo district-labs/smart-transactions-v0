@@ -1,13 +1,14 @@
 import { Axiom } from "@axiom-crypto/core";
+import { env } from "src/env";
 export { getQueryResult } from "./get-query-result";
 export { axiomSendQuery } from "./send-query";
 
 function getRprUrl(chainId: number) {
   switch (chainId) {
     case 1:
-      return process.env.GOERLI_RPC_URL as string;
+      return env.GOERLI_RPC_URL as string;
     case 5:
-      return process.env.MAINNET_RPC_URL as string;
+      return env.MAINNET_RPC_URL as string;
     default:
       throw new Error("Unsupported chainId");
   }

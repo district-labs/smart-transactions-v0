@@ -18,6 +18,7 @@
     "@district-labs/intentify-deployments": "workspace:*",
     "@district-labs/intentify-intent-batch": "workspace:*",
     "@openzeppelin/defender-relay-client": "^1.48.0",
+    "@t3-oss/env-core": "^0.7.1",
     "@types/node-cron": "^3.0.10",
     "@uniswap/sdk-core": "^4.0.7",
     "@uniswap/smart-order-router": "^3.16.29",
