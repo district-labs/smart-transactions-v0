@@ -9,7 +9,6 @@ import {
     EIP712DOMAIN_TYPEHASH,
     TypesAndDecoders
 } from "../TypesAndDecoders.sol";
-import { console2 } from "forge-std/console2.sol";
 import { SafeMinimal, Enum } from "../interfaces/SafeMinimal.sol";
 import { IntentAbstract } from "../abstracts/IntentAbstract.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";
@@ -252,7 +251,9 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Rever
         pure
         returns (bytes32)
     {
-        bytes memory encoded = abi.encode(EIP712DOMAIN_TYPEHASH, contractName, version, chainId, verifyingContract);
+        bytes memory encoded = abi.encode(
+            EIP712DOMAIN_TYPEHASH, keccak256(bytes(contractName)), keccak256(bytes(version)), chainId, verifyingContract
+        );
         return keccak256(encoded);
     }
 
