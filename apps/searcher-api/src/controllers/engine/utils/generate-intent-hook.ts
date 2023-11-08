@@ -10,9 +10,11 @@ import {
   chainlinkDataFeed,
   erc20LimitOrder,
   erc20Rebalance,
+  erc20SwapSpotPriceBalanceTokenOut,
   erc20SwapSpotPriceExactTokenIn,
   erc20SwapSpotPriceExactTokenOut,
   erc20Transfer,
+  erc4626DepositBalanceContinual,
   ethTip,
   timestampRange,
   uniswapV3HistoricalTwapPercentageChangeIntent,
@@ -22,6 +24,7 @@ import type { PublicClient } from "viem"
 
 import {
   generateHookErc20LimitOrderIntent,
+  generateHookErc20SwapSpotPriceBalanceTokenOut,
   generateHookErc20SwapSpotPriceExactTokenIn,
   generateHookErc20SwapSpotPriceExactTokenOut,
   generateHookEthTipIntent,
@@ -68,6 +71,13 @@ export async function generateIntentHook({
     case generateIntentId(erc20Rebalance.name): {
       // return ""
     }
+    case generateIntentId(erc20SwapSpotPriceBalanceTokenOut.name): {
+      return generateHookErc20SwapSpotPriceBalanceTokenOut({
+        chainId,
+        intent,
+        publicClient,
+      })
+    }
     case generateIntentId(erc20SwapSpotPriceExactTokenIn.name): {
       return generateHookErc20SwapSpotPriceExactTokenIn({
         chainId,
@@ -83,6 +93,9 @@ export async function generateIntentHook({
       })
     }
     case generateIntentId(erc20Transfer.name): {
+      return EMPTY_HOOK
+    }
+    case generateIntentId(erc4626DepositBalanceContinual.name): {
       return EMPTY_HOOK
     }
     case generateIntentId(ethTip.name): {
