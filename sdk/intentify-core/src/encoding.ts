@@ -94,7 +94,7 @@ export function getIntentBatchPacketHash(
       [
         INTENTBATCH_TYPEHASH,
         intentBatch.root,
-        intentBatch.nonce,
+        keccak256(intentBatch.nonce),
         getIntentArrayPacketHash(intentBatch.intents),
       ],
     ),
