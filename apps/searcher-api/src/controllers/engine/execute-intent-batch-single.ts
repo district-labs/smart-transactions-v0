@@ -1,20 +1,16 @@
 import type { DbIntentBatchWithRelations } from "@district-labs/intentify-database"
-import { NextFunction, Request, Response } from "express"
+import { Request, Response } from "express"
 
-import { getPublicClientByChainId, INTENTIFY_API_URL } from "../../constants"
+import { INTENTIFY_API_URL } from "../../constants"
 import CustomError from "../../utils/customError"
-import { getRelayerAddress, getRelayerByChainId } from "../../utils/relayer"
-import { executeIntentBatchExecution } from "./utils/execute-intent-batch-execution"
-import { generateIntentBatchExecution } from "./utils/generate-intent-batch-execution"
-import { simulateIntentBatchExecution } from "./utils/simulate-intent-batch-execution"
+import { simulateExecuteIntentBatch } from "./utils/simulate-execute-intent-batch"
 
 /**
  * Execute a single intent batch by ID.
  */
 export const executeIntentBatchSingle = async (
   request: Request,
-  response: Response,
-  next: NextFunction
+  response: Response
 ) => {
   try {
     const intentBatchId = request.params.id
@@ -22,6 +18,7 @@ export const executeIntentBatchSingle = async (
       throw new CustomError("Invalid IntentBatch ID", 400)
     }
 
+    // TODO: Replace with api-actions SDK
     const res = await fetch(
       `${INTENTIFY_API_URL}/intent-batch/${intentBatchId}`
     )
@@ -30,44 +27,16 @@ export const executeIntentBatchSingle = async (
       return response.status(res.status).json({ data: res.statusText })
     }
 
-    const intentBatch: { data: DbIntentBatchWithRelations } = await res.json()
+    const intentBatchResponse: { data: DbIntentBatchWithRelations } =
+      await res.json()
 
-    if (Object.keys(intentBatch).length === 0) {
-      return response
-        .status(404)
-        .json({ data: `IntentBatch with ID ${intentBatchId} not found` })
-    }
+    const { data: intentBatchDb } = intentBatchResponse
 
-    const { chainId } = intentBatch.data
+    const txReceipt = await simulateExecuteIntentBatch(intentBatchDb)
 
-    const relayer = getRelayerByChainId(chainId).relayer
-    const searcherAddress = await getRelayerAddress(relayer)
-
-    const publicClient = getPublicClientByChainId(chainId)
-
-    const intentBatchExecution = await generateIntentBatchExecution({
-      intentBatch: intentBatch.data,
-      publicClient,
-    })
-
-    // Run a simulation of the intent batch execution
-    // Reverts if the intent batch execution is invalid
-    await simulateIntentBatchExecution({
-      intentBatchExecution,
-      chainId,
-      publicClient,
-      searcherAddress,
-    })
-
-    const txReceipt = await executeIntentBatchExecution({
-      chainId,
-      intentBatchExecution,
-      publicClient,
-      relayer,
-    })
-
-    return response.status(200).json({ txReceipt: JSON.stringify(txReceipt) })
+    return response.status(201).json({ txReceipt: JSON.stringify(txReceipt) })
   } catch (error: any) {
+    console.error(error)
     return response.status(500).json({ error: error?.message })
   }
 }
