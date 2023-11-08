@@ -1,4 +1,10 @@
-import { encodeAbiParameters, encodePacked, keccak256, parseAbiParameters, toBytes } from "viem";
+import {
+  encodeAbiParameters,
+  encodePacked,
+  keccak256,
+  parseAbiParameters,
+  toBytes
+} from "viem";
 import { DimensionalNonce, EIP712Domain, Intent, IntentBatch } from "./types";
 
 // Define the TypeHash constants
@@ -51,7 +57,13 @@ export function getIntentPacketHash(intent: Intent): `0x${string}` {
   return keccak256(
     encodeAbiParameters(
       parseAbiParameters("bytes32, address, address, uint256, bytes"),
-      [INTENT_TYPEHASH, intent.root, intent.target, intent.value, intent.data],
+      [
+        INTENT_TYPEHASH,
+        intent.root,
+        intent.target,
+        intent.value,
+        keccak256(intent.data),
+      ],
     ),
   );
 }
@@ -73,7 +85,7 @@ export function getIntentBatchPacketHash(
       [
         INTENTBATCH_TYPEHASH,
         intentBatch.root,
-        intentBatch.nonce,
+        keccak256(intentBatch.nonce),
         getIntentArrayPacketHash(intentBatch.intents),
       ],
     ),
