@@ -1,7 +1,7 @@
 import type { DbIntentBatchWithRelations } from "@district-labs/intentify-database"
 import { Request, Response } from "express"
 
-import { INTENTIFY_API_URL } from "../../constants"
+import { env } from "../../env"
 import CustomError from "../../utils/customError"
 import { simulateExecuteIntentBatch } from "./utils/simulate-execute-intent-batch"
 
@@ -20,7 +20,7 @@ export const executeIntentBatchSingle = async (
 
     // TODO: Replace with api-actions SDK
     const res = await fetch(
-      `${INTENTIFY_API_URL}/intent-batch/${intentBatchId}`
+      `${env.INTENTIFY_API_URL}/intent-batch/${intentBatchId}`
     )
 
     if (!res.ok) {

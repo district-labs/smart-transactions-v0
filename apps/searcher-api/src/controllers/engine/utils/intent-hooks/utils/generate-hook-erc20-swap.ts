@@ -17,8 +17,10 @@ import {
 
 import {
   getSearcherAddressBychainId,
-  MULTICALL_WITH_FLASHLOAN_ADDRESS,
 } from "../../../../../constants"
+import {
+  env
+} from "../../../../../env"
 import { routeSwapExactInput } from "../uniswap/routing"
 import { encodeMultiCallWithFlashLoanData } from "./encode-multicall-with-flashloan"
 
@@ -92,7 +94,7 @@ export async function generateHookErc20Swap({
         address: tokenIn as Address,
         decimals: Number(tokenInDecimals),
       },
-      recipient: MULTICALL_WITH_FLASHLOAN_ADDRESS,
+      recipient: env.MULTICALL_WITH_FLASHLOAN_ADDRESS,
     })
 
     if (!route?.methodParameters) throw new Error("route not found")
