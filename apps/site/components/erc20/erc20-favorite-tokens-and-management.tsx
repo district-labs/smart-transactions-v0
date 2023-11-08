@@ -43,13 +43,14 @@ export const Erc20FavoriteTokensAndManagement = ({ className }: Erc20FavoriteTok
             <>
             <Erc20Token symbol="WETH" />
             <Erc20Token symbol="USDC" />
+            <Erc20Token symbol="DAI" />
             <Erc20Token symbol="DIS" />
             </>
         </ResponsiveMobileAndDesktop>
      </div>
      <Sheet >
       <SheetTrigger className='text-xs font-medium hover:opacity-80 cursor-pointer'>Manage Tokens</SheetTrigger>
-      <SheetContent side="bottom" className='h-full w-fullz'>
+      <SheetContent side="bottom" className='h-full w-full'>
         <IsSafeCounterfactual>
             <ViewCreateAndSetupSmartWallet />
         </IsSafeCounterfactual>
@@ -66,6 +67,7 @@ export const Erc20FavoriteTokensAndManagement = ({ className }: Erc20FavoriteTok
               <Erc20CardTokenOverview symbol="USDC" />
               <Erc20CardTokenOverview symbol="DIS" />
               <Erc20CardTokenOverview symbol="RIZZ" />
+              <Erc20CardTokenOverview symbol="DAI" />
           </div>
         </IsSafeMaterialized>
       </SheetContent>
