@@ -40,11 +40,11 @@ export function getEIP712DomainPacketHash(domain: EIP712Domain): `0x${string}` {
         },
         {
           name: "name",
-          type: "bytes32",
+          type: "string",
         },
         {
           name: "version",
-          type: "bytes32",
+          type: "string",
         },
         {
           name: "chainId",
@@ -57,8 +57,8 @@ export function getEIP712DomainPacketHash(domain: EIP712Domain): `0x${string}` {
       ],
       [
         EIP712DOMAIN_TYPEHASH,
-        keccak256(toBytes(domain.name)),
-        keccak256(toBytes(domain.version)),
+        domain.name,
+        domain.version,
         domain.chainId,
         domain.verifyingContract,
       ],

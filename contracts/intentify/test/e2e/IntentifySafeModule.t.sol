@@ -18,10 +18,6 @@ contract IntentifySafeModuleTest is SafeTestingUtils {
     function setUp() public virtual {
         initializeBase();
         initializeSafeBase();
-        console2.log("_intentifySafeModule", address(_intentifySafeModule));
-        console2.logBytes(bytes(""));
-        console2.log(block.chainid);
-        console2.logBytes(abi.encodePacked(uint256(0)));
         _counter = new Counter();
     }
 
