@@ -9,7 +9,6 @@ import {
     EIP712DOMAIN_TYPEHASH,
     TypesAndDecoders
 } from "../TypesAndDecoders.sol";
-import { console2 } from "forge-std/console2.sol";
 import { SafeMinimal, Enum } from "../interfaces/SafeMinimal.sol";
 import { IntentAbstract } from "../abstracts/IntentAbstract.sol";
 import { IntentWithHookAbstract } from "../abstracts/IntentWithHookAbstract.sol";

@@ -12,9 +12,11 @@ export async function intentBatchCreate(intentBatch: any) {
       },
     })
 
+  
     if (response.ok) {
-      const data: {
-        ok: true
+      const data : {
+        ok: true,
+        intentBatchHash:`0x${string}`
       } = await response.json()
 
       return data

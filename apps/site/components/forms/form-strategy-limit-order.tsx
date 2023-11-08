@@ -1,6 +1,5 @@
 "use client"
 
-import { useCallback, useState } from "react"
 import { intentBatchFactory } from "@/core/intent-batch-factory"
 import tokenListGoerli from "@/data/lists/token-list-testnet.json"
 import { functionTokenListByChainId } from "@/integrations/erc20/utils/filter-token-list-by-chain-id"
@@ -16,6 +15,7 @@ import { type IntentModule } from "@district-labs/intentify-intent-batch"
 import { StrategyLimitOrder } from "@district-labs/intentify-strategy-react"
 import { Button } from "@district-labs/ui-react"
 import { Loader2 } from "lucide-react"
+import { useCallback, useRef, useState } from "react"
 import { useChainId, useSignTypedData } from "wagmi"
 
 import { useActionIntentBatchCreate } from "@/hooks/intent-batch/user/use-intent-batch-create"
@@ -41,27 +41,29 @@ export function FormStrategyLimitOrder({
     useActionIntentBatchCreate()
 
   const [currentValues, setCurrentValues] = useState<any>(null)
-  // const defaultValues ={}
+const intentBatchStructRef = useRef<IntentBatch>()
+
   const defaultValues = useFormStrategySetDefaultValues(overrideValues)
 
+
   const { isLoading: isSignatureRequested, signTypedDataAsync } =
-    useSignTypedData()
+    // eslint-disable-next-line
+    // @ts-ignore
+    useSignTypedData(generateIntentBatchEIP712({
+          chainId: chainId,
+          verifyingContract: intentifyAddress,
+          intentBatch: intentBatchStructRef.current,
+        }))
 
   const onIntentBatchGenerated = useCallback(
     async (
       intentBatchStruct: IntentBatch,
       intentBatchMetadata: IntentModule[]
     ) => {
-      const signature = await signTypedDataAsync(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        generateIntentBatchEIP712({
-          chainId: chainId,
-          verifyingContract: intentifyAddress,
-          intentBatch: intentBatchStruct,
-        })
-      )
-      mutateAsync({
+      intentBatchStructRef.current = intentBatchStruct
+      const signature = await signTypedDataAsync()
+
+        mutateAsync({
         chainId,
         intentBatch: intentBatchStruct,
         intentBatchMetadata,

@@ -21,6 +21,13 @@ export function NavigationCore() {
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href={"/blog"} legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Blog
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
           {/* <NavigationMenuItem>
             <Link href={"/research"} legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>

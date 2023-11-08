@@ -39,6 +39,7 @@ export type IntentBatch = {
 
 export type Hook = {
   target: `0x${string}`; // Ethereum addresses are usually represented as strings in TypeScript
+  instructions: `0x${string}`; // bytes can be represented as a hex string
   data: `0x${string}`; // bytes can be represented as a hex string
 };
 
@@ -89,42 +90,42 @@ export interface TokenList {
 }
 
 export interface Vault {
-  name: string
-  address: string
-  symbol: string
-  decimals: number
-  chainId: number
-  logoURI: string
-  tags?: string[]
+  name: string;
+  address: string;
+  symbol: string;
+  decimals: number;
+  chainId: number;
+  logoURI: string;
+  tags?: string[];
   extensions?: {
     bridgeInfo?:
       | {
           [key: string]:
             | {
-                tokenAddress: string
+                tokenAddress: string;
               }
-            | undefined
+            | undefined;
         }
-      | undefined
-  }
-  asset: Token
+      | undefined;
+  };
+  asset: Token;
 }
 
 export interface VaultList {
-  name: string
-  logoURI: string
-  keywords: string[]
+  name: string;
+  logoURI: string;
+  keywords: string[];
   tags: {
     [key: string]: {
-      name: string
-      description: string
-    }
-  }
-  timestamp: string
-  vaults: Vault[]
+      name: string;
+      description: string;
+    };
+  };
+  timestamp: string;
+  vaults: Vault[];
   version: {
-    major: number
-    minor: number
-    patch: number
-  }
+    major: number;
+    minor: number;
+    patch: number;
+  };
 }
