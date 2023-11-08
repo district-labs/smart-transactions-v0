@@ -1,44 +1,41 @@
 import * as React from "react"
 import { ButtonSiweSignIn } from "@/integrations/siwe/components/button-siwe-sign-in"
-import { IsSignedIn } from "@/integrations/siwe/components/is-signed-in"
 import { useIsSignedIn } from "@/integrations/siwe/hooks/use-is-signed-in"
 import {
-  DeploySafe,
-  EnableSafeIntentModule,
-  IsSafeCounterfactual,
   IsSafeIntentModuleDisabled,
-  IsSafeIntentModuleEnabled,
-  IsSafeMaterialized,
-  useIsSafeIntentModuleEnabled,
-  useIsSafeMaterialized,
+  useIsSafeIntentModuleEnabled
 } from "@district-labs/intentify-core-react"
 import {
   Button,
-  ScrollArea,
   Sheet,
   SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@district-labs/ui-react"
-import { useAccount } from "wagmi"
+import { useAccount, useChainId } from "wagmi"
 
 import { useUser } from "@/hooks/use-user"
 
 import WalletConnectCustom from "../blockchain/wallet-connect-custom"
 import { LinkComponent } from "../shared/link-component"
+import { ViewCreateAndSetupSmartWallet } from "../view/view-create-and-setup-smart-wallet"
+import { strategies } from "@/data/strategies"
 
 type ButtonSetupSmartWalletBeforeSigningIntent =
-  React.HTMLAttributes<HTMLElement>
+  React.HTMLAttributes<HTMLElement> & {
+    strategyId: string
+  }
 
 export const ButtonSetupSmartWalletBeforeSigningIntent = ({
   children,
+  strategyId
 }: ButtonSetupSmartWalletBeforeSigningIntent) => {
+  const chainId = useChainId()
+  const selectedStrategy = Object.values(strategies).find((strategy: any) => {
+    return strategy.id === strategyId || strategy.alias === strategyId
+  })
   const { address } = useAccount()
   const {
     data: userData,
-    isError: userIsError,
     isSuccess: userIsSuccess,
   } = useUser()
   const isSmartWalletModuleEnabled = useIsSafeIntentModuleEnabled()
@@ -55,6 +52,15 @@ export const ButtonSetupSmartWalletBeforeSigningIntent = ({
 
   if (!isSignedIn) {
     return <ButtonSiweSignIn label="Authenticate" className="w-full" />
+  }
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if(!selectedStrategy?.supportedChains?.includes(chainId)) {
+    return (
+        <Button variant="outline" className="w-full flex items-center gap-x-1">
+          Support Coming Soon
+        </Button>
+    )
   }
 
   if (isSmartWalletModuleEnabled) {
@@ -74,76 +80,7 @@ export const ButtonSetupSmartWalletBeforeSigningIntent = ({
           </div>
         </SheetTrigger>
         <SheetContent side={"bottom"} className="h-full">
-          <ScrollArea className="max-h-[100%] overflow-auto">
-            <div className="container max-w-screen-md">
-              <SheetHeader>
-                <SheetTitle className="text-4xl">
-                  Create Smart Wallet
-                </SheetTitle>
-                <SheetDescription className="text-lg">
-                  Setup a new smart wallet to manage your assets.
-                </SheetDescription>
-              </SheetHeader>
-              <hr className="mb-10 mt-8" />
-              <h3 className="text-xl font-bold">
-                Step 1. Setup Safe Smart Wallet{" "}
-              </h3>
-              <p className="mt-3">
-                Safe is an open-source smart wallet that is audited and
-                battle-tested.
-              </p>
-              <IsSafeCounterfactual>
-                <DeploySafe className="my-4 block">
-                  <Button size="lg" className="w-full">
-                    Create Smart Wallet
-                  </Button>
-                </DeploySafe>
-              </IsSafeCounterfactual>
-              <IsSafeMaterialized>
-                <Button size="lg" className="my-4 w-full">
-                  Smart Wallet Created
-                </Button>
-              </IsSafeMaterialized>
-
-              <h3 className="mt-8 text-xl font-bold">
-                Step 2. Sign Permission and Enable District Finance Module
-              </h3>
-              <p className="mt-3">
-                Enable the District Finance module to create smart transactions.
-              </p>
-              <IsSafeCounterfactual>
-                <Button
-                  size="lg"
-                  disabled={true}
-                  variant="outline"
-                  className="mt-4 w-full"
-                >
-                  Enable Module
-                </Button>
-              </IsSafeCounterfactual>
-              <IsSafeMaterialized>
-                <EnableSafeIntentModule
-                  className="my-4 block w-full"
-                  signMessageComponent={
-                    <Button className="w-full">Sign Permission</Button>
-                  }
-                  signTransactionComponent={
-                    <Button className="w-full">Enable Module</Button>
-                  }
-                />
-              </IsSafeMaterialized>
-              <h3 className="mt-8 text-xl font-bold">
-                Step 3. Sign Smart Transaction
-              </h3>
-              <p className="mt-3">
-                Start using District Finance to create smart transactions.
-              </p>
-              <IsSafeIntentModuleEnabled>
-                <h3 className="text-4xl font-normal">Congratulations!</h3>
-                <p className="text-lg">Your smart wallet is ready to use.</p>
-              </IsSafeIntentModuleEnabled>
-            </div>
-          </ScrollArea>
+          <ViewCreateAndSetupSmartWallet/>
         </SheetContent>
       </Sheet>
     )
@@ -158,6 +95,8 @@ export const ButtonSetupSmartWalletBeforeSigningIntent = ({
       </LinkComponent>
     )
   }
+
+
 
   return null
 }

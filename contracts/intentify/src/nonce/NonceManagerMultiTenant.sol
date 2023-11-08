@@ -31,7 +31,8 @@ pragma solidity >=0.8.19;
 enum NonceType {
     Standard,
     Dimensional,
-    Time
+    Time,
+    Module
 }
 
 struct TimeTracker {
@@ -96,6 +97,8 @@ contract NonceManagerMultiTenant {
             _enforceDimensionalNonce(account, encodedNonce);
         } else if (nonceType == uint8(NonceType.Time)) {
             _enforceTimeNonce(account, encodedNonce);
+        } else if (nonceType == uint8(NonceType.Module)) {
+            return;
         } else {
             revert("NonceManagerMultiTenant:invalid-nonce-type");
         }

@@ -2,6 +2,7 @@ export enum NonceType {
   Standard = 0,
   Dimensional = 1,
   Time = 2,
+  Module = 3,
 }
 
 export type EIP712Domain = {
@@ -38,6 +39,7 @@ export type IntentBatch = {
 
 export type Hook = {
   target: `0x${string}`; // Ethereum addresses are usually represented as strings in TypeScript
+  instructions: `0x${string}`; // bytes can be represented as a hex string
   data: `0x${string}`; // bytes can be represented as a hex string
 };
 
@@ -80,6 +82,47 @@ export interface TokenList {
   };
   timestamp: string;
   tokens: Token[];
+  version: {
+    major: number;
+    minor: number;
+    patch: number;
+  };
+}
+
+export interface Vault {
+  name: string;
+  address: string;
+  symbol: string;
+  decimals: number;
+  chainId: number;
+  logoURI: string;
+  tags?: string[];
+  extensions?: {
+    bridgeInfo?:
+      | {
+          [key: string]:
+            | {
+                tokenAddress: string;
+              }
+            | undefined;
+        }
+      | undefined;
+  };
+  asset: Token;
+}
+
+export interface VaultList {
+  name: string;
+  logoURI: string;
+  keywords: string[];
+  tags: {
+    [key: string]: {
+      name: string;
+      description: string;
+    };
+  };
+  timestamp: string;
+  vaults: Vault[];
   version: {
     major: number;
     minor: number;

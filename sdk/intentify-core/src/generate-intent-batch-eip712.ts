@@ -1,4 +1,3 @@
-import { SignTypedDataParameters } from "viem";
 import { eip712Types } from "./eip712-types";
 import { IntentBatch } from "./types";
 
@@ -12,17 +11,16 @@ export function generateIntentBatchEIP712({
   chainId,
   verifyingContract,
   intentBatch,
-}: SignIntentBundle): SignTypedDataParameters {
+}: SignIntentBundle) {
   return {
     domain: {
-      name: "Intentify",
+      name: "Intentify Safe Module",
       version: "0",
       chainId,
       verifyingContract,
     },
-    account: "0x0000000000" as `0x${string}`,
-    message: intentBatch ?? {},
-    primaryType: "IntentBatch" as "IntentBatch",
+    message: intentBatch as IntentBatch,
+    primaryType: "IntentBatch",
     types: eip712Types,
-  };
+  } as const;
 }
