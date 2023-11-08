@@ -1,5 +1,6 @@
 import {
   encodeDimensionalNonce,
+  encodeModuleNonce,
   encodeStandardNonce,
   encodeTimeNonce,
 } from "@district-labs/intentify-core"
@@ -37,6 +38,9 @@ export class IntentBatchManager {
         break
       case "time":
         encodedNonce = encodeTimeNonce(args[0], args[1], args[2])
+        break
+      case "module":
+        encodedNonce = encodeModuleNonce()
         break
       default:
         throw new Error(`Unknown nonce type: ${type}`)

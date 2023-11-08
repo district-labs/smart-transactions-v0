@@ -30,8 +30,6 @@ export function VaultSelector({
   const [open, setOpen] = useState(false)
   const [searchValue, setSearchValue] = useState("")
 
-  console.log(vaultList, 'vaultListvaultList')
-
   const filteredVaultList = useMemo(() => {
     if (vaultList?.vaults && vaultList.vaults.length > 0) {
       return vaultList.vaults.filter((token: Vault) => {
