@@ -15,7 +15,7 @@
   "scripts": {
     "clean": "rimraf node_modules",
     "lint": "eslint .",
-    "build": "tsup",
+    "build": "pnpm generate && tsup",
     "watch": "tsup --watch",
     "generate": "wagmi generate"
   },

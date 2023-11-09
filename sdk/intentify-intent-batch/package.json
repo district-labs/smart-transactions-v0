@@ -15,12 +15,11 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "build": "pnpm wagmi generate && tsup",
+    "build": "tsup",
     "clean": "rimraf node_modules",
     "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",
     "dev": "tsup --watch",
-    "generate": "wagmi generate",
     "test": "vitest"
   },
   "devDependencies": {
