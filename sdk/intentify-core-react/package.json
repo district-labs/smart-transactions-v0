@@ -17,7 +17,7 @@
     "lint": "eslint .",
     "build": "tsup",
     "watch": "tsup --watch",
-    "generate": "wagmi generate"
+    "wagmi-generate": "wagmi generate"
   },
   "devDependencies": {
     "@types/node": "^20.5.2",

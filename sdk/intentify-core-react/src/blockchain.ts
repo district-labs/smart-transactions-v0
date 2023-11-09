@@ -15,335 +15,17 @@ import {
 } from 'wagmi/actions'
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Intentify
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const intentifyABI = [
-  {
-    stateMutability: 'nonpayable',
-    type: 'constructor',
-    inputs: [
-      { name: '_owner', internalType: 'address', type: 'address' },
-      { name: 'contractName', internalType: 'string', type: 'string' },
-      { name: 'version', internalType: 'string', type: 'string' },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'DOMAIN_SEPARATOR',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-  },
-  {
-    stateMutability: 'pure',
-    type: 'function',
-    inputs: [
-      {
-        name: '_input',
-        internalType: 'struct DimensionalNonce',
-        type: 'tuple',
-        components: [
-          { name: 'queue', internalType: 'uint128', type: 'uint128' },
-          { name: 'accumulator', internalType: 'uint128', type: 'uint128' },
-        ],
-      },
-    ],
-    name: 'GET_DIMENSIONALNONCE_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-  },
-  {
-    stateMutability: 'pure',
-    type: 'function',
-    inputs: [
-      {
-        name: '_input',
-        internalType: 'struct EIP712Domain',
-        type: 'tuple',
-        components: [
-          { name: 'name', internalType: 'string', type: 'string' },
-          { name: 'version', internalType: 'string', type: 'string' },
-          { name: 'chainId', internalType: 'uint256', type: 'uint256' },
-          {
-            name: 'verifyingContract',
-            internalType: 'address',
-            type: 'address',
-          },
-        ],
-      },
-    ],
-    name: 'GET_EIP712DOMAIN_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-  },
-  {
-    stateMutability: 'pure',
-    type: 'function',
-    inputs: [
-      {
-        name: '_input',
-        internalType: 'struct Hook[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
-        ],
-      },
-    ],
-    name: 'GET_HOOK_ARRAY_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-  },
-  {
-    stateMutability: 'pure',
-    type: 'function',
-    inputs: [
-      {
-        name: '_input',
-        internalType: 'struct Hook',
-        type: 'tuple',
-        components: [
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
-        ],
-      },
-    ],
-    name: 'GET_HOOK_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-  },
-  {
-    stateMutability: 'pure',
-    type: 'function',
-    inputs: [
-      {
-        name: '_input',
-        internalType: 'struct IntentBatchExecution',
-        type: 'tuple',
-        components: [
-          {
-            name: 'batch',
-            internalType: 'struct IntentBatch',
-            type: 'tuple',
-            components: [
-              { name: 'root', internalType: 'address', type: 'address' },
-              { name: 'nonce', internalType: 'bytes', type: 'bytes' },
-              {
-                name: 'intents',
-                internalType: 'struct Intent[]',
-                type: 'tuple[]',
-                components: [
-                  { name: 'root', internalType: 'address', type: 'address' },
-                  { name: 'target', internalType: 'address', type: 'address' },
-                  { name: 'value', internalType: 'uint256', type: 'uint256' },
-                  { name: 'data', internalType: 'bytes', type: 'bytes' },
-                ],
-              },
-            ],
-          },
-          {
-            name: 'signature',
-            internalType: 'struct Signature',
-            type: 'tuple',
-            components: [
-              { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-              { name: 's', internalType: 'bytes32', type: 'bytes32' },
-              { name: 'v', internalType: 'uint8', type: 'uint8' },
-            ],
-          },
-          {
-            name: 'hooks',
-            internalType: 'struct Hook[]',
-            type: 'tuple[]',
-            components: [
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
-            ],
-          },
-        ],
-      },
-    ],
-    name: 'GET_INTENTBATCHEXECUTION_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-  },
-  {
-    stateMutability: 'pure',
-    type: 'function',
-    inputs: [
-      {
-        name: '_input',
-        internalType: 'struct IntentBatch',
-        type: 'tuple',
-        components: [
-          { name: 'root', internalType: 'address', type: 'address' },
-          { name: 'nonce', internalType: 'bytes', type: 'bytes' },
-          {
-            name: 'intents',
-            internalType: 'struct Intent[]',
-            type: 'tuple[]',
-            components: [
-              { name: 'root', internalType: 'address', type: 'address' },
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'value', internalType: 'uint256', type: 'uint256' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
-            ],
-          },
-        ],
-      },
-    ],
-    name: 'GET_INTENTBATCH_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-  },
-  {
-    stateMutability: 'pure',
-    type: 'function',
-    inputs: [
-      {
-        name: '_input',
-        internalType: 'struct Intent[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'root', internalType: 'address', type: 'address' },
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'value', internalType: 'uint256', type: 'uint256' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
-        ],
-      },
-    ],
-    name: 'GET_INTENT_ARRAY_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-  },
-  {
-    stateMutability: 'pure',
-    type: 'function',
-    inputs: [
-      {
-        name: '_input',
-        internalType: 'struct Intent',
-        type: 'tuple',
-        components: [
-          { name: 'root', internalType: 'address', type: 'address' },
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'value', internalType: 'uint256', type: 'uint256' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
-        ],
-      },
-    ],
-    name: 'GET_INTENT_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-  },
-  {
-    stateMutability: 'pure',
-    type: 'function',
-    inputs: [
-      {
-        name: '_input',
-        internalType: 'struct Signature',
-        type: 'tuple',
-        components: [
-          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-          { name: 's', internalType: 'bytes32', type: 'bytes32' },
-          { name: 'v', internalType: 'uint8', type: 'uint8' },
-        ],
-      },
-    ],
-    name: 'GET_SIGNATURE_PACKETHASH',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      {
-        name: 'execution',
-        internalType: 'struct IntentBatchExecution',
-        type: 'tuple',
-        components: [
-          {
-            name: 'batch',
-            internalType: 'struct IntentBatch',
-            type: 'tuple',
-            components: [
-              { name: 'root', internalType: 'address', type: 'address' },
-              { name: 'nonce', internalType: 'bytes', type: 'bytes' },
-              {
-                name: 'intents',
-                internalType: 'struct Intent[]',
-                type: 'tuple[]',
-                components: [
-                  { name: 'root', internalType: 'address', type: 'address' },
-                  { name: 'target', internalType: 'address', type: 'address' },
-                  { name: 'value', internalType: 'uint256', type: 'uint256' },
-                  { name: 'data', internalType: 'bytes', type: 'bytes' },
-                ],
-              },
-            ],
-          },
-          {
-            name: 'signature',
-            internalType: 'struct Signature',
-            type: 'tuple',
-            components: [
-              { name: 'r', internalType: 'bytes32', type: 'bytes32' },
-              { name: 's', internalType: 'bytes32', type: 'bytes32' },
-              { name: 'v', internalType: 'uint8', type: 'uint8' },
-            ],
-          },
-          {
-            name: 'hooks',
-            internalType: 'struct Hook[]',
-            type: 'tuple[]',
-            components: [
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
-            ],
-          },
-        ],
-      },
-    ],
-    name: 'execute',
-    outputs: [{ name: 'executed', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      {
-        name: 'intent',
-        internalType: 'struct IntentBatch',
-        type: 'tuple',
-        components: [
-          { name: 'root', internalType: 'address', type: 'address' },
-          { name: 'nonce', internalType: 'bytes', type: 'bytes' },
-          {
-            name: 'intents',
-            internalType: 'struct Intent[]',
-            type: 'tuple[]',
-            components: [
-              { name: 'root', internalType: 'address', type: 'address' },
-              { name: 'target', internalType: 'address', type: 'address' },
-              { name: 'value', internalType: 'uint256', type: 'uint256' },
-              { name: 'data', internalType: 'bytes', type: 'bytes' },
-            ],
-          },
-        ],
-      },
-    ],
-    name: 'getIntentBatchTypedDataHash',
-    outputs: [{ name: '', internalType: 'bytes32', type: 'bytes32' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'owner',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IntentifySafeModule
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const intentifySafeModuleABI = [
   { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
+  { type: 'error', inputs: [], name: 'ExecutionFailed' },
+  { type: 'error', inputs: [], name: 'IntentAlreadyCancelled' },
+  { type: 'error', inputs: [], name: 'IntentExecutionFailed' },
+  { type: 'error', inputs: [], name: 'InvalidHookLength' },
+  { type: 'error', inputs: [], name: 'OnlyIntentBatchRootCanCancel' },
+  { type: 'error', inputs: [], name: 'ReentrantCall' },
   {
     type: 'event',
     anonymous: false,
@@ -441,6 +123,7 @@ export const intentifySafeModuleABI = [
         components: [
           { name: 'target', internalType: 'address', type: 'address' },
           { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'instructions', internalType: 'bytes', type: 'bytes' },
         ],
       },
     ],
@@ -458,6 +141,7 @@ export const intentifySafeModuleABI = [
         components: [
           { name: 'target', internalType: 'address', type: 'address' },
           { name: 'data', internalType: 'bytes', type: 'bytes' },
+          { name: 'instructions', internalType: 'bytes', type: 'bytes' },
         ],
       },
     ],
@@ -510,6 +194,7 @@ export const intentifySafeModuleABI = [
             components: [
               { name: 'target', internalType: 'address', type: 'address' },
               { name: 'data', internalType: 'bytes', type: 'bytes' },
+              { name: 'instructions', internalType: 'bytes', type: 'bytes' },
             ],
           },
         ],
@@ -751,6 +436,7 @@ export const intentifySafeModuleABI = [
             components: [
               { name: 'target', internalType: 'address', type: 'address' },
               { name: 'data', internalType: 'bytes', type: 'bytes' },
+              { name: 'instructions', internalType: 'bytes', type: 'bytes' },
             ],
           },
         ],
@@ -766,6 +452,7 @@ export const intentifySafeModuleABI = [
       { name: 'target', internalType: 'address', type: 'address' },
       { name: 'value', internalType: 'uint256', type: 'uint256' },
       { name: 'data', internalType: 'bytes', type: 'bytes' },
+      { name: 'operation', internalType: 'enum Enum.Operation', type: 'uint8' },
     ],
     name: 'executeTransactionFromIntentModule',
     outputs: [{ name: 'success', internalType: 'bool', type: 'bool' }],
@@ -893,6 +580,7 @@ export const intentifySafeModuleBundlerABI = [
             components: [
               { name: 'target', internalType: 'address', type: 'address' },
               { name: 'data', internalType: 'bytes', type: 'bytes' },
+              { name: 'instructions', internalType: 'bytes', type: 'bytes' },
             ],
           },
         ],
@@ -900,63 +588,6 @@ export const intentifySafeModuleBundlerABI = [
     ],
     name: 'executeBundle',
     outputs: [],
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// LimitOrderIntent
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const limitOrderIntentABI = [
-  {
-    stateMutability: 'pure',
-    type: 'function',
-    inputs: [
-      { name: 'tokenOut', internalType: 'address', type: 'address' },
-      { name: 'tokenIn', internalType: 'address', type: 'address' },
-      { name: 'amountOutMax', internalType: 'uint256', type: 'uint256' },
-      { name: 'amountInMin', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'encode',
-    outputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      {
-        name: 'intent',
-        internalType: 'struct Intent',
-        type: 'tuple',
-        components: [
-          { name: 'root', internalType: 'address', type: 'address' },
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'value', internalType: 'uint256', type: 'uint256' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
-        ],
-      },
-      {
-        name: 'hook',
-        internalType: 'struct Hook',
-        type: 'tuple',
-        components: [
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
-        ],
-      },
-    ],
-    name: 'execute',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: '', internalType: 'address', type: 'address' },
-      { name: '', internalType: 'address', type: 'address' },
-    ],
-    name: 'till',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
 ] as const
 
@@ -1531,6 +1162,10 @@ export const safeABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const timestampIntentABI = [
+  { type: 'error', inputs: [], name: 'Early' },
+  { type: 'error', inputs: [], name: 'Expired' },
+  { type: 'error', inputs: [], name: 'InvalidRoot' },
+  { type: 'error', inputs: [], name: 'InvalidTarget' },
   {
     stateMutability: 'pure',
     type: 'function',
@@ -1538,7 +1173,7 @@ export const timestampIntentABI = [
       { name: 'minTimestamp', internalType: 'uint128', type: 'uint128' },
       { name: 'maxTimestamp', internalType: 'uint128', type: 'uint128' },
     ],
-    name: 'encode',
+    name: 'encodeIntent',
     outputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
   },
   {
@@ -1559,89 +1194,6 @@ export const timestampIntentABI = [
     ],
     name: 'execute',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// TokenRouterReleaseIntent
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const tokenRouterReleaseIntentABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'account',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'token',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'amount',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
-    ],
-    name: 'Release',
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address' },
-      { name: 'to', internalType: 'address', type: 'address' },
-      { name: 'token', internalType: 'address', type: 'address' },
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'claim',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'pure',
-    type: 'function',
-    inputs: [
-      { name: 'token', internalType: 'address', type: 'address' },
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'encode',
-    outputs: [{ name: 'data', internalType: 'bytes', type: 'bytes' }],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      {
-        name: 'intent',
-        internalType: 'struct Intent',
-        type: 'tuple',
-        components: [
-          { name: 'root', internalType: 'address', type: 'address' },
-          { name: 'target', internalType: 'address', type: 'address' },
-          { name: 'value', internalType: 'uint256', type: 'uint256' },
-          { name: 'data', internalType: 'bytes', type: 'bytes' },
-        ],
-      },
-    ],
-    name: 'execute',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: '', internalType: 'address', type: 'address' },
-      { name: '', internalType: 'address', type: 'address' },
-    ],
-    name: 'till',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
 ] as const
 
@@ -1781,6 +1333,7 @@ export const walletFactoryTestnetABI = [
       { name: 'amountList', internalType: 'uint256[]', type: 'uint256[]' },
     ],
   },
+  { type: 'error', inputs: [], name: 'InvalidTestTokens' },
   {
     type: 'event',
     anonymous: false,
@@ -1908,336 +1461,6 @@ export const walletFactoryTestnetABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // React
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__.
- */
-export function useIntentifyRead<
-  TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"DOMAIN_SEPARATOR"`.
- */
-export function useIntentifyDomainSeparator<
-  TFunctionName extends 'DOMAIN_SEPARATOR',
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: 'DOMAIN_SEPARATOR',
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_DIMENSIONALNONCE_PACKETHASH"`.
- */
-export function useIntentifyGetDimensionalnoncePackethash<
-  TFunctionName extends 'GET_DIMENSIONALNONCE_PACKETHASH',
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: 'GET_DIMENSIONALNONCE_PACKETHASH',
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_EIP712DOMAIN_PACKETHASH"`.
- */
-export function useIntentifyGetEip712DomainPackethash<
-  TFunctionName extends 'GET_EIP712DOMAIN_PACKETHASH',
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: 'GET_EIP712DOMAIN_PACKETHASH',
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_HOOK_ARRAY_PACKETHASH"`.
- */
-export function useIntentifyGetHookArrayPackethash<
-  TFunctionName extends 'GET_HOOK_ARRAY_PACKETHASH',
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: 'GET_HOOK_ARRAY_PACKETHASH',
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_HOOK_PACKETHASH"`.
- */
-export function useIntentifyGetHookPackethash<
-  TFunctionName extends 'GET_HOOK_PACKETHASH',
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: 'GET_HOOK_PACKETHASH',
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_INTENTBATCHEXECUTION_PACKETHASH"`.
- */
-export function useIntentifyGetIntentbatchexecutionPackethash<
-  TFunctionName extends 'GET_INTENTBATCHEXECUTION_PACKETHASH',
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: 'GET_INTENTBATCHEXECUTION_PACKETHASH',
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_INTENTBATCH_PACKETHASH"`.
- */
-export function useIntentifyGetIntentbatchPackethash<
-  TFunctionName extends 'GET_INTENTBATCH_PACKETHASH',
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: 'GET_INTENTBATCH_PACKETHASH',
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_INTENT_ARRAY_PACKETHASH"`.
- */
-export function useIntentifyGetIntentArrayPackethash<
-  TFunctionName extends 'GET_INTENT_ARRAY_PACKETHASH',
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: 'GET_INTENT_ARRAY_PACKETHASH',
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_INTENT_PACKETHASH"`.
- */
-export function useIntentifyGetIntentPackethash<
-  TFunctionName extends 'GET_INTENT_PACKETHASH',
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: 'GET_INTENT_PACKETHASH',
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"GET_SIGNATURE_PACKETHASH"`.
- */
-export function useIntentifyGetSignaturePackethash<
-  TFunctionName extends 'GET_SIGNATURE_PACKETHASH',
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: 'GET_SIGNATURE_PACKETHASH',
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"getIntentBatchTypedDataHash"`.
- */
-export function useIntentifyGetIntentBatchTypedDataHash<
-  TFunctionName extends 'getIntentBatchTypedDataHash',
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: 'getIntentBatchTypedDataHash',
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"owner"`.
- */
-export function useIntentifyOwner<
-  TFunctionName extends 'owner',
-  TSelectData = ReadContractResult<typeof intentifyABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: intentifyABI,
-    functionName: 'owner',
-    ...config,
-  } as UseContractReadConfig<typeof intentifyABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link intentifyABI}__.
- */
-export function useIntentifyWrite<
-  TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof intentifyABI,
-          string
-        >['request']['abi'],
-        TFunctionName,
-        TMode
-      >
-    : UseContractWriteConfig<typeof intentifyABI, TFunctionName, TMode> & {
-        abi?: never
-      } = {} as any,
-) {
-  return useContractWrite<typeof intentifyABI, TFunctionName, TMode>({
-    abi: intentifyABI,
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"execute"`.
- */
-export function useIntentifyExecute<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof intentifyABI,
-          'execute'
-        >['request']['abi'],
-        'execute',
-        TMode
-      > & { functionName?: 'execute' }
-    : UseContractWriteConfig<typeof intentifyABI, 'execute', TMode> & {
-        abi?: never
-        functionName?: 'execute'
-      } = {} as any,
-) {
-  return useContractWrite<typeof intentifyABI, 'execute', TMode>({
-    abi: intentifyABI,
-    functionName: 'execute',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link intentifyABI}__.
- */
-export function usePrepareIntentifyWrite<TFunctionName extends string>(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof intentifyABI, TFunctionName>,
-    'abi'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: intentifyABI,
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof intentifyABI, TFunctionName>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link intentifyABI}__ and `functionName` set to `"execute"`.
- */
-export function usePrepareIntentifyExecute(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof intentifyABI, 'execute'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: intentifyABI,
-    functionName: 'execute',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof intentifyABI, 'execute'>)
-}
 
 /**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link intentifySafeModuleABI}__.
@@ -3307,174 +2530,6 @@ export function usePrepareIntentifySafeModuleBundlerExecuteBundle(
     typeof intentifySafeModuleBundlerABI,
     'executeBundle'
   >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link limitOrderIntentABI}__.
- */
-export function useLimitOrderIntentRead<
-  TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof limitOrderIntentABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof limitOrderIntentABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: limitOrderIntentABI,
-    ...config,
-  } as UseContractReadConfig<
-    typeof limitOrderIntentABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link limitOrderIntentABI}__ and `functionName` set to `"encode"`.
- */
-export function useLimitOrderIntentEncode<
-  TFunctionName extends 'encode',
-  TSelectData = ReadContractResult<typeof limitOrderIntentABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof limitOrderIntentABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: limitOrderIntentABI,
-    functionName: 'encode',
-    ...config,
-  } as UseContractReadConfig<
-    typeof limitOrderIntentABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link limitOrderIntentABI}__ and `functionName` set to `"till"`.
- */
-export function useLimitOrderIntentTill<
-  TFunctionName extends 'till',
-  TSelectData = ReadContractResult<typeof limitOrderIntentABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof limitOrderIntentABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: limitOrderIntentABI,
-    functionName: 'till',
-    ...config,
-  } as UseContractReadConfig<
-    typeof limitOrderIntentABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link limitOrderIntentABI}__.
- */
-export function useLimitOrderIntentWrite<
-  TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof limitOrderIntentABI,
-          string
-        >['request']['abi'],
-        TFunctionName,
-        TMode
-      >
-    : UseContractWriteConfig<
-        typeof limitOrderIntentABI,
-        TFunctionName,
-        TMode
-      > & {
-        abi?: never
-      } = {} as any,
-) {
-  return useContractWrite<typeof limitOrderIntentABI, TFunctionName, TMode>({
-    abi: limitOrderIntentABI,
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link limitOrderIntentABI}__ and `functionName` set to `"execute"`.
- */
-export function useLimitOrderIntentExecute<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof limitOrderIntentABI,
-          'execute'
-        >['request']['abi'],
-        'execute',
-        TMode
-      > & { functionName?: 'execute' }
-    : UseContractWriteConfig<typeof limitOrderIntentABI, 'execute', TMode> & {
-        abi?: never
-        functionName?: 'execute'
-      } = {} as any,
-) {
-  return useContractWrite<typeof limitOrderIntentABI, 'execute', TMode>({
-    abi: limitOrderIntentABI,
-    functionName: 'execute',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link limitOrderIntentABI}__.
- */
-export function usePrepareLimitOrderIntentWrite<TFunctionName extends string>(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof limitOrderIntentABI, TFunctionName>,
-    'abi'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: limitOrderIntentABI,
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof limitOrderIntentABI, TFunctionName>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link limitOrderIntentABI}__ and `functionName` set to `"execute"`.
- */
-export function usePrepareLimitOrderIntentExecute(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof limitOrderIntentABI, 'execute'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: limitOrderIntentABI,
-    functionName: 'execute',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof limitOrderIntentABI, 'execute'>)
 }
 
 /**
@@ -4730,10 +3785,10 @@ export function useTimestampIntentRead<
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link timestampIntentABI}__ and `functionName` set to `"encode"`.
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link timestampIntentABI}__ and `functionName` set to `"encodeIntent"`.
  */
-export function useTimestampIntentEncode<
-  TFunctionName extends 'encode',
+export function useTimestampIntentEncodeIntent<
+  TFunctionName extends 'encodeIntent',
   TSelectData = ReadContractResult<typeof timestampIntentABI, TFunctionName>,
 >(
   config: Omit<
@@ -4747,7 +3802,7 @@ export function useTimestampIntentEncode<
 ) {
   return useContractRead({
     abi: timestampIntentABI,
-    functionName: 'encode',
+    functionName: 'encodeIntent',
     ...config,
   } as UseContractReadConfig<
     typeof timestampIntentABI,
@@ -4781,285 +3836,6 @@ export function useTimestampIntentExecute<
     TFunctionName,
     TSelectData
   >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link tokenRouterReleaseIntentABI}__.
- */
-export function useTokenRouterReleaseIntentRead<
-  TFunctionName extends string,
-  TSelectData = ReadContractResult<
-    typeof tokenRouterReleaseIntentABI,
-    TFunctionName
-  >,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof tokenRouterReleaseIntentABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: tokenRouterReleaseIntentABI,
-    ...config,
-  } as UseContractReadConfig<
-    typeof tokenRouterReleaseIntentABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link tokenRouterReleaseIntentABI}__ and `functionName` set to `"encode"`.
- */
-export function useTokenRouterReleaseIntentEncode<
-  TFunctionName extends 'encode',
-  TSelectData = ReadContractResult<
-    typeof tokenRouterReleaseIntentABI,
-    TFunctionName
-  >,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof tokenRouterReleaseIntentABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: tokenRouterReleaseIntentABI,
-    functionName: 'encode',
-    ...config,
-  } as UseContractReadConfig<
-    typeof tokenRouterReleaseIntentABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link tokenRouterReleaseIntentABI}__ and `functionName` set to `"till"`.
- */
-export function useTokenRouterReleaseIntentTill<
-  TFunctionName extends 'till',
-  TSelectData = ReadContractResult<
-    typeof tokenRouterReleaseIntentABI,
-    TFunctionName
-  >,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof tokenRouterReleaseIntentABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: tokenRouterReleaseIntentABI,
-    functionName: 'till',
-    ...config,
-  } as UseContractReadConfig<
-    typeof tokenRouterReleaseIntentABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link tokenRouterReleaseIntentABI}__.
- */
-export function useTokenRouterReleaseIntentWrite<
-  TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof tokenRouterReleaseIntentABI,
-          string
-        >['request']['abi'],
-        TFunctionName,
-        TMode
-      >
-    : UseContractWriteConfig<
-        typeof tokenRouterReleaseIntentABI,
-        TFunctionName,
-        TMode
-      > & {
-        abi?: never
-      } = {} as any,
-) {
-  return useContractWrite<
-    typeof tokenRouterReleaseIntentABI,
-    TFunctionName,
-    TMode
-  >({ abi: tokenRouterReleaseIntentABI, ...config } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link tokenRouterReleaseIntentABI}__ and `functionName` set to `"claim"`.
- */
-export function useTokenRouterReleaseIntentClaim<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof tokenRouterReleaseIntentABI,
-          'claim'
-        >['request']['abi'],
-        'claim',
-        TMode
-      > & { functionName?: 'claim' }
-    : UseContractWriteConfig<
-        typeof tokenRouterReleaseIntentABI,
-        'claim',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'claim'
-      } = {} as any,
-) {
-  return useContractWrite<typeof tokenRouterReleaseIntentABI, 'claim', TMode>({
-    abi: tokenRouterReleaseIntentABI,
-    functionName: 'claim',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link tokenRouterReleaseIntentABI}__ and `functionName` set to `"execute"`.
- */
-export function useTokenRouterReleaseIntentExecute<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof tokenRouterReleaseIntentABI,
-          'execute'
-        >['request']['abi'],
-        'execute',
-        TMode
-      > & { functionName?: 'execute' }
-    : UseContractWriteConfig<
-        typeof tokenRouterReleaseIntentABI,
-        'execute',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'execute'
-      } = {} as any,
-) {
-  return useContractWrite<typeof tokenRouterReleaseIntentABI, 'execute', TMode>(
-    {
-      abi: tokenRouterReleaseIntentABI,
-      functionName: 'execute',
-      ...config,
-    } as any,
-  )
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link tokenRouterReleaseIntentABI}__.
- */
-export function usePrepareTokenRouterReleaseIntentWrite<
-  TFunctionName extends string,
->(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof tokenRouterReleaseIntentABI,
-      TFunctionName
-    >,
-    'abi'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: tokenRouterReleaseIntentABI,
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof tokenRouterReleaseIntentABI,
-    TFunctionName
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link tokenRouterReleaseIntentABI}__ and `functionName` set to `"claim"`.
- */
-export function usePrepareTokenRouterReleaseIntentClaim(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof tokenRouterReleaseIntentABI, 'claim'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: tokenRouterReleaseIntentABI,
-    functionName: 'claim',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof tokenRouterReleaseIntentABI,
-    'claim'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link tokenRouterReleaseIntentABI}__ and `functionName` set to `"execute"`.
- */
-export function usePrepareTokenRouterReleaseIntentExecute(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof tokenRouterReleaseIntentABI,
-      'execute'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: tokenRouterReleaseIntentABI,
-    functionName: 'execute',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof tokenRouterReleaseIntentABI,
-    'execute'
-  >)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link tokenRouterReleaseIntentABI}__.
- */
-export function useTokenRouterReleaseIntentEvent<TEventName extends string>(
-  config: Omit<
-    UseContractEventConfig<typeof tokenRouterReleaseIntentABI, TEventName>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: tokenRouterReleaseIntentABI,
-    ...config,
-  } as UseContractEventConfig<typeof tokenRouterReleaseIntentABI, TEventName>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link tokenRouterReleaseIntentABI}__ and `eventName` set to `"Release"`.
- */
-export function useTokenRouterReleaseIntentReleaseEvent(
-  config: Omit<
-    UseContractEventConfig<typeof tokenRouterReleaseIntentABI, 'Release'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: tokenRouterReleaseIntentABI,
-    eventName: 'Release',
-    ...config,
-  } as UseContractEventConfig<typeof tokenRouterReleaseIntentABI, 'Release'>)
 }
 
 /**

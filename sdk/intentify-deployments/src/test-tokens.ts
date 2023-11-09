@@ -1,19 +1,19 @@
 import { ChainToAddress } from "./types";
 
 export const TEST_WETH: ChainToAddress = {
-  5: "0x2ab2786E93EF381C37463330eb570449E87fa492"
+  5: "0x3Cf65F68E746155ac591B6F144BD0a908FF78Aef"
 };
 
 export const TEST_USDC: ChainToAddress = {
-  5: "0x1700AF12268032f96f4c447ac15d381442Be99f4"
+  5: "0x5Fa016760Ac7962D2edEf1A1d9642CE787d29078"
 };
 
 export const TEST_DIS: ChainToAddress = {
-  5: "0xf212c1F9d768AbBB111a23cbAa4172FdAA2A6600"
+  5: "0xC8Ec2527ec26391e588e6e5329C78a9DfCeE9140"
 };
 
 export const TEST_RIZZ: ChainToAddress = {
-  5: "0xBF3C31027452F6f7ed0Ff6dAEA1F371C9F646aFc"
+  5: "0x1231f5dF83CA6713bFB2C1C9C8F382c2fb8e10aF"
 };
 
 export const TEST_TOKENS_LIST = [
