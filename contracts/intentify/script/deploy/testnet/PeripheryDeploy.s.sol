@@ -20,7 +20,7 @@ contract PeripheryDeploy is Script {
         ERC20Mintable dis = new ERC20Mintable("District Labs","DIS", 18);
         ERC20Mintable rizz = new ERC20Mintable("Web3 Rizz","RIZZ", 18);
         // PoolTogether V5 DAI. Can be used to deposit in Goerli vault 0x9e025155f7BD3b17E26bCE811F7B6F075973570A
-        address dai = 0x4D07Ba104ff254c19B443aDE6224f744Db84FB8A;
+        // address dai = 0x4D07Ba104ff254c19B443aDE6224f744Db84FB8A;
 
         // Chainlink Oracles
         int256 wethPrice = 2000e8;
@@ -32,18 +32,18 @@ contract PeripheryDeploy is Script {
         new ChainlinkOracleTestnet(disPrice);
         new ChainlinkOracleTestnet(rizzPrice);
 
-        address[] memory addressList = new address[](5);
+        address[] memory addressList = new address[](4);
         addressList[0] = address(weth);
         addressList[1] = address(usdc);
         addressList[2] = address(dis);
         addressList[3] = address(rizz);
-        addressList[4] = dai;
-        uint256[] memory amountList = new uint256[](5);
+        // addressList[4] = dai;
+        uint256[] memory amountList = new uint256[](4);
         amountList[0] = 10e18;
         amountList[1] = 10_000e6;
         amountList[2] = 100e18;
         amountList[3] = 5e18;
-        amountList[4] = 10_000e18;
+        // amountList[4] = 10_000e18;
         vm.stopBroadcast();
 
         uint256 walletFactoryDeployerPrivateKey = vm.envUint("WALLET_FACTORY_PRIVATE_KEY");

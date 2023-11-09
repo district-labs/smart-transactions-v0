@@ -14,12 +14,12 @@ export const IntentifyBundler: ChainToAddress = {
   };
 
 export const WalletFactory: ChainToAddress = {
-  5: "0x1aFC1ce8bec38CF8D6a6e0Dd81d8d492C9B70eb4",
+  5: "0x7AB05F13aa87031B3B6aA6bdFaDFD1eA841D3bB5",
   31337: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
 };
 
 export const WalletFactoryTestnet: ChainToAddress = {
-  5: "0x1aFC1ce8bec38CF8D6a6e0Dd81d8d492C9B70eb4",
+  5: "0x7AB05F13aa87031B3B6aA6bdFaDFD1eA841D3bB5",
   31337: "0x000000000000000000000000000000000000dEaD",
 };
 

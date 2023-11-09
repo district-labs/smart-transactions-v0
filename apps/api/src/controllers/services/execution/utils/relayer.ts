@@ -3,7 +3,7 @@ import {
   DefenderRelayProvider,
   DefenderRelaySigner,
 } from "@openzeppelin/defender-relay-client/lib/ethers";
-import { env } from "src/env";
+import { env } from "../../../../env";
 
 const credentialsList: Record<number, { apiKey: string; apiSecret: string }> = {
   1: {
