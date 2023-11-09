@@ -95,8 +95,6 @@ export const createIntentBatch = async (
           intentBatch,
         }))
 
-				console.log("intentBatchHash1234", intentBatchHash);
-
 		// Insert the new IntentBatch into the database
 		const newIntentBatch = await createIntentBatchInDB({
 			chainId,
