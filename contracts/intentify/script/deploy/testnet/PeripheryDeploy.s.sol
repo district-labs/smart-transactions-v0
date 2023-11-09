@@ -32,13 +32,13 @@ contract PeripheryDeploy is Script {
         new ChainlinkOracleTestnet(disPrice);
         new ChainlinkOracleTestnet(rizzPrice);
 
-        address[] memory addressList = new address[](4);
+        address[] memory addressList = new address[](5);
         addressList[0] = address(weth);
         addressList[1] = address(usdc);
         addressList[2] = address(dis);
         addressList[3] = address(rizz);
         addressList[4] = dai;
-        uint256[] memory amountList = new uint256[](4);
+        uint256[] memory amountList = new uint256[](5);
         amountList[0] = 10e18;
         amountList[1] = 10_000e6;
         amountList[2] = 100e18;
