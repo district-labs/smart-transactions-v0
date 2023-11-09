@@ -19,7 +19,7 @@
     "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",
     "watch": "tsup --watch",
-    "generate": "wagmi generate",
+    "wagmi-generate": "wagmi generate",
     "test": "vitest"
   },
   "devDependencies": {
