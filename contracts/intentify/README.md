@@ -1,4 +1,4 @@
-# Intentify
+# Intentify Smart Contracts
 
 A framework for expressing blockchain EVM intents.
 
