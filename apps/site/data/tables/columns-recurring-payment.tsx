@@ -1,9 +1,6 @@
 "use client"
 
 import { ERC20ConvertBalance } from "@/integrations/erc20/components/erc20-convert-balance"
-import {
-  ERC20Symbol,
-} from "@/integrations/erc20/components/erc20-read"
 import tokenList from "@/data/lists/token-list-testnet.json"
 import { Address } from "@/components/blockchain/address"
 import { ChainIdToNetworkDetails } from "@/components/blockchain/chain-id-to-network-details"
@@ -21,19 +18,6 @@ export const columnsRecurringPayment = [
     ),
     cell: ({ row }: any) => (
       <ERC20DetailsFromTokenList tokenList={tokenList}  address={row.original.tokenOut as `0x${string}`} />
-      // <div className="flex flex-col gap-y-1">
-      //   <ERC20Symbol
-      //     className="font-bold"
-      //     address={row.original.tokenOut as `0x${string}`}
-      //     chainId={row.original.chainId}
-      //   />
-      //   <Address
-      //     isLink
-      //     className="text-xs text-blue-500 hover:text-blue-600"
-      //     truncate
-      //     address={row.original.tokenOut as `0x${string}`}
-      //   />
-      // </div>
     ),
   },
   {

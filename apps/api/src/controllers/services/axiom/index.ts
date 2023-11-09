@@ -1,5 +1,5 @@
 import { Axiom } from "@axiom-crypto/core";
-import { env } from "src/env";
+import { env } from "../../../env";
 export { getQueryResult } from "./get-query-result";
 export { axiomSendQuery } from "./send-query";
 

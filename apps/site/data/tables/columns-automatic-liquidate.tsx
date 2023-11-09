@@ -1,18 +1,12 @@
 "use client"
-
-import {
-    ERC20Image,
-  ERC20Symbol,
-} from "@/integrations/erc20/components/erc20-read"
-
-import { Address } from "@/components/blockchain/address"
+import tokenList from "@/data/lists/token-list-testnet.json"
 import { ChainIdToNetworkDetails } from "@/components/blockchain/chain-id-to-network-details"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
 import { IntentBatchNonceDetails } from "@/components/intent-batch-nonce-details"
 import { TagIntentBatchState } from "@/components/intent-batch/tag-intent-batch-state"
 import { StrategyTableActions } from "@/components/strategies/strategy-table-actions"
 import { ERC20ConvertBalance } from "@/integrations/erc20/components/erc20-convert-balance"
-import Image from "next/image"
+import { ERC20DetailsFromTokenList } from "@/components/erc20/erc20-details-from-token-list"
 
 export const columnsAutomaticLiquidate = [
   {
@@ -21,31 +15,13 @@ export const columnsAutomaticLiquidate = [
       <DataTableColumnHeader column={column} title="Sell" />
     ),
     cell: ({ row }: any) => (
-    <div className='flex items-center gap-x-2'>
-        <ERC20Image className="w-7 h-7" address={row.original.tokenOut as `0x${string}`} />
-        <div className="flex flex-col gap-y-1">
-          <ERC20Symbol
-            className="font-bold"
-            address={row.original.tokenOut as `0x${string}`}
-            chainId={row.original.chainId}
-          />
-          <span className='flex items-center mt-1 gap-x-1'>
-              <Image alt="Chainlink" src="/protocols/chainlink.png" width={14} height={14} />
-              <Address
-                isLink
-                className="text-xs cursor-pointer"
-                truncate
-                address={row.original.tokenOutPriceFeed as `0x${string}`}
-              />
-          </span>
-        </div>
-      </div>
+      <ERC20DetailsFromTokenList tokenList={tokenList}  address={row.original.tokenOut as `0x${string}`} />
     ),
   },
   {
     accessorKey: "balanceDelta",
     header: ({ column }: any) => (
-      <DataTableColumnHeader column={column} title="Deposit Minimum" />
+      <DataTableColumnHeader column={column} title="Swap Minimum" />
     ),
     cell: ({ row }: any) => (
         <ERC20ConvertBalance className="text-xl font-bold" balance={row.original.balanceDelta} address={row.original.tokenOut as `0x${string}`} chainId={row.original.chainId} />
@@ -54,7 +30,7 @@ export const columnsAutomaticLiquidate = [
   {
     accessorKey: "minBalance",
     header: ({ column }: any) => (
-      <DataTableColumnHeader column={column} title="Minimum Balance" />
+      <DataTableColumnHeader column={column} title="Maintain Balance" />
     ),
     cell: ({ row }: any) => (
     <ERC20ConvertBalance className="text-xl font-bold" balance={row.original.minBalance} address={row.original.tokenOut as `0x${string}`} chainId={row.original.chainId} />
@@ -66,25 +42,7 @@ export const columnsAutomaticLiquidate = [
       <DataTableColumnHeader column={column} title="Buy" />
     ),
     cell: ({ row }: any) => (
-        <div className='flex items-center gap-x-2'>
-        <ERC20Image className="w-7 h-7" address={row.original.tokenIn as `0x${string}`} />
-        <div className="flex flex-col gap-y-1">
-          <ERC20Symbol
-            className="font-bold"
-            address={row.original.tokenIn as `0x${string}`}
-            chainId={row.original.chainId}
-          />
-          <span className='flex items-center mt-1 gap-x-1'>
-              <Image alt="Chainlink" src="/protocols/chainlink.png" width={14} height={14} />
-              <Address
-                isLink
-                className="text-xs cursor-pointer"
-                truncate
-                address={row.original.tokenInPriceFeed as `0x${string}`}
-              />
-          </span>
-        </div>
-      </div>
+      <ERC20DetailsFromTokenList tokenList={tokenList}  address={row.original.tokenIn as `0x${string}`} />
     ),
   },
   {

@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { Token, TokenList } from '@district-labs/intentify-core';
+import { Token, VaultList } from '@district-labs/intentify-core';
 import { Address } from '../blockchain/address';
 import Image from 'next/image';
 
-type ERC20DetailsFromTokenList = React.HTMLAttributes<HTMLElement> & {
-  tokenList: TokenList
+type ERC20DetailsFromVaultList = React.HTMLAttributes<HTMLElement> & {
+  vaultList: VaultList
   address: string
 }
 
-export const ERC20DetailsFromTokenList = ({ className, tokenList, address }: ERC20DetailsFromTokenList) => { 
+export const ERC20DetailsFromVaultList = ({ className, vaultList, address }: ERC20DetailsFromVaultList) => { 
  const classes = cn(className, 'flex gap-x-2 items-center');
 
  const [ selectedToken, setSelectedToken ] = React.useState<Token>()
  React.useEffect( () => { 
-    setSelectedToken(tokenList.tokens.find(token => token.address === address))
- }, [tokenList, address])
+    setSelectedToken(vaultList.vaults.find(token => token.address === address))
+ }, [vaultList, address])
 
  if(!selectedToken) return <span className='text-xs'>Token Info Unavailable</span>
 
@@ -25,7 +25,7 @@ export const ERC20DetailsFromTokenList = ({ className, tokenList, address }: ERC
     <div className="flex flex-col gap-y-1">
       <div className='flex gap-x-1'>
         <span className="font-bold">{selectedToken?.symbol}</span>
-        <span className="text-2xs">({selectedToken?.name})</span>
+        (<span className="text-2xs">{selectedToken?.name}</span>)
       </div>
       <Address
         isLink

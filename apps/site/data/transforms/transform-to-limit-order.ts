@@ -6,14 +6,10 @@ import { transformIntentQueryToIntentBatchStruct } from "./transform-intent-quer
 export type LimitOrderIntent = {
   chainId: number
   nonce: string
-  sell: {
-    asset: string
-    amount: number
-  }
-  receive: {
-    asset: string
-    amount: number
-  }
+  tokenOut: string
+    tokenIn: string
+    tokenOutAmount: number
+    tokenInAmount: number
   limitPrice: string
   executeAfter: string
   executeBefore: string
@@ -27,14 +23,10 @@ export function transformToLimitOrder(intentBatch: any): LimitOrderIntent {
   return {
     chainId: Number(intentBatch.chainId),
     nonce: intentBatch.nonce,
-    sell: {
-      asset: String(intents[1]?.intentArgs[0]?.value),
-      amount: Number(intents[1]?.intentArgs[2]?.value),
-    },
-    receive: {
-      asset: String(intents[1]?.intentArgs[1]?.value),
-      amount: Number(intents[1]?.intentArgs[3]?.value),
-    },
+    tokenOut: String(intents[1]?.intentArgs[0]?.value),
+    tokenIn: String(intents[1]?.intentArgs[1]?.value),
+    tokenOutAmount: intents[1]?.intentArgs[2]?.value,
+    tokenInAmount: intents[1]?.intentArgs[3]?.value,
     limitPrice: String(0),
     executeAfter: String(intents[0]?.intentArgs[0]?.value),
     executeBefore: String(intents[0]?.intentArgs[1]?.value),

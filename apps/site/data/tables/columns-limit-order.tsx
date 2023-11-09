@@ -1,5 +1,5 @@
 "use client"
-
+import tokenList from "@/data/lists/token-list-testnet.json"
 import { ERC20ConvertBalance } from "@/integrations/erc20/components/erc20-convert-balance"
 import { ERC20Symbol } from "@/integrations/erc20/components/erc20-read"
 
@@ -10,6 +10,7 @@ import { IntentBatchNonceDetails } from "@/components/intent-batch-nonce-details
 import { TagIntentBatchState } from "@/components/intent-batch/tag-intent-batch-state"
 import { TimeFromEpoch } from "@/components/shared/time-from-epoch"
 import { StrategyTableActions } from "@/components/strategies/strategy-table-actions"
+import { ERC20DetailsFromTokenList } from "@/components/erc20/erc20-details-from-token-list"
 
 export const columnsLimitOrder = [
   {
@@ -18,19 +19,7 @@ export const columnsLimitOrder = [
       <DataTableColumnHeader column={column} title="Out" />
     ),
     cell: ({ row }: any) => (
-      <div className="flex flex-col gap-y-1">
-        <ERC20Symbol
-          className="font-bold"
-          address={row.original.receive.asset as `0x${string}`}
-          chainId={row.original.chainId}
-        />
-        <Address
-          isLink
-          className="text-2xs text-blue-500 hover:text-blue-600"
-          truncate
-          address={row.original.receive.asset as `0x${string}`}
-        />
-      </div>
+      <ERC20DetailsFromTokenList tokenList={tokenList}  address={row.original.tokenOut as `0x${string}`} />
     ),
   },
   {
@@ -41,8 +30,8 @@ export const columnsLimitOrder = [
     cell: ({ row }: any) => (
       <div className="flex items-center">
         <ERC20ConvertBalance
-          address={row.original.sell.asset as `0x${string}`}
-          balance={row.original.sell.amount}
+          address={row.original.tokenOut as `0x${string}`}
+          balance={row.original.tokenOutAmount}
           chainId={row.original.chainId}
         />
       </div>
@@ -57,14 +46,14 @@ export const columnsLimitOrder = [
       <div className="flex flex-col gap-y-1">
         <ERC20Symbol
           className="font-bold"
-          address={row.original.receive.asset as `0x${string}`}
+          address={row.original.tokenIn as `0x${string}`}
           chainId={row.original.chainId}
         />
         <Address
           isLink
           className="text-xs text-blue-500 hover:text-blue-600"
           truncate
-          address={row.original.receive.asset as `0x${string}`}
+          address={row.original.tokenIn as `0x${string}`}
         />
       </div>
     ),
@@ -76,8 +65,8 @@ export const columnsLimitOrder = [
     ),
     cell: ({ row }: any) => (
       <ERC20ConvertBalance
-        address={row.original.receive.asset as `0x${string}`}
-        balance={row.original.receive.amount}
+        address={row.original.tokenIn as `0x${string}`}
+        balance={row.original.tokenInAmount}
         chainId={row.original.chainId}
       />
     ),
