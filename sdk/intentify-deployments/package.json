@@ -15,9 +15,9 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "build": "pnpm generate && tsup",
+    "build": "tsup",
     "watch": "tsup --watch",
-    "generate": "wagmi generate",
+    "wagmi-generate": "wagmi generate",
     "test": "vitest"
   },
   "devDependencies": {

@@ -15,9 +15,9 @@
   "scripts": {
     "clean": "rimraf node_modules",
     "lint": "eslint .",
-    "build": "pnpm generate && tsup",
+    "build": "tsup",
     "watch": "tsup --watch",
-    "generate": "wagmi generate"
+    "wagmi-generate": "wagmi generate"
   },
   "devDependencies": {
     "@types/node": "^20.5.2",

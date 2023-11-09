@@ -15,7 +15,7 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "build": "pnpm generate && tsup",
+    "build": "tsup",
     "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",
     "watch": "tsup --watch",
