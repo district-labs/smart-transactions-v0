@@ -1,4 +1,4 @@
-import { ponder } from "@/generated";
+import { Context, ponder } from "@/generated";
 import { dispatchIntentCancelled } from "./dispatch-intent-cancelled";
 import { dispatchIntentExecution } from "./dispatch-intent-execution";
 
@@ -6,11 +6,12 @@ import { dispatchIntentExecution } from "./dispatch-intent-execution";
 // Local
 // ----------------------------
 if(process.env.npm_lifecycle_event === "dev"){
-ponder.on("IntentifySafeModuleLocal:IntentBatchExecuted",async ({context, event}) => {
-    const { IntentBatch  } = context.entities;
+ponder.on("IntentifySafeModuleLocal:IntentBatchExecuted",async ({context, event}: {
+  context: Context;
+  event: any;
+}) => {
+    const { IntentBatch } = context.entities;
     // Dispatch a message to the API to notify that the intent batch has been executed 
-    console.log(event.params.intentBatchId)
-    await dispatchIntentExecution(31337, event.params.intentBatchId, event.transaction.hash)
     await IntentBatch.upsert({
       id: event.params.intentBatchId,
       create: {
@@ -24,9 +25,13 @@ ponder.on("IntentifySafeModuleLocal:IntentBatchExecuted",async ({context, event}
         executor: event.params.executor,
       }
     })
-})
+    await dispatchIntentExecution(31337, event.params.intentBatchId, event.transaction)
+  })
 
-ponder.on("IntentifySafeModuleLocal:IntentBatchCancelled",async ({context, event}) => {
+ponder.on("IntentifySafeModuleLocal:IntentBatchCancelled",async ({context, event}: {
+  context: Context;
+  event: any;
+}) => {
   const { IntentBatch } = context.entities;
   // Dispatch a message to the API to notify that the intent batch has been cancelled
   await dispatchIntentCancelled(31337, event.params.intentBatchId, event.transaction.hash)
@@ -42,16 +47,18 @@ ponder.on("IntentifySafeModuleLocal:IntentBatchCancelled",async ({context, event
     }
   })
 })
-}
 
+}
 
 // ----------------------------
 // Goerli
 // ----------------------------
 
-ponder.on("IntentifySafeModuleGoerli:IntentBatchExecuted",async ({context, event}) => {
+ponder.on("IntentifySafeModuleGoerli:IntentBatchExecuted",async ({context, event}: {
+  context: Context;
+  event: any;
+}) => {
     const { IntentBatch  } = context.entities;
-    await dispatchIntentExecution(5, event.params.intentBatchId, event.transaction.hash)
     await IntentBatch.upsert({
       id: event.params.intentBatchId,
       create: {
@@ -65,20 +72,24 @@ ponder.on("IntentifySafeModuleGoerli:IntentBatchExecuted",async ({context, event
         executor: event.params.executor,
       }
     })
+    await dispatchIntentExecution(5, event.params.intentBatchId, event.transaction)
 })
 
-ponder.on("IntentifySafeModuleGoerli:IntentBatchCancelled",async ({context, event}) => {
+ponder.on("IntentifySafeModuleGoerli:IntentBatchCancelled",async ({context, event}: {
+  context: Context;
+  event: any;
+}) => {
   const { IntentBatch } = context.entities;
-  await dispatchIntentCancelled(5, event.params.intentBatchId, event.transaction.hash)
   await IntentBatch.upsert({
     id: event.params.intentBatchId,
     create: {
-        chainId: 5,
-        root: event.params.root,
-        state: "CANCELLED",
+      chainId: 5,
+      root: event.params.root,
+      state: "CANCELLED",
     },
     update:{
       state: "CANCELLED",
     }
   })
+  await dispatchIntentCancelled(5, event.params.intentBatchId, event.transaction.hash)
 })

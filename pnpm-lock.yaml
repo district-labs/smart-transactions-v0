@@ -238,6 +238,9 @@ importers:
 
   apps/cache:
     dependencies:
+      '@district-labs/intentify-deployments':
+        specifier: workspace:*
+        version: link:../../sdk/intentify-deployments
       '@ponder/core':
         specifier: 0.0.88
         version: 0.0.88(typescript@5.2.2)
