@@ -1,10 +1,9 @@
 const typedMessage = {
   primaryType: "IntentBatch",
   domain: {
-    name: "Intentify",
-    version: "1",
+    name: "Intentify Safe Module",
+    version: "0",
   },
-
   types: {
     EIP712Domain: [
       { name: "name", type: "string" },

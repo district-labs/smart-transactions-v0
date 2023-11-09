@@ -108,8 +108,7 @@ contract IntentifySafeModule is TypesAndDecoders, NonceManagerMultiTenant, Rever
     /// @param intent The intent batch to be encoded.
     /// @return digest The typed data hash.
     function getIntentBatchTypedDataHash(IntentBatch memory intent) public view returns (bytes32) {
-        bytes32 digest = keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, GET_INTENTBATCH_PACKETHASH(intent)));
-        return digest;
+        return keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, GET_INTENTBATCH_PACKETHASH(intent)));
     }
 
     /*//////////////////////////////////////////////////////////////////////////
