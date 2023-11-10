@@ -43,19 +43,7 @@ export const columnsLimitOrder = [
       <DataTableColumnHeader column={column} title="In" />
     ),
     cell: ({ row }: any) => (
-      <div className="flex flex-col gap-y-1">
-        <ERC20Symbol
-          className="font-bold"
-          address={row.original.tokenIn as `0x${string}`}
-          chainId={row.original.chainId}
-        />
-        <Address
-          isLink
-          className="text-xs text-blue-500 hover:text-blue-600"
-          truncate
-          address={row.original.tokenIn as `0x${string}`}
-        />
-      </div>
+      <ERC20DetailsFromTokenList tokenList={tokenList}  address={row.original.tokenIn as `0x${string}`} />
     ),
   },
   {

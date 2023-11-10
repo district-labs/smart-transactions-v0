@@ -123,7 +123,6 @@ export function StrategyLimitOrder({
       dimensional: nonceData.dimensional,
     })
 
-    console.log(intentBatch.timestampRange,'intentBatch.timestampRange')
     intentBatchManager.add("TimestampRange", [
         intentBatch.timestampRange.minTimestamp,
         intentBatch.timestampRange.maxTimestamp

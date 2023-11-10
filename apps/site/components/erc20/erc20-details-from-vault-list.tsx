@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { Token, VaultList } from '@district-labs/intentify-core';
+import type { Vault, VaultList } from '@district-labs/intentify-core';
 import { Address } from '../blockchain/address';
 import Image from 'next/image';
 
@@ -12,9 +12,9 @@ type ERC20DetailsFromVaultList = React.HTMLAttributes<HTMLElement> & {
 export const ERC20DetailsFromVaultList = ({ className, vaultList, address }: ERC20DetailsFromVaultList) => { 
  const classes = cn(className, 'flex gap-x-2 items-center');
 
- const [ selectedToken, setSelectedToken ] = React.useState<Token>()
+ const [ selectedToken, setSelectedToken ] = React.useState<Vault>()
  React.useEffect( () => { 
-    setSelectedToken(vaultList.vaults.find(token => token.address === address))
+    setSelectedToken(vaultList.vaults.find((token: Vault) => token.address === address))
  }, [vaultList, address])
 
  if(!selectedToken) return <span className='text-xs'>Token Info Unavailable</span>

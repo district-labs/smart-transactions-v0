@@ -1,21 +1,19 @@
 import {
   encodeAbiParameters,
   encodePacked,
+  hashTypedData,
   keccak256,
   parseAbiParameters,
   toBytes
 } from "viem";
-import { DimensionalNonce, EIP712Domain, Intent, IntentBatch } from "./types";
+import { EIP712Domain, Intent, IntentBatch } from "./types";
+import { eip712Types } from "./eip712-types";
 
 // Define the TypeHash constants
 const EIP712DOMAIN_TYPEHASH = keccak256(
   toBytes(
     "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)",
   ),
-);
-
-const DIMENSIONALNONCE_TYPEHASH = keccak256(
-  toBytes("DimensionalNonce(uint128 queue,uint128 accumulator)"),
 );
 
 const INTENT_TYPEHASH = keccak256(
@@ -42,16 +40,6 @@ export function getEIP712DomainPacketHash(domain: EIP712Domain): `0x${string}` {
 return DOMAIN_SEPARATOR
 }
 
-export function getDimensionalNoncePacketHash(
-  nonce: DimensionalNonce,
-): `0x${string}` {
-  return keccak256(
-    encodeAbiParameters(
-      parseAbiParameters("bytes32 hash, uint128 queue, uint128 accumulator"),
-      [DIMENSIONALNONCE_TYPEHASH, nonce.queue, nonce.accumulator],
-    ),
-  );
-}
 
 export function getIntentPacketHash(intent: Intent): `0x${string}` {
   return keccak256(
@@ -105,4 +93,21 @@ export function getIntentBatchTypedDataHash(
   );
 
   return hash;
+}
+
+export function getIntentBatchHash(
+  domain: {
+    name: string;
+    version: string;
+    chainId: bigint;
+    verifyingContract: `0x${string}`;
+  },
+  intentBatch: IntentBatch,
+): `0x${string}` | undefined {
+  return hashTypedData({
+    domain: domain,
+    types: eip712Types,
+    primaryType: "IntentBatch",
+    message: intentBatch,
+  });
 }

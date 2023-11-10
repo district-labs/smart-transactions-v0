@@ -86,6 +86,8 @@ export default function SmartWalletPage() {
               <TabsContent value="token-balances" className=" grid gap-y-6">
                 <Erc20CardTokenOverview symbol="WETH" />
                 <Erc20CardTokenOverview symbol="USDC" />
+                <Erc20CardTokenOverview symbol="DIS" />
+                <Erc20CardTokenOverview symbol="RIZZ" />
               </TabsContent>
             </div>
           </IsSignedIn>

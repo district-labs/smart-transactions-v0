@@ -46,22 +46,21 @@ const intentBatchStructRef = useRef<IntentBatch>()
   const defaultValues = useFormStrategySetDefaultValues(overrideValues)
 
 
-  const { isLoading: isSignatureRequested, signTypedDataAsync } =
-    // eslint-disable-next-line
-    // @ts-ignore
-    useSignTypedData(generateIntentBatchEIP712({
-          chainId: chainId,
-          verifyingContract: intentifyAddress,
-          intentBatch: intentBatchStructRef.current,
-        }))
-
+  const { isLoading: isSignatureRequested, signTypedDataAsync } = useSignTypedData()
+  
   const onIntentBatchGenerated = useCallback(
     async (
       intentBatchStruct: IntentBatch,
       intentBatchMetadata: IntentModule[]
-    ) => {
-      intentBatchStructRef.current = intentBatchStruct
-      const signature = await signTypedDataAsync()
+      ) => {
+        intentBatchStructRef.current = intentBatchStruct
+        // eslint-disable-next-line
+        // @ts-ignore
+      const signature = await signTypedDataAsync(generateIntentBatchEIP712({
+        chainId: chainId,
+        verifyingContract: intentifyAddress,
+        intentBatch: intentBatchStructRef.current,
+      }))
 
         mutateAsync({
         chainId,
