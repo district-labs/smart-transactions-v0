@@ -1,11 +1,15 @@
 import cors from "cors";
 import "dotenv/config";
 import express from "express";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocs from "./docs/swagger-output.json";
 import { env } from "./env";
 import { errorHandler } from "./middleware/errorHandler";
 import { authRouter } from "./routes/auth";
 import { intentBatchesRouter } from "./routes/intent-batches";
 import { usersRouter } from "./routes/users";
+
+
 // import intentBatchAdminRoutes from "./routes/admin/intent-batch";
 // import serviceAxiomRoutes from "./routes/services/axiom";
 // import serviceEventsRoutes from "./routes/services/events";
@@ -40,6 +44,9 @@ app.use("/intent-batches", intentBatchesRouter);
 // app.use("/service", serviceEventsRoutes);
 // app.use("/service", serviceAxiomRoutes);
 // app.use("/infra", infraIntentBatchRoutes);
+
+// Documentation
+app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Middleware for error handling
 app.use(errorHandler);
