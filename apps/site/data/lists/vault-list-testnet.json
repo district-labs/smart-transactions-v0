@@ -7,6 +7,7 @@
     "patch": 0
   },
   "tags": {},
+  "logoURI": "/apple-touch-icon.png",
   "keywords": [
     "district-labs",
     "goerli"
@@ -17,14 +18,14 @@
       "address": "0x9e025155f7BD3b17E26bCE811F7B6F075973570A",
       "name": "Prize DAI Low Yield",
       "symbol": "pDAI-LY-T ",
-      "decimals": 6,
+      "decimals": 18,
       "logoURI": "/images/tokens/dai-pt.png",
       "asset": {
         "chainId": 5,
         "address": "0x4D07Ba104ff254c19B443aDE6224f744Db84FB8A",
         "name": "Test DAI",
         "symbol": "DAI Stablecoin",
-        "decimals": 6,
+        "decimals": 18,
         "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
       }
     }

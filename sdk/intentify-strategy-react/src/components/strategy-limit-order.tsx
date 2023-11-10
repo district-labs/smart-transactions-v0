@@ -124,23 +124,20 @@ export function StrategyLimitOrder({
     })
 
     intentBatchManager.add("TimestampRange", [
-      convertDateStringToEpoch(
-        intentBatch.timestampRange.minTimestamp
-      ).toString(),
-      convertDateStringToEpoch(
+        intentBatch.timestampRange.minTimestamp,
         intentBatch.timestampRange.maxTimestamp
-      ).toString(),
     ])
+
     intentBatchManager.add("Erc20LimitOrder", [
-      intentBatch.erc20LimitOrder.tokenIn.address,
       intentBatch.erc20LimitOrder.tokenOut.address,
-      parseUnits(
-        String(intentBatch.erc20LimitOrder.amountIn),
-        intentBatch.erc20LimitOrder.tokenOut.decimals
-      ),
+      intentBatch.erc20LimitOrder.tokenIn.address,
       parseUnits(
         String(intentBatch.erc20LimitOrder.amountOut),
         intentBatch.erc20LimitOrder.tokenOut.decimals
+      ),
+      parseUnits(
+        String(intentBatch.erc20LimitOrder.amountIn),
+        intentBatch.erc20LimitOrder.tokenIn.decimals
       ),
     ])
     const intentBatchStruct = intentBatchManager.generate()
@@ -262,7 +259,7 @@ const IntentStatement = ({
         {formatted?.tokenOutAmount} {tokenOut?.symbol}{" "}
         <span className="font-normal">for</span> {formatted?.tokenInAmount} {tokenIn?.symbol}
       </span>
-      . Limit order must be executded after{" "}
+      . Limit order must be executed after{" "}
       <TimeFromEpoch
         className="font-bold"
         type="DATETIME"

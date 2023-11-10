@@ -63,6 +63,16 @@ export const ButtonSetupSmartWalletBeforeSigningIntent = ({
     )
   }
 
+  if (userIsSuccess && !userData?.isRegistered) {
+    return (
+      <LinkComponent href="/register" className="w-full">
+        <Button variant="default" className="w-full">
+          Register for Alpha
+        </Button>
+      </LinkComponent>
+    )
+  }
+
   if (isSmartWalletModuleEnabled) {
     return <>{children}</>
   }
@@ -85,18 +95,6 @@ export const ButtonSetupSmartWalletBeforeSigningIntent = ({
       </Sheet>
     )
   }
-
-  if (userIsSuccess && !userData?.isRegistered) {
-    return (
-      <LinkComponent href="/register" className="w-full">
-        <Button variant="default" className="w-full">
-          Register for Alpha
-        </Button>
-      </LinkComponent>
-    )
-  }
-
-
 
   return null
 }

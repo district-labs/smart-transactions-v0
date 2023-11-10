@@ -11,14 +11,17 @@ import { cn } from "@/lib/utils"
 
 import { Erc20MintTestnet } from "./erc20-mint-testnet"
 import { ERC20BalanceSafe } from "./erc20-balanceOf-safe"
+import Image from "next/image"
 
 type Erc20CardTokenOverview = React.HTMLAttributes<HTMLElement> & {
   symbol: string
+  mintAmount?: number
 }
 
 export const Erc20CardTokenOverview = ({
   className,
   symbol,
+  mintAmount = 1,
 }: Erc20CardTokenOverview) => {
   const classes = cn(
     className,
@@ -31,7 +34,7 @@ export const Erc20CardTokenOverview = ({
   return (
     <Card className={classes}>
       <div className="col-span-4 flex items-center">
-        <img className="h-10 w-10 rounded-full" src={token?.logoURI} />
+        <Image alt={token.name} height={48} width={48}  className="h-10 w-10 rounded-full" src={token?.logoURI} />
         <div className="ml-4">
           <h3 className="text-lg font-medium">{token?.name}</h3>
           <h3 className="text-sm font-light">{token?.symbol}</h3>
@@ -60,7 +63,7 @@ export const Erc20CardTokenOverview = ({
       <div className="col-span-2">
         <Erc20MintTestnet
           className="w-full"
-          amount={token.symbol == "WETH" ? 5 : 10000}
+          amount={mintAmount}
           address={token.address as `0x${string}`}
           decimals={token.decimals}
           symbol={token.symbol}

@@ -55,40 +55,6 @@ export const strategies = {
     transformData: transformToRecurringPayment,
     tableColumns: columnsRecurringPayment,
   },
-  "0xeb597abd3d72972a0bb1199caa65378889d54e1a0edcb1017235626f5f12a4d3": {
-    id: "0xeb597abd3d72972a0bb1199caa65378889d54e1a0edcb1017235626f5f12a4d3",
-    name: "Recurring Prize Savings Deposit",
-    alias: "recurring-prize-savings-deposit",
-    description:
-      "Automatically deposit into a prize savings account for a chance to win prizes.",
-    createdBy: {
-      name: "District Finance",
-      pfp: "/apple-touch-icon.png",
-    },
-    supportedChains: [5],
-    overrideValues: {},
-    IntentForm: FormStrategyAutomaticSaving,
-    IntentTable: StrategyTable,
-    transformData: transformToAutomaticSaving,
-    tableColumns: columnsAutomaticSaving,
-  },
-  "0x862579b2580594878e5e916a94308de27b43bbe8f3775978d2c14964ad485da2": {
-    id: "0x862579b2580594878e5e916a94308de27b43bbe8f3775978d2c14964ad485da2",
-    name: "Liquidate Balance",
-    alias: "liquidate-balance",
-    description:
-      "Automatically liquidate a position at spot price.",
-    createdBy: {
-      name: "District Finance",
-      pfp: "/apple-touch-icon.png",
-    },
-    supportedChains: [5],
-    overrideValues: {},
-    IntentForm: FormStrategyAutomaticLiquidate,
-    IntentTable: StrategyTable,
-    transformData: transformToAutomaticLiquidate,
-    tableColumns: columnsAutomaticLiquidate,
-  },
   "0x564369be27beaca3a73a1da91280164eaa81e9a66d5e43c2a180c78fef295505": {
     id: "0x564369be27beaca3a73a1da91280164eaa81e9a66d5e43c2a180c78fef295505",
     name: "Limit Order",
@@ -110,6 +76,40 @@ export const strategies = {
     IntentTable: StrategyTable,
     transformData: transformToLimitOrder,
     tableColumns: columnsLimitOrder,
+  },
+  "0x862579b2580594878e5e916a94308de27b43bbe8f3775978d2c14964ad485da2": {
+    id: "0x862579b2580594878e5e916a94308de27b43bbe8f3775978d2c14964ad485da2",
+    name: "Liquidate Balance",
+    alias: "liquidate-balance",
+    description:
+      "Automatically liquidate a position at spot price.",
+    createdBy: {
+      name: "District Finance",
+      pfp: "/apple-touch-icon.png",
+    },
+    supportedChains: [5],
+    overrideValues: {},
+    IntentForm: FormStrategyAutomaticLiquidate,
+    IntentTable: StrategyTable,
+    transformData: transformToAutomaticLiquidate,
+    tableColumns: columnsAutomaticLiquidate,
+  },
+  "0xeb597abd3d72972a0bb1199caa65378889d54e1a0edcb1017235626f5f12a4d3": {
+    id: "0xeb597abd3d72972a0bb1199caa65378889d54e1a0edcb1017235626f5f12a4d3",
+    name: "Recurring Prize Savings Deposit",
+    alias: "recurring-prize-savings-deposit",
+    description:
+      "Automatically deposit into a prize savings account for a chance to win prizes.",
+    createdBy: {
+      name: "District Finance",
+      pfp: "/apple-touch-icon.png",
+    },
+    supportedChains: [],
+    overrideValues: {},
+    IntentForm: FormStrategyAutomaticSaving,
+    IntentTable: StrategyTable,
+    transformData: transformToAutomaticSaving,
+    tableColumns: columnsAutomaticSaving,
   },
   "0xd5720c3e00f3ea3b1179e3b10c7a033f9db23cad12b68ddabf7c392b604812a3": {
     id: "0xd5720c3e00f3ea3b1179e3b10c7a033f9db23cad12b68ddabf7c392b604812a3",

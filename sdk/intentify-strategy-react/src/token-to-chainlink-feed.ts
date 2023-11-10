@@ -1,5 +1,5 @@
 import { ADDRESS_ZERO } from "@district-labs/intentify-core"
-import { CHAINLINK_FEEDS } from "@district-labs/intentify-intent-batch"
+import { CHAINLINK_FEEDS } from "@district-labs/intentify-deployments"
 import { Address } from "viem"
 
 export function tokenToChainLinkFeed(token: Address | string) {

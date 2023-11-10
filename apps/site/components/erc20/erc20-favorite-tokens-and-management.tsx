@@ -1,13 +1,8 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 import {
-    DeploySafe,
-    EnableSafeIntentModule,
     IsSafeCounterfactual,
-    IsSafeIntentModuleDisabled,
-    IsSafeIntentModuleEnabled,
     IsSafeMaterialized,
-    useIsSafeIntentModuleEnabled
   } from "@district-labs/intentify-core-react"
 import tokenList from "@/data/lists/token-list-testnet.json"
 import {
@@ -25,6 +20,7 @@ import { useChainId } from 'wagmi';
 import { ResponsiveMobileAndDesktop } from '../shared/responsive-mobile-and-desktop';
 import { ERC20BalanceSafe } from './erc20-balanceOf-safe';
 import { ViewCreateAndSetupSmartWallet } from '../view/view-create-and-setup-smart-wallet';
+import Image from 'next/image';
 
 type Erc20FavoriteTokensAndManagement = React.HTMLAttributes<HTMLElement>;
 
@@ -43,8 +39,8 @@ export const Erc20FavoriteTokensAndManagement = ({ className }: Erc20FavoriteTok
             <>
             <Erc20Token symbol="WETH" />
             <Erc20Token symbol="USDC" />
-            <Erc20Token symbol="DAI" />
             <Erc20Token symbol="DIS" />
+            <Erc20Token symbol="RIZZ" />
             </>
         </ResponsiveMobileAndDesktop>
      </div>
@@ -67,7 +63,6 @@ export const Erc20FavoriteTokensAndManagement = ({ className }: Erc20FavoriteTok
               <Erc20CardTokenOverview symbol="USDC" />
               <Erc20CardTokenOverview symbol="DIS" />
               <Erc20CardTokenOverview symbol="RIZZ" />
-              <Erc20CardTokenOverview symbol="DAI" />
           </div>
         </IsSafeMaterialized>
       </SheetContent>
@@ -90,7 +85,7 @@ const chainId = useChainId();
 
  return(
   <div className={classes}>
-   <img src={token.logoURI} className="w-6 h-6 rounded-full" alt={token.name} />
+   <Image width={48} height={48} src={token.logoURI} className="w-6 h-6 rounded-full" alt={token.name} />
    <ERC20BalanceSafe address={token.address as `0x${string}`} chainId={token.chainId} />
    <span className='text-2xs font-medium'>{token.symbol}</span>
   </div>

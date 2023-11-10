@@ -118,7 +118,7 @@ export function FormStrategyMeanReversionBuy({
           },
           chainlinkTrigger: {
             classNameTrigger:
-              "text-xs bg-neutral-100 px-2 py-1 w-full text-center cursor-pointer rounded-lg shadow-sm",
+              "text-xs bg-card-footer px-2 py-2 w-full text-center cursor-pointer rounded-lg shadow-sm",
           },
           tokenOutPriceFeed: {
             label: "Token In Chainlink Price Feed",

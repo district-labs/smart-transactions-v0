@@ -1,17 +1,12 @@
 "use client"
-
-import {
-  ERC20Image,
-  ERC20Symbol,
-} from "@/integrations/erc20/components/erc20-read"
-
-import { Address } from "@/components/blockchain/address"
+import tokenList from "@/data/lists/vault-list-testnet.json"
 import { ChainIdToNetworkDetails } from "@/components/blockchain/chain-id-to-network-details"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
 import { IntentBatchNonceDetails } from "@/components/intent-batch-nonce-details"
 import { TagIntentBatchState } from "@/components/intent-batch/tag-intent-batch-state"
 import { StrategyTableActions } from "@/components/strategies/strategy-table-actions"
 import { ERC20ConvertBalance } from "@/integrations/erc20/components/erc20-convert-balance"
+import { ERC20DetailsFromVaultList } from "@/components/erc20/erc20-details-from-vault-list"
 
 export const columnsAutomaticSaving = [
   {
@@ -20,22 +15,7 @@ export const columnsAutomaticSaving = [
       <DataTableColumnHeader column={column} title="Token" />
     ),
     cell: ({ row }: any) => (
-      <div className='flex items-center gap-x-2'>
-        <ERC20Image className="w-7 h-7" address={row.original.tokenOut as `0x${string}`} />
-        <div className="flex flex-col gap-y-1">
-          <ERC20Symbol
-            className="font-bold"
-            address={row.original.tokenOut as `0x${string}`}
-            chainId={row.original.chainId}
-          />
-          <Address
-            isLink
-            className="text-xs text-blue-500 hover:text-blue-600"
-            truncate
-            address={row.original.tokenOut as `0x${string}`}
-          />
-        </div>
-      </div>
+      <ERC20DetailsFromVaultList vaultList={tokenList}  address={row.original.tokenOut as `0x${string}`} />
     ),
   },
   {
