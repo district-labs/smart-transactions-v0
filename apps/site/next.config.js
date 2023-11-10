@@ -10,7 +10,16 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding")
     return config
   },
-  transpilePackages: ["@district-labs/intentify-core-react", "@district-labs/intentify-database"],
+  transpilePackages: [
+    "@district-labs/intentify-api-actions",
+    "@district-labs/intentify-core",
+    "@district-labs/intentify-core-react",
+    "@district-labs/intentify-database",
+    "@district-labs/intentify-intent-batch",
+    "@district-labs/intentify-intent-modules-react",
+    "@district-labs/intentify-strategy-react",
+    "@district-labs/ui-react"
+  ],
 }
 
 module.exports = nextConfig
