@@ -1,0 +1,45 @@
+# Block Number Range
+
+The `BlockNumberRangeIntent.sol` module allows a User to set when a transaction can be executed using block numbers.
+
+### Purpose
+
+Control when a smart transaction can be executed using the onchain `block.number` constant.
+
+# Intent Encoding
+
+The `BlockNumberRangeIntent.sol` requires a single argument: amount.
+
+```solidity
+function encodeIntent(
+    uint128 minBlockNumber, 
+    uint128 maxBlockNumber
+) external pure returns (bytes memory data) {
+    data = abi.encode(minBlockNumber, maxBlockNumber);
+}
+````
+
+# Intent Execution
+
+The `BlockNumberRangeIntent.sol` module compares the user supplied block numbers and compares them to the current `block.number` to validate execution.
+
+```solidity
+function execute(Intent calldata intent)
+    external
+    view
+    override
+    validIntentRoot(intent)
+    validIntentTarget(intent)
+    returns (bool)
+{
+    (uint128 minBlockNumber, uint128 maxBlockNumber) = _decodeIntent(intent);
+
+    if (block.number > maxBlockNumber) {
+        revert Expired();
+    } else if (block.number < minBlockNumber) {
+        revert Early();
+    }
+
+    return true;
+}
+```
