@@ -5,5 +5,9 @@ const intentBatchesRouter = express.Router();
 
 intentBatchesRouter.get("/", intentBatchesController.getIntentBatches);
 intentBatchesRouter.get("/:id", intentBatchesController.getIntentBatch);
+intentBatchesRouter.patch(
+  "/invalidate",
+  intentBatchesController.patchInvalidateIntentBatches,
+);
 
 export { intentBatchesRouter };

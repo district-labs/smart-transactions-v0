@@ -3,18 +3,24 @@ import {
   DefenderRelayProvider,
   DefenderRelaySigner,
 } from "@openzeppelin/defender-relay-client/lib/ethers";
-import { env } from "../../../../../env";
+import type { Address } from "viem";
+
+import { env } from "../../../env";
 
 const credentialsList: Record<number, { apiKey: string; apiSecret: string }> = {
   1: {
-    apiKey: env.OPEN_ZEPPELIN_DEFENDER_API_KEY_MAINNET,
-    apiSecret: env.OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_MAINNET,
+    apiKey: env.OPEN_ZEPPELIN_DEFENDER_API_KEY_MAINNET as string,
+    apiSecret: env.OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_MAINNET as string,
   },
   5: {
-    apiKey: env.OPEN_ZEPPELIN_DEFENDER_API_KEY_GOERLI,
-    apiSecret: env.OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_GOERLI,
+    apiKey: env.OPEN_ZEPPELIN_DEFENDER_API_KEY_GOERLI as string,
+    apiSecret: env.OPEN_ZEPPELIN_DEFENDER_SECRET_KEY_GOERLI as string,
   },
 };
+
+export async function getRelayerAddress(relayer: Relayer) {
+  return (await relayer.getRelayer()).address as Address;
+}
 
 export function getRelayerByChainId(chainId: number) {
   if (!credentialsList[chainId]) {

@@ -6,17 +6,10 @@ import swaggerDocs from "./docs/swagger-output.json";
 import { env } from "./env";
 import { errorHandler } from "./middleware/errorHandler";
 import { authRouter } from "./routes/auth";
+import { axiomQueryRouter } from "./routes/axiom-query";
 import { intentBatchesRouter } from "./routes/intent-batches";
+import { strategiesRouter } from "./routes/strategies";
 import { usersRouter } from "./routes/users";
-
-
-// import intentBatchAdminRoutes from "./routes/admin/intent-batch";
-// import serviceAxiomRoutes from "./routes/services/axiom";
-// import serviceEventsRoutes from "./routes/services/events";
-// import infraIntentBatchRoutes from "./routes/stale/infra/intent-batch";
-// import intentBatchUserRoutes from "./routes/stale/user/intent-batch";
-// import profileUserRoutes from "./routes/stale/user/profile";
-// import strategyUserRoutes from "./routes/stale/user/strategy";
 
 const PORT = env.PORT;
 const app = express();
@@ -37,13 +30,8 @@ app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/users", usersRouter);
 app.use("/intent-batches", intentBatchesRouter);
-// app.use("/user", profileUserRoutes);
-// app.use("/intent-batch", intentBatchUserRoutes);
-// app.use("/strategy", strategyUserRoutes);
-// app.use("/admin/intent-batch", intentBatchAdminRoutes);
-// app.use("/service", serviceEventsRoutes);
-// app.use("/service", serviceAxiomRoutes);
-// app.use("/infra", infraIntentBatchRoutes);
+app.use("/strategies", strategiesRouter);
+app.use("/axiom-query", axiomQueryRouter);
 
 // Documentation
 app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocs));

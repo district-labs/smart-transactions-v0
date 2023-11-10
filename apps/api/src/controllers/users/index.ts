@@ -7,10 +7,17 @@ import {
 import type { NextFunction, Request, Response } from "express";
 import { isAddress } from "viem";
 import { z } from "zod";
+import {
+  getExpandFields,
+  getExpandFieldsSchema,
+} from "../../validations/queries";
 
+const expandFieldsGetUsers = ["strategies", "emailPreferences"];
 const getUsersQuerySchema = z.object({
-  expand: z.literal('emailPreferences').optional(),
-})
+  limit: z.string().optional(),
+  offset: z.string().optional(),
+  expand: getExpandFieldsSchema(expandFieldsGetUsers),
+});
 
 export async function getUsers(
   request: Request,
@@ -18,11 +25,18 @@ export async function getUsers(
   next: NextFunction,
 ) {
   try {
-    const expand = getUsersQuerySchema.parse(request.query).expand;
+    const { expand, limit, offset } = getUsersQuerySchema.parse(request.query);
+
+    const expandFields = getExpandFields(expand);
 
     const users = await db.query.users.findMany({
+      limit: Number(limit),
+      offset: Number(offset),
       with: {
-        emailPreferences: expand=== "emailPreferences" ? true : undefined,
+        strategies: expandFields.includes("strategies") ? true : undefined,
+        emailPreferences: expandFields.includes("emailPreferences")
+          ? true
+          : undefined,
       },
     });
 
@@ -33,8 +47,8 @@ export async function getUsers(
 }
 
 const getUserQuerySchema = z.object({
-  expand: z.literal('emailPreferences').optional(),
-})
+  expand: getExpandFieldsSchema(expandFieldsGetUsers),
+});
 
 export async function getUser(
   request: Request,
@@ -43,16 +57,21 @@ export async function getUser(
 ) {
   try {
     const userAddress = request.params.address;
-    const expand = getUserQuerySchema.parse(request.query).expand;
+    const { expand } = getUserQuerySchema.parse(request.query);
 
     if (!userAddress || !isAddress(userAddress)) {
       return response.status(400).json({ error: "Invalid user address" });
     }
 
+    const expandFields = getExpandFields(expand);
+
     const user = await db.query.users.findFirst({
       where: eq(users.address, userAddress),
       with: {
-        emailPreferences: expand=== "emailPreferences" ? true : undefined,
+        strategies: expandFields.includes("strategies") ? true : undefined,
+        emailPreferences: expandFields.includes("emailPreferences")
+          ? true
+          : undefined,
       },
     });
 
