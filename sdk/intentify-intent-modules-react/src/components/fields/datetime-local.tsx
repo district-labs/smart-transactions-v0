@@ -54,7 +54,6 @@ export const DateTimeLocal = ({
         onChange={(event: any) => {
           const date = new Date(event.target.value)
           const epoch = Math.floor(date.getTime() / 1000)
-          console.log(epoch, 'epoch')
           setIntentBatch((draft: any) => {
             setValueFromPath(draft, path, epoch)
           })
