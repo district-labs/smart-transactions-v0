@@ -13,7 +13,7 @@ const localConfig: Config = {
       network: "goerli",
       address: IntentifySafeModule[5],
       abi: './abis/IntentifySafeModule.json',
-      startBlock: 9764809,
+      startBlock: 10013285,
     },
     {
       name: "IntentifySafeModuleLocal",
@@ -36,7 +36,7 @@ const localConfig: Config = {
       network: "goerli",
       address: IntentifySafeModule[5],
       abi: './abis/IntentifySafeModule.json',
-      startBlock: 9764809,
+      startBlock: 10013285,
     },
   ],
 };
