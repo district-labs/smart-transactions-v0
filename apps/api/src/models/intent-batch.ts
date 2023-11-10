@@ -1,6 +1,4 @@
-import type {
-  DbIntentBatchWithRelations
-} from "@district-labs/intentify-database";
+import type { DbIntentBatchWithRelations } from "@district-labs/intentify-database";
 import {
   and,
   db,
@@ -97,8 +95,8 @@ export const getIntentBatchFromDB = async (
     where: eq(intentBatch.intentBatchHash, intentBatchId),
     with: {
       intents: true,
-    }
-  })
+    },
+  });
 };
 
 /**
