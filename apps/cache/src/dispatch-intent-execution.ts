@@ -4,6 +4,7 @@ const siteUrl = process.env.PONDER_APP_API_URL
 if(!siteUrl) throw new Error("API_URL not set")
 
 export async function dispatchIntentExecution(chainId: number, intentBatchId: `0x${string}`, receipt: Transaction){
+
     try {
         await fetch(`${siteUrl}/api/events/executed`, {
             method: 'POST',
@@ -15,7 +16,7 @@ export async function dispatchIntentExecution(chainId: number, intentBatchId: `0
                 intentBatchId,
                 transactionHash: receipt.hash,
                 blockHash: receipt.blockHash,
-                blockNumber: receipt.blockNumber,
+                blockNumber: receipt.blockNumber.toString(),
                 to: receipt.to,
             })
         })
