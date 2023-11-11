@@ -1,12 +1,12 @@
 {
-  "name": "intentify-cache",
-  "version": "0.1.0",
+  "name": "@district-labs/intentify-event-cache",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "cache": "ponder dev",
     "start": "ponder start",
     "lint": "eslint .",
-    "codegen": "ponder codegen"
+    "build": "ponder codegen"
   },
   "engines": {
     "node": "18"
