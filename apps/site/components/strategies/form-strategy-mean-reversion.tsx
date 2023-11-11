@@ -21,9 +21,9 @@ import { useChainId, useSignTypedData } from "wagmi"
 import { useActionIntentBatchCreate } from "@/hooks/intent-batch/user/use-intent-batch-create"
 import { useFormStrategySetDefaultValues } from "@/hooks/strategy/use-form-strategy-set-default-values"
 
-import { ButtonSetupSmartWalletBeforeSigningIntent } from "./button-setup-smart-wallet-before-signing-intents"
-import { PassFormIntentBatchState } from "./pass-form-intent-batch-state"
-import { StrategyActionBar } from "./strategy-action-bar"
+import { ButtonSetupSmartWalletBeforeSigningIntent } from "../forms/button-setup-smart-wallet-before-signing-intents"
+import { PassFormIntentBatchState } from "../forms/pass-form-intent-batch-state"
+import { StrategyActionBar } from "../forms/strategy-action-bar"
 
 export type FormStrategyMeanReversion = React.HTMLAttributes<HTMLElement> & {
   strategyId: string

@@ -11,7 +11,14 @@ export const eventIntentBatchExecuted = async (
   next: NextFunction,
 ) => {
   try {
-    const { chainId, intentBatchId, transactionHash, blockHash, blockNumber, to } = await request.body;
+    const {
+      chainId,
+      intentBatchId,
+      transactionHash,
+      blockHash,
+      blockNumber,
+      to,
+    } = await request.body;
 
     if (!chainId || !intentBatchId || !transactionHash) {
       throw new CustomError("Missing Event Parameters", 400);
@@ -23,7 +30,7 @@ export const eventIntentBatchExecuted = async (
       transactionHash: transactionHash,
       blockHash: blockHash,
       blockNumber: blockNumber,
-      to: to
+      to: to,
     });
 
     return response.status(200).send();

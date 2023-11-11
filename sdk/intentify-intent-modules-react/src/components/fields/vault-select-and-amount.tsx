@@ -1,6 +1,7 @@
 import { getValueFromPath, setValueFromPath } from "@/src/utils"
-import { Label } from "@district-labs/ui-react"
 import type { Vault } from "@district-labs/intentify-core"
+import { Label } from "@district-labs/ui-react"
+
 import { VaultSelectAndAmount as VaultSelectAndAmountCore } from "./core/vault-select-and-amount"
 
 export type VaultSelectAndAmountConfig = {

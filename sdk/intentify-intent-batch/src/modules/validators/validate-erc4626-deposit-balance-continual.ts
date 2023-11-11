@@ -1,4 +1,4 @@
-import { erc4626ABI, erc20ABI } from "@district-labs/intentify-abi-external"
+import { erc20ABI, erc4626ABI } from "@district-labs/intentify-abi-external"
 import { decodeAbiParameters, type Address, type PublicClient } from "viem"
 
 import { ValidationResponse } from "../../types"
@@ -16,11 +16,11 @@ export async function validateErc4626DepositBalanceContinual(
 ): Promise<ValidationResponse> {
   const decodedData = decodeAbiParameters(abi, data)
 
-  const tokenOut = (await args?.publicClient.readContract({
+  const tokenOut = await args?.publicClient.readContract({
     address: decodedData[0],
     abi: erc4626ABI,
     functionName: "asset",
-  }))
+  })
 
   const dataTokenOutBalance = (await args?.publicClient.readContract({
     address: tokenOut,

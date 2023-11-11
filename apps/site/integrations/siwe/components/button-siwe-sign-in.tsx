@@ -45,7 +45,7 @@ export const ButtonSiweSignIn = ({
 
   return (
     <Button
-    variant={variant}
+      variant={variant}
       size={size}
       className={classes}
       disabled={disabled}

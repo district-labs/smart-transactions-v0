@@ -203,7 +203,8 @@ export function FormStrategyMeanReversionSell({
           },
           intentContainerStatement: {
             label: "Intent Statement",
-            className: "bg-card-footer p-3 rounded-md shadow-xs border-dotted border-2 border-neutral-400 text-xs",
+            className:
+              "bg-card-footer p-3 rounded-md shadow-xs border-dotted border-2 border-neutral-400 text-xs",
           },
           nonceStatement: {
             label: "Intent Statement",

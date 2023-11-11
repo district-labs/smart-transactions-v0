@@ -1,35 +1,51 @@
 "use client"
+
 import tokenList from "@/data/lists/token-list-testnet.json"
 import { ERC20ConvertBalance } from "@/integrations/erc20/components/erc20-convert-balance"
-import { ERC20Symbol } from "@/integrations/erc20/components/erc20-read"
 
-import { Address } from "@/components/blockchain/address"
 import { ChainIdToNetworkDetails } from "@/components/blockchain/chain-id-to-network-details"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
-import { IntentBatchNonceDetails } from "@/components/intent-batch-nonce-details"
+import { ERC20DetailsFromTokenList } from "@/components/erc20/erc20-details-from-token-list"
+import { IntentBatchId } from "@/components/intent-batch/intent-batch-id"
+import { IntentBatchNonceDetails } from "@/components/intent-batch/intent-batch-nonce-details"
+import { IntentBatchTransactionsSheet } from "@/components/intent-batch/intent-batch-transactions-sheet"
 import { TagIntentBatchState } from "@/components/intent-batch/tag-intent-batch-state"
 import { TimeFromEpoch } from "@/components/shared/time-from-epoch"
 import { StrategyTableActions } from "@/components/strategies/strategy-table-actions"
-import { ERC20DetailsFromTokenList } from "@/components/erc20/erc20-details-from-token-list"
 
 export const columnsLimitOrder = [
+  // {
+  //   accessorKey: "intentBatchHash",
+  //   header: ({ column }: any) => (
+  //     <DataTableColumnHeader column={column} title="Intent Batch ID" />
+  //   ),
+  //   cell: ({ row }: any) => (
+  //     <IntentBatchId truncate id={row.original.intentBatchHash} />
+  //   ),
+  // },
   {
     accessorKey: "sell.asset",
     header: ({ column }: any) => (
-      <DataTableColumnHeader column={column} title="Out" />
+      <DataTableColumnHeader column={column} title="Sell" />
     ),
     cell: ({ row }: any) => (
-      <ERC20DetailsFromTokenList tokenList={tokenList}  address={row.original.tokenOut as `0x${string}`} />
+      <div className="min-w-[420px]">
+        <ERC20DetailsFromTokenList
+          tokenList={tokenList}
+          address={row.original.tokenOut as `0x${string}`}
+        />
+      </div>
     ),
   },
   {
     accessorKey: "sell.amount",
     header: ({ column }: any) => (
-      <DataTableColumnHeader column={column} title="Out Amount" />
+      <DataTableColumnHeader column={column} title="Sell Amount" />
     ),
     cell: ({ row }: any) => (
       <div className="flex items-center">
         <ERC20ConvertBalance
+          className="text-xl"
           address={row.original.tokenOut as `0x${string}`}
           balance={row.original.tokenOutAmount}
           chainId={row.original.chainId}
@@ -40,19 +56,23 @@ export const columnsLimitOrder = [
   {
     accessorKey: "receive.asset",
     header: ({ column }: any) => (
-      <DataTableColumnHeader column={column} title="In" />
+      <DataTableColumnHeader column={column} title="Buy" />
     ),
     cell: ({ row }: any) => (
-      <ERC20DetailsFromTokenList tokenList={tokenList}  address={row.original.tokenIn as `0x${string}`} />
+      <ERC20DetailsFromTokenList
+        tokenList={tokenList}
+        address={row.original.tokenIn as `0x${string}`}
+      />
     ),
   },
   {
     accessorKey: "receive.amount",
     header: ({ column }: any) => (
-      <DataTableColumnHeader column={column} title="In Amount" />
+      <DataTableColumnHeader column={column} title="Buy Amount" />
     ),
     cell: ({ row }: any) => (
       <ERC20ConvertBalance
+        className="text-xl"
         address={row.original.tokenIn as `0x${string}`}
         balance={row.original.tokenInAmount}
         chainId={row.original.chainId}
@@ -89,13 +109,13 @@ export const columnsLimitOrder = [
       />
     ),
   },
-  {
-    accessorKey: "status",
-    header: ({ column }: any) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }: any) => <TagIntentBatchState state={row.original.status} />,
-  },
+  // {
+  //   accessorKey: "status",
+  //   header: ({ column }: any) => (
+  //     <DataTableColumnHeader column={column} title="Status" />
+  //   ),
+  //   cell: ({ row }: any) => <TagIntentBatchState state={row.original.status} />,
+  // },
   {
     accessorKey: "chainId",
     header: ({ column }: any) => (
@@ -112,6 +132,15 @@ export const columnsLimitOrder = [
     ),
     cell: ({ row }: any) => (
       <IntentBatchNonceDetails nonce={row.original.nonce} />
+    ),
+  },
+  {
+    accessorKey: "transactions",
+    header: ({ column }: any) => (
+      <DataTableColumnHeader column={column} title="Transactions" />
+    ),
+    cell: ({ row }: any) => (
+      <IntentBatchTransactionsSheet transactions={row.original.executedTxs} />
     ),
   },
   {

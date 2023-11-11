@@ -1,17 +1,15 @@
 import * as React from "react"
+import Image from "next/image"
 import tokenList from "@/data/lists/token-list-testnet.json"
-import {
-  ERC20TotalSupply,
-} from "@/integrations/erc20/components/erc20-read"
+import { ERC20TotalSupply } from "@/integrations/erc20/components/erc20-read"
 import { useFindTokenFromList } from "@/integrations/erc20/hooks/use-find-token-from-list"
 import { Card } from "@district-labs/ui-react"
 import { useChainId } from "wagmi"
 
 import { cn } from "@/lib/utils"
 
-import { Erc20MintTestnet } from "./erc20-mint-testnet"
 import { ERC20BalanceSafe } from "./erc20-balanceOf-safe"
-import Image from "next/image"
+import { Erc20MintTestnet } from "./erc20-mint-testnet"
 
 type Erc20CardTokenOverview = React.HTMLAttributes<HTMLElement> & {
   symbol: string
@@ -34,7 +32,13 @@ export const Erc20CardTokenOverview = ({
   return (
     <Card className={classes}>
       <div className="col-span-4 flex items-center">
-        <Image alt={token.name} height={48} width={48}  className="h-10 w-10 rounded-full" src={token?.logoURI} />
+        <Image
+          alt={token.name}
+          height={48}
+          width={48}
+          className="h-10 w-10 rounded-full"
+          src={token?.logoURI}
+        />
         <div className="ml-4">
           <h3 className="text-lg font-medium">{token?.name}</h3>
           <h3 className="text-sm font-light">{token?.symbol}</h3>

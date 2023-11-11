@@ -2,7 +2,7 @@ import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
 
 export const env = createEnv({
-  server:{
+  server: {
     // Private key for the server's wallet with either 0x prefix or not
     PRIVATE_KEY: z.string().min(64).max(66),
     GOERLI_RPC_URL: z.string().url(),
@@ -18,4 +18,4 @@ export const env = createEnv({
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,
-})
+});

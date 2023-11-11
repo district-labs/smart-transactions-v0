@@ -26,12 +26,12 @@ import { useImmer } from "use-immer"
 import { parseUnits } from "viem"
 
 import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
+import { tokenToChainLinkFeed } from "../token-to-chainlink-feed"
 import { StrategyChildrenCallback } from "../types"
 import { deepMerge } from "../utils"
 import { NonceManager, type NonceConfig } from "./nonce-manager"
 import { NonceStatement } from "./nonce-statement"
 import { useDynamicNonce } from "./use-dynamic-nonce"
-import { tokenToChainLinkFeed } from "../token-to-chainlink-feed"
 
 export type StrategyAutomaticLiquidate = {
   defaultValues: any

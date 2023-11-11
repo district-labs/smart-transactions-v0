@@ -13,7 +13,7 @@ import {
 import { HelpCircle } from "lucide-react"
 import { type Hex } from "viem"
 
-import { Row } from "./shared/row"
+import { Row } from "../shared/row"
 
 type IntentBatchNonceDetails = React.HTMLAttributes<HTMLElement> & {
   nonce: Hex
@@ -34,7 +34,7 @@ const NonceSelection = ({ nonce }: { nonce: Hex }) => {
       <Tooltip>
         <TooltipTrigger className="flex items-center gap-x-1">
           <HelpCircle size={12} />
-          <span className={"text-xs"}>Standard </span>
+          <span className={"text-sm"}>Standard</span>
         </TooltipTrigger>
         <TooltipContent className="bg-card p-4 text-card-foreground">
           <h3 className="text-lg font-normal">Standard Nonce</h3>
@@ -59,7 +59,7 @@ const NonceSelection = ({ nonce }: { nonce: Hex }) => {
       <Tooltip>
         <TooltipTrigger className="flex items-center gap-x-1">
           <HelpCircle size={12} />
-          <span className={"text-xs"}>Dimensional</span>{" "}
+          <span className={"text-sm"}>Dimensional</span>{" "}
         </TooltipTrigger>
         <TooltipContent className="bg-card p-4 text-card-foreground">
           <h3 className="text-lg font-normal">Dimensional Nonce</h3>
@@ -90,7 +90,7 @@ const NonceSelection = ({ nonce }: { nonce: Hex }) => {
       <Tooltip>
         <TooltipTrigger className="flex items-center gap-x-1">
           <HelpCircle size={12} />
-          <span className={"text-xs"}>Time</span>{" "}
+          <span className={"text-sm"}>Time</span>{" "}
         </TooltipTrigger>
         <TooltipContent className="bg-card p-4 text-card-foreground">
           <h3 className="text-lg font-normal">Dimensional Nonce</h3>
@@ -120,17 +120,20 @@ const NonceSelection = ({ nonce }: { nonce: Hex }) => {
       </Tooltip>
     )
   }
-  
+
   if (nonce?.startsWith("0x03")) {
     return (
       <Tooltip>
         <TooltipTrigger className="flex items-center gap-x-1">
           <HelpCircle size={12} />
-          <span className={"text-xs"}>Module</span>{" "}
+          <span className={"text-sm"}>Module</span>{" "}
         </TooltipTrigger>
         <TooltipContent className="bg-card p-4 text-card-foreground">
           <h3 className="text-lg font-normal">Module Nonce</h3>
-          <span className="text-xs">Module transaction nonce. Execution rules managed by underlying intents</span>
+          <span className="text-xs">
+            Module transaction nonce. Execution rules managed by underlying
+            intents
+          </span>
         </TooltipContent>
       </Tooltip>
     )

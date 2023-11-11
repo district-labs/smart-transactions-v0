@@ -1,11 +1,13 @@
 "use client"
 
 import { HTMLAttributes } from "react"
+import {
+  useErc20BalanceOf,
+  useErc20Decimals,
+} from "@/integrations/erc20/generated/erc20-wagmi"
+import { useGetSafeAddress } from "@district-labs/intentify-core-react"
 import { formatUnits } from "viem"
 import { Address } from "wagmi"
-
-import { useGetSafeAddress } from '@district-labs/intentify-core-react' 
-import { useErc20BalanceOf, useErc20Decimals } from "@/integrations/erc20/generated/erc20-wagmi"
 
 export interface ERC20Props extends HTMLAttributes<HTMLElement> {
   address: Address
@@ -33,7 +35,8 @@ export function ERC20BalanceSafe({
     watch: true,
   })
 
-  if (!isSuccess || !isSuccessDecimals) return <span className={className}>0</span>
+  if (!isSuccess || !isSuccessDecimals)
+    return <span className={className}>0</span>
 
   return (
     <span className={className} {...props}>

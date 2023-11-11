@@ -17,7 +17,13 @@ type Input = {
   disabled?: boolean
 }
 
-export const Input = ({ disabled, path, intentBatch, setIntentBatch, config }: Input) => {
+export const Input = ({
+  disabled,
+  path,
+  intentBatch,
+  setIntentBatch,
+  config,
+}: Input) => {
   return (
     <div className={config?.className}>
       {config?.label && (

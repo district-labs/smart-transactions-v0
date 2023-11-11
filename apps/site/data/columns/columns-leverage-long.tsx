@@ -1,16 +1,13 @@
 "use client"
 
-import {
-  ERC20Name,
-  ERC20Symbol,
-} from "@/integrations/erc20/components/erc20-read"
+import { ERC20Symbol } from "@/integrations/erc20/components/erc20-read"
 import { formatUnits } from "viem"
 
 import { bigIntToDecimal } from "@/lib/utils/big-int-to-decimals"
 import { Address } from "@/components/blockchain/address"
 import { ChainIdToNetworkDetails } from "@/components/blockchain/chain-id-to-network-details"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
-import { IntentBatchNonceDetails } from "@/components/intent-batch-nonce-details"
+import { IntentBatchNonceDetails } from "@/components/intent-batch/intent-batch-nonce-details"
 import { TagIntentBatchState } from "@/components/intent-batch/tag-intent-batch-state"
 import { StrategyTableActions } from "@/components/strategies/strategy-table-actions"
 

@@ -16,7 +16,7 @@ export const ironOptions: IronSessionOptions = {
   cookieName: `${env.AUTH_NAME} session`,
   password: env.AUTH_SECRET_KEY,
   cookieOptions: {
-    sameSite:  process.env.NODE_ENV == "production" ? "none" : undefined,
+    sameSite: process.env.NODE_ENV == "production" ? "none" : undefined,
     secure: process.env.NODE_ENV == "production",
   },
 };

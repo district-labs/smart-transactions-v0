@@ -124,8 +124,8 @@ export function StrategyLimitOrder({
     })
 
     intentBatchManager.add("TimestampRange", [
-        intentBatch.timestampRange.minTimestamp,
-        intentBatch.timestampRange.maxTimestamp
+      intentBatch.timestampRange.minTimestamp,
+      intentBatch.timestampRange.maxTimestamp,
     ])
 
     intentBatchManager.add("Erc20LimitOrder", [
@@ -257,7 +257,8 @@ const IntentStatement = ({
       Swap{" "}
       <span className="font-bold">
         {formatted?.tokenOutAmount} {tokenOut?.symbol}{" "}
-        <span className="font-normal">for</span> {formatted?.tokenInAmount} {tokenIn?.symbol}
+        <span className="font-normal">for</span> {formatted?.tokenInAmount}{" "}
+        {tokenIn?.symbol}
       </span>
       . Limit order must be executed after{" "}
       <TimeFromEpoch

@@ -2,20 +2,21 @@
 
 import { useEffect, useRef, useState, useTransition } from "react"
 import Image from "next/image"
+import { ButtonSiweSignIn } from "@/integrations/siwe/components/button-siwe-sign-in"
+import { IsSignedIn } from "@/integrations/siwe/components/is-signed-in"
+import { IsSignedOut } from "@/integrations/siwe/components/is-signed-out"
 import { CornerDownLeft } from "lucide-react"
 import { useForm } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
 import { assets } from "@/lib/utils/asset-utils"
 import { colors, type Color } from "@/lib/utils/color-utils"
+import { WalletConnect } from "@/components/blockchain/wallet-connect"
 import { FormUserRegister } from "@/components/forms/form-user-register"
 import { Canvas } from "@/components/shared/canvas"
-import { IsSignedIn } from "@/integrations/siwe/components/is-signed-in"
 import { IsWalletConnected } from "@/components/shared/is-wallet-connected"
-import { IsSignedOut } from "@/integrations/siwe/components/is-signed-out"
-import { ButtonSiweSignIn } from "@/integrations/siwe/components/button-siwe-sign-in"
 import { IsWalletDisconnected } from "@/components/shared/is-wallet-disconnected"
-import { WalletConnect } from "@/components/blockchain/wallet-connect"
+import { LinkComponent } from "@/components/shared/link-component"
 
 // import { emailSchema } from "@/lib/validations"
 
@@ -61,6 +62,7 @@ export default function Register() {
           }
         )}
       />
+
       <Image
         width={1200}
         height={1200}
@@ -83,20 +85,15 @@ export default function Register() {
       />
       <div className="mx-auto mt-20 max-w-7xl">
         <div className="relative z-10 flex flex-col items-center">
-          {/* <Image
-            src="/district.png"
-            alt="District"
-            width={1287}
-            height={264}
-            className="mb-12 h-auto max-w-xs"
-          /> */}
-          <Image
-            src="/district-globe.svg"
-            height={100}
-            width={100}
-            alt="District"
-            className=""
-          />
+          <LinkComponent href="/">
+            <Image
+              src="/district-globe.svg"
+              height={100}
+              width={100}
+              alt="District"
+              className=""
+            />
+          </LinkComponent>
           <h1 className="font-archivo mb-12 max-w-3xl text-center text-7xl font-bold leading-snug text-white">
             Investment Strategies{" "}
             <span
@@ -123,7 +120,11 @@ export default function Register() {
           </IsWalletDisconnected>
           <IsWalletConnected>
             <IsSignedOut>
-              <ButtonSiweSignIn  className="w-full max-w-[320px]" variant={"secondary"} label="Authenticate" />
+              <ButtonSiweSignIn
+                className="w-full max-w-[320px]"
+                variant={"secondary"}
+                label="Authenticate"
+              />
             </IsSignedOut>
             <IsSignedIn>
               <FormUserRegister currentColor={currentColor} />

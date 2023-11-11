@@ -18,6 +18,15 @@ export function NavigationAccount() {
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
+            <Link href={"/register"} legacyBehavior passHref>
+              <NavigationMenuLink
+                className={`${navigationMenuTriggerStyle()} text-green-700`}
+              >
+                Alpha Registration
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
             <Link href={"/smart-wallet"} legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 <Wallet2 size={16} className="mr-1" /> Smart Wallet

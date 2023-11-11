@@ -1,22 +1,6 @@
 import { type IntentBatch } from "@district-labs/intentify-core"
 import type { IntentBatchQuery } from "@district-labs/intentify-database"
 
-4
-export type LimitOrderIntent = {
-  chainId: number
-  sell: {
-    asset: string
-    amount: number
-  }
-  receive: {
-    asset: string
-    amount: number
-  }
-  limitPrice: string
-  expiry: string
-  status: "open" | "closed" | "canceled"
-}
-
 export function transformIntentQueryToIntentBatchStruct(
   intentBatch: IntentBatchQuery
 ): IntentBatch {

@@ -1,12 +1,14 @@
 "use client"
+
 import tokenList from "@/data/lists/vault-list-testnet.json"
+import { ERC20ConvertBalance } from "@/integrations/erc20/components/erc20-convert-balance"
+
 import { ChainIdToNetworkDetails } from "@/components/blockchain/chain-id-to-network-details"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
-import { IntentBatchNonceDetails } from "@/components/intent-batch-nonce-details"
+import { ERC20DetailsFromVaultList } from "@/components/erc20/erc20-details-from-vault-list"
+import { IntentBatchNonceDetails } from "@/components/intent-batch/intent-batch-nonce-details"
 import { TagIntentBatchState } from "@/components/intent-batch/tag-intent-batch-state"
 import { StrategyTableActions } from "@/components/strategies/strategy-table-actions"
-import { ERC20ConvertBalance } from "@/integrations/erc20/components/erc20-convert-balance"
-import { ERC20DetailsFromVaultList } from "@/components/erc20/erc20-details-from-vault-list"
 
 export const columnsAutomaticSaving = [
   {
@@ -15,7 +17,10 @@ export const columnsAutomaticSaving = [
       <DataTableColumnHeader column={column} title="Token" />
     ),
     cell: ({ row }: any) => (
-      <ERC20DetailsFromVaultList vaultList={tokenList}  address={row.original.tokenOut as `0x${string}`} />
+      <ERC20DetailsFromVaultList
+        vaultList={tokenList}
+        address={row.original.tokenOut as `0x${string}`}
+      />
     ),
   },
   {
@@ -24,7 +29,12 @@ export const columnsAutomaticSaving = [
       <DataTableColumnHeader column={column} title="Deposit Minimum" />
     ),
     cell: ({ row }: any) => (
-        <ERC20ConvertBalance className="text-xl font-bold" balance={row.original.balanceDelta} address={row.original.tokenOut as `0x${string}`} chainId={row.original.chainId} />
+      <ERC20ConvertBalance
+        className="text-xl font-bold"
+        balance={row.original.balanceDelta}
+        address={row.original.tokenOut as `0x${string}`}
+        chainId={row.original.chainId}
+      />
     ),
   },
   {
@@ -33,7 +43,12 @@ export const columnsAutomaticSaving = [
       <DataTableColumnHeader column={column} title="Minimum Balance" />
     ),
     cell: ({ row }: any) => (
-    <ERC20ConvertBalance className="text-xl font-bold" balance={row.original.minBalance} address={row.original.tokenOut as `0x${string}`} chainId={row.original.chainId} />
+      <ERC20ConvertBalance
+        className="text-xl font-bold"
+        balance={row.original.minBalance}
+        address={row.original.tokenOut as `0x${string}`}
+        chainId={row.original.chainId}
+      />
     ),
   },
   {

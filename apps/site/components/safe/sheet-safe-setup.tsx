@@ -22,14 +22,12 @@ import { ScrollArea } from "../ui/scroll-area"
 
 // type SheetSafeSetup = {}
 
-export const SheetSafeSetup = ({children}: any) => {
+export const SheetSafeSetup = ({ children }: any) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
         <div className="">
-          <IsSafeIntentModuleDisabled>
-            {children}
-          </IsSafeIntentModuleDisabled>
+          <IsSafeIntentModuleDisabled>{children}</IsSafeIntentModuleDisabled>
         </div>
       </SheetTrigger>
       <SheetContent className="sm:max-w-1/2 max-h-screen sm:w-[720px]">
