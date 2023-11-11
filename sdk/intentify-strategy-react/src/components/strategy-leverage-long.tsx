@@ -1,6 +1,11 @@
 "use client"
 
-import { IntentBatch, Token, type TokenList } from "@district-labs/intentify-core"
+import { useEffect, useState } from "react"
+import {
+  IntentBatch,
+  Token,
+  type TokenList,
+} from "@district-labs/intentify-core"
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
   intentAaveLeverageLong,
@@ -8,6 +13,7 @@ import {
   nonceManager,
 } from "@district-labs/intentify-intent-modules-react"
 import { Card, CardContent, CardFooter } from "@district-labs/ui-react"
+import numeral from "numeral"
 import { useImmer } from "use-immer"
 import { parseUnits } from "viem"
 
@@ -15,10 +21,8 @@ import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
 import { StrategyChildrenCallback } from "../types"
 import { decimalToBigInt, deepMerge } from "../utils"
 import { NonceManager } from "./nonce-manager"
-import { useDynamicNonce } from "./use-dynamic-nonce"
 import { NonceStatement } from "./nonce-statement"
-import numeral from "numeral"
-import { useEffect, useState } from "react"
+import { useDynamicNonce } from "./use-dynamic-nonce"
 
 export type StrategyLeverageLong = {
   defaultValues: any
@@ -199,7 +203,6 @@ export function StrategyLeverageLong({
   )
 }
 
-
 type IntentStatement = React.HTMLAttributes<HTMLElement> & {
   tokenOut: Token
   tokenIn: Token
@@ -214,12 +217,7 @@ const IntentStatement = ({
   minHealthFactor,
   fee,
 }: IntentStatement) => {
-  if (
-    !tokenOut ||
-    !tokenIn ||
-    !minHealthFactor ||
-    !fee
-  )
+  if (!tokenOut || !tokenIn || !minHealthFactor || !fee)
     return (
       <div className={className}>
         <p className="">
@@ -232,9 +230,11 @@ const IntentStatement = ({
     <div className={className}>
       Leverage long by borrowing against{" "}
       <span className="font-bold">
-         {tokenOut?.symbol}{" "}
-        <span className="font-normal">and borrowing/swapping</span> {tokenIn.symbol}
-      </span> for more {tokenOut?.symbol}. The minimum health factor is{" "}
+        {tokenOut?.symbol}{" "}
+        <span className="font-normal">and borrowing/swapping</span>{" "}
+        {tokenIn.symbol}
+      </span>{" "}
+      for more {tokenOut?.symbol}. The minimum health factor is{" "}
       <span className="font-bold">{minHealthFactor}%</span> and the fee is{" "}
       <span className="font-bold">{fee}%</span>.
     </div>

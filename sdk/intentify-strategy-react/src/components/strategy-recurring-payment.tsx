@@ -1,10 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import {
-  type IntentBatch,
-  type VaultList,
-} from "@district-labs/intentify-core"
+import { type IntentBatch, type VaultList } from "@district-labs/intentify-core"
 import { IntentBatchFactory } from "@district-labs/intentify-intent-batch"
 import {
   intentErc20Transfer,

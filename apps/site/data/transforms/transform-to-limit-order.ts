@@ -1,15 +1,18 @@
 import { type IntentBatch } from "@district-labs/intentify-core"
+import { DbTransaction } from "@district-labs/intentify-database"
 
 import { getStatus } from "./get-status"
 import { transformIntentQueryToIntentBatchStruct } from "./transform-intent-query-to-intent-batch-struct"
 
 export type LimitOrderIntent = {
+  intentBatchHash: string
+  executedTxs: DbTransaction[]
   chainId: number
   nonce: string
   tokenOut: string
-    tokenIn: string
-    tokenOutAmount: number
-    tokenInAmount: number
+  tokenIn: string
+  tokenOutAmount: number
+  tokenInAmount: number
   limitPrice: string
   executeAfter: string
   executeBefore: string
@@ -21,6 +24,8 @@ export type LimitOrderIntent = {
 export function transformToLimitOrder(intentBatch: any): LimitOrderIntent {
   const { intents } = intentBatch
   return {
+    intentBatchHash: intentBatch.intentBatchHash,
+    executedTxs: intentBatch.executedTxs,
     chainId: Number(intentBatch.chainId),
     nonce: intentBatch.nonce,
     tokenOut: String(intents[1]?.intentArgs[0]?.value),

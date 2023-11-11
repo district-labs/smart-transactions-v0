@@ -1,10 +1,12 @@
 import { type IntentBatch } from "@district-labs/intentify-core"
+import { type DbTransaction } from "@district-labs/intentify-database"
 
 import { getStatus } from "./get-status"
 import { transformIntentQueryToIntentBatchStruct } from "./transform-intent-query-to-intent-batch-struct"
 
 export type AutomaticLiquidateIntent = {
   chainId: number
+  executedTxs: DbTransaction[]
   nonce: string
   tokenOut: string
   minBalance: string
@@ -18,6 +20,7 @@ export function transformToAutomaticLiquidate(intentBatch: any) {
   const { intents } = intentBatch
   return {
     chainId: Number(intentBatch.chainId),
+    executedTxs: intentBatch.executedTxs,
     nonce: intentBatch.nonce,
     tokenOut: String(intents[0]?.intentArgs[0]?.value),
     tokenIn: String(intents[0]?.intentArgs[1]?.value),

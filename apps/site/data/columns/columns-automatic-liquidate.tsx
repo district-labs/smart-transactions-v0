@@ -1,12 +1,14 @@
 "use client"
+
 import tokenList from "@/data/lists/token-list-testnet.json"
+import { ERC20ConvertBalance } from "@/integrations/erc20/components/erc20-convert-balance"
+
 import { ChainIdToNetworkDetails } from "@/components/blockchain/chain-id-to-network-details"
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header"
-import { IntentBatchNonceDetails } from "@/components/intent-batch-nonce-details"
-import { TagIntentBatchState } from "@/components/intent-batch/tag-intent-batch-state"
-import { StrategyTableActions } from "@/components/strategies/strategy-table-actions"
-import { ERC20ConvertBalance } from "@/integrations/erc20/components/erc20-convert-balance"
 import { ERC20DetailsFromTokenList } from "@/components/erc20/erc20-details-from-token-list"
+import { IntentBatchNonceDetails } from "@/components/intent-batch/intent-batch-nonce-details"
+import { IntentBatchTransactionsSheet } from "@/components/intent-batch/intent-batch-transactions-sheet"
+import { StrategyTableActions } from "@/components/strategies/strategy-table-actions"
 
 export const columnsAutomaticLiquidate = [
   {
@@ -15,7 +17,10 @@ export const columnsAutomaticLiquidate = [
       <DataTableColumnHeader column={column} title="Sell" />
     ),
     cell: ({ row }: any) => (
-      <ERC20DetailsFromTokenList tokenList={tokenList}  address={row.original.tokenOut as `0x${string}`} />
+      <ERC20DetailsFromTokenList
+        tokenList={tokenList}
+        address={row.original.tokenOut as `0x${string}`}
+      />
     ),
   },
   {
@@ -24,7 +29,12 @@ export const columnsAutomaticLiquidate = [
       <DataTableColumnHeader column={column} title="Swap Minimum" />
     ),
     cell: ({ row }: any) => (
-        <ERC20ConvertBalance className="text-xl font-bold" balance={row.original.balanceDelta} address={row.original.tokenOut as `0x${string}`} chainId={row.original.chainId} />
+      <ERC20ConvertBalance
+        className="text-xl"
+        balance={row.original.balanceDelta}
+        address={row.original.tokenOut as `0x${string}`}
+        chainId={row.original.chainId}
+      />
     ),
   },
   {
@@ -33,7 +43,12 @@ export const columnsAutomaticLiquidate = [
       <DataTableColumnHeader column={column} title="Maintain Balance" />
     ),
     cell: ({ row }: any) => (
-    <ERC20ConvertBalance className="text-xl font-bold" balance={row.original.minBalance} address={row.original.tokenOut as `0x${string}`} chainId={row.original.chainId} />
+      <ERC20ConvertBalance
+        className="text-xl"
+        balance={row.original.minBalance}
+        address={row.original.tokenOut as `0x${string}`}
+        chainId={row.original.chainId}
+      />
     ),
   },
   {
@@ -42,15 +57,11 @@ export const columnsAutomaticLiquidate = [
       <DataTableColumnHeader column={column} title="Buy" />
     ),
     cell: ({ row }: any) => (
-      <ERC20DetailsFromTokenList tokenList={tokenList}  address={row.original.tokenIn as `0x${string}`} />
+      <ERC20DetailsFromTokenList
+        tokenList={tokenList}
+        address={row.original.tokenIn as `0x${string}`}
+      />
     ),
-  },
-  {
-    accessorKey: "status",
-    header: ({ column }: any) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }: any) => <TagIntentBatchState state={row.original.status} />,
   },
   {
     accessorKey: "chainId",
@@ -68,6 +79,15 @@ export const columnsAutomaticLiquidate = [
     ),
     cell: ({ row }: any) => (
       <IntentBatchNonceDetails nonce={row.original.nonce} />
+    ),
+  },
+  {
+    accessorKey: "transactions",
+    header: ({ column }: any) => (
+      <DataTableColumnHeader column={column} title="Transactions" />
+    ),
+    cell: ({ row }: any) => (
+      <IntentBatchTransactionsSheet transactions={row.original.executedTxs} />
     ),
   },
   {

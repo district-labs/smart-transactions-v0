@@ -1,31 +1,31 @@
 import tokenListGoerli from "@/data/lists/token-list-testnet.json"
+import { findTokenFromList } from "@/integrations/erc20/utils/find-token-from-list"
+import { ADDRESS_ZERO } from "@district-labs/intentify-core"
 
-import FormStrategyLeverageLong from "@/components/forms/form-strategy-leverage-long"
-import { FormStrategyLimitOrder } from "@/components/forms/form-strategy-limit-order"
-import FormStrategyRecurringPayment from "@/components/forms/form-strategy-recurring-payment"
+import { FormStrategyAutomaticLending } from "@/components/strategies/form-strategy-automatic-lending"
+import { FormStrategyAutomaticLiquidate } from "@/components/strategies/form-strategy-automatic-liquidate"
+import { FormStrategyAutomaticSaving } from "@/components/strategies/form-strategy-automatic-saving"
+import FormStrategyLeverageLong from "@/components/strategies/form-strategy-leverage-long"
+import { FormStrategyLimitOrder } from "@/components/strategies/form-strategy-limit-order"
+import FormStrategyRecurringPayment from "@/components/strategies/form-strategy-recurring-payment"
 import { StrategyTable } from "@/components/tables/strategy-table"
 import { ViewFormsStrategyMeanReversion } from "@/components/view/view-forms-strategy-mean-reversion"
 import { ViewTablesStrategyMeanReversion } from "@/components/view/view-tables-strategy-mean-reversion"
 
-import { columnsLeverageLong } from "./tables/columns-leverage-long"
-import { columnsLimitOrder } from "./tables/columns-limit-order"
-import { columnsMeanReversionBuy } from "./tables/columns-mean-reversion-buy"
-import { columnsRecurringPayment } from "./tables/columns-recurring-payment"
+import { columnsAutomaticLending } from "./columns/columns-automatic-lending"
+import { columnsAutomaticLiquidate } from "./columns/columns-automatic-liquidate"
+import { columnsAutomaticSaving } from "./columns/columns-automatic-saving"
+import { columnsLeverageLong } from "./columns/columns-leverage-long"
+import { columnsLimitOrder } from "./columns/columns-limit-order"
+import { columnsMeanReversionBuy } from "./columns/columns-mean-reversion-buy"
+import { columnsRecurringPayment } from "./columns/columns-recurring-payment"
+import { transformToAutomaticLending } from "./transforms/transform-to-automatic-lending"
+import { transformToAutomaticLiquidate } from "./transforms/transform-to-automatic-liquidate"
+import { transformToAutomaticSaving } from "./transforms/transform-to-automatic-saving"
 import { transformToLeverageLong } from "./transforms/transform-to-leverage-long"
 import { transformToLimitOrder } from "./transforms/transform-to-limit-order"
 import { transformToMeanReversionBuy } from "./transforms/transform-to-mean-reversion-buy"
 import { transformToRecurringPayment } from "./transforms/transform-to-recurring-payment"
-import {FormStrategyAutomaticLending} from "@/components/strategies/form-strategy-automatic-lending"
-import {FormStrategyAutomaticSaving} from "@/components/strategies/form-strategy-automatic-saving"
-import {FormStrategyAutomaticLiquidate} from "@/components/strategies/form-strategy-automatic-liquidate"
-import { columnsAutomaticLending } from "./tables/columns-automatic-lending"
-import { transformToAutomaticLending } from "./transforms/transform-to-automatic-lending"
-import { transformToAutomaticSaving } from "./transforms/transform-to-automatic-saving"
-import { columnsAutomaticSaving } from "./tables/columns-automatic-saving"
-import { transformToAutomaticLiquidate } from "./transforms/transform-to-automatic-liquidate"
-import { columnsAutomaticLiquidate } from "./tables/columns-automatic-liquidate"
-import { ADDRESS_ZERO } from "@district-labs/intentify-core"
-import { findTokenFromList } from "@/integrations/erc20/utils/find-token-from-list"
 
 export const strategies = {
   "0x22ffb702ee9a3bd196987c66bcad309a3576c8ec14a4101b611fc694663da6ba": {
@@ -33,12 +33,12 @@ export const strategies = {
     name: "District Subscription",
     alias: "recurring-transfer",
     description:
-      "Subscribe to District Finance for 7 days. Make a daily payment of 10 DIS.",
+      "Subscribe to District Finance for 7 days. Recurring transfer of 10 DIS.",
     createdBy: {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
     },
-    supportedChains: [5],
+    chainsSupported: [5],
     overrideValues: {
       nonce: {
         type: "time",
@@ -47,7 +47,7 @@ export const strategies = {
       erc20Transfer: {
         tokenOut: findTokenFromList(tokenListGoerli, "DIS", 5),
         amountOut: 10,
-        to: ADDRESS_ZERO
+        to: ADDRESS_ZERO,
       },
     },
     IntentForm: FormStrategyRecurringPayment,
@@ -59,18 +59,17 @@ export const strategies = {
     id: "0x564369be27beaca3a73a1da91280164eaa81e9a66d5e43c2a180c78fef295505",
     name: "Limit Order",
     alias: "limit-order",
-    description:
-      "Swap tokens at a specified exchange rate and time range.",
+    description: "Swap tokens at a specified exchange rate and time range.",
     createdBy: {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
     },
-    supportedChains: [5],
+    chainsSupported: [5],
     overrideValues: {
       erc20LimitOrder: {
         tokenOut: tokenListGoerli.tokens[0],
         tokenIn: tokenListGoerli.tokens[2],
-      }
+      },
     },
     IntentForm: FormStrategyLimitOrder,
     IntentTable: StrategyTable,
@@ -81,13 +80,12 @@ export const strategies = {
     id: "0x862579b2580594878e5e916a94308de27b43bbe8f3775978d2c14964ad485da2",
     name: "Liquidate Balance",
     alias: "liquidate-balance",
-    description:
-      "Automatically liquidate a position at spot price.",
+    description: "Automatically liquidate a position at spot price.",
     createdBy: {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
     },
-    supportedChains: [5],
+    chainsSupported: [5],
     overrideValues: {},
     IntentForm: FormStrategyAutomaticLiquidate,
     IntentTable: StrategyTable,
@@ -99,12 +97,12 @@ export const strategies = {
     name: "Recurring Prize Savings Deposit",
     alias: "recurring-prize-savings-deposit",
     description:
-      "Automatically deposit into a prize savings account for a chance to win prizes.",
+      "Automatically deposit into a prize savings account and win prizes.",
     createdBy: {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
     },
-    supportedChains: [],
+    chainsSupported: [],
     overrideValues: {},
     IntentForm: FormStrategyAutomaticSaving,
     IntentTable: StrategyTable,
@@ -115,13 +113,12 @@ export const strategies = {
     id: "0xd5720c3e00f3ea3b1179e3b10c7a033f9db23cad12b68ddabf7c392b604812a3",
     name: "Automatic Lending",
     alias: "automatic-lending",
-    description:
-      "Automatically lend an asset using the Aave V3 protocol.",
+    description: "Automatically lend an asset using the Aave V3 protocol.",
     createdBy: {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
     },
-    supportedChains: [],
+    chainsSupported: [],
     overrideValues: {},
     IntentForm: FormStrategyAutomaticLending,
     IntentTable: StrategyTable,
@@ -132,13 +129,12 @@ export const strategies = {
     id: "0x89033b533d9a8e6875cfd119a1bbaa4727cdd207c9b38a234022402b30e0a861",
     name: "Leverage Long",
     alias: "leveraged-long",
-    description:
-      "Leverage long an asset by borrowing and buying more of it.",
+    description: "Leverage long an asset by borrowing and buying more of it.",
     createdBy: {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
     },
-    supportedChains: [],
+    chainsSupported: [],
     overrideValues: {},
     IntentForm: FormStrategyLeverageLong,
     IntentTable: StrategyTable,
@@ -155,11 +151,11 @@ export const strategies = {
       name: "District Finance",
       pfp: "/apple-touch-icon.png",
     },
-    supportedChains: [],
+    chainsSupported: [],
     overrideValues: {},
     IntentForm: ViewFormsStrategyMeanReversion,
     IntentTable: ViewTablesStrategyMeanReversion,
     transformData: transformToMeanReversionBuy,
     tableColumns: columnsMeanReversionBuy,
-  }
+  },
 }

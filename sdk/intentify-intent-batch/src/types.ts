@@ -30,3 +30,19 @@ export type ValidationResponse = {
     msg: string
   }[]
 }
+
+export type IntentModuleDecodedArgs = {
+  name: string
+  type: string
+  value: string
+}
+
+export type IntentModuleDecoded = {
+  intentId: string
+  name: string
+  root: `0x${string}`
+  target: `0x${string}`
+  data: `0x${string}`
+  value: bigint
+  intentArgs: IntentModuleDecodedArgs[]
+}

@@ -11,7 +11,7 @@ import {
 import { TimeFromDate } from "@/components/shared/time-from-date"
 
 import { Address } from "../blockchain/address"
-import { SheetIntentBatchDetails } from "./sheet-intent-batch-details"
+import { SheetIntentBatchDetails } from "../intent-batch/intent-batch-details-sheet"
 
 type IntentBatchTable = {
   data: DBIntentBatchActiveItem[]

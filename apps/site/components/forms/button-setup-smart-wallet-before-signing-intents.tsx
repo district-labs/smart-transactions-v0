@@ -1,9 +1,10 @@
 import * as React from "react"
+import { strategies } from "@/data/strategies"
 import { ButtonSiweSignIn } from "@/integrations/siwe/components/button-siwe-sign-in"
 import { useIsSignedIn } from "@/integrations/siwe/hooks/use-is-signed-in"
 import {
   IsSafeIntentModuleDisabled,
-  useIsSafeIntentModuleEnabled
+  useIsSafeIntentModuleEnabled,
 } from "@district-labs/intentify-core-react"
 import {
   Button,
@@ -18,7 +19,6 @@ import { useUser } from "@/hooks/use-user"
 import WalletConnectCustom from "../blockchain/wallet-connect-custom"
 import { LinkComponent } from "../shared/link-component"
 import { ViewCreateAndSetupSmartWallet } from "../view/view-create-and-setup-smart-wallet"
-import { strategies } from "@/data/strategies"
 
 type ButtonSetupSmartWalletBeforeSigningIntent =
   React.HTMLAttributes<HTMLElement> & {
@@ -27,17 +27,14 @@ type ButtonSetupSmartWalletBeforeSigningIntent =
 
 export const ButtonSetupSmartWalletBeforeSigningIntent = ({
   children,
-  strategyId
+  strategyId,
 }: ButtonSetupSmartWalletBeforeSigningIntent) => {
   const chainId = useChainId()
   const selectedStrategy = Object.values(strategies).find((strategy: any) => {
     return strategy.id === strategyId || strategy.alias === strategyId
   })
   const { address } = useAccount()
-  const {
-    data: userData,
-    isSuccess: userIsSuccess,
-  } = useUser()
+  const { data: userData, isSuccess: userIsSuccess } = useUser()
   const isSmartWalletModuleEnabled = useIsSafeIntentModuleEnabled()
   const isSignedIn = useIsSignedIn()
 
@@ -55,11 +52,11 @@ export const ButtonSetupSmartWalletBeforeSigningIntent = ({
   }
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  if(!selectedStrategy?.supportedChains?.includes(chainId)) {
+  if (!selectedStrategy?.chainsSupported?.includes(chainId)) {
     return (
-        <Button variant="outline" className="w-full flex items-center gap-x-1">
-          Support Coming Soon
-        </Button>
+      <Button variant="outline" className="flex w-full items-center gap-x-1">
+        Support Coming Soon
+      </Button>
     )
   }
 
@@ -90,7 +87,7 @@ export const ButtonSetupSmartWalletBeforeSigningIntent = ({
           </div>
         </SheetTrigger>
         <SheetContent side={"bottom"} className="h-full">
-          <ViewCreateAndSetupSmartWallet/>
+          <ViewCreateAndSetupSmartWallet />
         </SheetContent>
       </Sheet>
     )

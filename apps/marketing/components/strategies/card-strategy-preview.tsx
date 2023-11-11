@@ -1,10 +1,10 @@
 import * as React from "react"
+import { env } from "@/env.mjs"
 import { Card, CardHeader } from "@district-labs/ui-react"
 
 import { cn } from "@/lib/utils"
 
 import { LinkComponent } from "../shared/link-component"
-import { env } from "@/env.mjs"
 
 type CardStrategyPreview = React.HTMLAttributes<HTMLElement> & {
   id?: string

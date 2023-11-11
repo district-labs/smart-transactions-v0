@@ -4,7 +4,7 @@ import {
   hashTypedData,
   keccak256,
   parseAbiParameters,
-  toBytes
+  toBytes,
 } from "viem";
 import { EIP712Domain, Intent, IntentBatch } from "./types";
 import { eip712Types } from "./eip712-types";
@@ -28,18 +28,25 @@ const INTENTBATCH_TYPEHASH = keccak256(
 
 // Define the TypeScript functions
 export function getEIP712DomainPacketHash(domain: EIP712Domain): `0x${string}` {
-  const encodedData = encodeAbiParameters([
-      {name:"EIP712DOMAIN_TYPEHASH", type:"bytes32"},
-      {name:"name", type:"string"},
-      {name:"version", type:"string"},
-      {name:"chainId", type:"uint256"},
-      {name:"verifyingContract", type:"address"}
+  const encodedData = encodeAbiParameters(
+    [
+      { name: "EIP712DOMAIN_TYPEHASH", type: "bytes32" },
+      { name: "name", type: "string" },
+      { name: "version", type: "string" },
+      { name: "chainId", type: "uint256" },
+      { name: "verifyingContract", type: "address" },
     ],
-      [EIP712DOMAIN_TYPEHASH, keccak256(toBytes(domain.name)), keccak256(toBytes(domain.version)), domain.chainId, domain.verifyingContract])
-    const DOMAIN_SEPARATOR = keccak256(encodedData)
-return DOMAIN_SEPARATOR
+    [
+      EIP712DOMAIN_TYPEHASH,
+      keccak256(toBytes(domain.name)),
+      keccak256(toBytes(domain.version)),
+      domain.chainId,
+      domain.verifyingContract,
+    ],
+  );
+  const DOMAIN_SEPARATOR = keccak256(encodedData);
+  return DOMAIN_SEPARATOR;
 }
-
 
 export function getIntentPacketHash(intent: Intent): `0x${string}` {
   return keccak256(

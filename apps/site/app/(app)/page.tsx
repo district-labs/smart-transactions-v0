@@ -17,7 +17,8 @@ export default function Home() {
           Smart Transactions
         </h1>
         <Balancer className="my-2 max-w-3xl text-lg text-muted-foreground sm:text-xl">
-          Interact with blockchains without the hassle<br/>
+          Interact with blockchains without the hassle
+          <br />
           <span className="font-bold">
             Unlock the full power of Decentralized Finance
           </span>
@@ -26,12 +27,7 @@ export default function Home() {
       <section className="h-full px-10 lg:px-20">
         <div className="max-w-screen-3xl mx-auto grid gap-10 text-left lg:grid-cols-3">
           {Object.values(strategies).map((strategy) => {
-            return (
-              <CardStrategyPreview
-                key={strategy.id}
-                {...strategy}
-              />
-            )
+            return <CardStrategyPreview key={strategy.id} {...strategy} />
           })}
         </div>
       </section>

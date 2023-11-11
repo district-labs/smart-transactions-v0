@@ -61,7 +61,7 @@ export function VaultSelector({
     <>
       <button
         className={(cn("w-fit rounded-full"), className)}
-        onClick={() => !disabled ? setOpen(true) : undefined}
+        onClick={() => (!disabled ? setOpen(true) : undefined)}
       >
         {selectedVault && (
           <img

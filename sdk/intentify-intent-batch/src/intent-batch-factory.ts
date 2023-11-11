@@ -7,7 +7,7 @@ import {
 } from "viem"
 
 import { IntentBatchManager } from "./intent-batch-manager"
-import { ChainToPublicClient, IntentModule } from "./types"
+import { ChainToPublicClient, IntentModule, IntentModuleDecoded } from "./types"
 
 export class IntentBatchFactory {
   modules: IntentModule[]
@@ -126,7 +126,7 @@ export class IntentBatchFactory {
     return (await Promise.all(results)).filter((value) => value !== undefined)
   }
 
-  decodeIntentBatch(intentBatch: IntentBatch) {
+  decodeIntentBatch(intentBatch: IntentBatch): IntentModuleDecoded[] {
     return intentBatch.intents.map((intent) => {
       const module = this.getModuleByAddress(intent.target)
       const decoded = this.decode(module.abi, intent.data)

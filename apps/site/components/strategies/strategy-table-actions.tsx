@@ -1,5 +1,4 @@
 import * as React from "react"
-import { toObject } from "@/data/tables/to-object"
 import { IntentBatch } from "@district-labs/intentify-core"
 import { CancelIntentBundle } from "@district-labs/intentify-core-react"
 import { IntentBatchQuery } from "@district-labs/intentify-database"
@@ -9,12 +8,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@district-labs/ui-react"
-import { Copy, Info, XCircle } from "lucide-react"
+import { Info, XCircle } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-import { SheetIntentBatchDetails } from "../admin/sheet-intent-batch-details"
-import { ButtonCopyIntentBatchState } from "../forms/button-copy-intent-batch-state"
+import { SheetIntentBatchDetails } from "../intent-batch/intent-batch-details-sheet"
 
 type StrategyTableActions = React.HTMLAttributes<HTMLElement> & {
   intentBatch: IntentBatch

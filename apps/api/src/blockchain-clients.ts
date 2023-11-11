@@ -5,15 +5,11 @@ import { foundry, goerli, mainnet } from "viem/chains";
 import { env } from "./env";
 
 export const accountShared = privateKeyToAccount(
-  env.PRIVATE_KEY as `0x${string}`
+  env.PRIVATE_KEY as `0x${string}`,
 );
 
-const transportMainnet = http(
-  env.MAINNET_RPC_URL
-);
-const transportGoerli = http(
-  env.GOERLI_RPC_URL
-);
+const transportMainnet = http(env.MAINNET_RPC_URL);
+const transportGoerli = http(env.GOERLI_RPC_URL);
 
 const localGoerli = http(`http://localhost:8545`);
 

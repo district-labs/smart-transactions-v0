@@ -1,7 +1,7 @@
+import { useGetSafeAddress } from "@district-labs/intentify-core-react"
 import { Loader2 } from "lucide-react"
-import { BaseError, parseEther, parseUnits } from "viem"
-import { Address, useAccount, useWaitForTransaction } from "wagmi"
-import { symbol } from "zod"
+import { parseUnits, type BaseError } from "viem"
+import { useWaitForTransaction, type Address } from "wagmi"
 
 import { ContractWriteButton } from "@/components/blockchain/contract-write-button"
 import { TransactionStatus } from "@/components/blockchain/transaction-status"
@@ -25,14 +25,14 @@ export function Erc20MintTestnet({
   decimals,
   symbol,
 }: Erc20MintTestnetProps) {
-  const { address: accountAddress } = useAccount()
+  const safeAddress = useGetSafeAddress()
 
   const { config, error, isError } = usePrepareErc20MintableMint({
     address,
-    args: accountAddress
-      ? [accountAddress, parseUnits(`${Number(amount)}`, decimals)]
+    args: safeAddress
+      ? [safeAddress, parseUnits(`${Number(amount)}`, decimals)]
       : undefined,
-    enabled: Boolean(address),
+    enabled: Boolean(!!safeAddress),
   })
 
   const {

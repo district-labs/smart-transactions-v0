@@ -28,14 +28,12 @@ export const userProfileIsSignedIn = async (
     if (!user) {
       throw new Error("User not found");
     }
-    return response
-      .status(200)
-      .json({
-        address: session.address,
-        isLoggedIn: !!session.address,
-        isRegistered: user.isRegistered,
-        emailSaved: !!user.email,
-      });
+    return response.status(200).json({
+      address: session.address,
+      isLoggedIn: !!session.address,
+      isRegistered: user.isRegistered,
+      emailSaved: !!user.email,
+    });
   } catch (error) {
     next(error);
   }

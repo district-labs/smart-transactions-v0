@@ -1,12 +1,10 @@
 import type { Token, TokenList } from "@district-labs/intentify-core"
 
-import { Input } from "./fields/input"
-import { TokenSelect, TokenSelectConfig } from "./fields/token-select"
-import {
-  TokenSelectAndAmountConfig,
-} from "./fields/token-select-and-amount"
-import { TokenAmount } from "./fields/token-amount"
 import { getValueFromPath } from "../utils"
+import { Input } from "./fields/input"
+import { TokenAmount } from "./fields/token-amount"
+import { TokenSelect, TokenSelectConfig } from "./fields/token-select"
+import { TokenSelectAndAmountConfig } from "./fields/token-select-and-amount"
 
 export type IntentErc20SwapSpotPriceBalanceTokenOut = {
   erc20SwapSpotPriceBalanceTokenOut: {
@@ -131,7 +129,11 @@ export const intentErc20SwapSpotPriceBalanceTokenOutFields = {
       intentBatch={intentBatch}
       config={config}
       setIntentBatch={setIntentBatch}
-      decimals={getValueFromPath(intentBatch, ["erc20SwapSpotPriceBalanceTokenOut", "tokenOut", "decimals"])}
+      decimals={getValueFromPath(intentBatch, [
+        "erc20SwapSpotPriceBalanceTokenOut",
+        "tokenOut",
+        "decimals",
+      ])}
       path={["erc20SwapSpotPriceBalanceTokenOut", "minBalance"]}
     />
   ),
@@ -150,7 +152,11 @@ export const intentErc20SwapSpotPriceBalanceTokenOutFields = {
       intentBatch={intentBatch}
       config={config}
       setIntentBatch={setIntentBatch}
-      decimals={getValueFromPath(intentBatch, ["erc20SwapSpotPriceBalanceTokenOut", "tokenOut", "decimals"])}
+      decimals={getValueFromPath(intentBatch, [
+        "erc20SwapSpotPriceBalanceTokenOut",
+        "tokenOut",
+        "decimals",
+      ])}
       path={["erc20SwapSpotPriceBalanceTokenOut", "balanceDelta"]}
     />
   ),
