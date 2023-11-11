@@ -20,7 +20,7 @@ export const StrategyChainIdIsNotSupported = ({
 
   if (!currentChain) return null
 
-  if (isChainSupported) return <>children</>
+  if (isChainSupported) return <>{children}</>
 
   return null
 }

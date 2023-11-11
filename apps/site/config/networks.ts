@@ -17,10 +17,11 @@ const goerli = {
 export const ETH_CHAINS_TEST = [goerli, sepolia, hardhat]
 export const ETH_CHAINS_L2_TEST = [optimismGoerli]
 export const ETH_CHAINS_PROD = [goerli, sepolia, hardhat]
+export const ETH_CHAINS_L2_PROD = [optimismGoerli]
 export const ETH_CHAINS_DEV =
   env.NEXT_PUBLIC_PROD_NETWORKS_DEV === "true"
     ? [...ETH_CHAINS_PROD, ...ETH_CHAINS_TEST, ...ETH_CHAINS_L2_TEST]
-    : [...ETH_CHAINS_TEST, ...ETH_CHAINS_L2_TEST]
+    : [...ETH_CHAINS_TEST, ...ETH_CHAINS_L2_PROD]
 
 export const CHAINS: Chain[] =
   process.env.NODE_ENV === "production" ? ETH_CHAINS_PROD : ETH_CHAINS_DEV
