@@ -1,7 +1,6 @@
-import { env } from "@/env.mjs"
-import { Address } from "wagmi"
-import { SignMessageArgs } from "wagmi/dist/actions"
-
+import { postAuthSessionApi } from "@district-labs/intentify-api-actions"
+import { type Address } from "wagmi"
+import { type SignMessageArgs } from "wagmi/dist/actions"
 import { siweMessage } from "./siwe-message"
 
 interface SiweSignInProps {
@@ -23,17 +22,15 @@ export const siweSignIn = async ({
   })
 
   // 2. Verify signature
-  const verifyRes = await fetch(`${env.NEXT_PUBLIC_API_URL}/auth/sign-in`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ message, signature }),
+  const verifyRes = await postAuthSessionApi({
+    message,
+    signature,
   })
 
-  if (!verifyRes.ok) throw new Error("Error verifying message")
-  if (verifyRes.status === 200) {
-    dispatchEvent(new Event("verified"))
-  }
+
+  if(verifyRes.ok) {
+ dispatchEvent(new Event("verified"))
+  } else {
+throw new Error("Error verifying message")
+  }  
 }

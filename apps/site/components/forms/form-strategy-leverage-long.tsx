@@ -1,6 +1,5 @@
 "use client"
 
-import { useCallback, useState } from "react"
 import { intentBatchFactory } from "@/core/intent-batch-factory"
 import tokenListGoerli from "@/data/lists/token-list-testnet.json"
 import { functionTokenListByChainId } from "@/integrations/erc20/utils/filter-token-list-by-chain-id"
@@ -16,6 +15,7 @@ import type { IntentModule } from "@district-labs/intentify-intent-batch"
 import { StrategyLeverageLong } from "@district-labs/intentify-strategy-react"
 import { Button } from "@district-labs/ui-react"
 import { Loader2 } from "lucide-react"
+import { useCallback, useState } from "react"
 import { useChainId, useSignTypedData } from "wagmi"
 
 import { useActionIntentBatchCreate } from "@/hooks/intent-batch/user/use-intent-batch-create"
@@ -61,11 +61,18 @@ export function FormStrategyLeverageLong({
         })
       )
       mutateAsync({
+       ...intentBatchStruct,
+       intentBatchHash: intentBatchStruct.intentBatchHash as string,
+        strategyId,
         chainId,
-        intentBatch: intentBatchStruct,
-        intentBatchMetadata,
+        userId: address,
         signature,
-        strategyId: strategyId,
+        intents: intentBatchStruct.intents.map((intent) => ({
+          root: intent.root,
+          intentArgs:[],
+          intentBatchId: intentBatchStruct.intentBatchHash as string,
+          target: intent.target
+        })),
       })
     },
     [signTypedDataAsync, chainId, intentifyAddress, mutateAsync, strategyId]

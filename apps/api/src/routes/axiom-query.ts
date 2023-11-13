@@ -3,7 +3,7 @@ import * as axiomQueryController from "../controllers/axiom-query";
 
 const axiomQueryRouter = express.Router();
 
-axiomQueryRouter.get("/", axiomQueryController.getAxiomQuery);
-axiomQueryRouter.post("/", axiomQueryController.postAxiomQuery);
+axiomQueryRouter.post("/get-query", axiomQueryController.getAxiomQuery);
+axiomQueryRouter.post("/send-query", axiomQueryController.postAxiomQuery);
 
 export { axiomQueryRouter };

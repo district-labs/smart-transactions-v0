@@ -1,5 +1,5 @@
-export const SEED_USER_ADDRESS = "0x4596039A69602b115752006Ef8425f43d6E80a6f"
-export const STRATEGY_ID = 1
+export const SEED_USER_ADDRESS = "0x4596039A69602b115752006Ef8425f43d6E80a6f";
+export const STRATEGY_ID = 1;
 
 export const INTENT_BATCH_DATA = {
   intentBatchHash:
@@ -59,4 +59,4 @@ export const INTENT_BATCH_DATA = {
       ],
     },
   ],
-}
+};

@@ -1,1 +1,2 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL
+// TODO: Move to .env file
+export const API_URL = "http://localhost:3002";

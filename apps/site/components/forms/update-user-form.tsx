@@ -1,6 +1,5 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
@@ -9,6 +8,7 @@ import { type z } from "zod"
 
 import { userSchema } from "@/lib/validations/user"
 
+import { putUserApi } from "@district-labs/intentify-api-actions"
 import { Icons } from "../icons"
 import { Button } from "../ui/button"
 import {
@@ -32,15 +32,10 @@ export function UpdateUserForm() {
 
   const updateUserMutation = useMutation({
     mutationFn: (data: UserInput) => {
-      return fetch("/api/user", {
-        method: "POST",
-        body: JSON.stringify({
-          ...data,
-          address,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      if(!address) throw new Error("User not found")
+      return  putUserApi({
+        address,
+        ...data,
       })
     },
     onSuccess: () => {

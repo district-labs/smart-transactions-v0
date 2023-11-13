@@ -1,17 +1,22 @@
+import { getIntentBatchesApi } from "@district-labs/intentify-api-actions"
 import { useGetSafeAddress } from "@district-labs/intentify-core-react"
-import type { IntentBatchQuery } from "@district-labs/intentify-database"
 import { useQuery } from "@tanstack/react-query"
 
 export function useGetIntentBatchFind() {
   const address = useGetSafeAddress()
   return useQuery({
     queryKey: ["intent-batch", "all", address],
-    queryFn: async (): Promise<IntentBatchQuery[] | undefined> => {
+    queryFn: async () => {
       try {
-        const res = await fetch(`/api/intent-batch/find?root=${address}`)
-        const data = await res.json()
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return data
+       
+       const intentBatches = await  getIntentBatchesApi({
+        root: address,
+        expand: {
+          intents: true,
+        }
+        
+       })
+       return intentBatches
       } catch (error) {
         console.log(error, "error")
       }

@@ -6,7 +6,7 @@ type IsSignedIn = React.HTMLAttributes<HTMLElement>
 
 export const IsSignedIn = ({ children }: IsSignedIn) => {
   const { data: user } = useUser()
-  if (user?.isLoggedIn) return <>{children}</>
+  if (user) return <>{children}</>
 
   return null
 }

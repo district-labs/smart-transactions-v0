@@ -1,5 +1,5 @@
 import { env } from "@/env.mjs"
-import { intentBatchCreate } from "@district-labs/intentify-api-actions"
+import { postIntentBatchApi } from "@district-labs/intentify-api-actions"
 import { useGetSafeAddress } from "@district-labs/intentify-core-react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
@@ -13,7 +13,11 @@ export function useActionIntentBatchCreate() {
   const address = useGetSafeAddress()
 
   const mutationResult = useMutation(["intent-batch-create"], {
-    mutationFn: intentBatchCreate,
+    mutationFn: async (createIntentBatchParams: Parameters<typeof postIntentBatchApi>[0]) => {
+      const intentBatch = await postIntentBatchApi(createIntentBatchParams)
+
+      return {result: intentBatch, intentBatchHash: createIntentBatchParams.intentBatchHash}
+    },
     onSuccess: async ({intentBatchHash}) => {
       await queryClient.invalidateQueries(["intent-batch", "all"])
       await queryClient.invalidateQueries(["intent-batch", "all", address])

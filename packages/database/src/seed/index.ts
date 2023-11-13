@@ -1,15 +1,15 @@
-import "dotenv/config"
-import { sql } from "drizzle-orm"
-import { db } from "../.."
+import "dotenv/config";
+import { sql } from "drizzle-orm";
+import { db } from "../..";
 import {
   emailPreferences,
   intentBatch,
   intents,
   strategies,
   users,
-} from "../schema"
-import { INTENT_BATCH_DATA, SEED_USER_ADDRESS } from "./data"
-import { strategiesBeta } from "./strategies"
+} from "../schema";
+import { INTENT_BATCH_DATA, SEED_USER_ADDRESS } from "./data";
+import { strategiesBeta } from "./strategies";
 
 async function main() {
   await db.transaction(async (tx) => {
@@ -36,18 +36,18 @@ async function main() {
     //   })
     //   .onDuplicateKeyUpdate({ set: { id: sql`id` } })
 
-    Promise.all(strategiesBeta.map(async strategy => {
-        await tx
-        .insert(strategies)
-        .values({
+    Promise.all(
+      strategiesBeta.map(async (strategy) => {
+        await tx.insert(strategies).values({
           id: strategy.id,
           alias: strategy.alias,
           name: strategy.name,
           description: strategy.description,
           managerId: SEED_USER_ADDRESS,
-        })
+        });
         // .onDuplicateKeyUpdate({ set: { id: sql`id` } })
-      }))
+      }),
+    );
 
     // const {
     //   nonce,
@@ -57,7 +57,7 @@ async function main() {
     //   root,
     //   signature,
     // } = INTENT_BATCH_DATA
-    
+
     // await tx.insert(intentBatch).values({
     //   intentBatchHash,
     //   nonce,
@@ -78,10 +78,10 @@ async function main() {
     //     intentBatchId: intentBatchHash,
     //   }))
     // )
-  })
+  });
 }
 
 main().catch((e) => {
-  console.error(e)
-  process.exit(1)
-})
+  console.error(e);
+  process.exit(1);
+});

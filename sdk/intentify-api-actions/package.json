@@ -32,6 +32,8 @@
     "vitest": "^0.34.5"
   },
   "dependencies": {
-    "viem": "^1.12.1"
+    "@district-labs/intentify-database": "workspace:^",
+    "viem": "^1.12.1",
+    "zod": "^3.22.4"
   }
 }

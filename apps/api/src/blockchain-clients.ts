@@ -1,5 +1,5 @@
-import type { PublicClient, WalletClient } from "viem";
-import { createPublicClient, createWalletClient, http } from "viem";
+
+import { createPublicClient, createWalletClient, http, type PublicClient, type WalletClient } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { foundry, goerli, mainnet } from "viem/chains";
 import { env } from "./env";

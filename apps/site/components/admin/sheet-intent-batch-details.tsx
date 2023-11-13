@@ -1,5 +1,4 @@
-import type { IntentBatchQuery } from "@district-labs/intentify-database"
-import { Info } from "lucide-react"
+import type { DbIntentBatchWithRelations } from "@district-labs/intentify-database"
 
 import {
   Sheet,
@@ -17,7 +16,7 @@ import { LimitOrderIntent } from "./limit-order-intent"
 import { TimestampRangeIntent } from "./timestamp-range-intent"
 
 type SheetIntentBatchDetails = React.HTMLAttributes<HTMLElement> & {
-  data: IntentBatchQuery
+  data: DbIntentBatchWithRelations
 }
 
 export const SheetIntentBatchDetails = ({
@@ -80,13 +79,13 @@ export const SheetIntentBatchDetails = ({
                 <Row
                   classNameValue="font-bold"
                   label="Total Intents"
-                  value={data.intents.length}
+                  value={data?.intents?.length}
                 />
               </div>
             </div>
             <hr className="my-4" />
             <div className="flex flex-col gap-y-5">
-              {data.intents.map((intent) => {
+              {data?.intents?.map((intent) => {
                 if (
                   intent.intentId ===
                   "0x588617bbd20062df159d68794269d3d6318bb44bdea3a6963d146ad5aafdb0be"

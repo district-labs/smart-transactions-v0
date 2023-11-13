@@ -10,7 +10,7 @@ import { SiweMessage } from "siwe";
 import { z } from "zod";
 import { ironOptions } from "../../iron-session";
 
-const getAuthSessionSchema = z.object({
+export const getAuthSessionSchema = z.object({
   signature: z.string(),
   message: z.object({
     domain: z.string(),

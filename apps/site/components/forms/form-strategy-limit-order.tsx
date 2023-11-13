@@ -62,9 +62,12 @@ const intentBatchStructRef = useRef<IntentBatch>()
     ) => {
       intentBatchStructRef.current = intentBatchStruct
       const signature = await signTypedDataAsync()
-
+      // eslint-disable-next-line
+        // @ts-ignore
         mutateAsync({
         chainId,
+         // eslint-disable-next-line
+        // @ts-ignore
         intentBatch: intentBatchStruct,
         intentBatchMetadata,
         signature,

@@ -1,6 +1,8 @@
 "use client"
 
-import { env } from "@/env.mjs"
+import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
+import { cn } from "@/lib/utils"
+import { getAuthUserApi, postUserApi } from "@district-labs/intentify-api-actions"
 import {
   Button,
   Form,
@@ -12,9 +14,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useForm } from "react-hook-form"
 
-import { cn } from "@/lib/utils"
-import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
-
 import { Icons } from "../icons"
 import { toast } from "../ui/use-toast"
 
@@ -25,18 +24,16 @@ export function FormUserRegister({ currentColor }: { currentColor: string }) {
   const form = useForm<any>()
 
   const updateUserMutation = useMutation({
-    mutationFn: (data: { email: string }) => {
-      return fetch(`${env.NEXT_PUBLIC_API_URL}/user/register`, {
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify({
-          ...data,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+     mutationFn: async function registerUser(data: { email: string }){
+      const authUser = await getAuthUserApi()
+      if(!authUser) throw new Error("User not found")
+      const user = await postUserApi({
+        address: authUser?.address,
+        email: data.email,
       })
-    },
+      return user
+     }
+   ,
     onSuccess: () => {
       queryClient.invalidateQueries(["user", "profile"])
       toast({
