@@ -47,7 +47,7 @@ export function FormUserProfile() {
 
   const updateUserMutation = useMutation({
     mutationFn: (data: UserInput) => {
-      return fetch(`${env.NEXT_PUBLIC_API_URL}/user/profile`, {
+      return fetch(`${env.NEXT_PUBLIC_API_URL}user/profile`, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify({

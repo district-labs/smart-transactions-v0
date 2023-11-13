@@ -1,0 +1,11 @@
+import { Router } from "express";
+import * as teamsUserController from "../../controllers/user/team";
+const router = Router();
+router.get("/", teamsUserController.getTeams);
+router.get("/:id", teamsUserController.getTeamById);
+router.post("/", teamsUserController.createTeam);
+router.post("/invite", teamsUserController.createInviteToTeam);
+router.get("/invite/:teamId", teamsUserController.getTeamInvite);
+router.post("/invite/:teamId", teamsUserController.acceptTeamInvite);
+router.post("/strategy", teamsUserController.addStrategyToTeam);
+export default router;

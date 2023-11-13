@@ -47,7 +47,7 @@ export function FormUserEmailPreferences() {
 
   const updateUserMutation = useMutation({
     mutationFn: (data: EmailPreferencesInput) => {
-      return fetch(`${env.NEXT_PUBLIC_API_URL}/user/email-preferences`, {
+      return fetch(`${env.NEXT_PUBLIC_API_URL}user/email-preferences`, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify({

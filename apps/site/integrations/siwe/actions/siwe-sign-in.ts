@@ -23,7 +23,7 @@ export const siweSignIn = async ({
   })
 
   // 2. Verify signature
-  const verifyRes = await fetch(`${env.NEXT_PUBLIC_API_URL}/auth/sign-in`, {
+  const verifyRes = await fetch(`${env.NEXT_PUBLIC_API_URL}auth/sign-in`, {
     method: "POST",
     credentials: "include",
     headers: {

@@ -10,7 +10,7 @@ const adjustPriceBody = {
 
 const baseUrl = env.VERCEL_URL
   ? "https://" + env.VERCEL_URL
-  : "http://localhost:3000"
+  : "http://localhost:3000/"
 
 export async function GET() {
   try {

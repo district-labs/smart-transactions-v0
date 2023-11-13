@@ -9,7 +9,7 @@ import {
   users,
 } from "../schema"
 import { INTENT_BATCH_DATA, SEED_USER_ADDRESS } from "./data"
-import { strategiesBeta } from "./strategies"
+import { strategiesBeta, strategyLeverageLong, strategyMeanReversion } from "./strategies"
 
 async function main() {
   await db.transaction(async (tx) => {
@@ -36,18 +36,40 @@ async function main() {
     //   })
     //   .onDuplicateKeyUpdate({ set: { id: sql`id` } })
 
-    Promise.all(strategiesBeta.map(async strategy => {
-        await tx
-        .insert(strategies)
-        .values({
-          id: strategy.id,
-          alias: strategy.alias,
-          name: strategy.name,
-          description: strategy.description,
-          managerId: SEED_USER_ADDRESS,
-        })
-        // .onDuplicateKeyUpdate({ set: { id: sql`id` } })
-      }))
+    // Promise.all(strategiesBeta.map(async strategy => {
+    //     await tx
+    //     .insert(strategies)
+    //     .values({
+    //       id: strategy.id,
+    //       alias: strategy.alias,
+    //       name: strategy.name,
+    //       description: strategy.description,
+    //       managerId: SEED_USER_ADDRESS,
+    //     })
+    //     // .onDuplicateKeyUpdate({ set: { id: sql`id` } })
+    //   }))
+
+      await tx
+      .insert(strategies)
+      .values({
+        id: strategyLeverageLong.id,
+        alias: strategyLeverageLong.alias,
+        name: strategyLeverageLong.name,
+        description: strategyLeverageLong.description,
+        managerId: SEED_USER_ADDRESS,
+      })
+      .onDuplicateKeyUpdate({ set: { id: sql`id` } })
+
+      await tx
+      .insert(strategies)
+      .values({
+        id: strategyMeanReversion.id,
+        alias: strategyMeanReversion.alias,
+        name: strategyMeanReversion.name,
+        description: strategyMeanReversion.description,
+        managerId: SEED_USER_ADDRESS,
+      })
+      .onDuplicateKeyUpdate({ set: { id: sql`id` } })
 
     // const {
     //   nonce,

@@ -38,8 +38,8 @@ export const strategyRecurringTransfer = {
 
 export const strategiesBeta = [
   // strategyLimitOrder,
-  // strategyLeverageLong,
-  // strategyMeanReversion,
-  strategyRecurringTransfer
+  strategyLeverageLong,
+  strategyMeanReversion,
+  // strategyRecurringTransfer
   // strategySmartCash
 ]

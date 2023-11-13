@@ -11,6 +11,7 @@ import serviceEventsRoutes from "./routes/services/events";
 import intentBatchUserRoutes from "./routes/user/intent-batch";
 import profileUserRoutes from "./routes/user/profile";
 import strategyUserRoutes from "./routes/user/strategy";
+import teamRoutes from "./routes/user/team";
 
 const PORT = env.PORT;
 const app = express();
@@ -30,6 +31,7 @@ app.use(express.json());
 // Route groups
 app.use("/auth", authRoutes);
 app.use("/user", profileUserRoutes);
+app.use("/team", teamRoutes);
 app.use("/intent-batch", intentBatchUserRoutes);
 app.use("/strategy", strategyUserRoutes);
 app.use("/admin/intent-batch", intentBatchAdminRoutes);

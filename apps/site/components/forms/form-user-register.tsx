@@ -26,7 +26,7 @@ export function FormUserRegister({ currentColor }: { currentColor: string }) {
 
   const updateUserMutation = useMutation({
     mutationFn: (data: { email: string }) => {
-      return fetch(`${env.NEXT_PUBLIC_API_URL}/user/register`, {
+      return fetch(`${env.NEXT_PUBLIC_API_URL}user/register`, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify({

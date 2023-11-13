@@ -1,5 +1,19 @@
 import { db, eq } from "@district-labs/intentify-database";
 
+export const getStrategiesFromDB = async (): Promise<any> => {
+  return await db.query.strategies.findMany({
+    with: {
+      manager: {
+        columns: {
+          address: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+    },
+  });
+};
+
 export const getStrategiesActiveFromDB = async (
   root: string,
 ): Promise<
