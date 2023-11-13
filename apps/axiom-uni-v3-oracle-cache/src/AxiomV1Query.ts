@@ -1,13 +1,11 @@
 import { ponder } from "@/generated";
 
-const PROOF_GENERATION_ADDRESS = "0xf84B4AbfcC1E062aa54D738f2ABE00c1B85090DF"
-
 ponder.on("AxiomV1Query:QueryInitiatedOnchain", async ({event,context}) => {
 
   // Only process events for the proof generator address
   // This cannot be implemented as a ponder filter because the event
   // parameters are not indexed
-  if(event.params.refundee !== PROOF_GENERATION_ADDRESS) return
+  if(event.params.refundee !== process.env.PROOF_GENERATION_ADDRESS) return
 
   const {AxiomQuery } = context.entities
 
@@ -35,6 +33,7 @@ ponder.on("AxiomV1Query:QueryFulfilled", async ({event,context}) => {
      id: keccakQueryResponse,
   data: {
     state: "FULFILLED",
+    
   }
     })
 })
@@ -42,5 +41,4 @@ ponder.on("AxiomV1Query:QueryFulfilled", async ({event,context}) => {
 // TODO:
 // - Filter events for query initiated only for defender address
 // - Get all the events for query fulfilled
-// - Update the query state to fulfilled
 // - Check if an event exists for query failed or expired

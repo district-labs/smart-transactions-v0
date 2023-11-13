@@ -1,10 +1,10 @@
 import { ponder } from "@/generated";
-import { client } from "./client";
+import { goerliclient } from "./client";
 
 ponder.on("UniswapV3TwapOracle:ObservationStored", async ({event,context}) => {
   const {UniswapV3Pool,BlockInfo } = context.entities
 
-  const block = await client.getBlock({
+  const block = await goerliclient.getBlock({
     blockNumber: event.params.blockNumber
   })
 

@@ -28,5 +28,3 @@ type AxiomQuery @entity {
   state: ProofState!
 }
 
-
-
