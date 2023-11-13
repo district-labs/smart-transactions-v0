@@ -40,15 +40,6 @@ export const Post = defineDocumentType(() => ({
       type: "string",
       required: true,
     },
-    authors: {
-      // Reference types are not embedded.
-      // Until this is fixed, we can use a simple list.
-      // type: "reference",
-      // of: Author,
-      type: "list",
-      of: { type: "string" },
-      required: true,
-    },
   },
   computedFields,
 }))
