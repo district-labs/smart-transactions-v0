@@ -1,19 +1,5 @@
-import 'dotenv/config';
-import { CronJob } from 'cron';
-import { invalidateIntentBatches } from './actions/invalidate-intent-batches';
-
-/**
- * Cron job to invalidate intents every 5 minutes
- */
-const jobInvalidateIntents = new CronJob(
-	'0 */5 * * * *', // cronTime
-	async function () {
-		console.log('Invalidating intents');
-    await invalidateIntentBatches();
-	}, // onTick
-	null, // onComplete
-	true, // start
-	'America/Los_Angeles' // timeZone
-);
+import { jobSendAxiomQueryUniV3Goerli } from "./cron-jobs/axiom-query/send-axiom-query-uni-v3-goerli";
+import { jobInvalidateIntents } from "./cron-jobs/intent-batches/invalidate-intent-batches";
 
 jobInvalidateIntents.start();
+jobSendAxiomQueryUniV3Goerli.start();

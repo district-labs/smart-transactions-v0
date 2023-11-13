@@ -11,7 +11,7 @@ const reqSchema = z.object({
   queries: z
     .array(
       z.object({
-        blockNumber: z.number(),
+        blockNumber: z.string(),
         address: z.string().optional(),
         slot: z.string().optional(),
       }),
@@ -26,7 +26,11 @@ export const axiomSendQuery = async (request: Request, response: Response) => {
     const qb = ax.newQueryBuilder();
 
     for (const query of requestParsed.queries) {
-      await qb.append(query);
+      await qb.append({
+        blockNumber: Number(query.blockNumber),
+        address: query.address,
+        slot: query.slot,
+      });
     }
 
     const { keccakQueryResponse, queryHash, query } = await qb.build();
