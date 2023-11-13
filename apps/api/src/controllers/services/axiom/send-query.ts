@@ -1,9 +1,9 @@
+import { newAxiomQuery } from "@district-labs/intentify-database";
 import { Request, Response } from "express";
 import { encodeFunctionData, type Address } from "viem";
 import { z } from "zod";
-import { getRelayerByChainId } from "../execution/utils/relayer";
-
 import { getAxiom } from ".";
+import { getRelayerByChainId } from "../execution/utils/relayer";
 import { axiomV1QueryABI } from "./abis";
 
 const reqSchema = z.object({
@@ -57,6 +57,17 @@ export const axiomSendQuery = async (request: Request, response: Response) => {
       value: "10000000000000000",
       data,
     });
+
+    // Store axiom queries in database
+    for (const query of requestParsed.queries) {
+      await newAxiomQuery({
+        chainId:requestParsed.chainId,
+        keccakQueryResponse,
+        address: query.address,
+        blockNumber: Number(query.blockNumber),
+        slot: Number(query.slot),
+      });
+    }
 
     return response
       .status(200)
