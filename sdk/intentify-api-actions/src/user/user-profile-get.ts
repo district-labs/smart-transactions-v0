@@ -1,7 +1,7 @@
 import { API_URL } from "../constants"
 
 export async function userProfileGet() {
-    const response = await fetch(`${API_URL}/user/profile`, {
+    const response = await fetch(`${API_URL}user/profile`, {
       method: "GET",
       credentials: "include",
       headers: {
