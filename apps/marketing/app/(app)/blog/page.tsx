@@ -1,3 +1,4 @@
+import { type Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { allPosts } from "contentlayer/generated"
@@ -5,8 +6,45 @@ import { compareDesc } from "date-fns"
 
 import { formatDate } from "@/lib/utils"
 
-export const metadata = {
-  title: "Blog",
+interface MetadataProps {
+  params: {
+    slug: string
+  }
+}
+
+export function generateMetadata({
+  params: { slug },
+}: MetadataProps): Metadata {
+  const post = allPosts.find((post) => post._raw.flattenedPath === slug)
+
+  if (!post) {
+    return {}
+  }
+
+  const { title, description, date } = post
+
+  const ogImage = {
+    url: `${process.env.HOST}/blog/${slug}/og.png`,
+  }
+
+  return {
+    title,
+    description,
+    openGraph: {
+      type: "article",
+      url: `${process.env.HOST}/blog/${slug}`,
+      title,
+      description,
+      publishedTime: date,
+      images: [ogImage],
+    },
+    twitter: {
+      title,
+      description,
+      images: ogImage,
+      card: "summary_large_image",
+    },
+  }
 }
 
 export default function BlogPage() {
