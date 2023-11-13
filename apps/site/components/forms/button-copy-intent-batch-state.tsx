@@ -33,6 +33,7 @@ export const ButtonCopyIntentBatchState = ({
     <CopyToClipboard
       text={url}
       onCopy={() =>
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         toast({
           description: "Copied Smart Transaction to Clipboard.",
         })

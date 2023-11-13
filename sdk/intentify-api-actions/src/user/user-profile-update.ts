@@ -2,7 +2,7 @@ import { API_URL } from "../constants"
 
 export async function userProfileUpdate(user: any) {
     if (!user) throw new Error("No intent batch provided")
-    const response = await fetch(`${API_URL}/user/profile`, {
+    const response = await fetch(`${API_URL}user/profile`, {
       method: "POST",
       credentials: "include",
       body: JSON.stringify(user),

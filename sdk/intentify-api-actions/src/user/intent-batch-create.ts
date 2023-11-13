@@ -3,7 +3,7 @@ import { toObjectString } from "../utils"
 
 export async function intentBatchCreate(intentBatch: any) {
     if (!intentBatch) throw new Error("No intent batch provided")
-    const response = await fetch(`${API_URL}/intent-batch`, {
+    const response = await fetch(`${API_URL}intent-batch`, {
       method: "POST",
       credentials: "include",
       body: toObjectString(intentBatch),

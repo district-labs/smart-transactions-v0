@@ -2,7 +2,7 @@ import { API_URL } from "../constants"
 
 export async function userEmailPreferencesUpdate(emailPreferences: any) {
     if (!emailPreferences) throw new Error("No email preferences provided")
-    const response = await fetch(`${API_URL}/email-preferences/profile`, {
+    const response = await fetch(`${API_URL}email-preferences/profile`, {
       method: "POST",
       credentials: "include",
       body: JSON.stringify(emailPreferences),

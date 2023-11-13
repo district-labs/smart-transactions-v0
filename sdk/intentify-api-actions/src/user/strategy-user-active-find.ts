@@ -8,7 +8,7 @@ export type StrategyUserActiveFindFilters = {
 
 export async function strategyUserActiveFind({filters}: StrategyUserActiveFindFilters) {
     const params = new URLSearchParams(filters);
-    const response = await fetch(`${API_URL}/strategy/active?${params.toString()}`, {
+    const response = await fetch(`${API_URL}strategy/active?${params.toString()}`, {
       method: "GET",
       credentials: "include",
       headers: {
