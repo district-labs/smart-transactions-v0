@@ -19,7 +19,7 @@ import {
   UncontrolledFormMessage,
 } from "../ui/form"
 import { Input } from "../ui/input"
-import { toast } from "../ui/use-toast"
+import { toast } from "@district-labs/ui-react"
 
 type UserInput = z.infer<typeof userSchema>
 

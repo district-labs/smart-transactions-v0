@@ -19,7 +19,7 @@ export function useUser({ redirectTo = "", redirectIfFound = false } = {}) {
     ...rest
   } = useQuery<User>(["user"], {
     queryFn: () =>
-      fetch(`${env.NEXT_PUBLIC_API_URL}/user`, {
+      fetch(`${env.NEXT_PUBLIC_API_URL}user`, {
         credentials: "include",
       }).then((res) => res.json()),
   })

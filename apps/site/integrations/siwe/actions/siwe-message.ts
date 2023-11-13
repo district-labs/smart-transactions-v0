@@ -24,7 +24,7 @@ export const siweMessage = async ({
   signMessageAsync,
 }: SiweMessageOptions) => {
   // 1. Get random nonce from API
-  const nonceRes = await fetch(`${env.NEXT_PUBLIC_API_URL}/auth/nonce`, {
+  const nonceRes = await fetch(`${env.NEXT_PUBLIC_API_URL}auth/nonce`, {
     credentials: "include",
   })
   const nonce = await nonceRes.text()

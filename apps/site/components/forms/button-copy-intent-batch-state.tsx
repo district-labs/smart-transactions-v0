@@ -4,7 +4,7 @@ import { toObjectString } from "@/data/columns/to-object-string"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import { toHex } from "viem"
 
-import { toast } from "../ui/use-toast"
+import { toast } from "@district-labs/ui-react"
 
 type ButtonCopyIntentBatchState = React.HTMLAttributes<HTMLElement> & {
   intentBatchData: any

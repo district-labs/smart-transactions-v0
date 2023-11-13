@@ -20,7 +20,7 @@ export function NavigationAccount() {
           <NavigationMenuItem>
             <Link href={"/register"} legacyBehavior passHref>
               <NavigationMenuLink
-                className={`${navigationMenuTriggerStyle()} text-green-700`}
+                className={`${navigationMenuTriggerStyle()} text-emerald-700 dark:text-emerald-200`}
               >
                 Alpha Registration
               </NavigationMenuLink>

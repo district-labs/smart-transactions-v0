@@ -3,7 +3,7 @@
   "scripts": {
     "build": "turbo build",
     "generate": "turbo wagmi-generate",
-    "dev": "turbo dev --concurrency 20",
+    "dev": "turbo dev --concurrency 30",
     "lint": "turbo lint",
     "clean": "turbo clean ; rimraf node_modules",
     "start": "turbo start",

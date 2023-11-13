@@ -1,14 +1,14 @@
-import React, { ButtonHTMLAttributes } from "react"
+import { ButtonHTMLAttributes } from "react"
 import { Loader2 } from "lucide-react"
 
-import { Button } from "../ui/button"
+
+import { Button } from "@district-labs/ui-react"
 
 interface ContractWriteButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoadingTx: boolean
   isLoadingWrite: boolean
   write?: boolean
-  loadingWriteText?: any
   loadingTxText?: string
   text?: string
 }
@@ -19,7 +19,6 @@ export const ContractWriteButton = ({
   isLoadingTx,
   isLoadingWrite,
   write = true,
-  loadingWriteText = "Sign the transaction in your wallet",
   loadingTxText = "Writing...",
   ...props
 }: ContractWriteButtonProps) => {
@@ -30,7 +29,7 @@ export const ContractWriteButton = ({
       {...props}
     >
       {isLoadingWrite ? (
-        <Loader2 className="animate-spin" size={18} />
+        <Loader2 className="animate-spin mx-auto" size={18} />
       ) : isLoadingTx ? (
         loadingTxText
       ) : (

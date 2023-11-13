@@ -7,8 +7,11 @@ import {
   eq,
   users,
 } from "@district-labs/intentify-database";
+import { SafeProxy, WalletFactory } from '@district-labs/intentify-deployments' 
+import { DEFAULT_SALT, walletFactoryABI } from '@district-labs/intentify-core' 
 import { ironOptions } from "../../iron-session";
 import { z } from "zod";
+import { publicClients } from "../../blockchain-clients";
 
 const verifySchema = z.object({
   signature: z.string(),
@@ -50,14 +53,24 @@ export const authSiweSignIn = async (
     if (user) {
       session.user = user;
     } else {
+      const client = publicClients[fields.chainId]
+      if(!client) throw new Error('Invalid chainId')
+      const data = await client.readContract({
+        address: WalletFactory[fields.chainId],
+        abi: walletFactoryABI,
+        functionName: 'getDeterministicWalletAddress',
+        args: [SafeProxy[fields.chainId], fields.address, DEFAULT_SALT],
+      })
+
       session.address = fields.address;
       await db.insert(users).values({
         address: fields.address,
+        safeAddress: data as string,
       });
 
       await db.insert(emailPreferences).values({
-        marketing: true,
-        newsletter: true,
+        marketing: false,
+        newsletter: false,
         transactional: true,
         userId: session.address,
       });
