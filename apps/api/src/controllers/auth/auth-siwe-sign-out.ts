@@ -26,7 +26,6 @@ export const authSiweSignOut = async (
 ) => {
   try {
     const session = await getIronSession(request, response, ironOptions);
-    console.log(session, "sessionsession");
     session.destroy();
     return response.status(200).json({ oke: true });
   } catch (error) {

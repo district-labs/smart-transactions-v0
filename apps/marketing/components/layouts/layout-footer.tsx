@@ -21,12 +21,12 @@ export default function Footer() {
           </Link>
         </div>
         <div className="flex items-center space-x-6 md:order-2">
-          <LinkComponent
+          {/* <LinkComponent
             href={siteConfig.links.docs}
             className="text-muted-foreground hover:text-accent-foreground"
           >
             Documentation
-          </LinkComponent>
+          </LinkComponent> */}
           <LinkComponent
             href={siteConfig.links.discord}
             target="_blank"

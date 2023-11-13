@@ -2,7 +2,6 @@ import { HTMLAttributes, useEffect } from "react"
 import { BaseError } from "viem"
 
 import { toast } from "@district-labs/ui-react"
-
 interface TransactionStatusProps extends HTMLAttributes<HTMLDivElement> {
   error?: BaseError
   isError: boolean

@@ -3,7 +3,6 @@ import {
   DeploySafe,
   EnableSafeIntentModule,
   IsSafeCounterfactual,
-  IsSafeIntentModuleEnabled,
   IsSafeMaterialized,
 } from "@district-labs/intentify-core-react"
 import {
@@ -36,10 +35,10 @@ export const ViewCreateAndSetupSmartWallet =
             battle-tested.
           </p>
           <IsSafeCounterfactual>
-            <DeploySafe className="my-4 block">
-              <Button size="lg" className="w-full">
+            <DeploySafe className="my-4 block w-full">
+              <span>
                 Create Smart Wallet
-              </Button>
+              </span>
             </DeploySafe>
           </IsSafeCounterfactual>
           <IsSafeMaterialized>
@@ -68,17 +67,13 @@ export const ViewCreateAndSetupSmartWallet =
             <EnableSafeIntentModule
               className="my-4 block w-full"
               signMessageComponent={
-                <Button className="w-full">Sign Permission</Button>
+                  <Button className="w-full">Sign Permission</Button>
               }
               signTransactionComponent={
                 <Button className="w-full">Enable Module</Button>
               }
             />
           </IsSafeMaterialized>
-          <IsSafeIntentModuleEnabled>
-            <h3 className="text-4xl font-normal">Congratulations!</h3>
-            <p className="text-lg">Your smart wallet is ready to use.</p>
-          </IsSafeIntentModuleEnabled>
         </div>
       </ScrollArea>
     )

@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils"
 import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
 
 import { Icons } from "../icons"
-import { toast } from "../ui/use-toast"
+import { toast } from "@district-labs/ui-react"
 
 export function FormUserRegister({ currentColor }: { currentColor: string }) {
   const queryClient = useQueryClient()
@@ -26,7 +26,7 @@ export function FormUserRegister({ currentColor }: { currentColor: string }) {
 
   const updateUserMutation = useMutation({
     mutationFn: (data: { email: string }) => {
-      return fetch(`${env.NEXT_PUBLIC_API_URL}/user/register`, {
+      return fetch(`${env.NEXT_PUBLIC_API_URL}user/register`, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify({
@@ -84,7 +84,7 @@ export function FormUserRegister({ currentColor }: { currentColor: string }) {
               type="email"
               inputMode="email"
               placeholder="vitalik@ethereum.org"
-              className="block w-full rounded-md border-gray-300 bg-white focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
+              className="block w-full rounded-md border-gray-300 bg-white text-neutral-700 focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
               {...form.register("email")}
             />
           </FormControl>

@@ -24,7 +24,7 @@ import { userSchema } from "@/lib/validations/user"
 import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
 
 import { Icons } from "../icons"
-import { toast } from "../ui/use-toast"
+import { toast } from "@district-labs/ui-react"
 
 type UserInput = z.infer<typeof userSchema>
 
@@ -47,7 +47,7 @@ export function FormUserProfile() {
 
   const updateUserMutation = useMutation({
     mutationFn: (data: UserInput) => {
-      return fetch(`${env.NEXT_PUBLIC_API_URL}/user/profile`, {
+      return fetch(`${env.NEXT_PUBLIC_API_URL}user/profile`, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify({
