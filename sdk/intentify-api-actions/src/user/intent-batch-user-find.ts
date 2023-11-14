@@ -8,7 +8,7 @@ type IntentBatchUserFindFilters = {
 
 export async function intentBatchUserFind({filters}: IntentBatchUserFindFilters) {
     const params = new URLSearchParams(filters);
-    const response = await fetch(`${API_URL}/intent-batch?${params.toString()}`, {
+    const response = await fetch(`${API_URL}intent-batch?${params.toString()}`, {
       method: "GET",
       credentials: "include",
       headers: {
