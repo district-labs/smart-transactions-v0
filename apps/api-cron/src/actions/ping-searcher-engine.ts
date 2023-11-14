@@ -1,8 +1,8 @@
 import { env } from "../env";
 
-export async function invalidateIntentBatches() {
+export async function pingSearcherEngine() {
     try {
-        await fetch(`${env.CORE_API_URL}/infra/intents/invalidate`, {
+        await fetch(`${env.SEARCHER_API_URL}/engine`, {
             method: 'GET',
         });
     } catch (error) {

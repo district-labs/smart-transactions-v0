@@ -20,7 +20,7 @@ export function useDynamicNonce({
   setIntentBatch,
   config,
 }: UseDynamicNonce) {
-  const { data: nonceStandardData, error: nonceStandardError } =
+  const { data: nonceStandardData } =
     useIntentifySafeModuleGetStandardNonce({
       address: address,
       chainId: chainId,
@@ -28,14 +28,37 @@ export function useDynamicNonce({
       enabled: intentBatch.nonce.type === "standard",
     })
 
-  const { data: nonceDimensionalData, error: nonceDimensionalError } =
+  const { data: nonceDimensionalData } =
     useIntentifySafeModuleGetDimensionalNonce({
       address: address,
       chainId: chainId,
       args: [root, intentBatch?.nonce?.args[0]],
       enabled: intentBatch.nonce.type === "dimensional",
     })
+  
+  // Automatically set the nonce to the next standard nonce accumulator
+  useEffect( () => { 
+    if (
+      intentBatch.nonce.type === "standard"
+    ) {
+      setIntentBatch((draft: any) => {
+        draft["nonce"]["args"][0] = nonceStandardData
+      })
+    }
+  }, [nonceStandardData])
+  
+  // Automatically set the nonce to the next dimensional nonce accumulator
+  useEffect( () => { 
+    if (
+      intentBatch.nonce.type === "dimensional"
+    ) {
+      setIntentBatch((draft: any) => {
+        draft["nonce"]["args"][1] = nonceDimensionalData
+      })
+    }
+  }, [nonceStandardData])
 
+  // Automatically set the nonce to the next dimensional nonce accumulator
   useEffect(() => {
     if (
       intentBatch.nonce.type === "dimensional" &&
