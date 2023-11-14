@@ -28,7 +28,7 @@ export async function sendAxiomQueryUniV3Goerli() {
     const blockNumber = await goerliPublicClient.getBlockNumber();
 
     const queries = UNI_V3_POOLS.map((poolAddress) => ({
-      blockNumber: blockNumber.toString(),
+      blockNumber: (blockNumber - BigInt(1)).toString(),
       address: poolAddress,
       slot: OBSERVATIONS_SLOT,
     }));

@@ -18,14 +18,14 @@ export const config: Config = {
       network: "goerli",
       address: UniswapV3TwapOracle[GOERLI_CHAIN_ID],
       abi: "./abis/UniswapV3TwapOracle.json",
-      startBlock: 9844774,
+      startBlock: 10038857,
     },
     {
       name: "AxiomV1Query",
       network: "goerli",
       address: "0x4Fb202140c5319106F15706b1A69E441c9536306",
       abi: "./abis/AxiomV1Query.json",
-      startBlock: 9844774,
+      startBlock: 10038857,
     },
   ],
 };

@@ -7,7 +7,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@district-labs/intentify-abi-external": "workspace:^",
     "@district-labs/intentify-deployments": "workspace:^",
+    "@openzeppelin/defender-relay-client": "^1.52.0",
     "@ponder/core": "^0.0.95"
   },
   "devDependencies": {

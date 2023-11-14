@@ -238,9 +238,15 @@ importers:
 
   apps/axiom-uni-v3-oracle-cache:
     dependencies:
+      '@district-labs/intentify-abi-external':
+        specifier: workspace:^
+        version: link:../../sdk/intentify-abi-external
       '@district-labs/intentify-deployments':
         specifier: workspace:^
         version: link:../../sdk/intentify-deployments
+      '@openzeppelin/defender-relay-client':
+        specifier: ^1.52.0
+        version: 1.52.0(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/hash@5.7.0)(@ethersproject/providers@5.7.2)(@ethersproject/transactions@5.7.0)(web3-core-helpers@1.10.3)(web3-core@1.10.3)
       '@ponder/core':
         specifier: ^0.0.95
         version: 0.0.95(typescript@5.2.2)
