@@ -5,6 +5,7 @@ import {
 } from "@district-labs/intentify-deployments";
 import { createPublicClient, http } from "viem";
 import { goerli } from "viem/chains";
+import { env } from "../../env";
 
 // Goerli
 const CHAIN_ID = 5;
@@ -34,7 +35,7 @@ export async function sendAxiomQueryUniV3Goerli() {
     }));
 
     const response = await fetch(
-      `http:localhost:3002/service/axiom/send-query`,
+      `${env.CORE_API_URL}service/axiom/send-query`,
       {
         method: "POST",
         headers: {

@@ -8,7 +8,8 @@
     "strict": true,
     "rootDir": ".",
     "paths": {
-      "@/generated": ["./generated/index.ts"]
+      "@/generated": ["./generated/index.ts"],
+      "@/*": ["./src/*"],
     }
   },
   "include": ["./**/*.ts"],

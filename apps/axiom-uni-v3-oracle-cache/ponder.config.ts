@@ -2,13 +2,13 @@ import { UniswapV3TwapOracle } from "@district-labs/intentify-deployments";
 import type { Config } from "@ponder/core";
 import { http } from "viem";
 
-const GOERLI_CHAIN_ID = 5;
+const CHAIN_ID = 5;
 
 export const config: Config = {
   networks: [
     {
       name: "goerli",
-      chainId: GOERLI_CHAIN_ID,
+      chainId: CHAIN_ID,
       transport: http(process.env.PONDER_RPC_URL_GOERLI),
     },
   ],
@@ -16,7 +16,7 @@ export const config: Config = {
     {
       name: "UniswapV3TwapOracle",
       network: "goerli",
-      address: UniswapV3TwapOracle[GOERLI_CHAIN_ID],
+      address: UniswapV3TwapOracle[CHAIN_ID],
       abi: "./abis/UniswapV3TwapOracle.json",
       startBlock: 10038857,
     },
