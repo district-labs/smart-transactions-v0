@@ -12,6 +12,6 @@ export const jobPingSearcher = new CronJob(
 		await pingSearcherEngine();
 	},
 	() => console.log('Searcher Engine Pinged'), // onComplete
-	false, // start
+	true, // start
 	'America/Los_Angeles' // timeZone
 );
