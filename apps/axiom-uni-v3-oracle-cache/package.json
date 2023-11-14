@@ -1,4 +1,6 @@
 {
+  "name": "@district-labs/axiom-uni-v3-oracle-cache",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "ponder dev",
@@ -6,6 +8,10 @@
     "codegen": "ponder codegen",
     "lint": "eslint ."
   },
+  "engines": {
+    "node": "18"
+  },
+  "packageManager": "pnpm@8.7.1",
   "dependencies": {
     "@district-labs/intentify-abi-external": "workspace:^",
     "@district-labs/intentify-deployments": "workspace:^",
