@@ -24,6 +24,7 @@ import { useFormStrategySetDefaultValues } from "@/hooks/strategy/use-form-strat
 import { ButtonSetupSmartWalletBeforeSigningIntent } from "../forms/button-setup-smart-wallet-before-signing-intents"
 import { PassFormIntentBatchState } from "../forms/pass-form-intent-batch-state"
 import { StrategyActionBar } from "../forms/strategy-action-bar"
+import { randomBigIntInRange } from "@/lib/utils/random-big-int-range"
 
 export type FormStrategyAutomaticLiquidate =
   React.HTMLAttributes<HTMLElement> & {
@@ -97,7 +98,14 @@ export function FormStrategyAutomaticLiquidate({
               classNameLabel: "text-muted-background",
               classNameTrigger:
                 "text-muted-background text-xs text-center my-1 cursor-pointer",
-              defaultQueue: 1,
+              defaultQueue: randomBigIntInRange(BigInt(1), BigInt(100000)).toString(),
+            },
+            time: {
+              label: "Queue",
+              labelTrigger: "Advanced Nonce Settings",
+              classNameLabel: "text-muted-background",
+              classNameTrigger:
+                "text-muted-background text-xs text-center my-1 cursor-pointer",
             },
           },
           tokenOut: {

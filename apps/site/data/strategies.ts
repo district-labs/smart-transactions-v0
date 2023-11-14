@@ -47,7 +47,7 @@ export const strategies = {
       erc20Transfer: {
         tokenOut: findTokenFromList(tokenListGoerli, "DIS", 5),
         amountOut: 10,
-        to: ADDRESS_ZERO,
+        to: "0x64217Ec2a624d84B9621346cBcEb04aF576fc331",
       },
     },
     IntentForm: FormStrategyRecurringPayment,
@@ -66,10 +66,9 @@ export const strategies = {
     },
     chainsSupported: [5],
     overrideValues: {
-      erc20LimitOrder: {
-        tokenOut: tokenListGoerli.tokens[0],
-        tokenIn: tokenListGoerli.tokens[2],
-      },
+      nonce: {
+        type: "dimensional",
+      }
     },
     IntentForm: FormStrategyLimitOrder,
     IntentTable: StrategyTable,
@@ -86,7 +85,11 @@ export const strategies = {
       pfp: "/apple-touch-icon.png",
     },
     chainsSupported: [5],
-    overrideValues: {},
+    overrideValues: {
+      nonce: {
+        type: "module",
+      }
+    },
     IntentForm: FormStrategyAutomaticLiquidate,
     IntentTable: StrategyTable,
     transformData: transformToAutomaticLiquidate,

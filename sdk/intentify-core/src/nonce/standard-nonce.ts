@@ -1,5 +1,5 @@
 import type { Hex } from "viem";
-import { decodeAbiParameters, encodePacked } from "viem";
+import { encodePacked } from "viem";
 import { NonceType } from "../types";
 
 export function encodeStandardNonce(accumulator: bigint): Hex {
@@ -8,5 +8,5 @@ export function encodeStandardNonce(accumulator: bigint): Hex {
 
 export function decodeStandardNonce(nonceData: Hex) {
   const accumulator = nonceData.slice(4, 4);
-  return [BigInt(accumulator)];
+  return [BigInt(`0x${accumulator}`)];
 }
