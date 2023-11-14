@@ -75,8 +75,8 @@ export default function BlogPage() {
                 <Image
                   src={post.image}
                   alt={post.title}
-                  width={804}
-                  height={452}
+                  width={1200}
+                  height={675}
                   className="rounded-md border bg-muted transition-colors"
                   priority={index <= 1}
                 />
