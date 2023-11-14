@@ -3,7 +3,8 @@ import type {
   SolidityBlockResponse,
   SolidityStorageResponse,
 } from "@axiom-crypto/core";
-import type { NextFunction, Request, Response } from "express";
+import { getAxiomQueries } from "@district-labs/intentify-database";
+import { Request, Response } from "express";
 import { z } from "zod";
 import CustomError from "../../utils/customError";
 import { getAxiom } from "../utils";
@@ -19,7 +20,6 @@ const queriesSchema = z.array(
 export const getAxiomQuerySchema = z.object({
   chainId: z.number(),
   keccakQueryResponse: z.string(),
-  queries: queriesSchema.min(1),
 });
 export async function getAxiomQuery(
   request: Request,
@@ -27,8 +27,15 @@ export async function getAxiomQuery(
   next: NextFunction,
 ) {
   try {
-    const { chainId, keccakQueryResponse, queries } = getAxiomQuerySchema.parse(
-      request.body,
+    const requestParsed = reqSchema.parse(await request.body);
+    const queries = await getAxiomQueries({
+      keccakQueryResponse: requestParsed.keccakQueryResponse,
+    })
+  
+    const ax = getAxiom(requestParsed.chainId);
+
+    const responseTree = await ax.query.getResponseTreeForKeccakQueryResponse(
+      requestParsed.keccakQueryResponse,
     );
 
     const ax = getAxiom(chainId);
@@ -47,7 +54,7 @@ export async function getAxiomQuery(
       const validationWitness = ax.query.getValidationWitness(
         responseTree,
         blockNumber,
-        address,
+        address || undefined,
         slot,
       );
 
