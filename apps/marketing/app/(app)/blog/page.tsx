@@ -24,7 +24,7 @@ export function generateMetadata({
   const { title, description, date } = post
 
   const ogImage = {
-    url: `${process.env.HOST}/blog/${slug}/og.png`,
+    url: `${process.env.NEXT_PUBLIC_APP_URL}/blog/${slug}/og.png`,
   }
 
   return {
@@ -32,7 +32,7 @@ export function generateMetadata({
     description,
     openGraph: {
       type: "article",
-      url: `${process.env.HOST}/blog/${slug}`,
+      url: `${process.env.NEXT_PUBLIC_APP_URL}/blog/${slug}`,
       title,
       description,
       publishedTime: date,
