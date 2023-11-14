@@ -1,10 +1,7 @@
-import { env } from "../env";
-
+import { executeIntentBatchesSearcherApi } from "@district-labs/intentify-api-actions";
 export async function pingSearcherEngine() {
     try {
-        await fetch(`${env.SEARCHER_API_URL}engine`, {
-            method: 'GET',
-        });
+       await executeIntentBatchesSearcherApi()
     } catch (error) {
         console.log(error)
         return error;

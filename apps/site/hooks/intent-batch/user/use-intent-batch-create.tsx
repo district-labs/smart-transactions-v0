@@ -1,10 +1,10 @@
-import { env } from "@/env.mjs"
+import { executeIntentBatchSearcherApi } from "@district-labs/intentify-api-actions"
 import { useGetSafeAddress } from "@district-labs/intentify-core-react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 // Calls the searcher API to execute the newly created intent batch
 async function executeSearcherAPI(intentBatchHash: string) {
-  await fetch(`${env.NEXT_PUBLIC_SEARCHER_API_URL}engine/${intentBatchHash}`)
+  await executeIntentBatchSearcherApi({intentBatchHash})
 }
 
 export function useActionIntentBatchCreate() {

@@ -1,20 +1,23 @@
-const siteUrl = process.env.PONDER_APP_API_URL
-if(!siteUrl) throw new Error("PONDER_APP_API_URL not set")
+import { cancelIntentBatchApi } from "@district-labs/intentify-api-actions";
 
-export async function dispatchIntentCancelled(chainId: number, intentBatchId: `0x${string}`, transactionHash: `0x${string}`){
-    try {
-        await fetch(`${siteUrl}/service/events/cancelled`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                chainId,
-                intentBatchId,
-                transactionHash
-            })
-        })
-    } catch (error) {
-        console.log(error)
-    }
+interface DispatchIntentCancelledParams {
+  intentBatchHash: `0x${string}`;
+  transactionHash: `0x${string}`;
+  transactionTimestamp: number;
+}
+
+export async function dispatchIntentCancelled({
+  intentBatchHash,
+  transactionHash,
+  transactionTimestamp,
+}: DispatchIntentCancelledParams) {
+  try {
+    await cancelIntentBatchApi({
+      intentBatchHash,
+      transactionHash,
+      transactionTimestamp,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }

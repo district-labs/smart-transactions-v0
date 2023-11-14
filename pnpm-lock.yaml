@@ -150,6 +150,9 @@ importers:
       '@axiom-crypto/core':
         specifier: ^0.3.6
         version: 0.3.6
+      '@district-labs/intentify-api-actions':
+        specifier: workspace:^
+        version: link:../../sdk/intentify-api-actions
       '@district-labs/intentify-core':
         specifier: workspace:*
         version: link:../../sdk/intentify-core
@@ -259,6 +262,9 @@ importers:
 
   apps/cache:
     dependencies:
+      '@district-labs/intentify-api-actions':
+        specifier: workspace:^
+        version: link:../../sdk/intentify-api-actions
       '@district-labs/intentify-deployments':
         specifier: workspace:*
         version: link:../../sdk/intentify-deployments
@@ -953,6 +959,9 @@ importers:
       '@district-labs/intentify-abi-external':
         specifier: workspace:^
         version: link:../../sdk/intentify-abi-external
+      '@district-labs/intentify-api-actions':
+        specifier: workspace:^
+        version: link:../../sdk/intentify-api-actions
       '@district-labs/intentify-core':
         specifier: workspace:*
         version: link:../../sdk/intentify-core
@@ -1757,6 +1766,9 @@ importers:
       '@district-labs/intentify-database':
         specifier: workspace:^
         version: link:../../packages/database
+      '@openzeppelin/defender-relay-client':
+        specifier: ^1.52.0
+        version: 1.52.0(@ethersproject/abstract-provider@5.7.0)(@ethersproject/abstract-signer@5.7.0)(@ethersproject/hash@5.7.0)(@ethersproject/providers@5.7.2)(@ethersproject/transactions@5.7.0)(web3-core-helpers@1.10.3)(web3-core@1.10.3)
       viem:
         specifier: ^1.12.1
         version: 1.19.1(typescript@5.0.4)(zod@3.22.4)

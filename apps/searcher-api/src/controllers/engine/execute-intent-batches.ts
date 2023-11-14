@@ -1,7 +1,5 @@
-import type { DbIntentBatchWithRelations } from "@district-labs/intentify-database"
+import { getIntentBatchesApi } from "@district-labs/intentify-api-actions"
 import { Request, Response } from "express"
-
-import { INTENTIFY_API_URL } from "../../constants"
 import { simulateExecuteIntentBatch } from "./utils/simulate-execute-intent-batch"
 
 /**
@@ -12,36 +10,32 @@ export const executeIntentBatches = async (
   response: Response
 ) => {
   try {
-    // TODO: Replace with api-actions SDK
-    const res = await fetch(
-      `${INTENTIFY_API_URL}/admin/intent-batch?intentBatchesValidity=valid`
-    )
 
-    if (!res.ok) {
-      return response.status(res.status).json({ data: res.statusText })
-    }
+    // TODO: Add filter for valid intent batches only
+    const intentBatches = await getIntentBatchesApi({expand: {
+      executedTxs: true,
+      intents: true,
+      strategy: true,
+      user: true,
+    }})
 
-    const intentBatchResponse: { data: DbIntentBatchWithRelations[] } =
-      await res.json()
-
-    const validIntentBatches = intentBatchResponse.data
-
-    if (validIntentBatches.length === 0) {
+    if (intentBatches.length === 0) {
       return response
         .status(200)
         .json({ message: "No valid intent batches to execute" })
     }
 
     const executionResult = await Promise.all(
-      validIntentBatches.map((intentBatchDb) =>
+      intentBatches.map((intentBatchDb) =>
         simulateExecuteIntentBatch(intentBatchDb)
       )
     )
 
     const successfulExecutions = executionResult
       .filter((result) => result.success)
-      .map(({ success, txReceipt }) => ({
+      .map(({ success, txReceipt, intentBatchHash }) => ({
         success,
+        intentBatchHash,
         // Ensure that the txReceipt is serializable
         txReceipt: JSON.parse(
           JSON.stringify(txReceipt, (key, value) =>

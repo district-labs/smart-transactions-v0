@@ -1,7 +1,6 @@
-import type { DbIntentBatchWithRelations } from "@district-labs/intentify-database"
+import { getIntentBatchApi } from "@district-labs/intentify-api-actions"
 import { Request, Response } from "express"
 
-import { env } from "../../env"
 import CustomError from "../../utils/customError"
 import { simulateExecuteIntentBatch } from "./utils/simulate-execute-intent-batch"
 
@@ -18,21 +17,21 @@ export const executeIntentBatchSingle = async (
       throw new CustomError("Invalid IntentBatch ID", 400)
     }
 
-    // TODO: Replace with api-actions SDK
-    const res = await fetch(
-      `${env.INTENTIFY_API_URL}/intent-batch/${intentBatchId}`
-    )
+    const intentBatch = await getIntentBatchApi({
+      intentBatchHash: intentBatchId,
+      expand:{
+        executedTxs: true,
+        intents: true,
+        strategy: true,
+        user: true,
+      }
+    })
 
-    if (!res.ok) {
-      return response.status(res.status).json({ data: res.statusText })
+    if (!intentBatch) {
+      throw new CustomError("IntentBatch not found", 404)
     }
 
-    const intentBatchResponse: { data: DbIntentBatchWithRelations } =
-      await res.json()
-
-    const { data: intentBatchDb } = intentBatchResponse
-
-    const txReceipt = await simulateExecuteIntentBatch(intentBatchDb)
+    const txReceipt = await simulateExecuteIntentBatch(intentBatch)
 
     return response.status(201).json({ txReceipt: JSON.stringify(txReceipt) })
   } catch (error: any) {

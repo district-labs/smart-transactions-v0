@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@district-labs/intentify-database": "workspace:^",
+    "@openzeppelin/defender-relay-client": "^1.52.0",
     "viem": "^1.12.1",
     "zod": "^3.22.4"
   }
