@@ -44,11 +44,7 @@ export function FormStrategyLimitOrder({
   const [currentValues, setCurrentValues] = useState<any>(null)
   const intentBatchStructRef = useRef<IntentBatch>()
 
-  const defaultValues = useFormStrategySetDefaultValues({...overrideValues,
-    nonce: {
-      type: "dimensional",
-    }
-  })
+  const defaultValues = useFormStrategySetDefaultValues(overrideValues)
 
   const { isLoading: isSignatureRequested, signTypedDataAsync } =
     useSignTypedData()
