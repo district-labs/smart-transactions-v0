@@ -3,8 +3,13 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    API_URL: z.string().url(),
+    CORE_API_URL: z.string().url(),
+    SEARCHER_API_URL: z.string().url(),
   },
-  runtimeEnv: process.env,
+  runtimeEnv: {
+    CORE_API_URL: process.env.CORE_API_URL,
+    SEARCHER_API_URL: process.env.SEARCHER_API_URL,
+  },
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
   emptyStringAsUndefined: true,
-});
+})
