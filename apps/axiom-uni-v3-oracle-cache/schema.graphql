@@ -12,17 +12,7 @@ type BlockInfo @entity {
   pool: UniswapV3Pool!
 }
 
-## Axiom proof generation related entities ##
-
-enum ProofState {
-  INITIATED
-  EXPIRED
-  FULFILLED
-  CACHED
-}
-
 type AxiomQuery @entity {
   id: String!
   refundee: String!
-  state: ProofState!
 }

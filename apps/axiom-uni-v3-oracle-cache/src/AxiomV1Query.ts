@@ -14,7 +14,6 @@ ponder.on("AxiomV1Query:QueryInitiatedOnchain", async ({ event, context }) => {
     id: event.params.keccakQueryResponse as `0x${string}`,
     data: {
       refundee: event.params.refundee,
-      state: "INITIATED",
     },
   });
 });
@@ -32,7 +31,7 @@ ponder.on("AxiomV1Query:QueryFulfilled", async ({ event, context }) => {
   // Only update the query state if it was initiated by the proof generator
   if (!query) return;
 
-  const axiomQueryResponseData =await getAxiomQueryResponseData({ keccakQueryResponse });
+  const axiomQueryResponseData = await getAxiomQueryResponseData({ keccakQueryResponse });
   const isStorageResponseMissing =  await checkIfAxiomQueryResponseDataIsMissingInUniV3Oracle({responseData: axiomQueryResponseData})
 
   // Store the query response in the UniV3TwapOracle contract if it some query responses are missing
@@ -40,10 +39,4 @@ ponder.on("AxiomV1Query:QueryFulfilled", async ({ event, context }) => {
     await storeQueryResponseToUniV3Oracle({responseData: axiomQueryResponseData})
   }
 
-  await AxiomQuery.update({
-    id: keccakQueryResponse,
-    data: {
-      state: "FULFILLED",
-    },
-  });
 });
