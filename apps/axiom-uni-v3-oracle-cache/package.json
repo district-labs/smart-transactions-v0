@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "ponder dev",
+    "start": "ponder start",
+    "codegen": "ponder codegen",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@district-labs/intentify-abi-external": "workspace:^",
+    "@district-labs/intentify-deployments": "workspace:^",
+    "@openzeppelin/defender-relay-client": "^1.52.0",
+    "@ponder/core": "^0.0.95"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "abitype": "^0.8.11",
+    "eslint": "^8.43.0",
+    "eslint-config-ponder": "^0.0.95",
+    "typescript": "^5.1.3",
+    "viem": "^1.2.6"
+  }
+}
