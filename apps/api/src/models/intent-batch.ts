@@ -79,6 +79,7 @@ export const getIntentBatchesFromDB = async (
           hooks: true,
         },
       },
+      executedTxs: true,
     },
   });
 };

@@ -35,7 +35,9 @@ export async function routeSwapExactOutput({
 }: RouteSwapExactOutputParams) {
   const router = new AlphaRouter({
     chainId,
-    provider: new ethers.providers.JsonRpcProvider(`https://eth-goerli.g.alchemy.com/v2/${env.ALCHEMY_API_KEY}`),
+    provider: new ethers.providers.JsonRpcProvider(
+      `https://eth-goerli.g.alchemy.com/v2/${env.ALCHEMY_API_KEY}`
+    ),
   })
 
   const inputTokenUniV3 = new UniV3Token(
@@ -84,7 +86,9 @@ export async function routeSwapExactInput({
 }: RouteSwapExactInputParams) {
   const router = new AlphaRouter({
     chainId,
-    provider: new ethers.providers.JsonRpcProvider(`https://eth-goerli.g.alchemy.com/v2/${env.ALCHEMY_API_KEY}`),
+    provider: new ethers.providers.JsonRpcProvider(
+      `https://eth-goerli.g.alchemy.com/v2/${env.ALCHEMY_API_KEY}`
+    ),
   })
 
   const inputTokenUniV3 = new UniV3Token(

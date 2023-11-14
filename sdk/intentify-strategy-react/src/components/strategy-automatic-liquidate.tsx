@@ -26,6 +26,7 @@ import { useImmer } from "use-immer"
 import { parseUnits } from "viem"
 
 import { setIntentBatchManagerNonce } from "../set-intent-batch-nonce"
+import { tokenToChainLinkFeed } from "../token-to-chainlink-feed"
 import { StrategyChildrenCallback } from "../types"
 import { deepMerge } from "../utils"
 import { NonceManager, type NonceConfig } from "./nonce-manager"
@@ -141,6 +142,28 @@ export function StrategyAutomaticLiquidate({
     setIntentBatch,
     config,
   })
+
+  useEffect(() => {
+    if (chainId) {
+      setIntentBatch((draft: any) => {
+        draft.erc20SwapSpotPriceBalanceTokenOut.tokenInPriceFeed =
+          tokenToChainLinkFeed(
+            intentBatch?.erc20SwapSpotPriceBalanceTokenOut?.tokenIn?.address
+          )
+      })
+    }
+  }, [intentBatch?.erc20SwapSpotPriceBalanceTokenOut?.tokenIn])
+
+  useEffect(() => {
+    if (chainId) {
+      setIntentBatch((draft: any) => {
+        draft.erc20SwapSpotPriceBalanceTokenOut.tokenOutPriceFeed =
+          tokenToChainLinkFeed(
+            intentBatch?.erc20SwapSpotPriceBalanceTokenOut?.tokenOut?.address
+          )
+      })
+    }
+  }, [intentBatch?.erc20SwapSpotPriceBalanceTokenOut?.tokenOut])
 
   const handleGenerateIntentBatch = async () => {
     if (!intentBatchFactory)
@@ -303,11 +326,11 @@ const IntentStatement = ({
       Automatically swap{" "}
       <span className="font-bold">
         {formatted?.balanceDelta}+ {tokenOut?.symbol}{" "}
-        <span className="font-normal">for</span> ${tokenIn?.symbol}
+        <span className="font-normal">for</span> {tokenIn?.symbol}
       </span>{" "}
       when you account contains{" "}
       <span className="font-bold">
-        {formatted?.floor}+ ${tokenOut?.symbol}.
+        {formatted?.floor}+ {tokenOut?.symbol}.
       </span>
     </div>
   )

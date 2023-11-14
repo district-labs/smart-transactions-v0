@@ -28,7 +28,9 @@ export interface ERC20ChainIdProps extends ERC20Props {
 }
 
 export function ERC20Image({ address, ...props }: ERC20Props) {
-  const [ src, setSrc ] = useState(`https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`)
+  const [src, setSrc] = useState(
+    `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+  )
 
   return (
     <img
@@ -37,7 +39,7 @@ export function ERC20Image({ address, ...props }: ERC20Props) {
       className="mx-auto h-12 w-12 rounded-full border-2 border-white shadow-md"
       src={src}
       {...props}
-      />
+    />
   )
 }
 
@@ -134,7 +136,8 @@ export function ERC20Balance({
     watch: true,
   })
 
-  if (!isSuccess || !isSuccessDecimals) return <span className={className}>0</span>
+  if (!isSuccess || !isSuccessDecimals)
+    return <span className={className}>0</span>
 
   return (
     <span className={className} {...props}>

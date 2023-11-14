@@ -88,6 +88,13 @@ export function NavigationPanel() {
             <DiscordLogoIcon className="mr-1" />
             Discord
           </Link>
+          <Link
+            href={"/register"}
+            className="flex w-full items-center border-b py-4 text-sm font-medium"
+            onClick={() => setOpen(false)}
+          >
+            Alpha Registration
+          </Link>
         </div>
         <IsSignedOut>
           <ButtonSiweSignIn className="mt-4 w-full" />

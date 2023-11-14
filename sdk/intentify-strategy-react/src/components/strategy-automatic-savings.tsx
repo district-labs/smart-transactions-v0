@@ -212,8 +212,10 @@ const IntentStatement = ({
     <div className={className}>
       Automatically save{" "}
       <span className="font-bold">
-        {balanceDeltaFormatted}+ {vault?.asset?.symbol} in <span className='font-normal'>the PoolTogether</span> {vault?.name}
-      </span>{" "} vault when you account contains{" "}
+        {balanceDeltaFormatted}+ {vault?.asset?.symbol} in{" "}
+        <span className="font-normal">the PoolTogether</span> {vault?.name}
+      </span>{" "}
+      vault when you account contains{" "}
       <span className="font-bold">
         {minimumAccountBalance}+ ${vault?.asset.symbol}.
       </span>

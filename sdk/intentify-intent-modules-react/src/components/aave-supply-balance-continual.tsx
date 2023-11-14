@@ -1,11 +1,11 @@
 import type { Token, TokenList } from "@district-labs/intentify-core"
 
-import { TokenSelect } from "./fields/token-select"
-import { TokenAmount } from "./fields/token-amount"
 import { getValueFromPath } from "../utils"
+import { TokenAmount } from "./fields/token-amount"
+import { TokenSelect } from "./fields/token-select"
 
 export type IntentAaveV3SupplyBalanceContinual = {
-aaveV3SupplyBalanceContinual: {
+  aaveV3SupplyBalanceContinual: {
     tokenOut: Token | undefined
     minBalance: string | undefined
     balanceDelta: string | undefined
@@ -13,7 +13,7 @@ aaveV3SupplyBalanceContinual: {
 }
 
 export const intentAaveV3SupplyBalanceContinual = {
-aaveV3SupplyBalanceContinual: {
+  aaveV3SupplyBalanceContinual: {
     tokenOut: undefined,
     minBalance: undefined,
     balanceDelta: undefined,
@@ -56,7 +56,11 @@ export const intentAaveV3SupplyBalanceContinualFields = {
       intentBatch={intentBatch}
       config={config}
       setIntentBatch={setIntentBatch}
-      decimals={getValueFromPath(intentBatch, ["aaveV3SupplyBalanceContinual", "tokenOut", "decimals"])}
+      decimals={getValueFromPath(intentBatch, [
+        "aaveV3SupplyBalanceContinual",
+        "tokenOut",
+        "decimals",
+      ])}
       path={["aaveV3SupplyBalanceContinual", "minBalance"]}
     />
   ),
@@ -75,7 +79,11 @@ export const intentAaveV3SupplyBalanceContinualFields = {
       intentBatch={intentBatch}
       config={config}
       setIntentBatch={setIntentBatch}
-      decimals={getValueFromPath(intentBatch, ["aaveV3SupplyBalanceContinual", "tokenOut", "decimals"])}
+      decimals={getValueFromPath(intentBatch, [
+        "aaveV3SupplyBalanceContinual",
+        "tokenOut",
+        "decimals",
+      ])}
       path={["aaveV3SupplyBalanceContinual", "balanceDelta"]}
     />
   ),

@@ -14,8 +14,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useForm } from "react-hook-form"
 
+import { toast } from "@district-labs/ui-react"
 import { Icons } from "../icons"
-import { toast } from "../ui/use-toast"
 
 export function FormUserRegister({ currentColor }: { currentColor: string }) {
   const queryClient = useQueryClient()
@@ -81,7 +81,7 @@ export function FormUserRegister({ currentColor }: { currentColor: string }) {
               type="email"
               inputMode="email"
               placeholder="vitalik@ethereum.org"
-              className="block w-full rounded-md border-gray-300 bg-white focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
+              className="block w-full rounded-md border-gray-300 bg-white text-neutral-700 focus:border-purple-500 focus:ring-purple-500 sm:text-sm"
               {...form.register("email")}
             />
           </FormControl>

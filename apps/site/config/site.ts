@@ -4,7 +4,7 @@ export const siteConfig = {
   description:
     "Unlock the full power of DeFi with District Finance. Smart transactions that work for you.",
   links: {
-    twitter: "https://twitter.com/district_labs",
+    twitter: "https://twitter.com/districtfi",
     discord: "https://discord.gg/k3yuxqahtJ",
     docs: "https://docs.districtfinance.io",
   },

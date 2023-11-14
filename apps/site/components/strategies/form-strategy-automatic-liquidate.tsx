@@ -20,15 +20,17 @@ import { useChainId, useSignTypedData } from "wagmi"
 
 import { useActionIntentBatchCreate } from "@/hooks/intent-batch/user/use-intent-batch-create"
 import { useFormStrategySetDefaultValues } from "@/hooks/strategy/use-form-strategy-set-default-values"
-import { PassFormIntentBatchState } from "../forms/pass-form-intent-batch-state"
+
 import { ButtonSetupSmartWalletBeforeSigningIntent } from "../forms/button-setup-smart-wallet-before-signing-intents"
+import { PassFormIntentBatchState } from "../forms/pass-form-intent-batch-state"
 import { StrategyActionBar } from "../forms/strategy-action-bar"
+import { randomBigIntInRange } from "@/lib/utils/random-big-int-range"
 
-
-export type FormStrategyAutomaticLiquidate = React.HTMLAttributes<HTMLElement> & {
-  strategyId: string
-  overrideValues?: any
-}
+export type FormStrategyAutomaticLiquidate =
+  React.HTMLAttributes<HTMLElement> & {
+    strategyId: string
+    overrideValues?: any
+  }
 
 export function FormStrategyAutomaticLiquidate({
   strategyId,
@@ -96,24 +98,33 @@ export function FormStrategyAutomaticLiquidate({
               classNameLabel: "text-muted-background",
               classNameTrigger:
                 "text-muted-background text-xs text-center my-1 cursor-pointer",
-              defaultQueue: 1,
+              defaultQueue: randomBigIntInRange(BigInt(1), BigInt(100000)).toString(),
+            },
+            time: {
+              label: "Queue",
+              labelTrigger: "Advanced Nonce Settings",
+              classNameLabel: "text-muted-background",
+              classNameTrigger:
+                "text-muted-background text-xs text-center my-1 cursor-pointer",
             },
           },
           tokenOut: {
             label: "Sell",
             classNameLabel: "text-muted-background",
-            description: "Token to supply to a PoolTogetherV5 Prize Savings Account",
+            description:
+              "Token to supply to a PoolTogetherV5 Prize Savings Account",
             classNameDescription: "text-xs",
           },
           tokenIn: {
             label: "Buy",
             classNameLabel: "text-muted-background",
-            description: "Token to supply to a PoolTogetherV5 Prize Savings Account",
+            description:
+              "Token to supply to a PoolTogetherV5 Prize Savings Account",
             classNameDescription: "text-xs",
           },
           chainlinkTrigger: {
             classNameTrigger:
-              "text-xs bg-neutral-100 px-2 py-1 w-full text-center cursor-pointer rounded-lg shadow-sm",
+              "text-xs bg-card-footer px-2 py-2 w-full text-center cursor-pointer rounded-lg shadow-sm",
           },
           tokenOutPriceFeed: {
             label: "Token In Chainlink Price Feed",
@@ -147,7 +158,8 @@ export function FormStrategyAutomaticLiquidate({
           },
           intentContainerStatement: {
             label: "Intent Statement",
-            className: "bg-card-footer p-3 rounded-md shadow-xs border-dotted border-2 border-neutral-400 text-xs",
+            className:
+              "bg-card-footer p-3 rounded-md shadow-xs border-dotted border-2 border-neutral-400 text-xs",
           },
           nonceStatement: {
             label: "Intent Statement",

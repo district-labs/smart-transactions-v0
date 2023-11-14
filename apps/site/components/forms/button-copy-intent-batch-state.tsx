@@ -1,10 +1,10 @@
 import * as React from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { toObjectString } from "@/data/columns/to-object-string"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import { toHex } from "viem"
 
-import { toast } from "../ui/use-toast"
-import { toObjectString } from "@/data/tables/to-object-string"
+import { toast } from "@district-labs/ui-react"
 
 type ButtonCopyIntentBatchState = React.HTMLAttributes<HTMLElement> & {
   intentBatchData: any
@@ -33,6 +33,7 @@ export const ButtonCopyIntentBatchState = ({
     <CopyToClipboard
       text={url}
       onCopy={() =>
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         toast({
           description: "Copied Smart Transaction to Clipboard.",
         })

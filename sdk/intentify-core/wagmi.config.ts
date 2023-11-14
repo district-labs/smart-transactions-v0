@@ -31,6 +31,8 @@ export default defineConfig({
         "TimestampIntent.json",
         "UniswapV3HistoricalTwapPercentageChangeIntent.json",
         "UniswapV3TwapIntent.json",
+        "WalletFactory.json",
+        "WalletFactoryTestnet.json",
       ],
     }),
   ],

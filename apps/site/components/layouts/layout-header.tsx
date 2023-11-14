@@ -1,16 +1,17 @@
 "use client"
 
 import React from "react"
+import Image from "next/image"
+
 import { cn } from "@/lib/utils"
 import useScroll from "@/hooks/use-scroll"
 import { NavigationCore } from "@/components/layouts/navigation-core"
 import { NavigationPanel } from "@/components/layouts/navigation-panel"
 
-import { NavigationAccount } from "./navigation-account"
-import { LinkComponent } from "../shared/link-component"
-import Image from "next/image"
 import { IsDarkTheme } from "../shared/is-dark-theme"
 import { IsLightTheme } from "../shared/is-light-theme"
+import { LinkComponent } from "../shared/link-component"
+import { NavigationAccount } from "./navigation-account"
 
 export default function Header() {
   const scrolled = useScroll(0)
@@ -23,16 +24,26 @@ export default function Header() {
       )}
     >
       <div className=" flex h-16 items-center justify-between px-10 sm:flex-row">
-        <div className="hidden sm:flex-1 justify-end sm:flex sm:justify-start">
+        <div className="hidden justify-end sm:flex sm:flex-1 sm:justify-start">
           <NavigationCore />
         </div>
-        <div className='sm:flex-1 flex sm:justify-center'>
+        <div className="flex sm:flex-1 sm:justify-center">
           <LinkComponent href="/">
             <IsDarkTheme>
-              <Image alt="District Finance" src="/district-globe.svg" width={36} height={36} />
+              <Image
+                alt="District Finance"
+                src="/district-globe.svg"
+                width={36}
+                height={36}
+              />
             </IsDarkTheme>
             <IsLightTheme>
-              <Image alt="District Finance" src="/district-globe-dark.svg" width={36} height={36} />
+              <Image
+                alt="District Finance"
+                src="/district-globe-dark.svg"
+                width={36}
+                height={36}
+              />
             </IsLightTheme>
           </LinkComponent>
         </div>

@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["cdn.builder.io"],
+    domains: ["cdn.builder.io", 'raw.githubusercontent.com', 'assets-cdn.trustwallet.com'],
     dangerouslyAllowSVG: true,
   },
   webpack: (config) => {

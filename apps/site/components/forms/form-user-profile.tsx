@@ -23,8 +23,8 @@ import { type z } from "zod"
 import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
 import { userSchema } from "@/lib/validations/user"
 
+import { toast } from "@district-labs/ui-react"
 import { Icons } from "../icons"
-import { toast } from "../ui/use-toast"
 
 type UserInput = z.infer<typeof userSchema>
 

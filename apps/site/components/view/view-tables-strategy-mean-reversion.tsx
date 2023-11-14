@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import * as React from "react"
-import { columnsMeanReversionBuy } from "@/data/tables/columns-mean-reversion-buy"
-import { columnsMeanReversionSell } from "@/data/tables/columns-mean-reversion-sell"
+import { columnsMeanReversionBuy } from "@/data/columns/columns-mean-reversion-buy"
+import { columnsMeanReversionSell } from "@/data/columns/columns-mean-reversion-sell"
 import { transformToMeanReversionBuy } from "@/data/transforms/transform-to-mean-reversion-buy"
 import { transformToMeanReversionSell } from "@/data/transforms/transform-to-mean-reversion-sell"
 

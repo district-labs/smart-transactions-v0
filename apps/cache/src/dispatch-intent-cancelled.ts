@@ -1,8 +1,9 @@
 const siteUrl = process.env.PONDER_APP_API_URL
-if(!siteUrl) throw new Error("API_URL not set")
+if(!siteUrl) throw new Error("PONDER_APP_API_URL not set")
+
 export async function dispatchIntentCancelled(chainId: number, intentBatchId: `0x${string}`, transactionHash: `0x${string}`){
     try {
-        await fetch(`${siteUrl}/api/events/cancelled`, {
+        await fetch(`${siteUrl}/service/events/cancelled`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

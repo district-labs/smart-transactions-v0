@@ -17,7 +17,7 @@ import { catchError, cn } from "@/lib/utils"
 import { Icons } from "../icons"
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
-import { toast } from "../ui/use-toast"
+import { toast } from "@district-labs/ui-react"
 
 export function FundAccountForm() {
   const router = useRouter()

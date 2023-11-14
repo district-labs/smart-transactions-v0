@@ -23,8 +23,8 @@ import { type z } from "zod"
 import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
 import { updateEmailPreferencesSchema } from "@/lib/validations/email"
 
+import { toast } from "@district-labs/ui-react"
 import { Icons } from "../icons"
-import { toast } from "../ui/use-toast"
 
 type EmailPreferencesInput = z.infer<typeof updateEmailPreferencesSchema>
 

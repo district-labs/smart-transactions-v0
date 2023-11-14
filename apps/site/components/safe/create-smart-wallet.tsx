@@ -8,8 +8,9 @@ import {
   IsSafeIntentModuleDisabled,
   IsSafeIntentModuleEnabled,
   IsSafeMaterialized,
-  useIsSafeIntentModuleEnabled
+  useIsSafeIntentModuleEnabled,
 } from "@district-labs/intentify-core-react"
+import { strategies } from "@district-labs/intentify-database"
 import {
   Button,
   ScrollArea,
@@ -26,20 +27,13 @@ import { useUser } from "@/hooks/use-user"
 
 import WalletConnectCustom from "../blockchain/wallet-connect-custom"
 import { LinkComponent } from "../shared/link-component"
-import { strategies } from "@district-labs/intentify-database"
 
-type CreateSmartWallet =
-  React.HTMLAttributes<HTMLElement>
+type CreateSmartWallet = React.HTMLAttributes<HTMLElement>
 
-export const CreateSmartWallet = ({
-  children,
-}: CreateSmartWallet) => {
+export const CreateSmartWallet = ({ children }: CreateSmartWallet) => {
   const chainId = useChainId()
   const { address } = useAccount()
-  const {
-    data: userData,
-    isSuccess: userIsSuccess,
-  } = useUser()
+  const { data: userData, isSuccess: userIsSuccess } = useUser()
   const isSmartWalletModuleEnabled = useIsSafeIntentModuleEnabled()
   const isSignedIn = useIsSignedIn()
 

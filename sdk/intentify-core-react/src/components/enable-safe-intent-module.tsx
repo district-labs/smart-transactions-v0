@@ -1,14 +1,16 @@
 import { constants } from "ethers";
 import * as React from "react";
 import { encodeFunctionData } from "viem";
-import { useChainId, useContractWrite, useWalletClient } from "wagmi";
+import { useChainId, useContractWrite, useWaitForTransaction, useWalletClient } from "wagmi";
 import { useGetSafeAddress } from "..";
+import {  type BaseError } from "viem"
 import {
   safeABI,
   usePrepareSafeExecTransaction,
   useSafeGetTransactionHash,
   useSafeNonce,
 } from "../blockchain";
+import { ContractWriteButton, TransactionStatus } from '@district-labs/buidl'
 import { ADDRESS_ZERO } from "@district-labs/intentify-core";
 import { useGetIntentifyModuleAddress } from "../hooks/use-get-intentify-module-address";
 import { cn } from "../utils";
@@ -66,7 +68,7 @@ export const EnableSafeIntentModule = ({
     ],
   });
 
-  const { config } = usePrepareSafeExecTransaction({
+  const { config, ...prepare } = usePrepareSafeExecTransaction({
     address: safeAddress,
     value: BigInt(0),
     args: [
@@ -89,6 +91,10 @@ export const EnableSafeIntentModule = ({
   });
 
   const _safe = useContractWrite(config);
+  const transaction = useWaitForTransaction({
+    hash: _safe?.data?.hash as `0x${string}`,
+    enabled: !!_safe?.data?.hash,
+  })
 
   const { data: walletClient } = useWalletClient();
 
@@ -114,17 +120,32 @@ export const EnableSafeIntentModule = ({
 
   if (!signature.signed) {
     return (
-      // rome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-      <span onClick={handleSignTransaction} className={classes}>
-        {signMessageComponent}
-      </span>
+      <div className='flex items-center gap-x-5'>
+        <span onClick={handleSignTransaction} className={classes}>
+          {signMessageComponent}
+        </span>
+        <span className={`${classes} opacity-70`}>
+          {signTransactionComponent}
+        </span>
+      </div>
     );
   }
 
   return (
-    // rome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-    <span onClick={handleSubmitTransaction} className={classes}>
-      {signTransactionComponent}
-    </span>
+    <div className='flex items-center gap-x-5'>
+       <span className={`${classes} opacity-70`}>
+          {signMessageComponent}
+        </span>
+      <span onClick={handleSubmitTransaction} className={classes}>
+        {signTransactionComponent}
+      </span>
+      <TransactionStatus
+        error={prepare.error as BaseError}
+        hash={_safe?.data?.hash}
+        isError={prepare.isError}
+        isLoadingTx={transaction.isLoading}
+        isSuccess={transaction.isSuccess}
+      />
+    </div>
   );
 };

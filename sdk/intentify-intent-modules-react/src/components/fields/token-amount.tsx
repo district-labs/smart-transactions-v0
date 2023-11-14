@@ -18,7 +18,13 @@ type TokenAmount = {
   config: TokenAmountConfig
 }
 
-export const TokenAmount = ({ path, intentBatch, setIntentBatch, decimals, config }: TokenAmount) => {
+export const TokenAmount = ({
+  path,
+  intentBatch,
+  setIntentBatch,
+  decimals,
+  config,
+}: TokenAmount) => {
   return (
     <div className={config?.className}>
       {config?.label && (

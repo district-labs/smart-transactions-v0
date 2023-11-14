@@ -1,14 +1,4 @@
 import * as React from "react"
-import {
-  Button,
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@district-labs/ui-react"
 import { Copy } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -24,7 +14,7 @@ export const StrategyActionBar = ({
   intentBatchData,
   className,
 }: StrategyActionBar) => {
-  const classes = cn("flex justify-between items-center mb-4 px-1", className)
+  const classes = cn("flex justify-end items-center mb-4 px-1", className)
 
   return (
     <div className={classes}>
@@ -33,22 +23,6 @@ export const StrategyActionBar = ({
           <Copy size={12} /> Share Smart Transaction
         </span>
       </ButtonCopyIntentBatchState>
-
-      <Sheet>
-        <SheetTrigger>
-          <Button size="sm" variant="outline" className="text-xs">
-            Details
-          </Button>
-        </SheetTrigger>
-        <SheetContent>
-          <SheetHeader>
-            {/* <SheetTitle>{intentBatchDetails.name}</SheetTitle>
-            <SheetDescription>
-              {intentBatchDetails.description}
-            </SheetDescription> */}
-          </SheetHeader>
-        </SheetContent>
-      </Sheet>
     </div>
   )
 }

@@ -84,8 +84,10 @@ export default function SmartWalletPage() {
                 <SmartWalletModuleStatus />
               </TabsContent>
               <TabsContent value="token-balances" className=" grid gap-y-6">
-                <Erc20CardTokenOverview symbol="WETH" />
-                <Erc20CardTokenOverview symbol="USDC" />
+                <Erc20CardTokenOverview symbol="WETH" mintAmount={1} />
+                <Erc20CardTokenOverview symbol="USDC" mintAmount={1000} />
+                <Erc20CardTokenOverview symbol="DIS" mintAmount={10} />
+                <Erc20CardTokenOverview symbol="RIZZ" mintAmount={5} />
               </TabsContent>
             </div>
           </IsSignedIn>

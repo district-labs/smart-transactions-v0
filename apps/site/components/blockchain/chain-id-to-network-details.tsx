@@ -1,14 +1,19 @@
 import * as React from "react"
+import Image from "next/image"
 
 import { CHAIN_ID_TO_HUMAN_NAME } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 
 type ChainIdToNetworkDetails = React.HTMLAttributes<HTMLElement> & {
   chainId: number
+  classNameLabel?: string
+  classNameImage?: string
 }
 
 export const ChainIdToNetworkDetails = ({
   className,
+  classNameImage = "h-4 w-4",
+  classNameLabel,
   chainId,
 }: ChainIdToNetworkDetails) => {
   const classes = cn(className, "flex items-center gap-x-1")
@@ -23,11 +28,19 @@ export const ChainIdToNetworkDetails = ({
     setChainDetails(CHAIN_ID_TO_HUMAN_NAME[chainId])
   }, [chainId])
 
-  if (!chainDetails) return <span className={classes}>unknown</span>
+  if (!chainDetails) return <span className={classes}>Unknown Network</span>
   return (
     <div className={classes}>
-      <img src={chainDetails.imgURL} className="h-4 w-4" alt="Network Icon" />
-      <span className="text-sm">{chainDetails.name}</span>
+      {chainDetails.imgURL && (
+        <Image
+          width={32}
+          height={32}
+          src={chainDetails.imgURL}
+          className={classNameImage}
+          alt="Network Icon"
+        />
+      )}
+      <span className={classNameLabel}>{chainDetails.name}</span>
     </div>
   )
 }

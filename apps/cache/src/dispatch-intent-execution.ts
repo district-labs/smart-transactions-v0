@@ -1,11 +1,10 @@
 import { Transaction } from "@ponder/core"
-
 const siteUrl = process.env.PONDER_APP_API_URL
-if(!siteUrl) throw new Error("API_URL not set")
+if(!siteUrl) throw new Error("PONDER_APP_API_URL not set")
 
 export async function dispatchIntentExecution(chainId: number, intentBatchId: `0x${string}`, receipt: Transaction){
     try {
-        await fetch(`${siteUrl}/api/events/executed`, {
+        await fetch(`${siteUrl}/service/events/executed`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -15,7 +14,7 @@ export async function dispatchIntentExecution(chainId: number, intentBatchId: `0
                 intentBatchId,
                 transactionHash: receipt.hash,
                 blockHash: receipt.blockHash,
-                blockNumber: receipt.blockNumber,
+                blockNumber: receipt.blockNumber.toString(),
                 to: receipt.to,
             })
         })

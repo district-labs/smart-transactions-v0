@@ -31,6 +31,7 @@
     "typescript": "5.0.4"
   },
   "dependencies": {
+    "@district-labs/buidl": "workspace:*",
     "@district-labs/intentify-core": "workspace:*",
     "@district-labs/intentify-deployments": "workspace:*",
     "@ethersproject/abstract-signer": "^5.7.0",

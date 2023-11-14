@@ -16,10 +16,9 @@ import {
   Input,
 } from "@district-labs/ui-react"
 import { useForm } from "react-hook-form"
+import { keccak256, toHex } from "viem"
 
 import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
-
-import { keccak256, toHex } from "viem"
 
 export function FormAdminGenerateStrategyId() {
   useUserProfileGet()

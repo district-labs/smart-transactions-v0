@@ -1,19 +1,18 @@
 import { type IntentBatch } from "@district-labs/intentify-core"
+import { DbTransaction } from "@district-labs/intentify-database"
 
 import { getStatus } from "./get-status"
 import { transformIntentQueryToIntentBatchStruct } from "./transform-intent-query-to-intent-batch-struct"
 
 export type LimitOrderIntent = {
+  intentBatchHash: string
+  executedTxs: DbTransaction[]
   chainId: number
   nonce: string
-  sell: {
-    asset: string
-    amount: number
-  }
-  receive: {
-    asset: string
-    amount: number
-  }
+  tokenOut: string
+  tokenIn: string
+  tokenOutAmount: number
+  tokenInAmount: number
   limitPrice: string
   executeAfter: string
   executeBefore: string
@@ -25,16 +24,14 @@ export type LimitOrderIntent = {
 export function transformToLimitOrder(intentBatch: any): LimitOrderIntent {
   const { intents } = intentBatch
   return {
+    intentBatchHash: intentBatch.intentBatchHash,
+    executedTxs: intentBatch.executedTxs,
     chainId: Number(intentBatch.chainId),
     nonce: intentBatch.nonce,
-    sell: {
-      asset: String(intents[1]?.intentArgs[0]?.value),
-      amount: Number(intents[1]?.intentArgs[2]?.value),
-    },
-    receive: {
-      asset: String(intents[1]?.intentArgs[1]?.value),
-      amount: Number(intents[1]?.intentArgs[3]?.value),
-    },
+    tokenOut: String(intents[1]?.intentArgs[0]?.value),
+    tokenIn: String(intents[1]?.intentArgs[1]?.value),
+    tokenOutAmount: intents[1]?.intentArgs[2]?.value,
+    tokenInAmount: intents[1]?.intentArgs[3]?.value,
     limitPrice: String(0),
     executeAfter: String(intents[0]?.intentArgs[0]?.value),
     executeBefore: String(intents[0]?.intentArgs[1]?.value),
