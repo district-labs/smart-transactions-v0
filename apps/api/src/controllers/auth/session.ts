@@ -18,7 +18,7 @@ export const postAuthSessionSchema = z.object({
   message: z.object({
     domain: z.string(),
     address: z.string(),
-    statement: z.string(),
+    statement: z.string().optional(),
     uri: z.string(),
     version: z.string(),
     chainId: z.number(),

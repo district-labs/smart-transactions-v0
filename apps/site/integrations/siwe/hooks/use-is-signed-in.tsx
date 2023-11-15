@@ -4,5 +4,5 @@ import { useUser } from "@/hooks/use-user"
 
 export const useIsSignedIn = () => {
   const { data: user } = useUser()
-  return user?.isLoggedIn
+  return !!user?.address
 }

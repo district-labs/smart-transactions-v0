@@ -9,6 +9,7 @@ import { z } from "zod";
 
 const expandFieldsGetStrategies = ["manager", "intentBatches"];
 export const getStrategiesQuerySchema = z.object({
+  intentBatchRoot: z.string().optional(),
   limit: z.string().optional(),
   offset: z.string().optional(),
   expand: getExpandFieldsSchema(expandFieldsGetStrategies),
@@ -20,12 +21,12 @@ export async function getStrategies(
   next: NextFunction,
 ) {
   try {
-    const { expand, limit, offset } = getStrategiesQuerySchema.parse(
+    const { expand, limit, offset, intentBatchRoot } = getStrategiesQuerySchema.parse(
       request.query,
     );
     const expandFields = getExpandFields(expand);
 
-    const strategies = await getStrategiesDb({ expandFields, limit, offset });
+    const strategies = await getStrategiesDb({ expandFields, limit, offset, intentBatchRoot });
 
     return response.status(200).json({ data: strategies });
   } catch (error) {

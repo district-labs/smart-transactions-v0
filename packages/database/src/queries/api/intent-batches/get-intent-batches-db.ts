@@ -1,10 +1,11 @@
-import { db } from "../../..";
+import { and, eq } from "drizzle-orm";
+import { db, intentBatch } from "../../..";
 
 interface GetIntentBatchesDbParams {
-  limit: string | undefined;
-  offset: string | undefined;
-  root: string | undefined;
-  strategyId: string | undefined;
+  limit?: string;
+  offset?: string;
+  root?: string
+  strategyId?: string;
   expandFields: string[];
 }
 
@@ -15,23 +16,21 @@ export async function getIntentBatchesDb({
   root,
   strategyId,
 }: GetIntentBatchesDbParams) {
-  const rootFilter = root ? { root } : undefined;
+
+  const filters: any[] = []
+
+  if(root) {
+    filters.push(eq(intentBatch.root, root))
+  }
+
+  if(strategyId) {
+    filters.push(eq(intentBatch.strategyId, strategyId))
+  }
 
   const intentBatches = await db.query.intentBatch.findMany({
     limit: Number(limit),
     offset: Number(offset),
-    where:
-      root && strategyId
-        ? (intentBatch, { eq, and }) =>
-            and(
-              eq(intentBatch.root, root),
-              eq(intentBatch.strategyId, strategyId),
-            )
-        : root
-          ? (intentBatch, { eq }) => eq(intentBatch.root, root)
-          : strategyId
-            ? (intentBatch, { eq }) => eq(intentBatch.strategyId, strategyId)
-            : undefined,
+    where: filters.length > 0 ? () => and(...filters) : undefined,
     with: {
       intents: expandFields.includes("intents") ? true : undefined,
       executedTxs: expandFields.includes("executedTxs") ? true : undefined,

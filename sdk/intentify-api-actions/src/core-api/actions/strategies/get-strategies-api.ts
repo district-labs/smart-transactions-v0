@@ -5,6 +5,7 @@ import { API_URL } from "../../../constants";
 interface GetStrategiesApiParams {
   limit?: number;
   offset?: number;
+  intentBatchRoot?: string;
   expand?: {
     manager?: boolean;
     intentBatches?: boolean;
@@ -18,6 +19,7 @@ interface GetStrategiesApiReturnType {
 export async function getStrategiesApi({
   limit,
   offset,
+  intentBatchRoot,
   expand,
 }: GetStrategiesApiParams = {}) {
   let url = new URL(`${API_URL}strategies`);
@@ -28,6 +30,11 @@ export async function getStrategiesApi({
   if (offset) {
     url.searchParams.append("offset", offset.toString());
   }
+  
+  if (intentBatchRoot) {
+    url.searchParams.append("intentBatchRoot", intentBatchRoot);
+  }
+
   url = addExpandParamsToUrl(url, expand);
 
   const response = await fetch(url, {
