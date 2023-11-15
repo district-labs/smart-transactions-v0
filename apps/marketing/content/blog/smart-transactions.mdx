@@ -1,0 +1,62 @@
+---
+title: "Smart Transactions: Crossing the Chasm"
+description: Unlocking the full power of crypto with embeddable execution conditions.
+image: /blog/smart-transactions/cover.png
+date: "2023-11-16"
+published: true
+---
+
+Cryptocurrency transactions have come a long way since the inception of Bitcoin. However, the fundamental process of signing and broadcasting transactions to the network remains largely unchanged. This simplicity has significant drawbacks, as it forces users to be available 24/7, or worse, compromise on security by sharing their private keys with an external service.
+
+This limitation has hindered the ability for users to construct higher-order complex interactions with the blockchain. For instance, constructing an onchain trading strategy is challenging due to the inability to set reactive conditional transactions in advance.
+
+But it’s not just complex interactions that are being hampered, even accomplishing basic actions like recurring transfers or actions you want to happen in the future require users to sign a transaction for every action.
+
+In response to these constraints, we’re introducing a powerful new primitive and toolkit for applications seeking to support more complex operations: **Smart Transactions**.
+
+### From Simple to Smart
+
+Ethereum currently supports very simple actions. There are 151 opcodes in the Ethereum Virtual Machine that collectively dictate how transactions and smart contracts are execute. However, these transactions suffer from two primary shortcomings:
+
+1. **Lack of Context:** Today’s transactions lack context. They explicitly define “how” an action should be performed, limiting the user experience (UX) and efficiency of transactions. Users are often required to determine the best course of actions upfront, making it challenging to optimize timing and conditions.
+2. **Lack of Data:** Smart contracts intentionally cannot access historic state data to preserve decentralization. This means that essential data such as trading volumes, fees, transactions, and historical prices, though available onchain, cannot be leveraged by protocols and transactions to inform actions.
+
+In combination, these constraints make crypto transactions suitable for early adopters, but hinder the industry’s potential to achieve mainstream adoption. To bridge this gap, we need a more advanced primitive for user interaction that enhances the UX and unlocks more powerful onchain capabilities.
+
+### Smart Transactions: Embedded Execution Conditons
+
+Smart Transactions are an implementation of an intent-based architecture, enabling users to specify their desired outcomes while embedding rules and conditions for how, when, where, or if their transactions should occur. These transactions aim to streamline the user experience and empower users with more control over their interactions with blockchains.
+
+The high-level architecture of Smart Transactions is illustrated in the chart below:
+
+<img
+  src="/blog/smart-transactions/chart.png"
+  width="1200"
+  height="675"
+  alt="District | Investment strategies, simplified"
+  className="my-6 rounded-md border"
+/>
+
+### What Can You Use Smart Transactions For?
+
+Smart Transactions open up new and more powerful ways of interacting with blockchains, offering the following advantages:
+
+- **Reactive DeFi:** Users can set conditions that automatically trigger actions in response to market developments. For instance, if the price of ETH increases by 10% in the last hour, Smart Transactions can automatically execute actions, such as buying more ETH or moving assets to a stablecoin, even when users are away from their wallets.
+- **Optimizing Execution:** Smart Transactions introduce an optimization layer to cryptocurrency trading by enabling solvers to compete in finding the most efficient execution paths for transactions. Users can leverage this feature to ensure that their trades are executed at the best possible prices, minimizing slippage and maximizing returns.
+- **Portfolio Risk Management:** Smart Transactions can continuously monitor the risk profile of a user's crypto portfolio and trigger actions like rebalancing or moving funds to stablecoins when predefined risk thresholds are exceeded.
+- **Dynamic Staking and Yield Farming:** Smart Transactions can automate staking and yield farming strategies by adjusting parameters based on real-time market conditions. For example, they can automatically switch between different liquidity pools or staking options to maximize returns.
+- **Lending and Borrowing with Custom Terms:** Users can create custom lending and borrowing agreements with specific terms and conditions using Smart Transactions. This allows for more flexibility in decentralized lending protocols.
+- **Token Airdrops with Decentralized Conditions:** Smart Transactions can distribute tokens to a specific group of users based on conditions like holding a certain amount of another token or participating in a particular event.
+- **Decentralized Autonomous Organizations (DAOs):** Smart Transactions can facilitate voting and governance processes within DAOs by enabling conditional voting based on specific criteria or triggering automated actions based on the outcomes of votes.
+- **Cross-Chain Interactions:** Smart Transactions can be used to create conditional actions that span multiple blockchains, enabling more complex cross-chain interactions and asset transfers.
+- **Subscription Services and Micropayments:** Content creators and service providers can use Smart Transactions to offer subscription services with customizable billing conditions. Users can set up automatic micropayments for content consumption.
+
+### Ready to Explore Smart Transactions
+
+Smart Transactions are a pivotal advancement in how we interact with blockchains. By addressing the limitations of current transactions, they offer a path towards mainstream adoption and a more powerful crypto experience.
+
+We encourage researchers, developers, and solvers to connect with us to further explore the potential of Smart Transactions and contribute to the future of decentralized finance.
+
+Have questions? Join us on [Discord](https://discord.gg/k3yuxqahtJ) or send us a [DM on Twitter](https://twitter.com/districtfi).
+
+— The District Team
