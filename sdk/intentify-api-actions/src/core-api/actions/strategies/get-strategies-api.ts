@@ -1,6 +1,5 @@
 import { addExpandParamsToUrl } from "@/src/utils";
 import { getStrategiesDb } from "@district-labs/intentify-database";
-import { API_URL } from "../../../constants";
 
 interface GetStrategiesApiParams {
   limit?: number;
@@ -12,17 +11,11 @@ interface GetStrategiesApiParams {
   };
 }
 
-interface GetStrategiesApiReturnType {
-  data: Awaited<ReturnType<typeof getStrategiesDb>>;
-}
-
-export async function getStrategiesApi({
-  limit,
-  offset,
-  intentBatchRoot,
-  expand,
-}: GetStrategiesApiParams = {}) {
-  let url = new URL(`${API_URL}strategies`);
+export async function getStrategiesApi(
+  coreApiUrl: string,
+  { limit, offset, intentBatchRoot, expand }: GetStrategiesApiParams = {},
+) {
+  let url = new URL(`${coreApiUrl}strategies`);
 
   if (limit) {
     url.searchParams.append("limit", limit.toString());
@@ -30,7 +23,7 @@ export async function getStrategiesApi({
   if (offset) {
     url.searchParams.append("offset", offset.toString());
   }
-  
+
   if (intentBatchRoot) {
     url.searchParams.append("intentBatchRoot", intentBatchRoot);
   }
@@ -46,7 +39,7 @@ export async function getStrategiesApi({
   });
 
   if (response.ok) {
-    const { data }: GetStrategiesApiReturnType = await response.json();
+    const data : Awaited<ReturnType<typeof getStrategiesDb>> = await response.json();
     return data;
   }
 

@@ -1,6 +1,7 @@
 import { getIntentBatchApi } from "@district-labs/intentify-api-actions"
 import { Request, Response } from "express"
 
+import { env } from "../../env"
 import CustomError from "../../utils/customError"
 import { simulateExecuteIntentBatch } from "./utils/simulate-execute-intent-batch"
 
@@ -17,14 +18,14 @@ export const executeIntentBatchSingle = async (
       throw new CustomError("Invalid IntentBatch ID", 400)
     }
 
-    const intentBatch = await getIntentBatchApi({
+    const intentBatch = await getIntentBatchApi(env.INTENTIFY_API_URL, {
       intentBatchHash: intentBatchId,
-      expand:{
+      expand: {
         executedTxs: true,
         intents: true,
         strategy: true,
         user: true,
-      }
+      },
     })
 
     if (!intentBatch) {

@@ -1,11 +1,11 @@
-import { API_URL } from "@/src/constants";
 import type { ExecuteIntentBatchApiParams } from "@district-labs/intentify-api";
 import { executeIntentBatchDb } from "@district-labs/intentify-database";
 
-export async function executeIntentBatchApi(executeIntentBatchParams:ExecuteIntentBatchApiParams): Promise<
-  ReturnType<typeof executeIntentBatchDb>
-> {
-  const url = new URL(`${API_URL}intent-batches`);
+export async function executeIntentBatchApi(
+  coreApiUrl: string,
+  executeIntentBatchParams: ExecuteIntentBatchApiParams,
+): Promise<ReturnType<typeof executeIntentBatchDb>> {
+  const url = new URL(`${coreApiUrl}intent-batches`);
 
   url.searchParams.append("action", "execute");
   const response = await fetch(url, {
@@ -18,7 +18,8 @@ export async function executeIntentBatchApi(executeIntentBatchParams:ExecuteInte
   });
 
   if (response.ok) {
-    const { data } = await response.json();
+    const data: Awaited<ReturnType<typeof executeIntentBatchDb>> =
+      await response.json();
     return data;
   }
 

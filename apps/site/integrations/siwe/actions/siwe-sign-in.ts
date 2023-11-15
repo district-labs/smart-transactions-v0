@@ -1,3 +1,4 @@
+import { env } from "@/env.mjs"
 import { postAuthSessionApi } from "@district-labs/intentify-api-actions"
 import { type Address } from "wagmi"
 import { type SignMessageArgs } from "wagmi/dist/actions"
@@ -23,7 +24,7 @@ export const siweSignIn = async ({
   })
 
   // 2. Verify signature
-  const verifyRes = await postAuthSessionApi({
+  const verifyRes = await postAuthSessionApi(env.NEXT_PUBLIC_API_URL, {
     message,
     signature,
   })

@@ -6,6 +6,7 @@ import {
 } from "@district-labs/intentify-deployments";
 import { createPublicClient, http } from "viem";
 import { goerli } from "viem/chains";
+import { env } from "../../env";
 
 // Goerli
 const CHAIN_ID = 5;
@@ -34,9 +35,12 @@ export async function sendAxiomQueryUniV3Goerli() {
       slot: OBSERVATIONS_SLOT,
     }));
 
-    postAxiomQueryApi({
+    postAxiomQueryApi(env.CORE_API_URL,{
       chainId: CHAIN_ID,
-      queries,
+      queries: queries.map((query) => ({
+        ...query,
+        blockNumber: query.blockNumber.toString(),
+      })),
     })
 
   } catch (error) {

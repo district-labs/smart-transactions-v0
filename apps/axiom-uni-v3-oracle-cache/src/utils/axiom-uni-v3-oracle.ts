@@ -6,6 +6,8 @@ import { goerliclient } from "../client";
 import { CHAIN_ID } from "../constants";
 import { getRelayerByChainId } from "../relayer";
 
+const CORE_API_URL = process.env.CORE_API_URL
+
 interface GetAxiomQueryResponseDataParams{keccakQueryResponse:string}
 
 interface GetAxiomResponseResult {
@@ -13,7 +15,10 @@ interface GetAxiomResponseResult {
 }
 
 export async function getAxiomQueryResponseData({keccakQueryResponse}:GetAxiomQueryResponseDataParams){
-  const {data: responseData} = await getAxiomQueryApi({chainId:CHAIN_ID, keccakQueryResponse})
+  if(!CORE_API_URL){
+  throw new Error("CORE_API_URL is missing")
+}
+  const {data: responseData} = await getAxiomQueryApi(CORE_API_URL,{chainId:CHAIN_ID, keccakQueryResponse})
   return responseData
 }
 

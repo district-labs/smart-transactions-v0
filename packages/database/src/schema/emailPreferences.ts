@@ -12,5 +12,5 @@ export const emailPreferences = mysqlTable("email_preferences", {
   userId: charAddress("user_id").notNull(),
 });
 
-export type EmailPreference = typeof emailPreferences.$inferSelect;
-export type NewEmailPreference = typeof emailPreferences.$inferInsert;
+export type DbEmailPreference = typeof emailPreferences.$inferSelect;
+export type DbNewEmailPreferences = typeof emailPreferences.$inferInsert;

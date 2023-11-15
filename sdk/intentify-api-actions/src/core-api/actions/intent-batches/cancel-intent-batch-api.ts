@@ -1,16 +1,16 @@
-import { API_URL } from "@/src/constants";
 import type { CancelIntentBatchApiParams } from "@district-labs/intentify-api";
 import { cancelIntentBatchDb } from "@district-labs/intentify-database";
 
-export async function cancelIntentBatchApi(cancelIntentBatchParams: CancelIntentBatchApiParams): Promise<
-  ReturnType<typeof cancelIntentBatchDb>
-> {
+export async function cancelIntentBatchApi(
+  coreApiUrl: string,
+  cancelIntentBatchParams: CancelIntentBatchApiParams,
+) {
   if (cancelIntentBatchParams.intentBatchHash.length === 0)
     throw new Error("Intent Batch Hash is required");
   if (cancelIntentBatchParams.transactionHash.length === 0)
     throw new Error("Transaction Hash is required");
 
-  const url = new URL(`${API_URL}intent-batches`);
+  const url = new URL(`${coreApiUrl}intent-batches`);
 
   url.searchParams.append("action", "cancel");
   const response = await fetch(url, {
@@ -23,7 +23,8 @@ export async function cancelIntentBatchApi(cancelIntentBatchParams: CancelIntent
   });
 
   if (response.ok) {
-    const { data } = await response.json();
+    const data: Awaited<ReturnType<typeof cancelIntentBatchDb>> =
+      await response.json();
     return data;
   }
 

@@ -1,8 +1,5 @@
 import { type IntentBatch } from "@district-labs/intentify-core"
-import type {
-  DbIntentBatchWithRelations,
-  IntentBatchQuery,
-} from "@district-labs/intentify-database"
+import type { DbIntentBatchWithRelations } from "@district-labs/intentify-database"
 
 4
 export type LimitOrderIntent = {

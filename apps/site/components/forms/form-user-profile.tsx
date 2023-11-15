@@ -1,10 +1,8 @@
 "use client"
 
 import { useEffect } from "react"
-import {
-  getAuthUserApi,
-  putUserApi,
-} from "@district-labs/intentify-api-actions"
+import { env } from "@/env.mjs"
+import { putUserApi } from "@district-labs/intentify-api-actions"
 import {
   Button,
   Card,
@@ -54,10 +52,7 @@ export function FormUserProfile() {
       firstName,
       lastName,
     }: UserInput) {
-      const user = await getAuthUserApi()
-      if (!user) throw new Error("User not found")
-      const result = await putUserApi({
-        address: user?.address,
+      const result = await putUserApi(env.NEXT_PUBLIC_API_URL, {
         email,
         firstName,
         lastName,

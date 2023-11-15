@@ -8,8 +8,8 @@ import { useForm } from "react-hook-form"
 import { useAccount } from "wagmi"
 import { type z } from "zod"
 
+import { env } from "@/env.mjs"
 import { userSchema } from "@/lib/validations/user"
-
 import { Icons } from "../icons"
 import { Button } from "../ui/button"
 import {
@@ -33,8 +33,7 @@ export function UpdateUserForm() {
   const updateUserMutation = useMutation({
     mutationFn: (data: UserInput) => {
       if (!address) throw new Error("User not found")
-      return putUserApi({
-        address,
+      return putUserApi(env.NEXT_PUBLIC_API_URL,{
         ...data,
       })
     },

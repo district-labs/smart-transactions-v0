@@ -1,4 +1,3 @@
-import { API_URL } from "@/src/constants";
 import { addExpandParamsToUrl } from "@/src/utils";
 import { getUserDb } from "@district-labs/intentify-database";
 
@@ -9,11 +8,11 @@ interface GetAuthUserApiParams {
   };
 }
 
-type GetAuthUserApiReturnType = {
-  data: Awaited<ReturnType<typeof getUserDb>>;
-};
-export async function getAuthUserApi({ expand }: GetAuthUserApiParams = {}) {
-  let url = new URL(`${API_URL}auth/user`);
+export async function getAuthUserApi(
+  coreApiUrl: string,
+  { expand }: GetAuthUserApiParams = {},
+) {
+  let url = new URL(`${coreApiUrl}auth/user`);
 
   url = addExpandParamsToUrl(url, expand);
 
@@ -26,7 +25,7 @@ export async function getAuthUserApi({ expand }: GetAuthUserApiParams = {}) {
   });
 
   if (response.ok) {
-    const { data }: GetAuthUserApiReturnType = await response.json();
+    const data: Awaited<ReturnType<typeof getUserDb>> = await response.json();
     return data;
   }
 }

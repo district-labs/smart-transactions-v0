@@ -2,9 +2,9 @@ import { putUserDb } from "@district-labs/intentify-database";
 import type { NextFunction, Request, Response } from "express";
 import { isAddress } from "viem";
 import { z } from "zod";
+import { getSession } from "../../iron-session";
 
 export const putUserSchema = z.object({
-  address: z.string().refine((value) => isAddress(value)),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   email: z.string().email().optional(),
@@ -12,13 +12,6 @@ export const putUserSchema = z.object({
   safeAddress: z
     .string()
     .refine((value) => isAddress(value))
-    .optional(),
-  emailPreferences: z
-    .object({
-      newsletter: z.boolean().nullable().optional(),
-      marketing: z.boolean().nullable().optional(),
-      transactional: z.boolean().nullable().optional(),
-    })
     .optional(),
 });
 
@@ -29,21 +22,22 @@ export async function putUser(
   response: Response,
   next: NextFunction,
 ) {
+  const session = await getSession(request, response);
+
+  if (!session?.address) {
+    return response.status(401).json({ error: "Unauthorized" });
+  }
+
   const updatedUserData = putUserSchema.parse(request.body);
 
-  const { success, error, data } = await putUserDb({
-    updatedUserData: {
-      ...updatedUserData,
-      emailPreferences: {
-        ...updatedUserData.emailPreferences,
-        userId: updatedUserData.address,
-      },
-    },
+  const { ok, error } = await putUserDb({
+    ...updatedUserData,
+    address: session.address,
   });
 
-  if (!success) {
+  if (!ok) {
     return response.status(500).json({ error: error });
   }
 
-  return response.status(200).json({ data });
+  return response.status(200).json({ ok });
 }

@@ -18,15 +18,18 @@ export async function cancelIntentBatchDb({
   transactionHash,
   transactionTimestamp,
 }: CancelIntentBatchDbParams) {
-  const cancelledIntentBatch = await db
-    .update(intentBatch)
-    .set({
-      cancelledTxHash: transactionHash,
-      cancelledAt: new Date(transactionTimestamp),
-    })
-    .where(eq(intentBatch.intentBatchHash, intentBatchHash));
-
-  return cancelledIntentBatch;
+  try {
+    await db
+      .update(intentBatch)
+      .set({
+        cancelledTxHash: transactionHash,
+        cancelledAt: new Date(transactionTimestamp),
+      })
+      .where(eq(intentBatch.intentBatchHash, intentBatchHash));
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error };
+  }
 }
 
 type ExecuteIntentBatchDbParams = DbInsertTransaction;
@@ -39,16 +42,20 @@ export async function executeIntentBatchDb({
   to,
   transactionHash,
 }: ExecuteIntentBatchDbParams) {
-  const insertedTransaction = await db.insert(transaction).values({
-    intentBatchId,
-    to,
-    chainId,
-    blockHash,
-    blockNumber,
-    transactionHash,
-  });
+  try {
+    await db.insert(transaction).values({
+      intentBatchId,
+      to,
+      chainId,
+      blockHash,
+      blockNumber,
+      transactionHash,
+    });
 
-  return insertedTransaction;
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error };
+  }
 }
 
 interface InvalidateIntentBatchDbParams {
@@ -58,10 +65,14 @@ interface InvalidateIntentBatchDbParams {
 export async function invalidateIntentsDb({
   intentId,
 }: InvalidateIntentBatchDbParams) {
-  const invalidatedIntent = await db
-    .update(intents)
-    .set({ isInvalid: true })
-    .where(eq(intents.intentId, intentId));
+  try {
+    await db
+      .update(intents)
+      .set({ isInvalid: true })
+      .where(eq(intents.intentId, intentId));
 
-  return invalidatedIntent;
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error };
+  }
 }

@@ -1,10 +1,8 @@
 "use client"
 
 import { useEffect } from "react"
-import {
-  getAuthUserApi,
-  putUserApi,
-} from "@district-labs/intentify-api-actions"
+import { env } from "@/env.mjs"
+import { putEmailPreferencesApi } from "@district-labs/intentify-api-actions"
 import {
   Button,
   Card,
@@ -59,15 +57,13 @@ export function FormUserEmailPreferences() {
 
   const updateUserMutation = useMutation({
     mutationFn: async (data: EmailPreferencesInput) => {
-      const userAuth = await getAuthUserApi()
-      if (!userAuth) throw new Error("User not found")
-
-      return putUserApi({
-        address: userAuth?.address,
-        emailPreferences: {
-          ...data,
-        },
+      const result = await putEmailPreferencesApi(env.NEXT_PUBLIC_API_URL, {
+        marketing: data.marketing,
+        newsletter: data.newsletter,
+        transactional: data.transactional,
       })
+
+      if (!result.ok) throw new Error(result.error)
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["user", "profile"])

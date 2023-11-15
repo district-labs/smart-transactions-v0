@@ -6,16 +6,21 @@ export async function dispatchIntentExecution(
   intentBatchId: `0x${string}`,
   receipt: Transaction,
 ) {
+  const CORE_API_URL = process.env.CORE_API_URL;
+
+  if (!CORE_API_URL) {
+    throw new Error("CORE_API_URL is not defined");
+  }
+
   try {
-    await executeIntentBatchApi({
-      transactionParams: {
+    if(!receipt.blockHash || !receipt.blockNumber || !receipt.to || !receipt.hash) throw new Error("Missing receipt data")
+    await executeIntentBatchApi(CORE_API_URL,{
         chainId,
-        intentBatchId,
+        intentBatchHash: intentBatchId,
         blockHash: receipt.blockHash,
         blockNumber: Number(receipt.blockNumber),
         to: receipt.to,
-        transactionHash: receipt.hash,
-      },
+        transactionHash: receipt.hash,   
     });
   } catch (error) {
     console.log(error);

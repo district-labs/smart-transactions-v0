@@ -25,9 +25,6 @@ export type DbUser = typeof users.$inferSelect;
 export type DbUserWithRelations = typeof users.$inferSelect & {
   emailPreferences?: typeof emailPreferences.$inferSelect;
 };
-export type DbInsertUserWithRelations = typeof users.$inferInsert & {
-  emailPreferences?: typeof emailPreferences.$inferInsert;
-};
 
 export const usersRelations = relations(users, ({ one, many }) => ({
   strategies: many(strategies),

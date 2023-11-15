@@ -1,6 +1,5 @@
 import { addExpandParamsToUrl } from "@/src/utils";
 import { getUsersDb } from "@district-labs/intentify-database";
-import { API_URL } from "../../../constants";
 
 interface GetUsersApiParams {
   limit?: number;
@@ -11,16 +10,11 @@ interface GetUsersApiParams {
   };
 }
 
-interface GetUsersApiReturnType {
-  data: Awaited<ReturnType<typeof getUsersDb>>;
-}
-
-export async function getUsersApi({
-  expand,
-  limit,
-  offset,
-}: GetUsersApiParams = {}) {
-  let url = new URL(`${API_URL}users`);
+export async function getUsersApi(
+  coreApiUrl: string,
+  { expand, limit, offset }: GetUsersApiParams = {},
+) {
+  let url = new URL(`${coreApiUrl}users`);
 
   if (limit) {
     url.searchParams.append("limit", limit.toString());
@@ -41,7 +35,7 @@ export async function getUsersApi({
   });
 
   if (response.ok) {
-    const { data }: GetUsersApiReturnType = await response.json();
+    const data : Awaited<ReturnType<typeof getUsersDb>> = await response.json();
     return data;
   }
 

@@ -1,7 +1,5 @@
-import { API_URL } from "@/src/constants";
-
-export async function getAuthNonceApi() {
-  const url = new URL(`${API_URL}auth/nonce`);
+export async function getAuthNonceApi(coreApiUrl: string) {
+  const url = new URL(`${coreApiUrl}auth/nonce`);
   const response = await fetch(url, {
     method: "GET",
     credentials: "include",

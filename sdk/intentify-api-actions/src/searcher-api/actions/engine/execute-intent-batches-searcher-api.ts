@@ -1,5 +1,4 @@
 import type { RelayerTransaction } from "@openzeppelin/defender-relay-client";
-import { SEARCHER_API_URL } from "../../../constants";
 
 interface ExecuteIntentBatchesSearcherApiResult {
   successfulExecutions: {
@@ -14,8 +13,8 @@ interface ExecuteIntentBatchesSearcherApiResult {
   }[];
 }
 
-export async function executeIntentBatchesSearcherApi() {
-  const response = await fetch(`${SEARCHER_API_URL}engine`, {
+export async function executeIntentBatchesSearcherApi(searcherApiUrl: string) {
+  const response = await fetch(`${searcherApiUrl}engine`, {
     method: "GET",
     credentials: "include",
     headers: {

@@ -43,7 +43,7 @@ export const intentsRelations = relations(intents, ({ one }) => ({
 }));
 
 export type DbIntent = typeof intents.$inferSelect;
-export type DbInsertIntent = typeof intents.$inferInsert
+export type DbInsertIntent = typeof intents.$inferInsert;
 
 // ------------------ INTENT BATCH ------------------ //
 

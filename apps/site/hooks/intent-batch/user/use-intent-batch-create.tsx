@@ -1,4 +1,5 @@
 import { intentBatchFactory } from "@/core/intent-batch-factory"
+import { env } from "@/env.mjs"
 import {
   executeIntentBatchSearcherApi,
   postIntentBatchApi,
@@ -14,7 +15,9 @@ import { hashTypedData } from "viem"
 
 // Calls the searcher API to execute the newly created intent batch
 async function executeSearcherAPI(intentBatchHash: string) {
-  await executeIntentBatchSearcherApi({ intentBatchHash })
+  await executeIntentBatchSearcherApi(env.NEXT_PUBLIC_SEARCHER_API_URL, {
+    intentBatchHash,
+  })
 }
 
 export function useActionIntentBatchCreate() {
@@ -47,7 +50,7 @@ export function useActionIntentBatchCreate() {
         })
       )
 
-      await postIntentBatchApi({
+      await postIntentBatchApi(env.NEXT_PUBLIC_API_URL, {
         intentBatch: {
           chainId,
           intentBatchHash,

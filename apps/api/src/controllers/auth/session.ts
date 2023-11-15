@@ -7,11 +7,10 @@ import {
 } from "@district-labs/intentify-database";
 import { SafeProxy, WalletFactory } from "@district-labs/intentify-deployments";
 import type { NextFunction, Request, Response } from "express";
-import { getIronSession } from "iron-session";
 import { SiweMessage } from "siwe";
 import { z } from "zod";
 import { publicClients } from "../../blockchain-clients";
-import { ironOptions } from "../../iron-session";
+import { getSession } from "../../iron-session";
 
 export const postAuthSessionSchema = z.object({
   signature: z.string(),
@@ -35,7 +34,7 @@ export async function postAuthSession(
   next: NextFunction,
 ) {
   try {
-    const session = await getIronSession(request, response, ironOptions);
+    const session = await getSession(request, response);
     const { message, signature } = postAuthSessionSchema.parse(
       await request.body,
     );
@@ -98,7 +97,7 @@ export async function deleteAuthSession(
   next: NextFunction,
 ) {
   try {
-    const session = await getIronSession(request, response, ironOptions);
+    const session = await getSession(request, response);
     session.destroy();
     return response.status(200).json({ ok: true });
   } catch (error) {

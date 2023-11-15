@@ -17,6 +17,9 @@ export const getIntentBatchesQuerySchema = z.object({
   limit: z.string().optional(),
   offset: z.string().optional(),
   root: z.string().optional(),
+  intentBatchValidity: z
+    .union([z.literal("valid"), z.literal("invalid"), z.literal("all")])
+    .optional(),
   strategyId: z.string().optional(),
   expand: getExpandFieldsSchema(expandFieldsGetIntentBatches),
 });
@@ -27,7 +30,7 @@ export async function getIntentBatches(
   next: NextFunction,
 ) {
   try {
-    const { expand, root, strategyId, limit, offset } =
+    const { expand, root, strategyId, limit, offset, intentBatchValidity } =
       getIntentBatchesQuerySchema.parse(request.query);
 
     const expandFields = getExpandFields(expand);
@@ -38,9 +41,10 @@ export async function getIntentBatches(
       expandFields,
       root,
       strategyId,
+      intentBatchValidity,
     });
 
-    return response.status(200).json({ data: intentBatches });
+    return response.status(200).json(intentBatches);
   } catch (error) {
     next(error);
   }

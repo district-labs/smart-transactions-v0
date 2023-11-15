@@ -1,11 +1,11 @@
-import { API_URL } from "@/src/constants";
 import type { PostUserApiParams } from "@district-labs/intentify-api";
 import { postUserDb } from "@district-labs/intentify-database";
 
 export async function postUserApi(
+  coreApiUrl: string,
   postUserParams: PostUserApiParams,
-): Promise<Awaited<ReturnType<typeof postUserDb>>["data"]> {
-  const response = await fetch(`${API_URL}users`, {
+): Promise<Awaited<ReturnType<typeof postUserDb>>> {
+  const response = await fetch(`${coreApiUrl}users`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -15,7 +15,7 @@ export async function postUserApi(
   });
 
   if (response.ok) {
-    const { data } = await response.json();
+    const data: Awaited<ReturnType<typeof postUserDb>> = await response.json();
     return data;
   }
 

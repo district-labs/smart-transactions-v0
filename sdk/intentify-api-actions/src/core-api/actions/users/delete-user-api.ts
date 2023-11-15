@@ -1,16 +1,14 @@
 import { deleteUserDb } from "@district-labs/intentify-database";
-import { API_URL } from "../../../constants";
 
 interface DeleteUserParams {
   userAddress: string;
 }
 
-export async function deleteUserApi({
-  userAddress,
-}: DeleteUserParams): Promise<
-  Awaited<ReturnType<typeof deleteUserDb>>["data"]
-> {
-  const response = await fetch(`${API_URL}users/${userAddress}`, {
+export async function deleteUserApi(
+  coreApiUrl: string,
+  { userAddress }: DeleteUserParams,
+): Promise<Awaited<ReturnType<typeof deleteUserDb>>> {
+  const response = await fetch(`${coreApiUrl}users/${userAddress}`, {
     method: "DELETE",
     credentials: "include",
     headers: {
@@ -19,8 +17,8 @@ export async function deleteUserApi({
   });
 
   if (response.ok) {
-    const { data } = await response.json();
-    return data;
+    const responseJson = await response.json();
+    return responseJson;
   }
 
   const errorData = await response.text();

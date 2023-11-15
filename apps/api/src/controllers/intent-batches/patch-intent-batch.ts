@@ -61,11 +61,11 @@ export async function patchIntentBatches(
           transactionTimestamp,
         });
 
-        if (!cancelledIntentBatch) {
-          return response.status(404).json({ error: "Intent batch not found" });
+        if (!cancelledIntentBatch.ok) {
+          return response.status(404).json(cancelledIntentBatch);
         }
 
-        return response.status(200).json({ data: cancelledIntentBatch });
+        return response.status(200).json(cancelledIntentBatch);
       }
       case "execute": {
         const {
@@ -86,11 +86,11 @@ export async function patchIntentBatches(
           transactionHash,
         });
 
-        if (!insertedTransaction) {
-          return response.status(404).json({ error: "Transaction not found" });
+        if (!insertedTransaction.ok) {
+          return response.status(404).json(insertedTransaction);
         }
 
-        return response.status(200).json({ data: insertedTransaction });
+        return response.status(200).json(insertedTransaction);
       }
       case "invalidate": {
         const intentBatches = await getIntentBatchesFromDB({
@@ -124,7 +124,7 @@ export async function patchIntentBatches(
         });
 
         return response.status(200).json({
-          data: intentInvalidations,
+          ok: true,
         });
       }
       default: {

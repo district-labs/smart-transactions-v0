@@ -1,9 +1,8 @@
 import { postIntentBatchDb } from "@district-labs/intentify-database";
 import type { NextFunction, Request, Response } from "express";
-import { getIronSession } from "iron-session";
-import { recoverAddress } from 'viem';
+import { recoverAddress } from "viem";
 import { z } from "zod";
-import { ironOptions } from "../../iron-session";
+import { getSession } from "../../iron-session";
 
 export const postIntentBatchSchema = z.object({
   intentBatch: z.object({
@@ -41,7 +40,7 @@ export async function postIntentBatch(
   next: NextFunction,
 ) {
   try {
-    const session = await getIronSession(request, response, ironOptions);
+    const session = await getSession(request, response);
 
     if (!session?.address) {
       return response.status(401).json({ error: "Unauthorized" });
@@ -52,14 +51,14 @@ export async function postIntentBatch(
     const recoveredAddress = await recoverAddress({
       signature: intentBatch.signature as `0x${string}`,
       hash: intentBatch.intentBatchHash as `0x${string}`,
-    })
+    });
 
     // Prevent users from submitting intent batches on behalf of other users
     if (recoveredAddress !== session.address) {
       return response.status(401).json({ error: "Unauthorized" });
     }
 
-    const { ok } = await postIntentBatchDb({
+    const postIntentBatchResponse = await postIntentBatchDb({
       intentBatch: {
         ...intentBatch,
         userId: session.address,
@@ -70,7 +69,11 @@ export async function postIntentBatch(
       })),
     });
 
-    return response.status(200).json({ ok });
+    if (!postIntentBatchResponse.ok) {
+      return response.status(500).json(postIntentBatchResponse);
+    }
+
+    return response.status(200).json(postIntentBatchResponse);
   } catch (error) {
     next(error);
   }

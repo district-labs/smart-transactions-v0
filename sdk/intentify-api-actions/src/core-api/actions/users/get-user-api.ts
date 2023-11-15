@@ -1,7 +1,6 @@
 import { addExpandParamsToUrl } from "@/src/utils";
 import { getUserDb } from "@district-labs/intentify-database";
 import type { Address } from "viem";
-import { API_URL } from "../../../constants";
 
 interface GetUserApiParams {
   address: Address;
@@ -11,14 +10,13 @@ interface GetUserApiParams {
   };
 }
 
-type GetUserApiReturnType = {
-  data: Awaited<ReturnType<typeof getUserDb>>;
-};
-
-export async function getUserApi({ address, expand }: GetUserApiParams) {
+export async function getUserApi(
+  coreApiUrl: string,
+  { address, expand }: GetUserApiParams,
+) {
   if (address.length === 0) throw new Error("Address is required");
 
-  let url = new URL(`${API_URL}users/${address}`);
+  let url = new URL(`${coreApiUrl}users/${address}`);
 
   url = addExpandParamsToUrl(url, expand);
 
@@ -31,7 +29,7 @@ export async function getUserApi({ address, expand }: GetUserApiParams) {
   });
 
   if (response.ok) {
-    const { data }: GetUserApiReturnType = await response.json();
+    const data: Awaited<ReturnType<typeof getUserDb>> = await response.json();
     return data;
   }
 

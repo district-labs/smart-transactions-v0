@@ -1,8 +1,10 @@
-import { API_URL } from "@/src/constants";
 import type { PostAuthSessionApiParams } from "@district-labs/intentify-api";
 
-export async function postAuthSessionApi(postAuthSessionParams: PostAuthSessionApiParams) {
-  const url = new URL(`${API_URL}auth/session`);
+export async function postAuthSessionApi(
+  coreApiUrl: string,
+  postAuthSessionParams: PostAuthSessionApiParams,
+) {
+  const url = new URL(`${coreApiUrl}auth/session`);
 
   const response = await fetch(url, {
     method: "POST",

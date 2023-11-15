@@ -11,8 +11,14 @@ export async function dispatchIntentCancelled({
   transactionHash,
   transactionTimestamp,
 }: DispatchIntentCancelledParams) {
+  const CORE_API_URL = process.env.CORE_API_URL;
+
+  if (!CORE_API_URL) {
+    throw new Error("CORE_API_URL is not defined");
+  }
+
   try {
-    await cancelIntentBatchApi({
+    await cancelIntentBatchApi(CORE_API_URL,{
       intentBatchHash,
       transactionHash,
       transactionTimestamp,

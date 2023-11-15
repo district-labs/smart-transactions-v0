@@ -16,6 +16,8 @@ import {
   CardHeader,
 } from "@district-labs/ui-react"
 
+import { useUserActiveStrategies } from "@/hooks/strategy/user/use-strategy-user-active-find"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Address } from "@/components/blockchain/address"
 import { BlockieSmartWallet } from "@/components/blockchain/blockie-smart-wallet"
 import { WalletConnectAndAuthenticatePrompt } from "@/components/blockchain/wallet-connect-and-authenticate-prompt"
@@ -23,8 +25,6 @@ import { Erc20CardTokenOverview } from "@/components/erc20/erc20-card-token-over
 import { LinkComponent } from "@/components/shared/link-component"
 import { SkeletonCardStrategyActive } from "@/components/skeleton/skeleton-card-strategy-active"
 import { CardStrategyActive } from "@/components/strategies/card-strategy-active"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useUserActiveStrategies } from "@/hooks/strategy/user/use-strategy-user-active-find"
 
 export default function SmartWalletPage() {
   const classesTabTrigger =

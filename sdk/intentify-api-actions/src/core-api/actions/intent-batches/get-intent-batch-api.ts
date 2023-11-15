@@ -1,6 +1,5 @@
 import { addExpandParamsToUrl } from "@/src/utils";
 import { getIntentBatchDb } from "@district-labs/intentify-database";
-import { API_URL } from "../../../constants";
 
 interface GetIntentBatchApiParams {
   intentBatchHash: string;
@@ -12,18 +11,14 @@ interface GetIntentBatchApiParams {
   };
 }
 
-interface GetIntentBatchApiReturnType {
-  data: Awaited<ReturnType<typeof getIntentBatchDb>>;
-}
-
-export async function getIntentBatchApi({
-  intentBatchHash,
-  expand,
-}: GetIntentBatchApiParams) {
+export async function getIntentBatchApi(
+  coreApiUrl: string,
+  { intentBatchHash, expand }: GetIntentBatchApiParams,
+) {
   if (intentBatchHash.length === 0)
     throw new Error("Intent Batch Hash is required");
 
-  let url = new URL(`${API_URL}intent-batches/${intentBatchHash}`);
+  let url = new URL(`${coreApiUrl}intent-batches/${intentBatchHash}`);
 
   url = addExpandParamsToUrl(url, expand);
 
@@ -36,7 +31,7 @@ export async function getIntentBatchApi({
   });
 
   if (response.ok) {
-    const { data }: GetIntentBatchApiReturnType = await response.json();
+    const data: Awaited<ReturnType<typeof getIntentBatchDb>> = await response.json();
     return data;
   }
 

@@ -33,7 +33,7 @@ export async function getStrategy(
       return response.status(404).json({ error: "Strategy not found" });
     }
 
-    return response.status(200).json({ data: strategy });
+    return response.status(200).json(strategy);
   } catch (error) {
     next(error);
   }

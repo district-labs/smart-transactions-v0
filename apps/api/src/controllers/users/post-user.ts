@@ -2,9 +2,9 @@ import { postUserDb } from "@district-labs/intentify-database";
 import type { NextFunction, Request, Response } from "express";
 import { isAddress } from "viem";
 import { z } from "zod";
+import { getSession } from "../../iron-session";
 
 export const postUserSchema = z.object({
-  address: z.string().refine((value) => isAddress(value)),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   email: z.string().email().optional(),
@@ -29,20 +29,26 @@ export async function postUser(
   next: NextFunction,
 ) {
   const newUserData = postUserSchema.parse(request.body);
+  const session = await getSession(request, response);
 
-  const { success, error, data } = await postUserDb({
+  if (!session?.address) {
+    return response.status(401).json({ error: "Unauthorized" });
+  }
+
+  const { ok, error } = await postUserDb({
     newUserData: {
       ...newUserData,
-      emailPreferences: {
-        ...newUserData.emailPreferences,
-        userId: newUserData.address,
-      },
+      address: session.address,
+    },
+    emailPreferencesData: {
+      ...newUserData.emailPreferences,
+      userId: session.address,
     },
   });
 
-  if (!success) {
+  if (!ok) {
     return response.status(500).json({ error: error });
   }
 
-  return response.status(201).json({ data });
+  return response.status(201).json({ ok });
 }

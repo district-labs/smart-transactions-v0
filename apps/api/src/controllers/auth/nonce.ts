@@ -1,7 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
-import { getIronSession } from "iron-session";
 import { generateNonce } from "siwe";
-import { ironOptions } from "../../iron-session";
+import { getSession } from "../../iron-session";
 
 export const getAuthNonce = async (
   request: Request,
@@ -10,7 +9,7 @@ export const getAuthNonce = async (
 ) => {
   try {
     const nonce = generateNonce();
-    const session = await getIronSession(request, response, ironOptions);
+    const session = await getSession(request, response);
     session.destroy();
     session.nonce = nonce;
 

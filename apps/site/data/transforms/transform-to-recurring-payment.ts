@@ -1,5 +1,5 @@
 import { type IntentBatch } from "@district-labs/intentify-core"
-import { type DbTransaction } from "@district-labs/intentify-database"
+import { type DbIntentBatchWithRelations, type DbTransaction } from "@district-labs/intentify-database"
 
 import { transformIntentQueryToIntentBatchStruct } from "./transform-intent-query-to-intent-batch-struct"
 
@@ -16,16 +16,17 @@ export type RecurringPaymentIntent = {
 }
 
 export function transformToRecurringPayment(
-  intentBatch: any
+  intentBatch: DbIntentBatchWithRelations
 ): RecurringPaymentIntent {
-  const { intents } = intentBatch
+  const intents = intentBatch?.intents
+
   return {
     chainId: Number(intentBatch.chainId),
-    executedTxs: intentBatch.executedTxs,
+    executedTxs: intentBatch?.executedTxs || [],
     nonce: intentBatch.nonce,
-    tokenOut: String(intents[0]?.intentArgs[0]?.value),
-    amountOut: Number(intents[0]?.intentArgs[1]?.value),
-    to: String(intents[0]?.intentArgs[2]?.value),
+    tokenOut: String(intents?.[0]?.intentArgs[0]?.value),
+    amountOut: Number(intents?.[0]?.intentArgs[1]?.value),
+    to: String(intents?.[0]?.intentArgs[2]?.value),
     status: getStatus(intentBatch.executedAt, intentBatch?.cancelledAt),
     intentBatch: transformIntentQueryToIntentBatchStruct(intentBatch),
     intentBatchDb: intentBatch,

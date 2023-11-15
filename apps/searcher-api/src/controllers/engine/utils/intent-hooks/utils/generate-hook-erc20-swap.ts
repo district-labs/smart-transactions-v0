@@ -15,12 +15,8 @@ import {
   type PublicClient,
 } from "viem"
 
-import {
-  getSearcherAddressBychainId,
-} from "../../../../../constants"
-import {
-  env
-} from "../../../../../env"
+import { getSearcherAddressBychainId } from "../../../../../constants"
+import { env } from "../../../../../env"
 import { routeSwapExactInput } from "../uniswap/routing"
 import { encodeMultiCallWithFlashLoanData } from "./encode-multicall-with-flashloan"
 

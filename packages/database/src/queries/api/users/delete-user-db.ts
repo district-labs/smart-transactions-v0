@@ -13,7 +13,7 @@ export async function deleteUserDb({ userAddress }: DeleteUserDbParams) {
   });
 
   if (!existingUser) {
-    return { success: false, error: "User not found" } as const;
+    return { ok: false, error: "User not found" } as const;
   }
 
   const deletedUser = await db
@@ -26,8 +26,8 @@ export async function deleteUserDb({ userAddress }: DeleteUserDbParams) {
     .where(eq(emailPreferences.userId, existingUser.address));
 
   if (!deletedUser) {
-    return { success: false, error: "Error deleting user" } as const;
+    return { ok: false, error: "Error deleting user" } as const;
   }
 
-  return { success: true, data: deletedUser } as const;
+  return { ok: true } as const;
 }

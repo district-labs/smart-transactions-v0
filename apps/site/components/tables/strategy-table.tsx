@@ -35,12 +35,13 @@ export function StrategyTable({
         !isSuccess
           ? []
           : filterData
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-            ? data.filter(filterData).map(transformData)
-             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-            : data.map(transformData)
+            ? 
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              data.filter(filterData).map(transformData)
+            : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
+              data.map(transformData)
       }
       pageCount={pageCount}
     />

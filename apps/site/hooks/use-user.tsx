@@ -1,9 +1,10 @@
 "use client"
 
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { env } from "@/env.mjs"
 import { getAuthUserApi } from "@district-labs/intentify-api-actions"
 import { useQuery } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
 
 export function useUser({ redirectTo = "", redirectIfFound = false } = {}) {
   const {
@@ -12,7 +13,12 @@ export function useUser({ redirectTo = "", redirectIfFound = false } = {}) {
     ...rest
   } = useQuery(["user"], {
     queryFn: async function getUser() {
-      const user = await getAuthUserApi()
+      const user = await getAuthUserApi(env.NEXT_PUBLIC_API_URL, {
+        expand: {
+          emailPreferences: true,
+          strategies: true,
+        },
+      })
 
       return user
     },

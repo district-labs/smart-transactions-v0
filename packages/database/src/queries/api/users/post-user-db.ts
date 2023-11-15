@@ -1,44 +1,33 @@
 import { eq } from "drizzle-orm";
 import {
-  DbInsertUserWithRelations,
+  DbNewEmailPreferences,
+  DbNewUser,
   db,
   emailPreferences,
   users,
 } from "../../..";
 
 interface PostUserDbParams {
-  newUserData: DbInsertUserWithRelations;
+  newUserData: DbNewUser;
+  emailPreferencesData: DbNewEmailPreferences;
 }
 
-export async function postUserDb({ newUserData }: PostUserDbParams) {
+export async function postUserDb({
+  newUserData,
+  emailPreferencesData,
+}: PostUserDbParams) {
   const existingUser = await db.query.users.findFirst({
     where: eq(users.address, newUserData.address),
   });
 
   if (existingUser) {
-    return { success: false, error: "User already exists" } as const;
+    return { ok: false, error: "User already exists" } as const;
   }
 
-  const newUser = await db.insert(users).values(newUserData);
+  await db.transaction(async (tx) => {
+    await db.insert(users).values(newUserData);
+    await db.insert(emailPreferences).values(emailPreferencesData);
+  });
 
-  if (!newUser) {
-    return { success: false, error: "Error creating user" } as const;
-  }
-
-  // Create email preferences if they exist
-  if (newUserData.emailPreferences) {
-    const newEmailPreferences = await db.insert(emailPreferences).values({
-      ...newUserData.emailPreferences,
-      userId: newUserData.address,
-    });
-
-    if (!newEmailPreferences) {
-      return {
-        success: false,
-        error: "Error creating email preferences",
-      } as const;
-    }
-  }
-
-  return { success: true, data: newUser } as const;
+  return { ok: true } as const;
 }

@@ -7,6 +7,7 @@ import { env } from "./env";
 import { errorHandler } from "./middleware/errorHandler";
 import { authRouter } from "./routes/auth";
 import { axiomQueryRouter } from "./routes/axiom-query";
+import { emailPreferencesRouter } from "./routes/email-preferences";
 import { intentBatchesRouter } from "./routes/intent-batches";
 import { strategiesRouter } from "./routes/strategies";
 import { usersRouter } from "./routes/users";
@@ -29,6 +30,7 @@ app.use(express.json());
 // Route groups
 app.use("/auth", authRouter);
 app.use("/users", usersRouter);
+app.use("/email-preferences", emailPreferencesRouter);
 app.use("/intent-batches", intentBatchesRouter);
 app.use("/strategies", strategiesRouter);
 app.use("/axiom-query", axiomQueryRouter);

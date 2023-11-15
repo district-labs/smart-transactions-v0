@@ -1,6 +1,5 @@
 import { addExpandParamsToUrl } from "@/src/utils";
 import { getStrategyDb } from "@district-labs/intentify-database";
-import { API_URL } from "../../../constants";
 
 interface GetStrategyApiParams {
   strategyId: string;
@@ -9,17 +8,14 @@ interface GetStrategyApiParams {
     intentBatches?: boolean;
   };
 }
-interface GetStrategyApiReturnType {
-  data: Awaited<ReturnType<typeof getStrategyDb>>;
-}
 
-export async function getStrategyApi({
-  strategyId,
-  expand,
-}: GetStrategyApiParams) {
+export async function getStrategyApi(
+  coreApiUrl: string,
+  { strategyId, expand }: GetStrategyApiParams,
+) {
   if (strategyId.length === 0) throw new Error("Strategy ID is required");
 
-  let url = new URL(`${API_URL}strategies/${strategyId}`);
+  let url = new URL(`${coreApiUrl}strategies/${strategyId}`);
 
   url = addExpandParamsToUrl(url, expand);
 
@@ -32,7 +28,7 @@ export async function getStrategyApi({
   });
 
   if (response.ok) {
-    const { data }: GetStrategyApiReturnType = await response.json();
+    const data: Awaited<ReturnType<typeof getStrategyDb>> = await response.json();
     return data;
   }
 

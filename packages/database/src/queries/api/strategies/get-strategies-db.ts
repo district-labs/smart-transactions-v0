@@ -1,7 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { db, intentBatch } from "../../..";
 
-
 interface GetStrategiesDbParams {
   limit?: string;
   offset?: string;
@@ -15,21 +14,25 @@ export async function getStrategiesDb({
   limit,
   offset,
 }: GetStrategiesDbParams) {
+  const intentBatchFilters: any[] = [];
 
-    const intentBatchFilters: any[] = []
-
-    if(intentBatchRoot) {
-      intentBatchFilters.push(eq(intentBatch.root, intentBatchRoot))
-    }
+  if (intentBatchRoot) {
+    intentBatchFilters.push(eq(intentBatch.root, intentBatchRoot));
+  }
 
   const strategiesData = await db.query.strategies.findMany({
     limit: Number(limit),
     offset: Number(offset),
     with: {
       manager: expandFields.includes("manager") ? true : undefined,
-      intentBatches: expandFields.includes("intentBatches") ? {
-        where: intentBatchFilters.length > 0 ? () => and(...intentBatchFilters) : undefined,
-      } : undefined,
+      intentBatches: expandFields.includes("intentBatches")
+        ? {
+            where:
+              intentBatchFilters.length > 0
+                ? () => and(...intentBatchFilters)
+                : undefined,
+          }
+        : undefined,
     },
   });
 

@@ -1,6 +1,5 @@
 import { addExpandParamsToUrl } from "@/src/utils";
 import { getIntentBatchesDb } from "@district-labs/intentify-database";
-import { API_URL } from "../../../constants";
 
 export interface GetIntentBatchesApiParams {
   limit?: number;
@@ -8,6 +7,7 @@ export interface GetIntentBatchesApiParams {
   filter?: {
     root?: string;
     strategyId?: string;
+    intentBatchValidity?: "valid" | "invalid" | "all";
   };
   expand?: {
     intents?: boolean;
@@ -17,17 +17,11 @@ export interface GetIntentBatchesApiParams {
   };
 }
 
-interface GetIntentBatchesApiReturnType {
-  data: Awaited<ReturnType<typeof getIntentBatchesDb>>;
-}
-
-export async function getIntentBatchesApi({
-  limit,
-  offset,
-  expand,
-  filter,
-}: GetIntentBatchesApiParams = {}) {
-  let url = new URL(`${API_URL}intent-batches`);
+export async function getIntentBatchesApi(
+  coreApiUrl: string,
+  { limit, offset, expand, filter }: GetIntentBatchesApiParams = {},
+) {
+  let url = new URL(`${coreApiUrl}intent-batches`);
   if (limit) {
     url.searchParams.append("limit", limit.toString());
   }
@@ -37,11 +31,15 @@ export async function getIntentBatchesApi({
   }
 
   if (filter?.root) {
-    url.searchParams.append("root", filter?.root);
+    url.searchParams.append("root", filter.root);
   }
 
   if (filter?.strategyId) {
-    url.searchParams.append("strategyId", filter?.strategyId);
+    url.searchParams.append("strategyId", filter.strategyId);
+  }
+
+  if (filter?.intentBatchValidity) {
+    url.searchParams.append("intentBatchValidity", filter.intentBatchValidity);
   }
 
   url = addExpandParamsToUrl(url, expand);
@@ -55,7 +53,7 @@ export async function getIntentBatchesApi({
   });
 
   if (response.ok) {
-    const { data }: GetIntentBatchesApiReturnType = await response.json();
+    const data : Awaited<ReturnType<typeof getIntentBatchesDb>> = await response.json();
     return data;
   }
 

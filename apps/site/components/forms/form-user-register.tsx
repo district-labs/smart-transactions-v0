@@ -1,9 +1,6 @@
 "use client"
 
-import {
-  getAuthUserApi,
-  postUserApi,
-} from "@district-labs/intentify-api-actions"
+import { postUserApi } from "@district-labs/intentify-api-actions"
 import {
   Button,
   Form,
@@ -16,8 +13,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useForm } from "react-hook-form"
 
-import { cn } from "@/lib/utils"
+import { env } from "@/env.mjs"
 import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
+import { cn } from "@/lib/utils"
 
 import { Icons } from "../icons"
 
@@ -29,10 +27,7 @@ export function FormUserRegister({ currentColor }: { currentColor: string }) {
 
   const updateUserMutation = useMutation({
     mutationFn: async function registerUser(data: { email: string }) {
-      const authUser = await getAuthUserApi()
-      if (!authUser) throw new Error("User not found")
-      const user = await postUserApi({
-        address: authUser?.address,
+      const user = await postUserApi(env.NEXT_PUBLIC_API_URL,{
         email: data.email,
       })
       return user

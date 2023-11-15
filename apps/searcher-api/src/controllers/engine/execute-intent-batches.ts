@@ -1,5 +1,7 @@
 import { getIntentBatchesApi } from "@district-labs/intentify-api-actions"
 import { Request, Response } from "express"
+
+import { env } from "../../env"
 import { simulateExecuteIntentBatch } from "./utils/simulate-execute-intent-batch"
 
 /**
@@ -10,14 +12,18 @@ export const executeIntentBatches = async (
   response: Response
 ) => {
   try {
-
-    // TODO: Add filter for valid intent batches only
-    const intentBatches = await getIntentBatchesApi({expand: {
-      executedTxs: true,
-      intents: true,
-      strategy: true,
-      user: true,
-    }})
+    const intentBatches = await getIntentBatchesApi(env.INTENTIFY_API_URL, {
+      filter: {
+        // Only fetch valid intent batches
+        intentBatchValidity: "valid",
+      },
+      expand: {
+        executedTxs: true,
+        intents: true,
+        strategy: true,
+        user: true,
+      },
+    })
 
     if (intentBatches.length === 0) {
       return response

@@ -29,7 +29,7 @@ export async function getUsers(
 
     const users = await getUsersDb({ limit, offset, expandFields });
 
-    return response.status(200).json({ data: users });
+    return response.status(200).json(users);
   } catch (error) {
     next(error);
   }

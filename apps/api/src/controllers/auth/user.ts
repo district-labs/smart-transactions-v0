@@ -1,8 +1,7 @@
 import { getUserDb } from "@district-labs/intentify-database";
 import type { NextFunction, Request, Response } from "express";
-import { getIronSession } from "iron-session";
 import { z } from "zod";
-import { ironOptions } from "../../iron-session";
+import { getSession } from "../../iron-session";
 import {
   getExpandFields,
   getExpandFieldsSchema,
@@ -22,7 +21,7 @@ export const getAuthUser = async (
   try {
     const { expand } = getAuthUserQuerySchema.parse(request.query);
 
-    const session = await getIronSession(request, response, ironOptions);
+    const session = await getSession(request, response);
     if (!session.address) {
       return response.status(404).json({ error: "No user found" });
     }
@@ -33,7 +32,11 @@ export const getAuthUser = async (
       expandFields,
     });
 
-    return response.status(200).json({ data: user });
+    if (!user) {
+      return response.status(404).json({ ok: false, error: "User not found" });
+    }
+
+    return response.status(200).json(user);
   } catch (error) {
     next(error);
   }

@@ -1,10 +1,7 @@
-import { API_URL } from "@/src/constants";
 import { invalidateIntentsDb } from "@district-labs/intentify-database";
 
-export async function invalidateIntentsApi(): Promise<
-  ReturnType<typeof invalidateIntentsDb>
-> {
-  const url = new URL(`${API_URL}intent-batches`);
+export async function invalidateIntentsApi(coreApiUrl: string) {
+  const url = new URL(`${coreApiUrl}intent-batches`);
 
   url.searchParams.append("action", "invalidate");
   const response = await fetch(url, {
@@ -16,7 +13,8 @@ export async function invalidateIntentsApi(): Promise<
   });
 
   if (response.ok) {
-    const { data } = await response.json();
+    const data: Awaited<ReturnType<typeof invalidateIntentsDb>> =
+      await response.json();
     return data;
   }
 

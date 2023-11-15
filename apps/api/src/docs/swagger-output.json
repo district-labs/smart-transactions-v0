@@ -127,6 +127,16 @@
         }
       }
     },
+    "/email-preferences/": {
+      "put": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/intent-batches/": {
       "get": {
         "description": "",

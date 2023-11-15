@@ -1,11 +1,10 @@
-import { API_URL } from "@/src/constants";
 import type { PostAxiomQueryApiParams } from "@district-labs/intentify-api";
 
-export async function postAxiomQueryApi({
-  chainId,
-  queries,
-}: PostAxiomQueryApiParams) {
-  const url = new URL(`${API_URL}axiom-query/send-query`);
+export async function postAxiomQueryApi(
+  coreApiUrl: string,
+  { chainId, queries }: PostAxiomQueryApiParams,
+) {
+  const url = new URL(`${coreApiUrl}axiom-query/send-query`);
 
   const response = await fetch(url, {
     method: "POST",
