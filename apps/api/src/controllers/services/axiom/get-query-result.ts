@@ -3,6 +3,7 @@ import type {
   SolidityBlockResponse,
   SolidityStorageResponse,
 } from "@axiom-crypto/core";
+import { getAxiomQueries } from "@district-labs/intentify-database";
 import { Request, Response } from "express";
 import { z } from "zod";
 import { getAxiom } from ".";
@@ -11,19 +12,15 @@ import CustomError from "../../../utils/customError";
 const reqSchema = z.object({
   chainId: z.number(),
   keccakQueryResponse: z.string(),
-  queries: z.array(
-    z.object({
-      blockNumber: z.number(),
-      address: z.string().optional(),
-      slot: z.string().optional(),
-    }),
-  ),
 });
 
 export const getQueryResult = async (request: Request, response: Response) => {
   try {
     const requestParsed = reqSchema.parse(await request.body);
-
+    const queries = await getAxiomQueries({
+      keccakQueryResponse: requestParsed.keccakQueryResponse,
+    })
+  
     const ax = getAxiom(requestParsed.chainId);
 
     const responseTree = await ax.query.getResponseTreeForKeccakQueryResponse(
@@ -38,11 +35,11 @@ export const getQueryResult = async (request: Request, response: Response) => {
     const accountResponses: SolidityAccountResponse[] = [];
     const storageResponses: SolidityStorageResponse[] = [];
 
-    requestParsed.queries.map(({ blockNumber, address, slot }) => {
+    queries.map(({ blockNumber, address, slot }) => {
       const validationWitness = ax.query.getValidationWitness(
         responseTree,
         blockNumber,
-        address,
+        address || undefined,
         slot,
       );
 

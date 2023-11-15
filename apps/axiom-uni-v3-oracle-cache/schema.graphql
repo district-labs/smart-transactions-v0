@@ -1,32 +1,18 @@
-
 ## UniswapV3 Twap Oracle related entities ##
 
 type UniswapV3Pool @entity {
   id: String!
-  blocks(block: BlockInfo) : [BlockInfo!]! @derivedFrom(field: "pool")
+  blocks(block: BlockInfo): [BlockInfo!]! @derivedFrom(field: "pool")
 }
 
 type BlockInfo @entity {
-  id: Int!
+  id: String!
   blockNumber: Int!
   timestamp: Int!
   pool: UniswapV3Pool!
 }
 
-## Axiom proof generation related entities ##
-
-enum ProofState {
-  INITIATED
-  EXPIRED
-  FULFILLED
-  CACHED
-}
-
 type AxiomQuery @entity {
   id: String!
   refundee: String!
-  state: ProofState!
 }
-
-
-

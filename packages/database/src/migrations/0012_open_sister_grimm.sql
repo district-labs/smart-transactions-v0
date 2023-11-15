@@ -1,0 +1,1 @@
+ALTER TABLE `axiom_query` ADD `chain_id` int NOT NULL;
