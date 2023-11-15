@@ -1,7 +1,7 @@
 {
-    "functions": {
-        "app/api/uniswap/adjust-price/route.ts": {
-            "maxDuration": 300
-        }
+  "functions": {
+    "app/api/uniswap/adjust-price/route.ts": {
+      "maxDuration": 300
     }
+  }
 }

@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { putUserApi } from "@district-labs/intentify-api-actions"
 import {
   DeploySafe,
@@ -8,8 +9,8 @@ import {
   useIsSafeIntentModuleEnabled,
   useIsSafeMaterialized,
 } from "@district-labs/intentify-core-react"
+import { toast } from "@district-labs/ui-react"
 import { useMutation } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
 import { useAccount } from "wagmi"
 
 import { catchError, cn } from "@/lib/utils"
@@ -17,7 +18,6 @@ import { catchError, cn } from "@/lib/utils"
 import { Icons } from "../icons"
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
-import { toast } from "@district-labs/ui-react"
 
 export function FundAccountForm() {
   const router = useRouter()
@@ -27,13 +27,12 @@ export function FundAccountForm() {
   const isModuleEnabled = useIsSafeIntentModuleEnabled()
 
   const { mutate } = useMutation({
-    mutationFn: 
-    () => {
-      if(!address || !safeAddress) throw new Error("User not found")
+    mutationFn: () => {
+      if (!address || !safeAddress) throw new Error("User not found")
 
       return putUserApi({
         address,
-        safeAddress
+        safeAddress,
       })
     },
     onSuccess: () => {

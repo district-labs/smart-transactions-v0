@@ -1,6 +1,7 @@
 import { postAuthSessionApi } from "@district-labs/intentify-api-actions"
 import { type Address } from "wagmi"
 import { type SignMessageArgs } from "wagmi/dist/actions"
+
 import { siweMessage } from "./siwe-message"
 
 interface SiweSignInProps {
@@ -27,10 +28,9 @@ export const siweSignIn = async ({
     signature,
   })
 
-
-  if(verifyRes.ok) {
- dispatchEvent(new Event("verified"))
+  if (verifyRes.ok) {
+    dispatchEvent(new Event("verified"))
   } else {
-throw new Error("Error verifying message")
-  }  
+    throw new Error("Error verifying message")
+  }
 }

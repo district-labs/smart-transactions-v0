@@ -20,11 +20,11 @@ export async function getStrategiesApi({
   offset,
   expand,
 }: GetStrategiesApiParams = {}) {
-  let url = new URL(`${API_URL}/strategies`);
+  let url = new URL(`${API_URL}strategies`);
+
   if (limit) {
     url.searchParams.append("limit", limit.toString());
   }
-
   if (offset) {
     url.searchParams.append("offset", offset.toString());
   }

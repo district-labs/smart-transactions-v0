@@ -1,9 +1,19 @@
-import { DbInserIntentBatch, db, intentBatch } from "../../..";
+import { DbInserIntentBatch, DbInsertIntent, db, intentBatch, intents } from "../../..";
 
-export async function postIntentBatchDb(intentBatchData: DbInserIntentBatch) {
+interface PostIntentBatchDbParams {
+  intentBatch: DbInserIntentBatch;
+  intents: DbInsertIntent[];
+}
+
+export async function postIntentBatchDb({
+  intentBatch: intentBatchData,
+  intents: intentsData
+}: PostIntentBatchDbParams) {
+
+  db.transaction(async (tx) => {
+    await tx.insert(intentBatch).values(intentBatchData);
+    await tx.insert(intents).values(intentsData);
+  })
   
-  const insertedIntentBatch = await db
-    .insert(intentBatch)
-    .values(intentBatchData);
-  return insertedIntentBatch;
+  return { ok: true };
 }

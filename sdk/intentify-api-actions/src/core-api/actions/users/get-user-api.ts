@@ -18,7 +18,7 @@ type GetUserApiReturnType = {
 export async function getUserApi({ address, expand }: GetUserApiParams) {
   if (address.length === 0) throw new Error("Address is required");
 
-  let url = new URL(`${API_URL}/users/${address}`);
+  let url = new URL(`${API_URL}users/${address}`);
 
   url = addExpandParamsToUrl(url, expand);
 

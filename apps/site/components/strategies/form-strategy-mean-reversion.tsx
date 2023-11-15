@@ -12,7 +12,6 @@ import {
   useGetIntentifyModuleAddress,
   useGetSafeAddress,
 } from "@district-labs/intentify-core-react"
-import type { IntentModule } from "@district-labs/intentify-intent-batch"
 import { StrategyMeanReversion } from "@district-labs/intentify-strategy-react"
 import { Button } from "@district-labs/ui-react"
 import { Loader2 } from "lucide-react"
@@ -37,8 +36,7 @@ export function FormStrategyMeanReversion({
   const address = useGetSafeAddress()
   const chainId = useChainId()
   const intentifyAddress = useGetIntentifyModuleAddress(chainId)
-  const { mutateAsync, isSuccess, isError, isLoading, error } =
-    useActionIntentBatchCreate()
+  const { mutateAsync, isSuccess } = useActionIntentBatchCreate()
 
   const [currentValues, setCurrentValues] = useState<any>(null)
   const defaultValues = useFormStrategySetDefaultValues(overrideValues)
@@ -47,25 +45,21 @@ export function FormStrategyMeanReversion({
     useSignTypedData()
 
   const onIntentBatchGenerated = useCallback(
-    async (
-      intentBatchStruct: IntentBatch,
-      intentBatchMetadata: IntentModule[]
-    ) => {
+    async (rawIntentBatch: IntentBatch) => {
       const signature = await signTypedDataAsync(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         generateIntentBatchEIP712({
           chainId: chainId,
           verifyingContract: intentifyAddress,
-          intentBatch: intentBatchStruct,
+          intentBatch: rawIntentBatch,
         })
       )
       mutateAsync({
         chainId,
-        intentBatch: intentBatchStruct,
-        intentBatchMetadata,
+        rawIntentBatch,
         signature,
-        strategyId: strategyId,
+        strategyId,
       })
     },
     [signTypedDataAsync, chainId, intentifyAddress, mutateAsync, strategyId]

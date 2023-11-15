@@ -19,7 +19,7 @@ export async function getStrategyApi({
 }: GetStrategyApiParams) {
   if (strategyId.length === 0) throw new Error("Strategy ID is required");
 
-  let url = new URL(`${API_URL}/strategies/${strategyId}`);
+  let url = new URL(`${API_URL}strategies/${strategyId}`);
 
   url = addExpandParamsToUrl(url, expand);
 

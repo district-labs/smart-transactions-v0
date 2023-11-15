@@ -13,7 +13,7 @@ type GetAuthUserApiReturnType = {
   data: Awaited<ReturnType<typeof getUserDb>>;
 };
 export async function getAuthUserApi({ expand }: GetAuthUserApiParams = {}) {
-  let url = new URL(`${API_URL}/auth/user`);
+  let url = new URL(`${API_URL}auth/user`);
 
   url = addExpandParamsToUrl(url, expand);
 

@@ -28,10 +28,10 @@ export async function getIntentBatchesDb({
               eq(intentBatch.strategyId, strategyId),
             )
         : root
-        ? (intentBatch, { eq }) => eq(intentBatch.root, root)
-        : strategyId
-        ? (intentBatch, { eq }) => eq(intentBatch.strategyId, strategyId)
-        : undefined,
+          ? (intentBatch, { eq }) => eq(intentBatch.root, root)
+          : strategyId
+            ? (intentBatch, { eq }) => eq(intentBatch.strategyId, strategyId)
+            : undefined,
     with: {
       intents: expandFields.includes("intents") ? true : undefined,
       executedTxs: expandFields.includes("executedTxs") ? true : undefined,

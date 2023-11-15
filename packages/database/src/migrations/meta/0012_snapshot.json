@@ -55,9 +55,7 @@
       "compositePrimaryKeys": {
         "axiom_query_id": {
           "name": "axiom_query_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -122,9 +120,7 @@
       "compositePrimaryKeys": {
         "email_preferences_id": {
           "name": "email_preferences_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -173,9 +169,7 @@
       "compositePrimaryKeys": {
         "hooks_id": {
           "name": "hooks_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -275,17 +269,13 @@
       "compositePrimaryKeys": {
         "intent_batch_intent_batch_hash": {
           "name": "intent_batch_intent_batch_hash",
-          "columns": [
-            "intent_batch_hash"
-          ]
+          "columns": ["intent_batch_hash"]
         }
       },
       "uniqueConstraints": {
         "intent_batch_cancelled_tx_hash_unique": {
           "name": "intent_batch_cancelled_tx_hash_unique",
-          "columns": [
-            "cancelled_tx_hash"
-          ]
+          "columns": ["cancelled_tx_hash"]
         }
       }
     },
@@ -335,9 +325,7 @@
       "compositePrimaryKeys": {
         "intent_batch_execution_id": {
           "name": "intent_batch_execution_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -416,9 +404,7 @@
       "compositePrimaryKeys": {
         "intents_id": {
           "name": "intents_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -483,9 +469,7 @@
       "compositePrimaryKeys": {
         "strategies_id": {
           "name": "strategies_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -556,9 +540,7 @@
       "compositePrimaryKeys": {
         "transactions_id": {
           "name": "transactions_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -631,9 +613,7 @@
       "compositePrimaryKeys": {
         "users_address": {
           "name": "users_address",
-          "columns": [
-            "address"
-          ]
+          "columns": ["address"]
         }
       },
       "uniqueConstraints": {}

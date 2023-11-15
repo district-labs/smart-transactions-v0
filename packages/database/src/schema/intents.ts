@@ -43,7 +43,7 @@ export const intentsRelations = relations(intents, ({ one }) => ({
 }));
 
 export type DbIntent = typeof intents.$inferSelect;
-export type DbNewIntent = Omit<typeof intents.$inferInsert, "intentId">;
+export type DbInsertIntent = typeof intents.$inferInsert
 
 // ------------------ INTENT BATCH ------------------ //
 
@@ -80,9 +80,7 @@ export const intentBatchRelations = relations(intentBatch, ({ one, many }) => ({
 }));
 
 export type DbIntentBatch = typeof intentBatch.$inferSelect;
-export type DbInserIntentBatch = typeof intentBatch.$inferInsert & {
-  intents: DbNewIntent[];
-};
+export type DbInserIntentBatch = typeof intentBatch.$inferInsert;
 
 export type DbIntentBatchWithRelations = InferSelectModel<
   typeof intentBatch

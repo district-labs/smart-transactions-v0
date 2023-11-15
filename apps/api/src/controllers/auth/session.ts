@@ -1,11 +1,11 @@
-import { DEFAULT_SALT, walletFactoryABI } from '@district-labs/intentify-core';
+import { DEFAULT_SALT, walletFactoryABI } from "@district-labs/intentify-core";
 import {
   db,
   emailPreferences,
   eq,
   users,
 } from "@district-labs/intentify-database";
-import { SafeProxy, WalletFactory } from '@district-labs/intentify-deployments';
+import { SafeProxy, WalletFactory } from "@district-labs/intentify-deployments";
 import type { NextFunction, Request, Response } from "express";
 import { getIronSession } from "iron-session";
 import { SiweMessage } from "siwe";
@@ -13,7 +13,7 @@ import { z } from "zod";
 import { publicClients } from "../../blockchain-clients";
 import { ironOptions } from "../../iron-session";
 
-export const getAuthSessionSchema = z.object({
+export const postAuthSessionSchema = z.object({
   signature: z.string(),
   message: z.object({
     domain: z.string(),
@@ -27,6 +27,8 @@ export const getAuthSessionSchema = z.object({
   }),
 });
 
+export type PostAuthSessionApiParams = z.infer<typeof postAuthSessionSchema>;
+
 export async function postAuthSession(
   request: Request,
   response: Response,
@@ -34,7 +36,7 @@ export async function postAuthSession(
 ) {
   try {
     const session = await getIronSession(request, response, ironOptions);
-    const { message, signature } = getAuthSessionSchema.parse(
+    const { message, signature } = postAuthSessionSchema.parse(
       await request.body,
     );
     const siweMessage = new SiweMessage(message);
@@ -56,14 +58,18 @@ export async function postAuthSession(
     if (user) {
       session.user = user;
     } else {
-      const client = publicClients[fields.chainId]
-      if(!client) throw new Error('Invalid chainId')
+      const client = publicClients[fields.chainId];
+      if (!client) throw new Error("Invalid chainId");
       const data = await client.readContract({
         address: WalletFactory[fields.chainId],
         abi: walletFactoryABI,
-        functionName: 'getDeterministicWalletAddress',
-        args: [SafeProxy[fields.chainId], fields.address, DEFAULT_SALT],
-      })
+        functionName: "getDeterministicWalletAddress",
+        args: [
+          SafeProxy[fields.chainId],
+          fields.address as `0x${string}`,
+          DEFAULT_SALT,
+        ],
+      });
 
       session.address = fields.address;
       await db.insert(users).values({

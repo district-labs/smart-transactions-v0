@@ -2,7 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["cdn.builder.io", 'raw.githubusercontent.com', 'assets-cdn.trustwallet.com'],
+    domains: [
+      "cdn.builder.io",
+      "raw.githubusercontent.com",
+      "assets-cdn.trustwallet.com",
+    ],
     dangerouslyAllowSVG: true,
   },
   webpack: (config) => {
@@ -18,7 +22,7 @@ const nextConfig = {
     "@district-labs/intentify-intent-batch",
     "@district-labs/intentify-intent-modules-react",
     "@district-labs/intentify-strategy-react",
-    "@district-labs/ui-react"
+    "@district-labs/ui-react",
   ],
 }
 

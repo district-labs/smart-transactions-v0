@@ -1,32 +1,60 @@
 import { API_URL } from "@/src/constants";
+import type { GetAxiomQueryApiParams } from "@district-labs/intentify-api";
 
-interface GetAxiomQueryApiParams {
-  chainId: number;
-  keccakQueryResponse: string;
-  queries: {
-    blockNumber: number;
-    address?: string;
-    slot?: string;
-  }[];
-}
+type axiomProof = [
+        `0x${string}`,
+        `0x${string}`,
+        `0x${string}`,
+        `0x${string}`,
+        `0x${string}`,
+        `0x${string}`]
 
-export async function getAxiomQueryApi({
-  chainId,
-  keccakQueryResponse,
-  queries,
-}: GetAxiomQueryApiParams) {
-  const url = new URL(`${API_URL}/axiom-query/get-query`);
+export interface GetAxiomResponseResult {
+    keccakBlockResponse: `0x${string}`;
+    keccakAccountResponse: `0x${string}`;
+    keccakStorageResponse: `0x${string}`;
+    blockResponses: {
+      blockNumber: number;
+      blockHash: `0x${string}`;
+      leafIdx: number;
+      proof: axiomProof;
+    }[];
+    accountResponses: {
+      blockNumber: number;
+      addr: `0x${string}`;
+      nonce: `0x${string}`;
+      balance: `0x${string}`;
+      storageRoot: `0x${string}`;
+      codeHash: `0x${string}`;
+      leafIdx: number;
+      proof: axiomProof;
+    }[];
+
+    storageResponses: {
+      blockNumber: number;
+      addr: `0x${string}`;
+      value: `0x${string}`;
+      slot: number;
+      leafIdx: number;
+      proof: axiomProof;
+    }[];
+  };
+
+
+
+export async function getAxiomQueryApi(getAxiomQueryParams: GetAxiomQueryApiParams) {
+  const url = new URL(`${API_URL}axiom-query/get-query`);
 
   const response = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ chainId, keccakQueryResponse, queries }),
+    body: JSON.stringify(getAxiomQueryParams),
   });
 
   if (response.ok) {
-    const data: { ok: boolean } = await response.json();
+    const data: { data: GetAxiomResponseResult } = await response.json();
     return data;
   }
 

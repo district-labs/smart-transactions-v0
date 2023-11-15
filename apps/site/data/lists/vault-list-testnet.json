@@ -8,10 +8,7 @@
   },
   "tags": {},
   "logoURI": "/apple-touch-icon.png",
-  "keywords": [
-    "district-labs",
-    "goerli"
-  ],
+  "keywords": ["district-labs", "goerli"],
   "vaults": [
     {
       "chainId": 5,

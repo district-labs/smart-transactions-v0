@@ -8,6 +8,11 @@ export const putUserSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   email: z.string().email().optional(),
+  isRegistered: z.boolean().optional(),
+  safeAddress: z
+    .string()
+    .refine((value) => isAddress(value))
+    .optional(),
   emailPreferences: z
     .object({
       newsletter: z.boolean().nullable().optional(),
@@ -16,6 +21,8 @@ export const putUserSchema = z.object({
     })
     .optional(),
 });
+
+export type PutUserApiParams = z.infer<typeof putUserSchema>;
 
 export async function putUser(
   request: Request,
@@ -26,9 +33,7 @@ export async function putUser(
 
   const { success, error, data } = await putUserDb({
     updatedUserData: {
-      address: updatedUserData.address,
-      firstName: updatedUserData.firstName,
-      lastName: updatedUserData.lastName,
+      ...updatedUserData,
       emailPreferences: {
         ...updatedUserData.emailPreferences,
         userId: updatedUserData.address,

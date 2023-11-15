@@ -1,10 +1,8 @@
-import { env } from "../../env";
+import { invalidateIntentsApi } from "@district-labs/intentify-api-actions";
 
 export async function invalidateIntentBatches() {
   try {
-    await fetch(`${env.CORE_API_URL}/infra/intents/invalidate`, {
-      method: "GET",
-    });
+    await invalidateIntentsApi()
   } catch (error) {
     console.log(error);
     return error;

@@ -27,13 +27,18 @@ export async function getIntentBatches(
   next: NextFunction,
 ) {
   try {
-    const { expand, root, strategyId, limit, offset } = getIntentBatchesQuerySchema.parse(
-      request.query,
-    );
-    
+    const { expand, root, strategyId, limit, offset } =
+      getIntentBatchesQuerySchema.parse(request.query);
+
     const expandFields = getExpandFields(expand);
 
-    const intentBatches = await getIntentBatchesDb({ limit, offset, expandFields, root, strategyId })
+    const intentBatches = await getIntentBatchesDb({
+      limit,
+      offset,
+      expandFields,
+      root,
+      strategyId,
+    });
 
     return response.status(200).json({ data: intentBatches });
   } catch (error) {

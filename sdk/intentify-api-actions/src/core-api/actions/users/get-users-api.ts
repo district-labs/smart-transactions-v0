@@ -20,7 +20,7 @@ export async function getUsersApi({
   limit,
   offset,
 }: GetUsersApiParams = {}) {
-  let url = new URL(`${API_URL}/users`);
+  let url = new URL(`${API_URL}users`);
 
   if (limit) {
     url.searchParams.append("limit", limit.toString());

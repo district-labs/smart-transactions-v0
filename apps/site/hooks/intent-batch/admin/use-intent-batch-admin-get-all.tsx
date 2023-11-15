@@ -6,11 +6,12 @@ import { useQuery } from "@tanstack/react-query"
 export function useIntentBatchAdminGetAll() {
   return useQuery({
     queryKey: ["intent-batch", "admin", "all"],
-    queryFn:async () =>  {
+    queryFn: async () => {
       const intentBatches = await getIntentBatchesApi({
         expand: {
-          intents: true}
-        })
+          intents: true,
+        },
+      })
 
       return intentBatches
     },

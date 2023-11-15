@@ -1,10 +1,9 @@
 import * as React from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { toObjectString } from "@/data/columns/to-object-string"
+import { toast } from "@district-labs/ui-react"
 import { CopyToClipboard } from "react-copy-to-clipboard"
 import { toHex } from "viem"
-
-import { toast } from "@district-labs/ui-react"
 
 type ButtonCopyIntentBatchState = React.HTMLAttributes<HTMLElement> & {
   intentBatchData: any

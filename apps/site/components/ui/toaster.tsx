@@ -1,5 +1,7 @@
 "use client"
 
+import { useToast } from "@district-labs/ui-react"
+
 import {
   Toast,
   ToastClose,
@@ -8,7 +10,6 @@ import {
   ToastTitle,
   ToastViewport,
 } from "@/components/ui/toast"
-import { useToast } from "@district-labs/ui-react"
 
 export function Toaster() {
   const { toasts } = useToast()

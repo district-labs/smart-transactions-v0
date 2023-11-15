@@ -26,7 +26,7 @@ export async function getStrategies(
     const expandFields = getExpandFields(expand);
 
     const strategies = await getStrategiesDb({ expandFields, limit, offset });
-    
+
     return response.status(200).json({ data: strategies });
   } catch (error) {
     next(error);

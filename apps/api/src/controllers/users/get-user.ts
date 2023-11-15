@@ -34,7 +34,6 @@ export async function getUser(
 
     const user = await getUserDb({ userAddress, expandFields });
 
-    
     if (!user) {
       return response.status(404).json({ error: "User not found" });
     }

@@ -1,37 +1,19 @@
 import { uniswapV3TwapOracleABI } from "@district-labs/intentify-abi-external";
+import { getAxiomQueryApi } from "@district-labs/intentify-api-actions";
 import { UniswapV3TwapOracle } from "@district-labs/intentify-deployments";
 import { encodeFunctionData } from "viem";
 import { goerliclient } from "../client";
 import { CHAIN_ID } from "../constants";
 import { getRelayerByChainId } from "../relayer";
-import type { GetAxiomResponseResult } from "../types";
-
-
 
 interface GetAxiomQueryResponseDataParams{keccakQueryResponse:string}
 
+interface GetAxiomResponseResult {
+  responseData: Awaited<ReturnType<typeof getAxiomQueryApi>>["data"]
+}
+
 export async function getAxiomQueryResponseData({keccakQueryResponse}:GetAxiomQueryResponseDataParams){
-   const response = await fetch(
-    `${process.env.CORE_API_URL}service/axiom/get-query-result`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chainId: CHAIN_ID,
-        keccakQueryResponse,
-      }),
-    },
-  );
-
-  if (!response.ok) {
-    console.error("Error getting query result");
-    throw new Error("Error getting query result");
-  }
-
-  const { responseData }: GetAxiomResponseResult = await response.json();
-
+  const {data: responseData} = await getAxiomQueryApi({chainId:CHAIN_ID, keccakQueryResponse})
   return responseData
 }
 

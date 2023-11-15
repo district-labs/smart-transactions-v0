@@ -1,24 +1,8 @@
 import { API_URL } from "@/src/constants";
+import type { PostAuthSessionApiParams } from "@district-labs/intentify-api";
 
-interface PostAuthSessionApiParams {
-  signature: string;
-  message: {
-    domain: string;
-    address: string;
-    statement?: string;
-    uri: string;
-    version: string;
-    chainId: number;
-    nonce: string;
-    issuedAt: string;
-  };
-}
-
-export async function postAuthSessionApi({
-  signature,
-  message,
-}: PostAuthSessionApiParams) {
-  const url = new URL(`${API_URL}/auth/session`);
+export async function postAuthSessionApi(postAuthSessionParams: PostAuthSessionApiParams) {
+  const url = new URL(`${API_URL}auth/session`);
 
   const response = await fetch(url, {
     method: "POST",
@@ -26,7 +10,7 @@ export async function postAuthSessionApi({
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ signature, message }),
+    body: JSON.stringify(postAuthSessionParams),
   });
 
   if (response.ok) {

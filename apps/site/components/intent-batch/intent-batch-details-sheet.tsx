@@ -16,7 +16,6 @@ import {
 
 import { Row } from "../shared/row"
 import { TimeFromDate } from "../shared/time-from-date"
-import { IntentBatchNonceDetails } from "./intent-batch-nonce-details"
 import { IntentBatchNonceType } from "./intent-batch-nonce-type"
 import { IntentModuleDecodedCard } from "./intent-module-decoded-card"
 

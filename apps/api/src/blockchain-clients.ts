@@ -1,5 +1,10 @@
-
-import { createPublicClient, createWalletClient, http, type PublicClient, type WalletClient } from "viem";
+import {
+  createPublicClient,
+  createWalletClient,
+  http,
+  type PublicClient,
+  type WalletClient,
+} from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { foundry, goerli, mainnet } from "viem/chains";
 import { env } from "./env";
@@ -13,17 +18,20 @@ const transportGoerli = http(env.GOERLI_RPC_URL);
 
 const localGoerli = http(`http://localhost:8545`);
 
-export const mainnetPublicClient = createPublicClient({
+// @ts-ignore
+export const mainnetPublicClient: PublicClient = createPublicClient({
   chain: mainnet,
   transport: transportMainnet,
 });
 
-export const goerliPublicClient = createPublicClient({
+// @ts-ignore
+export const goerliPublicClient: PublicClient = createPublicClient({
   chain: goerli,
   transport: transportGoerli,
 });
 
-export const localPublicClient = createPublicClient({
+// @ts-ignore
+export const localPublicClient: PublicClient = createPublicClient({
   chain: foundry,
   transport: localGoerli,
 });

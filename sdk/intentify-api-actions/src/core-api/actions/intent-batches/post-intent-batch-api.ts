@@ -1,12 +1,12 @@
 import { API_URL } from "@/src/constants";
+import type { PostIntentBatchApiParams } from "@district-labs/intentify-api";
 import { postIntentBatchDb } from "@district-labs/intentify-database";
 
-type PostIntentBatchApiParams = Parameters<typeof postIntentBatchDb>[0];
 
 export async function postIntentBatchApi(
-  intentBatchData: PostIntentBatchApiParams,
+  postIntentBatchParams: PostIntentBatchApiParams,
 ): Promise<ReturnType<typeof postIntentBatchDb>> {
-  const url = new URL(`${API_URL}/intent-batches`);
+  const url = new URL(`${API_URL}intent-batches`);
 
   const response = await fetch(url, {
     method: "POST",
@@ -14,12 +14,12 @@ export async function postIntentBatchApi(
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(intentBatchData),
+    body: JSON.stringify(postIntentBatchParams),
   });
 
   if (response.ok) {
-    const { data } = await response.json();
-    return data;
+    const responseJson= await response.json();
+    return responseJson;
   }
 
   const errorData = await response.text();

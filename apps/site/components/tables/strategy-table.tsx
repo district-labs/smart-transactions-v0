@@ -2,8 +2,8 @@
 
 import { useGetSafeAddress } from "@district-labs/intentify-core-react"
 
-import { useIntentBatchUserFind } from "@/hooks/intent-batch/user/use-intent-batch-user-find"
 import { DataTable } from "@/components/data-table/data-table"
+import { useIntentBatchUserFind } from "@/hooks/intent-batch/user/use-intent-batch-user-find"
 
 interface StrategyTable {
   strategyId: string
@@ -35,8 +35,12 @@ export function StrategyTable({
         !isSuccess
           ? []
           : filterData
-          ? data.filter(filterData).map(transformData)
-          : data.map(transformData)
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+            ? data.filter(filterData).map(transformData)
+             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+            : data.map(transformData)
       }
       pageCount={pageCount}
     />

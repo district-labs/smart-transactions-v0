@@ -1,20 +1,24 @@
 "use client"
 
-import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
-import { cn } from "@/lib/utils"
-import { getAuthUserApi, postUserApi } from "@district-labs/intentify-api-actions"
+import {
+  getAuthUserApi,
+  postUserApi,
+} from "@district-labs/intentify-api-actions"
 import {
   Button,
   Form,
   FormControl,
   FormItem,
   Input,
+  toast,
 } from "@district-labs/ui-react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useForm } from "react-hook-form"
 
-import { toast } from "@district-labs/ui-react"
+import { cn } from "@/lib/utils"
+import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
+
 import { Icons } from "../icons"
 
 export function FormUserRegister({ currentColor }: { currentColor: string }) {
@@ -24,16 +28,15 @@ export function FormUserRegister({ currentColor }: { currentColor: string }) {
   const form = useForm<any>()
 
   const updateUserMutation = useMutation({
-     mutationFn: async function registerUser(data: { email: string }){
+    mutationFn: async function registerUser(data: { email: string }) {
       const authUser = await getAuthUserApi()
-      if(!authUser) throw new Error("User not found")
+      if (!authUser) throw new Error("User not found")
       const user = await postUserApi({
         address: authUser?.address,
         email: data.email,
       })
       return user
-     }
-   ,
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(["user", "profile"])
       toast({

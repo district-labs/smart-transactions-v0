@@ -13,7 +13,7 @@ interface ExecuteIntentBatchSearcherApiResult {
 }
 
 export async function executeIntentBatchSearcherApi({intentBatchHash}:ExecuteIntentBatchSearcherApiParams) {
-  const response = await fetch(`${SEARCHER_API_URL}/engine/${intentBatchHash}`, {
+  const response = await fetch(`${SEARCHER_API_URL}engine/${intentBatchHash}`, {
     method: "GET",
     credentials: "include",
     headers: {

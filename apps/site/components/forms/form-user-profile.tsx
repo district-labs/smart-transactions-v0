@@ -1,6 +1,10 @@
 "use client"
 
-import { getAuthUserApi, putUserApi } from "@district-labs/intentify-api-actions"
+import { useEffect } from "react"
+import {
+  getAuthUserApi,
+  putUserApi,
+} from "@district-labs/intentify-api-actions"
 import {
   Button,
   Card,
@@ -12,18 +16,17 @@ import {
   FormItem,
   FormLabel,
   Input,
+  toast,
   UncontrolledFormMessage,
 } from "@district-labs/ui-react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { type z } from "zod"
 
-import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
 import { userSchema } from "@/lib/validations/user"
+import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
 
-import { toast } from "@district-labs/ui-react"
 import { Icons } from "../icons"
 
 type UserInput = z.infer<typeof userSchema>
@@ -40,20 +43,24 @@ export function FormUserProfile() {
   useEffect(() => {
     if (userProfile) {
       form.setValue("firstName", userProfile.firstName || "")
-      form.setValue("lastName", userProfile.lastName|| "")
+      form.setValue("lastName", userProfile.lastName || "")
       form.setValue("email", userProfile.email || "")
     }
   }, [userProfileIsSuccess, userProfile, form])
 
   const updateUserMutation = useMutation({
-    mutationFn:async function updateUser({email,firstName,lastName}: UserInput) {
+    mutationFn: async function updateUser({
+      email,
+      firstName,
+      lastName,
+    }: UserInput) {
       const user = await getAuthUserApi()
-      if(!user) throw new Error("User not found")
-      const result =  await putUserApi({
+      if (!user) throw new Error("User not found")
+      const result = await putUserApi({
         address: user?.address,
         email,
         firstName,
-        lastName
+        lastName,
       })
       return result
     },

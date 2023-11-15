@@ -8,7 +8,10 @@ export const postUserSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   email: z.string().email().optional(),
-  safeAddress: z.string().refine((value) => isAddress(value)).optional(),
+  safeAddress: z
+    .string()
+    .refine((value) => isAddress(value))
+    .optional(),
   emailPreferences: z
     .object({
       newsletter: z.boolean().nullable().optional(),
@@ -17,6 +20,8 @@ export const postUserSchema = z.object({
     })
     .optional(),
 });
+
+export type PostUserApiParams = z.infer<typeof postUserSchema>;
 
 export async function postUser(
   request: Request,

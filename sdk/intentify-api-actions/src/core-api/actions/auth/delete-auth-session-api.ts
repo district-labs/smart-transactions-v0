@@ -1,7 +1,7 @@
 import { API_URL } from "@/src/constants";
 
 export async function deleteAuthSessionApi() {
-  const url = new URL(`${API_URL}/auth/session`);
+  const url = new URL(`${API_URL}auth/session`);
 
   const response = await fetch(url, {
     method: "DELETE",

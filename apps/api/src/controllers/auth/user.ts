@@ -20,15 +20,18 @@ export const getAuthUser = async (
   next: NextFunction,
 ) => {
   try {
-        const { expand } = getAuthUserQuerySchema.parse(request.query);
+    const { expand } = getAuthUserQuerySchema.parse(request.query);
 
     const session = await getIronSession(request, response, ironOptions);
-   if(!session.address) {
+    if (!session.address) {
       return response.status(404).json({ error: "No user found" });
     }
 
     const expandFields = getExpandFields(expand);
-    const user = await getUserDb({ userAddress: session.address, expandFields });
+    const user = await getUserDb({
+      userAddress: session.address,
+      expandFields,
+    });
 
     return response.status(200).json({ data: user });
   } catch (error) {

@@ -23,7 +23,7 @@ export async function getIntentBatchApi({
   if (intentBatchHash.length === 0)
     throw new Error("Intent Batch Hash is required");
 
-  let url = new URL(`${API_URL}/intent-batches/${intentBatchHash}`);
+  let url = new URL(`${API_URL}intent-batches/${intentBatchHash}`);
 
   url = addExpandParamsToUrl(url, expand);
 

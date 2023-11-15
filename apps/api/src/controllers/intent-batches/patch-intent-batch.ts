@@ -1,4 +1,8 @@
-import { cancelIntentBatchDb, executeIntentBatchDb, invalidateIntentsDb } from "@district-labs/intentify-database";
+import {
+  cancelIntentBatchDb,
+  executeIntentBatchDb,
+  invalidateIntentsDb,
+} from "@district-labs/intentify-database";
 import type { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 import { getIntentBatchesFromDB } from "../../models/intent-batch";
@@ -9,18 +13,23 @@ import {
   invalidateIntentBatch,
 } from "../utils/intent-batches";
 
-export const patchIntentBatchQuerySchema = z.object({
+const patchIntentBatchQuerySchema = z.object({
   action: z.union([
     z.literal("cancel"),
     z.literal("execute"),
     z.literal("invalidate"),
   ]),
 });
+
 const patchIntentCancelBatchesBodySchema = z.object({
   intentBatchHash: z.string(),
   transactionHash: z.string(),
   transactionTimestamp: z.number(),
 });
+export type CancelIntentBatchApiParams = z.infer<
+  typeof patchIntentCancelBatchesBodySchema
+>;
+
 const patchIntentExecuteBatchesBodySchema = z.object({
   chainId: z.number(),
   intentBatchHash: z.string(),
@@ -29,6 +38,9 @@ const patchIntentExecuteBatchesBodySchema = z.object({
   blockNumber: z.number(),
   to: z.string(),
 });
+export type ExecuteIntentBatchApiParams = z.infer<
+  typeof patchIntentExecuteBatchesBodySchema
+>;
 
 export async function patchIntentBatches(
   request: Request,
@@ -42,10 +54,14 @@ export async function patchIntentBatches(
       case "cancel": {
         const { intentBatchHash, transactionHash, transactionTimestamp } =
           patchIntentCancelBatchesBodySchema.parse(request.body);
-          
-        const cancelledIntentBatch = await cancelIntentBatchDb({intentBatchHash,transactionHash,transactionTimestamp})
 
-          if (!cancelledIntentBatch) {
+        const cancelledIntentBatch = await cancelIntentBatchDb({
+          intentBatchHash,
+          transactionHash,
+          transactionTimestamp,
+        });
+
+        if (!cancelledIntentBatch) {
           return response.status(404).json({ error: "Intent batch not found" });
         }
 
@@ -68,7 +84,7 @@ export async function patchIntentBatches(
           intentBatchId: intentBatchHash,
           to,
           transactionHash,
-        })
+        });
 
         if (!insertedTransaction) {
           return response.status(404).json({ error: "Transaction not found" });

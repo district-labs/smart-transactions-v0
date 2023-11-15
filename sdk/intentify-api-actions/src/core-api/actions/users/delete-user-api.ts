@@ -10,7 +10,7 @@ export async function deleteUserApi({
 }: DeleteUserParams): Promise<
   Awaited<ReturnType<typeof deleteUserDb>>["data"]
 > {
-  const response = await fetch(`${API_URL}/users/${userAddress}`, {
+  const response = await fetch(`${API_URL}users/${userAddress}`, {
     method: "DELETE",
     credentials: "include",
     headers: {

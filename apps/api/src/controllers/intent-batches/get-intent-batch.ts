@@ -31,7 +31,10 @@ export async function getIntentBatch(
 
     const expandFields = getExpandFields(expand);
 
-    const intentBatch = await getIntentBatchDb({ intentBatchHash, expandFields });
+    const intentBatch = await getIntentBatchDb({
+      intentBatchHash,
+      expandFields,
+    });
 
     if (!intentBatch) {
       return response.status(404).json({ error: "Intent batch not found" });

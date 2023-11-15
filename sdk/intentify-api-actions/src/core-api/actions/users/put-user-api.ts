@@ -1,22 +1,21 @@
 import { API_URL } from "@/src/constants";
+import type { PutUserApiParams } from "@district-labs/intentify-api";
 import { putUserDb } from "@district-labs/intentify-database";
-
-type PutUserApiParams = Parameters<typeof putUserDb>[0]["updatedUserData"];
 
 type PutUserApiReturnType = {
   data: Awaited<ReturnType<typeof putUserDb>>;
 };
 
 export async function putUserApi(
-  updatedUserData: PutUserApiParams,
+  putUserparams: PutUserApiParams,
 ): Promise<PutUserApiReturnType["data"]> {
-  const response = await fetch(`${API_URL}/users/`, {
+  const response = await fetch(`${API_URL}users/`, {
     method: "PUT",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(updatedUserData),
+    body: JSON.stringify(putUserparams),
   });
 
   if (response.ok) {

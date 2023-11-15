@@ -2,7 +2,7 @@ import { addExpandParamsToUrl } from "@/src/utils";
 import { getIntentBatchesDb } from "@district-labs/intentify-database";
 import { API_URL } from "../../../constants";
 
-interface GetIntentBatchesApiParams {
+export interface GetIntentBatchesApiParams {
   limit?: number;
   offset?: number;
   filter?: {
@@ -27,7 +27,7 @@ export async function getIntentBatchesApi({
   expand,
   filter,
 }: GetIntentBatchesApiParams = {}) {
-  let url = new URL(`${API_URL}/intent-batches`);
+  let url = new URL(`${API_URL}intent-batches`);
   if (limit) {
     url.searchParams.append("limit", limit.toString());
   }

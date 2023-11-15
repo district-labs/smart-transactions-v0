@@ -3,48 +3,42 @@ import type {
   SolidityBlockResponse,
   SolidityStorageResponse,
 } from "@axiom-crypto/core";
+
 import { getAxiomQueries } from "@district-labs/intentify-database";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 import CustomError from "../../utils/customError";
 import { getAxiom } from "../utils";
-
-const queriesSchema = z.array(
-  z.object({
-    blockNumber: z.number(),
-    address: z.string().optional(),
-    slot: z.string().optional(),
-  }),
-);
 
 export const getAxiomQuerySchema = z.object({
   chainId: z.number(),
   keccakQueryResponse: z.string(),
 });
+
+export type GetAxiomQueryApiParams = z.infer<typeof getAxiomQuerySchema>;
+
 export async function getAxiomQuery(
   request: Request,
   response: Response,
   next: NextFunction,
 ) {
   try {
-    const requestParsed = reqSchema.parse(await request.body);
+    const requestParsed = getAxiomQuerySchema.parse(await request.body);
     const queries = await getAxiomQueries({
       keccakQueryResponse: requestParsed.keccakQueryResponse,
-    })
-  
+    });
+
     const ax = getAxiom(requestParsed.chainId);
 
     const responseTree = await ax.query.getResponseTreeForKeccakQueryResponse(
       requestParsed.keccakQueryResponse,
     );
 
-    const ax = getAxiom(chainId);
-    const responseTree =
-      await ax.query.getResponseTreeForKeccakQueryResponse(keccakQueryResponse);
-
-    const keccakBlockResponse = responseTree.blockTree.getHexRoot();
-    const keccakAccountResponse = responseTree.accountTree.getHexRoot();
-    const keccakStorageResponse = responseTree.storageTree.getHexRoot();
+    const keccakBlockResponse = responseTree.blockTree.getHexRoot() as string;
+    const keccakAccountResponse =
+      responseTree.accountTree.getHexRoot() as string;
+    const keccakStorageResponse =
+      responseTree.storageTree.getHexRoot() as string;
 
     const blockResponses: SolidityBlockResponse[] = [];
     const accountResponses: SolidityAccountResponse[] = [];
@@ -55,7 +49,7 @@ export async function getAxiomQuery(
         responseTree,
         blockNumber,
         address || undefined,
-        slot,
+        slot || undefined,
       );
 
       if (!validationWitness) {

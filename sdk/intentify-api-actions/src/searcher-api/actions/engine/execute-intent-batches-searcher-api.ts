@@ -15,7 +15,7 @@ interface ExecuteIntentBatchesSearcherApiResult {
 }
 
 export async function executeIntentBatchesSearcherApi() {
-  const response = await fetch(`${SEARCHER_API_URL}/engine`, {
+  const response = await fetch(`${SEARCHER_API_URL}engine`, {
     method: "GET",
     credentials: "include",
     headers: {

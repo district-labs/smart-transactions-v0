@@ -1,23 +1,13 @@
 "use client"
 
-import { CardStrategyPreview } from "@/components/strategies/card-strategy-preview"
 import { strategies } from "@/data/strategies"
-import { getAuthUserApi } from "@district-labs/intentify-api-actions"
 import Balancer from "react-wrap-balancer"
 
+import { CardStrategyPreview } from "@/components/strategies/card-strategy-preview"
+
 export default function Home() {
-  const handleAPI = async () => {
-  const user = await getAuthUserApi({
-    expand: {emailPreferences:true}
-  })
-  console.log("user")
- console.log(user) 
-  }
   return (
     <div className="relative space-y-4 overflow-hidden pb-20">
-      <button className="p-4 bg-red-500 rounded-lg my-4" onClick={handleAPI}>
-        Test API
-      </button>
       <section
         id="hero"
         aria-labelledby="hero-heading"

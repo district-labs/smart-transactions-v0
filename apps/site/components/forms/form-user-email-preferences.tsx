@@ -1,6 +1,10 @@
 "use client"
 
-import { getAuthUserApi, putUserApi } from "@district-labs/intentify-api-actions"
+import { useEffect } from "react"
+import {
+  getAuthUserApi,
+  putUserApi,
+} from "@district-labs/intentify-api-actions"
 import {
   Button,
   Card,
@@ -12,18 +16,17 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  toast,
   UncontrolledFormMessage,
 } from "@district-labs/ui-react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { type z } from "zod"
 
-import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
 import { updateEmailPreferencesSchema } from "@/lib/validations/email"
+import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
 
-import { toast } from "@district-labs/ui-react"
 import { Icons } from "../icons"
 
 type EmailPreferencesInput = z.infer<typeof updateEmailPreferencesSchema>
@@ -39,25 +42,32 @@ export function FormUserEmailPreferences() {
 
   useEffect(() => {
     if (userProfile) {
-      form.setValue("transactional", userProfile?.emailPreferences.transactional || undefined)
-      form.setValue("marketing", userProfile.emailPreferences.marketing || undefined)
-      form.setValue("newsletter", userProfile.emailPreferences.newsletter || undefined)
+      form.setValue(
+        "transactional",
+        userProfile?.emailPreferences.transactional || undefined
+      )
+      form.setValue(
+        "marketing",
+        userProfile.emailPreferences.marketing || undefined
+      )
+      form.setValue(
+        "newsletter",
+        userProfile.emailPreferences.newsletter || undefined
+      )
     }
   }, [userProfileIsSuccess, userProfile, form])
 
   const updateUserMutation = useMutation({
     mutationFn: async (data: EmailPreferencesInput) => {
-      const userAuth =  await getAuthUserApi()
-      if(!userAuth) throw new Error("User not found")
+      const userAuth = await getAuthUserApi()
+      if (!userAuth) throw new Error("User not found")
 
       return putUserApi({
         address: userAuth?.address,
         emailPreferences: {
-          userId: userAuth?.address,
-         ...data
+          ...data,
         },
       })
-     
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["user", "profile"])

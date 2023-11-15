@@ -1,10 +1,10 @@
 import { newAxiomQuery } from "@district-labs/intentify-database";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { encodeFunctionData, type Address } from "viem";
 import { z } from "zod";
-import { getAxiom } from ".";
-import { getRelayerByChainId } from "../execution/utils/relayer";
-import { axiomV1QueryABI } from "./abis";
+import { getAxiom } from "../utils/axiom-query";
+import { axiomV1QueryABI } from "../utils/axiom-query/abis";
+import { getRelayerByChainId } from "../utils/defender-relayer";
 
 export const postAxiomQuerySchema = z.object({
   chainId: z.number(),
@@ -19,6 +19,8 @@ export const postAxiomQuerySchema = z.object({
     .min(1),
 });
 
+export type PostAxiomQueryApiParams = z.infer<typeof postAxiomQuerySchema>;
+
 export async function postAxiomQuery(
   request: Request,
   response: Response,
@@ -30,7 +32,7 @@ export async function postAxiomQuery(
     const ax = getAxiom(chainId);
     const qb = ax.newQueryBuilder();
 
-    for (const query of requestParsed.queries) {
+    for (const query of queries) {
       await qb.append({
         blockNumber: Number(query.blockNumber),
         address: query.address,
@@ -64,9 +66,9 @@ export async function postAxiomQuery(
     });
 
     // Store axiom queries in database
-    for (const query of requestParsed.queries) {
+    for (const query of queries) {
       await newAxiomQuery({
-        chainId:requestParsed.chainId,
+        chainId: chainId,
         keccakQueryResponse,
         address: query.address,
         blockNumber: Number(query.blockNumber),

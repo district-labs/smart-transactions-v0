@@ -1,3 +1,2 @@
-export * from './get-axiom-query'
-export * from './post-axiom-query'
-
+export * from "./get-axiom-query";
+export * from "./post-axiom-query";

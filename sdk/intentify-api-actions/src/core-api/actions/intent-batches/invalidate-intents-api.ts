@@ -4,7 +4,7 @@ import { invalidateIntentsDb } from "@district-labs/intentify-database";
 export async function invalidateIntentsApi(): Promise<
   ReturnType<typeof invalidateIntentsDb>
 > {
-  const url = new URL(`${API_URL}/intent-batches`);
+  const url = new URL(`${API_URL}intent-batches`);
 
   url.searchParams.append("action", "invalidate");
   const response = await fetch(url, {
