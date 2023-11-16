@@ -20,6 +20,7 @@
     "@district-labs/intentify-core": "workspace:*",
     "@district-labs/intentify-core-react": "workspace:*",
     "@district-labs/intentify-database": "workspace:*",
+    "@district-labs/intentify-deployments": "workspace:^",
     "@district-labs/intentify-intent-batch": "workspace:*",
     "@district-labs/intentify-intent-modules-react": "workspace:*",
     "@district-labs/intentify-strategy-react": "workspace:*",

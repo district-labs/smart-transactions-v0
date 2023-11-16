@@ -3,25 +3,25 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { env } from "@/env.mjs"
+import { getAuthUserApi } from "@district-labs/intentify-api-actions"
 import { useQuery } from "@tanstack/react-query"
-
-interface User {
-  isLoggedIn: boolean
-  isRegistered: boolean
-  address?: string
-  isAdmin?: boolean
-}
 
 export function useUser({ redirectTo = "", redirectIfFound = false } = {}) {
   const {
     data: user,
     refetch: mutateUser,
     ...rest
-  } = useQuery<User>(["user"], {
-    queryFn: () =>
-      fetch(`${env.NEXT_PUBLIC_API_URL}user`, {
-        credentials: "include",
-      }).then((res) => res.json()),
+  } = useQuery(["user"], {
+    queryFn: async function getUser() {
+      const user = await getAuthUserApi(env.NEXT_PUBLIC_API_URL, {
+        expand: {
+          emailPreferences: true,
+          strategies: true,
+        },
+      })
+
+      return user
+    },
   })
 
   const Router = useRouter()
@@ -33,9 +33,9 @@ export function useUser({ redirectTo = "", redirectIfFound = false } = {}) {
 
     if (
       // If redirectTo is set, redirect if the user was not found.
-      (redirectTo && !redirectIfFound && !user?.isLoggedIn) ||
+      (redirectTo && !redirectIfFound && !user) ||
       // If redirectIfFound is also set, redirect if the user was found
-      (redirectIfFound && user?.isLoggedIn)
+      (redirectIfFound && user)
     ) {
       Router.push(redirectTo)
     }

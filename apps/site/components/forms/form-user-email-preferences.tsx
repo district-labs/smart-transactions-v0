@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { env } from "@/env.mjs"
+import { putEmailPreferencesApi } from "@district-labs/intentify-api-actions"
 import {
   Button,
   Card,
@@ -13,6 +14,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  toast,
   UncontrolledFormMessage,
 } from "@district-labs/ui-react"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -24,7 +26,6 @@ import { updateEmailPreferencesSchema } from "@/lib/validations/email"
 import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
 
 import { Icons } from "../icons"
-import { toast } from "@district-labs/ui-react"
 
 type EmailPreferencesInput = z.infer<typeof updateEmailPreferencesSchema>
 
@@ -39,24 +40,30 @@ export function FormUserEmailPreferences() {
 
   useEffect(() => {
     if (userProfile) {
-      form.setValue("transactional", userProfile.emailPreferences.transactional)
-      form.setValue("marketing", userProfile.emailPreferences.marketing)
-      form.setValue("newsletter", userProfile.emailPreferences.newsletter)
+      form.setValue(
+        "transactional",
+        userProfile?.emailPreferences.transactional || undefined
+      )
+      form.setValue(
+        "marketing",
+        userProfile.emailPreferences.marketing || undefined
+      )
+      form.setValue(
+        "newsletter",
+        userProfile.emailPreferences.newsletter || undefined
+      )
     }
   }, [userProfileIsSuccess, userProfile, form])
 
   const updateUserMutation = useMutation({
-    mutationFn: (data: EmailPreferencesInput) => {
-      return fetch(`${env.NEXT_PUBLIC_API_URL}user/email-preferences`, {
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify({
-          ...data,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+    mutationFn: async (data: EmailPreferencesInput) => {
+      const result = await putEmailPreferencesApi(env.NEXT_PUBLIC_API_URL, {
+        marketing: data.marketing,
+        newsletter: data.newsletter,
+        transactional: data.transactional,
       })
+
+      if (!result.ok) throw new Error(result.error)
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["user", "profile"])

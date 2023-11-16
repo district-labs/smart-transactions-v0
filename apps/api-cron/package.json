@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@axiom-crypto/core": "^0.3.6",
+    "@district-labs/intentify-api-actions": "workspace:^",
     "@district-labs/intentify-core": "workspace:*",
     "@district-labs/intentify-database": "workspace:*",
     "@district-labs/intentify-deployments": "workspace:*",

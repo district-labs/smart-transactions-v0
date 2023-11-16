@@ -2,7 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["cdn.builder.io", 'raw.githubusercontent.com', 'assets-cdn.trustwallet.com'],
+    domains: [
+      "cdn.builder.io",
+      "raw.githubusercontent.com",
+      "assets-cdn.trustwallet.com",
+    ],
     dangerouslyAllowSVG: true,
   },
   webpack: (config) => {
@@ -10,7 +14,16 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding")
     return config
   },
-  transpilePackages: ["@district-labs/intentify-core-react", "@district-labs/intentify-database"],
+  transpilePackages: [
+    "@district-labs/intentify-api-actions",
+    "@district-labs/intentify-core",
+    "@district-labs/intentify-core-react",
+    "@district-labs/intentify-database",
+    "@district-labs/intentify-intent-batch",
+    "@district-labs/intentify-intent-modules-react",
+    "@district-labs/intentify-strategy-react",
+    "@district-labs/ui-react",
+  ],
 }
 
 module.exports = nextConfig

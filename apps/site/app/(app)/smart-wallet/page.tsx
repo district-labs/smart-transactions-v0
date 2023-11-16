@@ -16,7 +16,7 @@ import {
   CardHeader,
 } from "@district-labs/ui-react"
 
-import { userStrategyUserActiveFind } from "@/hooks/strategy/user/use-strategy-user-active-find"
+import { useUserActiveStrategies } from "@/hooks/strategy/user/use-strategy-user-active-find"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Address } from "@/components/blockchain/address"
 import { BlockieSmartWallet } from "@/components/blockchain/blockie-smart-wallet"
@@ -98,10 +98,10 @@ export default function SmartWalletPage() {
 }
 
 const StrategiesActive = () => {
-  const address = useGetSafeAddress()
-  const { data } = userStrategyUserActiveFind({
+  const safeAddress = useGetSafeAddress()
+  const { data } = useUserActiveStrategies({
     filters: {
-      root: address as `0x${string}`,
+      intentBatchRoot: safeAddress as `0x${string}`,
     },
   })
 

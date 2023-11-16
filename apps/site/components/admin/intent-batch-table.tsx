@@ -1,4 +1,4 @@
-import type { DBIntentBatchActiveItem } from "@district-labs/intentify-database"
+import type { DbIntentBatchWithRelations } from "@district-labs/intentify-database"
 
 import {
   Table,
@@ -14,7 +14,7 @@ import { Address } from "../blockchain/address"
 import { SheetIntentBatchDetails } from "../intent-batch/intent-batch-details-sheet"
 
 type IntentBatchTable = {
-  data: DBIntentBatchActiveItem[]
+  data: DbIntentBatchWithRelations[] | undefined
 }
 
 export function IntentBatchTable({ data }: IntentBatchTable) {
@@ -49,7 +49,7 @@ export function IntentBatchTable({ data }: IntentBatchTable) {
                 date={intentBatch?.createdAt}
               />
             </TableCell>
-            <TableCell>{intentBatch.intents.length}</TableCell>
+            <TableCell>{intentBatch?.intents?.length}</TableCell>
             <TableCell>
               {intentBatch.executedAt ? (
                 <TimeFromDate

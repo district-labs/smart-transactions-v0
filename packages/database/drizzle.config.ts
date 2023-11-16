@@ -1,7 +1,7 @@
-import * as dotenv from "dotenv"
-import type { Config } from "drizzle-kit"
+import * as dotenv from "dotenv";
+import type { Config } from "drizzle-kit";
 
-dotenv.config()
+dotenv.config();
 
 export default {
   driver: "mysql2",
@@ -10,4 +10,4 @@ export default {
   dbCredentials: {
     connectionString: process.env.DATABASE_URL ?? "",
   },
-} satisfies Config
+} satisfies Config;

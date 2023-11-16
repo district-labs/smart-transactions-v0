@@ -1,14 +1,15 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { putUserApi } from "@district-labs/intentify-api-actions"
+import { toast } from "@district-labs/ui-react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 import { useAccount } from "wagmi"
 import { type z } from "zod"
 
+import { env } from "@/env.mjs"
 import { userSchema } from "@/lib/validations/user"
-
 import { Icons } from "../icons"
 import { Button } from "../ui/button"
 import {
@@ -19,7 +20,6 @@ import {
   UncontrolledFormMessage,
 } from "../ui/form"
 import { Input } from "../ui/input"
-import { toast } from "@district-labs/ui-react"
 
 type UserInput = z.infer<typeof userSchema>
 
@@ -32,15 +32,9 @@ export function UpdateUserForm() {
 
   const updateUserMutation = useMutation({
     mutationFn: (data: UserInput) => {
-      return fetch("/api/user", {
-        method: "POST",
-        body: JSON.stringify({
-          ...data,
-          address,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      if (!address) throw new Error("User not found")
+      return putUserApi(env.NEXT_PUBLIC_API_URL,{
+        ...data,
       })
     },
     onSuccess: () => {

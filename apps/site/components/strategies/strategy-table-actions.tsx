@@ -1,7 +1,7 @@
 import * as React from "react"
-import { IntentBatch } from "@district-labs/intentify-core"
+import { type IntentBatch } from "@district-labs/intentify-core"
 import { CancelIntentBundle } from "@district-labs/intentify-core-react"
-import { IntentBatchQuery } from "@district-labs/intentify-database"
+import { type DbIntentBatch } from "@district-labs/intentify-database"
 import {
   Tooltip,
   TooltipContent,
@@ -16,7 +16,7 @@ import { SheetIntentBatchDetails } from "../intent-batch/intent-batch-details-sh
 
 type StrategyTableActions = React.HTMLAttributes<HTMLElement> & {
   intentBatch: IntentBatch
-  intentBatchQuery: IntentBatchQuery
+  intentBatchQuery: DbIntentBatch
   status: "open" | "cancelled" | "executed"
 }
 

@@ -1,5 +1,5 @@
 import { type IntentBatch } from "@district-labs/intentify-core"
-import type { IntentBatchQuery } from "@district-labs/intentify-database"
+import type { DbIntentBatchWithRelations } from "@district-labs/intentify-database"
 
 import { transformIntentQueryToIntentBatchStruct } from "./transform-intent-query-to-intent-batch-struct"
 
@@ -19,26 +19,26 @@ export type LimitOrderIntent = {
   executeBefore: string
   status: "open" | "closed" | "canceled"
   intentBatch: IntentBatch
-  intentBatchDb: IntentBatchQuery
+  intentBatchDb: DbIntentBatchWithRelations
 }
 
 export function transformLimitOrderIntentQueryToLimitOrderData(
-  intentBatch: IntentBatchQuery
+  intentBatch: DbIntentBatchWithRelations
 ) {
   const { intents } = intentBatch
   return {
     chainId: Number(intentBatch.chainId),
     sell: {
-      asset: String(intents[1]?.intentArgs[0]?.value),
-      amount: Number(intents[1]?.intentArgs[2]?.value),
+      asset: String(intents?.[1]?.intentArgs[0]?.value),
+      amount: Number(intents?.[1]?.intentArgs[2]?.value),
     },
     receive: {
-      asset: String(intents[1]?.intentArgs[1]?.value),
-      amount: Number(intents[1]?.intentArgs[3]?.value),
+      asset: String(intents?.[1]?.intentArgs[1]?.value),
+      amount: Number(intents?.[1]?.intentArgs[3]?.value),
     },
     limitPrice: String(0),
-    executeAfter: String(intents[0]?.intentArgs[0]?.value),
-    executeBefore: String(intents[0]?.intentArgs[1]?.value),
+    executeAfter: String(intents?.[0]?.intentArgs[0]?.value),
+    executeBefore: String(intents?.[0]?.intentArgs[1]?.value),
     status: getStatus(intentBatch.executedAt, intentBatch?.cancelledAt),
     intentBatch: transformIntentQueryToIntentBatchStruct(intentBatch),
     intentBatchDb: intentBatch,

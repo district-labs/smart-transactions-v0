@@ -1,25 +1,28 @@
-import { Transaction } from "@ponder/core"
-const siteUrl = process.env.PONDER_APP_API_URL
-if(!siteUrl) throw new Error("PONDER_APP_API_URL not set")
+import { executeIntentBatchApi } from "@district-labs/intentify-api-actions";
+import { Transaction } from "@ponder/core";
 
-export async function dispatchIntentExecution(chainId: number, intentBatchId: `0x${string}`, receipt: Transaction){
-    try {
-        await fetch(`${siteUrl}/service/events/executed`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                chainId,
-                intentBatchId,
-                transactionHash: receipt.hash,
-                blockHash: receipt.blockHash,
-                blockNumber: receipt.blockNumber.toString(),
-                to: receipt.to,
-            })
-        })
-    } catch (error) {
-        console.log(error)
-    }
-  
+export async function dispatchIntentExecution(
+  chainId: number,
+  intentBatchId: `0x${string}`,
+  receipt: Transaction,
+) {
+  const CORE_API_URL = process.env.CORE_API_URL;
+
+  if (!CORE_API_URL) {
+    throw new Error("CORE_API_URL is not defined");
+  }
+
+  try {
+    if(!receipt.blockHash || !receipt.blockNumber || !receipt.to || !receipt.hash) throw new Error("Missing receipt data")
+    await executeIntentBatchApi(CORE_API_URL,{
+        chainId,
+        intentBatchHash: intentBatchId,
+        blockHash: receipt.blockHash,
+        blockNumber: Number(receipt.blockNumber),
+        to: receipt.to,
+        transactionHash: receipt.hash,   
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }

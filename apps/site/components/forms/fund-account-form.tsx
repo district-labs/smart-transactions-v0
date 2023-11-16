@@ -1,6 +1,8 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { env } from "@/env.mjs"
+import { catchError, cn } from "@/lib/utils"
+import { putUserApi } from "@district-labs/intentify-api-actions"
 import {
   DeploySafe,
   EnableSafeIntentModule,
@@ -8,15 +10,14 @@ import {
   useIsSafeIntentModuleEnabled,
   useIsSafeMaterialized,
 } from "@district-labs/intentify-core-react"
+import { toast } from "@district-labs/ui-react"
 import { useMutation } from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
 import { useAccount } from "wagmi"
-
-import { catchError, cn } from "@/lib/utils"
 
 import { Icons } from "../icons"
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
-import { toast } from "@district-labs/ui-react"
 
 export function FundAccountForm() {
   const router = useRouter()
@@ -27,15 +28,10 @@ export function FundAccountForm() {
 
   const { mutate } = useMutation({
     mutationFn: () => {
-      return fetch("/api/user", {
-        method: "POST",
-        body: JSON.stringify({
-          address,
-          safeAddress,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+      if (!address || !safeAddress) throw new Error("User not found")
+
+      return putUserApi(env.NEXT_PUBLIC_API_URL,{
+        safeAddress,
       })
     },
     onSuccess: () => {

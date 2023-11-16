@@ -1,4 +1,4 @@
-import { InferSelectModel, relations } from "drizzle-orm"
+import { InferSelectModel, relations } from "drizzle-orm";
 import {
   boolean,
   int,
@@ -7,11 +7,11 @@ import {
   serial,
   text,
   timestamp,
-} from "drizzle-orm/mysql-core"
+} from "drizzle-orm/mysql-core";
 
-import { DbStrategy, DbUser, strategies, users } from "."
-import { charAddress, charHash } from "../utils/schema"
-import { DbTransaction, transaction } from "./transaction"
+import { DbStrategy, DbUser, strategies, users } from ".";
+import { charAddress, charHash } from "../utils/schema";
+import { DbTransaction, transaction } from "./transaction";
 
 // ------------------ INTENT ------------------ //
 
@@ -22,9 +22,9 @@ export const intents = mysqlTable("intents", {
   intentArgs: json("intent_args")
     .$type<
       {
-        name: string
-        type: string
-        value: string | number
+        name: string;
+        type: string;
+        value: string | number;
       }[]
     >()
     .notNull(),
@@ -33,17 +33,17 @@ export const intents = mysqlTable("intents", {
   data: text("data"),
   value: int("value").default(0),
   isInvalid: boolean("isInvalid").default(false),
-})
+});
 
 export const intentsRelations = relations(intents, ({ one }) => ({
   intentBatch: one(intentBatch, {
     fields: [intents.intentBatchId],
     references: [intentBatch.intentBatchHash],
   }),
-}))
+}));
 
-export type DbIntent = typeof intents.$inferSelect
-export type DbNewIntent = typeof intents.$inferInsert
+export type DbIntent = typeof intents.$inferSelect;
+export type DbInsertIntent = typeof intents.$inferInsert;
 
 // ------------------ INTENT BATCH ------------------ //
 
@@ -60,7 +60,7 @@ export const intentBatch = mysqlTable("intent_batch", {
   cancelledAt: timestamp("cancelled_at"),
   strategyId: charHash("strategy_id").notNull(),
   userId: charAddress("user_id").notNull(),
-})
+});
 
 export const intentBatchRelations = relations(intentBatch, ({ one, many }) => ({
   intents: many(intents),
@@ -77,17 +77,20 @@ export const intentBatchRelations = relations(intentBatch, ({ one, many }) => ({
     fields: [intentBatch.intentBatchHash],
     references: [intentBatchExecution.intentBatchId],
   }),
-}))
+}));
 
-export type DbIntentBatch = typeof intentBatch.$inferSelect
-export type DbNewIntentBatch = typeof intentBatch.$inferInsert
-export type DbIntentBatchWithRelations = InferSelectModel<typeof intentBatch> & {
-  user?: DbUser
-  intents?: DbIntent[]
-  strategy?: DbStrategy
-  intentBatchExecution?: DbIntentBatchExecution
-  executedTxs?: DbTransaction[]
-}
+export type DbIntentBatch = typeof intentBatch.$inferSelect;
+export type DbInserIntentBatch = typeof intentBatch.$inferInsert;
+
+export type DbIntentBatchWithRelations = InferSelectModel<
+  typeof intentBatch
+> & {
+  user?: DbUser;
+  intents?: DbIntent[];
+  strategy?: DbStrategy;
+  intentBatchExecution?: DbIntentBatchExecution;
+  executedTxs?: DbTransaction[];
+};
 
 // ------------------ HOOKS ------------------ //
 
@@ -97,17 +100,17 @@ export const hooks = mysqlTable("hooks", {
   data: text("data"),
   instructions: text("instructions"),
   intentBatchExecutionId: int("intent_batch_execution_id").notNull(),
-})
+});
 
 export const hooksRelations = relations(hooks, ({ one }) => ({
   intentBatchExecution: one(intentBatchExecution, {
     fields: [hooks.intentBatchExecutionId],
     references: [intentBatchExecution.id],
   }),
-}))
+}));
 
-export type DbHook = typeof hooks.$inferSelect
-export type DbNewHook = typeof hooks.$inferInsert
+export type DbHook = typeof hooks.$inferSelect;
+export type DbNewHook = typeof hooks.$inferInsert;
 
 // ------------------ INTENT BATCH EXECUTION ------------------ //
 
@@ -117,7 +120,7 @@ export const intentBatchExecution = mysqlTable("intent_batch_execution", {
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").onUpdateNow(),
   intentBatchId: charAddress("intent_batch_id").notNull(),
-})
+});
 
 export const intentBatchExecutionRelations = relations(
   intentBatchExecution,
@@ -127,8 +130,9 @@ export const intentBatchExecutionRelations = relations(
       fields: [intentBatchExecution.intentBatchId],
       references: [intentBatch.intentBatchHash],
     }),
-  })
-)
+  }),
+);
 
-export type DbIntentBatchExecution = typeof intentBatchExecution.$inferSelect
-export type DbNewIntentBatchExecution = typeof intentBatchExecution.$inferInsert
+export type DbIntentBatchExecution = typeof intentBatchExecution.$inferSelect;
+export type DbNewIntentBatchExecution =
+  typeof intentBatchExecution.$inferInsert;

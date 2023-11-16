@@ -12,19 +12,18 @@ import {
   useGetIntentifyModuleAddress,
   useGetSafeAddress,
 } from "@district-labs/intentify-core-react"
-import { type IntentModule } from "@district-labs/intentify-intent-batch"
 import { StrategyAutomaticLiquidate } from "@district-labs/intentify-strategy-react"
 import { Button } from "@district-labs/ui-react"
 import { Loader2 } from "lucide-react"
 import { useChainId, useSignTypedData } from "wagmi"
 
+import { randomBigIntInRange } from "@/lib/utils/random-big-int-range"
 import { useActionIntentBatchCreate } from "@/hooks/intent-batch/user/use-intent-batch-create"
 import { useFormStrategySetDefaultValues } from "@/hooks/strategy/use-form-strategy-set-default-values"
 
 import { ButtonSetupSmartWalletBeforeSigningIntent } from "../forms/button-setup-smart-wallet-before-signing-intents"
 import { PassFormIntentBatchState } from "../forms/pass-form-intent-batch-state"
 import { StrategyActionBar } from "../forms/strategy-action-bar"
-import { randomBigIntInRange } from "@/lib/utils/random-big-int-range"
 
 export type FormStrategyAutomaticLiquidate =
   React.HTMLAttributes<HTMLElement> & {
@@ -39,8 +38,7 @@ export function FormStrategyAutomaticLiquidate({
   const chainId = useChainId()
   const address = useGetSafeAddress()
   const intentifyAddress = useGetIntentifyModuleAddress(chainId)
-  const { mutateAsync, isSuccess, isError, isLoading, error } =
-    useActionIntentBatchCreate()
+  const { mutateAsync, isSuccess } = useActionIntentBatchCreate()
 
   const [currentValues, setCurrentValues] = useState<any>(null)
   // const defaultValues ={}
@@ -50,10 +48,7 @@ export function FormStrategyAutomaticLiquidate({
     useSignTypedData()
 
   const onIntentBatchGenerated = useCallback(
-    async (
-      intentBatchStruct: IntentBatch,
-      intentBatchMetadata: IntentModule[]
-    ) => {
+    async (intentBatchStruct: IntentBatch) => {
       const signature = await signTypedDataAsync(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -65,13 +60,12 @@ export function FormStrategyAutomaticLiquidate({
       )
       mutateAsync({
         chainId,
-        intentBatch: intentBatchStruct,
-        intentBatchMetadata,
+        rawIntentBatch: intentBatchStruct,
         signature,
-        strategyId: strategyId,
+        strategyId,
       })
     },
-    [signTypedDataAsync, chainId, intentifyAddress, mutateAsync]
+    [signTypedDataAsync, chainId, intentifyAddress, mutateAsync, strategyId]
   )
 
   if (!defaultValues) return <Loader2 size={20} className="animate-spin" />
@@ -98,7 +92,10 @@ export function FormStrategyAutomaticLiquidate({
               classNameLabel: "text-muted-background",
               classNameTrigger:
                 "text-muted-background text-xs text-center my-1 cursor-pointer",
-              defaultQueue: randomBigIntInRange(BigInt(1), BigInt(100000)).toString(),
+              defaultQueue: randomBigIntInRange(
+                BigInt(1),
+                BigInt(100000)
+              ).toString(),
             },
             time: {
               label: "Queue",

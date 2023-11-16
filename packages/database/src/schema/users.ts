@@ -1,8 +1,13 @@
-import { relations } from "drizzle-orm"
-import { boolean, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core"
+import { relations } from "drizzle-orm";
+import {
+  boolean,
+  mysqlTable,
+  timestamp,
+  varchar,
+} from "drizzle-orm/mysql-core";
 
-import { emailPreferences, strategies } from "."
-import { charAddress } from "../utils/schema"
+import { emailPreferences, strategies } from ".";
+import { charAddress } from "../utils/schema";
 
 export const users = mysqlTable("users", {
   address: charAddress("address").primaryKey(),
@@ -12,11 +17,14 @@ export const users = mysqlTable("users", {
   firstName: varchar("first_name", { length: 255 }),
   lastName: varchar("last_name", { length: 255 }),
   email: varchar("email", { length: 255 }),
-  safeAddress: charAddress("safe_address")
-})
+  safeAddress: charAddress("safe_address"),
+});
 
-export type DbNewUser = typeof users.$inferInsert
-export type DbUser = typeof users.$inferSelect
+export type DbNewUser = typeof users.$inferInsert;
+export type DbUser = typeof users.$inferSelect;
+export type DbUserWithRelations = typeof users.$inferSelect & {
+  emailPreferences?: typeof emailPreferences.$inferSelect;
+};
 
 export const usersRelations = relations(users, ({ one, many }) => ({
   strategies: many(strategies),
@@ -24,4 +32,4 @@ export const usersRelations = relations(users, ({ one, many }) => ({
     fields: [users.address],
     references: [emailPreferences.userId],
   }),
-}))
+}));

@@ -5,9 +5,10 @@ export const ApiIntentBatch = z.object({
     intentBatchHash: z.string(),
     nonce: z.string(),
     root: z.string(),
-    chainId: z.union([z.string(), z.number()]),
+    chainId: z.number(),
     signature: z.string(),
     userId: z.string(),
+    strategyId: z.string(),
     intents: z.array(
       z.object({
         intentId: z.string(),

@@ -33,9 +33,7 @@ export function StrategyExecutedTable({
       data={
         !isSuccess
           ? []
-          : data
-              .map((item: DbIntentBatchWithRelations) => item.executedTxs)
-              .flat()
+          : data.flatMap((item: DbIntentBatchWithRelations) => item.executedTxs)
       }
       pageCount={pageCount}
     />

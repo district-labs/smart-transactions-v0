@@ -68,7 +68,7 @@ export const strategies = {
     overrideValues: {
       nonce: {
         type: "dimensional",
-      }
+      },
     },
     IntentForm: FormStrategyLimitOrder,
     IntentTable: StrategyTable,
@@ -88,7 +88,7 @@ export const strategies = {
     overrideValues: {
       nonce: {
         type: "module",
-      }
+      },
     },
     IntentForm: FormStrategyAutomaticLiquidate,
     IntentTable: StrategyTable,

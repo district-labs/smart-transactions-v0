@@ -1,3 +1,4 @@
+import { postAxiomQueryApi } from "@district-labs/intentify-api-actions";
 import {
   UNIV3_POOL_TEST_DIS_USDC,
   UNIV3_POOL_TEST_RIZZ_USDC,
@@ -29,28 +30,19 @@ export async function sendAxiomQueryUniV3Goerli() {
     const blockNumber = await goerliPublicClient.getBlockNumber();
 
     const queries = UNI_V3_POOLS.map((poolAddress) => ({
-      blockNumber: (blockNumber - BigInt(1)).toString(),
+      blockNumber: Number(blockNumber - BigInt(1)),
       address: poolAddress,
       slot: OBSERVATIONS_SLOT,
     }));
 
-    const response = await fetch(
-      `${env.CORE_API_URL}service/axiom/send-query`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          chainId: CHAIN_ID,
-          queries,
-        }),
-      },
-    );
+    postAxiomQueryApi(env.CORE_API_URL,{
+      chainId: CHAIN_ID,
+      queries: queries.map((query) => ({
+        ...query,
+        blockNumber: query.blockNumber.toString(),
+      })),
+    })
 
-    if (!response.ok) {
-      throw new Error("Error sending axiom query");
-    }
   } catch (error) {
     console.log(error);
     return error;

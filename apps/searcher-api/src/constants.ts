@@ -1,5 +1,6 @@
 import { createPublicClient, http, type Address } from "viem"
 import { goerli } from "viem/chains"
+
 import { env } from "./env"
 
 export const SUPPORTED_CHAINS = [5, 31337]

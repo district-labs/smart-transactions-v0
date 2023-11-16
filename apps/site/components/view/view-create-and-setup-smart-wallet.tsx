@@ -36,9 +36,7 @@ export const ViewCreateAndSetupSmartWallet =
           </p>
           <IsSafeCounterfactual>
             <DeploySafe className="my-4 block w-full">
-              <span>
-                Create Smart Wallet
-              </span>
+              <span>Create Smart Wallet</span>
             </DeploySafe>
           </IsSafeCounterfactual>
           <IsSafeMaterialized>
@@ -67,7 +65,7 @@ export const ViewCreateAndSetupSmartWallet =
             <EnableSafeIntentModule
               className="my-4 block w-full"
               signMessageComponent={
-                  <Button className="w-full">Sign Permission</Button>
+                <Button className="w-full">Sign Permission</Button>
               }
               signTransactionComponent={
                 <Button className="w-full">Enable Module</Button>

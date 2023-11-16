@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { env } from "@/env.mjs"
+import { putUserApi } from "@district-labs/intentify-api-actions"
 import {
   Button,
   Card,
@@ -13,6 +14,7 @@ import {
   FormItem,
   FormLabel,
   Input,
+  toast,
   UncontrolledFormMessage,
 } from "@district-labs/ui-react"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -24,7 +26,6 @@ import { userSchema } from "@/lib/validations/user"
 import { useUserProfileGet } from "@/hooks/profile/use-user-profile-get"
 
 import { Icons } from "../icons"
-import { toast } from "@district-labs/ui-react"
 
 type UserInput = z.infer<typeof userSchema>
 
@@ -39,24 +40,24 @@ export function FormUserProfile() {
 
   useEffect(() => {
     if (userProfile) {
-      form.setValue("firstName", userProfile.firstName)
-      form.setValue("lastName", userProfile.lastName)
-      form.setValue("email", userProfile.email)
+      form.setValue("firstName", userProfile.firstName || "")
+      form.setValue("lastName", userProfile.lastName || "")
+      form.setValue("email", userProfile.email || "")
     }
   }, [userProfileIsSuccess, userProfile, form])
 
   const updateUserMutation = useMutation({
-    mutationFn: (data: UserInput) => {
-      return fetch(`${env.NEXT_PUBLIC_API_URL}user/profile`, {
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify({
-          ...data,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+    mutationFn: async function updateUser({
+      email,
+      firstName,
+      lastName,
+    }: UserInput) {
+      const result = await putUserApi(env.NEXT_PUBLIC_API_URL, {
+        email,
+        firstName,
+        lastName,
       })
+      return result
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["user", "profile"])
