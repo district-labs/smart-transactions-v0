@@ -43,3 +43,6 @@
 [submodule "contracts/intentify/lib/balancer-labs"]
 	path = contracts/intentify/lib/balancer-labs
 	url = https://github.com/balancer/balancer-v2-monorepo/
+[submodule "contracts/intentify/lib/ens"]
+	path = contracts/intentify/lib/ens
+	url = https://github.com/ensdomains/ens-contracts
