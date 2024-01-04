@@ -1,0 +1,41 @@
+# ETH Tup
+
+The `EthTipIntent.sol` module allows a User to tip a searcher for executing a smart transaction.
+
+### Purpose
+
+Not every smart transaction include an opportunity for a searcher to make a profit for execution.
+
+The `EthTipIntent.sol` module let's a user pay the searcher for executing the transaction using a fixed amount.
+
+# Intent Encoding
+
+The `EthTipIntent.sol` requires a single argument: amount.
+
+```solidity
+function encodeIntent(
+    uint256 amount
+) external pure returns (bytes memory) {
+    return abi.encode(amount);
+}
+````
+
+# Intent Execution
+
+The `EthTipIntent.sol` module includes support for a `hook` instructions which allows the executor to insert a target address to receive the funds being tipped. In most situations this will be the executors address. 
+
+```solidity
+function execute(
+    Intent calldata intent,
+    Hook calldata hook
+)
+    external
+    override
+    validIntentRoot(intent)
+    validIntentTarget(intent)
+    returns (bool)
+{
+    (uint256 amount) = _decodeIntent(intent);
+    return executeFromRoot(hook.target, amount, new bytes(0));
+}
+```

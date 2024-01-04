@@ -1,0 +1,45 @@
+# Timestamp Range
+
+The `TimestampRangeIntent.sol` module allows a User to set when a transaction can be executed using epoch timestamps.
+
+### Purpose
+
+Control when a smart transaction can be executed using the onchain `block.timestamp` constant.
+
+# Intent Encoding
+
+The `TimestampRangeIntent.sol` requires a single argument: amount.
+
+```solidity
+function encodeIntent(
+    uint128 minTimestamp, 
+    uint128 maxTimestamp
+) external pure returns (bytes memory data) {
+    data = abi.encode(minTimestamp, maxTimestamp);
+}
+````
+
+# Intent Execution
+
+The `TimestampRangeIntent.sol` module compares the user supplied timestamps and compares them to the current `block.timestamp` to validate execution.
+
+```solidity
+function execute(Intent calldata intent)
+    external
+    view
+    override
+    validIntentRoot(intent)
+    validIntentTarget(intent)
+    returns (bool)
+{
+    (uint128 minTimestamp, uint128 maxTimestamp) = _decodeIntent(intent);
+
+    if (block.timestamp > maxTimestamp) {
+        revert Expired();
+    } else if (block.timestamp < minTimestamp) {
+        revert Early();
+    }
+
+    return true;
+}
+```

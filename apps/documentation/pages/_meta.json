@@ -1,16 +1,16 @@
 {
   "index": "👋 Introduction",
-  "contribute": "✍️ Contribute",
   "how-it-works": "📚 How It Works",
-  "zk-data-hub": "⏳ ZK Data Hub",
-  "api-architecture": "🎛️ API",
   "core": "🧱 Core",
   "intent-modules": "🧮 Modules",
+  "api-architecture": "🎛️ API",
+  "zk-data-hub": "⏳ ZK Data Hub",
   "terms": "📖 Dictionary",
   "about": {
     "title": "About",
     "type": "page"
   },
+  "contribute": "✍️ Contribute",
   "deployments": {
     "title": "Deployments",
     "type": "page"
@@ -20,6 +20,5 @@
     "type": "page",
     "href": "https://twitter.com/shuding_",
     "newWindow": true
-  },
-  "demo": "Demo"
+  }
 }

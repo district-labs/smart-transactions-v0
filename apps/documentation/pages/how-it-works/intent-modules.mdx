@@ -1,0 +1,107 @@
+# Intents
+
+District Finance is an "intent" based application.
+
+Which means user don't have to craft transactions with explicit steps and procedures.
+
+Instead users craft [Smart Transactions](how-it-works/smart-transactions) with constraints and rules for how a transaction be executed. And a third-party (i.e. searcher) will execute the transaction according to those rules and conditions embedded in the smart transaction.
+
+**Why is important? *And what value does it create for users?***
+
+A Smart Transaction based protocol is important, because blockchains are complicated.
+
+Today users are expected to have relatively sophisticated understanding of how blockchains work to execute a transaction. And also be available 24/7 to execute a trade, swap or regular transaction at the optimal time.
+
+**It's a big ask if we expect to onboard millions of everyday users.**
+
+Intent based protocols significantly reduce this friction. Users can instead craft smart transactions that only enforce an outcome **and not how that outcome is achieved**.
+
+For example if you want to swap 1 ETH for 5,000 USDC you probably don't care swapping protocol is used to make that happen -- **what you really care about is the swap being executed and receiving the amount you expect.**
+
+# How Intent Modules Work
+At the core of the District Finance application are intent modules.
+
+Intent modules are responsible for adding rules and conditions to a smart transaction.
+
+For example we can use the **Timestamp Range** and **ERC20 Limit Order** to create a smart transaction is only executable for the next 3 days and swaps two ERC20 tokens at a specific price.
+
+[Live demo of a Limit Order smart transaction](https://app.districtfinance.io/strategy/0x564369be27beaca3a73a1da91280164eaa81e9a66d5e43c2a180c78fef295505?page=1)
+
+### Timestamp Range
+The Timestamp Range intent modules accept 2 arguments: minTimestamp and maxTimestamp. 
+
+```solidity
+function encodeIntent(
+    uint128 minTimestamp, 
+    uint128 maxTimestamp
+) external pure returns (bytes memory data) {
+    data = abi.encode(minTimestamp, maxTimestamp);
+}
+```
+
+The `minTimestamp` and `maxTimestamp` args are compared to the `block.timestamp` during runtime.
+
+```solidity
+function execute(Intent calldata intent)
+    external
+    view
+    override
+    validIntentRoot(intent)
+    validIntentTarget(intent)
+    returns (bool)
+{
+    (uint128 minTimestamp, uint128 maxTimestamp) = _decodeIntent(intent);
+
+    if (block.timestamp > maxTimestamp) {
+        revert Expired();
+    } else if (block.timestamp < minTimestamp) {
+        revert Early();
+    }
+
+    return true;
+}
+```
+
+
+### ERC20 Limit Order
+The ERC20 Limit Order intent modules accept 4 arguments: minTimestamp and maxTimestamp. 
+
+```solidity
+function encodeIntent(
+    address tokenOut,
+    address tokenIn,
+    uint256 amountOutMax,
+    uint256 amountInMin
+)
+    external
+    pure
+    returns (bytes memory data)
+{
+    data = abi.encode(tokenOut, tokenIn, amountOutMax, amountInMin);
+}
+```
+
+What makes the ERC20 Limit Order module unique compared to the Timestamp Range module is the `hook` method which allows a searcher to execute logic during the intent module execution. In this case the searcher sends the ERC20 tokens to the account and if the amount matches the intent constraints the smart wallet will release funds back to the searcher for executing the swap.
+
+```solidity
+function execute(
+    Intent calldata intent,
+    Hook calldata hook
+)
+    external
+    override
+    validIntentRoot(intent)
+    validIntentTarget(intent)
+    returns (bool)
+{
+    (, address tokenIn,,) = _decodeIntent(intent);
+
+    uint256 initialTokenInBalance = ERC20(tokenIn).balanceOf(intent.root);
+
+    _hook(hook);
+
+    _unlock(intent, hook, initialTokenInBalance);
+
+    return true;
+}
+```

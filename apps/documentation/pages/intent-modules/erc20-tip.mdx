@@ -1,0 +1,45 @@
+# ERC20 Tip
+
+The `Erc20TipIntent.sol` module allows a User to tip (using ERC20 tokens) a searcher for executing a smart transaction.
+
+### Purpose
+
+Not every smart transaction include an opportunity for a searcher to make a profit for execution.
+
+The `Erc20TipIntent.sol` module let's a user pay the searcher for executing the transaction using a fixed amount.
+
+# Intent Encoding
+
+The `Erc20TipIntent.sol` requires two argument: token and amount.
+
+```solidity
+function encodeIntent(
+    address token, 
+    uint256 amount) 
+external pure returns (bytes memory) {
+    return abi.encode(token, amount);
+}
+````
+
+# Intent Execution
+
+The `Erc20TipIntent.sol` module includes support for a `hook` instructions which allows the executor to insert a target address to receive the funds being tipped. In most situations this will be the executors address. 
+
+```solidity
+function execute(
+    Intent calldata intent,
+    Hook calldata hook
+)
+    external
+    override
+    validIntentRoot(intent)
+    validIntentTarget(intent)
+    returns (bool)
+{
+    (address token, uint256 amount) = _decodeIntent(intent);
+
+    // Transfer the ERC20 tokens to the hook target.
+    bytes memory data = abi.encodeWithSelector(ERC20.transfer.selector, hook.target, amount);
+    return executeFromRoot(token, 0, data);
+}
+```
